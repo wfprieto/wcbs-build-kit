@@ -1,0 +1,18 @@
+{
+  "_comment": "Merge these into the hooks section of ~/.claude/settings.json. Windows uses the cmd /c form; POSIX users: replace each command with  node \"$HOME/.claude/helpers/<file>\" .",
+  "Stop": [
+    {
+      "hooks": [
+        { "type": "command", "command": "cmd /c \"node \\\"%USERPROFILE%\.claude\helpers\wcbs-completion-lock.cjs\\\"\"", "timeout": 8, "statusMessage": "WCBS completion-lock" }
+      ]
+    }
+  ],
+  "PreToolUse": [
+    {
+      "matcher": "Write|Edit|MultiEdit",
+      "hooks": [
+        { "type": "command", "command": "cmd /c \"node \\\"%USERPROFILE%\.claude\helpers\wcbs-scrummaster-challenge.cjs\\\"\"", "timeout": 8, "statusMessage": "WCBS ScrumMaster-3 challenge" }
+      ]
+    }
+  ]
+}
