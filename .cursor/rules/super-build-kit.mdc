@@ -1,0 +1,15 @@
+---
+description: Activate the LLM-agnostic Super Build Kit guardrails for software work.
+alwaysApply: true
+---
+
+# Super Build Kit Cursor Rule
+
+Before planning, editing, auditing, verifying, or releasing:
+
+1. Read `00_start_here/START_HERE.md`.
+2. Read `00_start_here/SOURCE_OF_TRUTH.md`.
+3. Read `00_start_here/LOAD_ORDER.md`.
+4. Read `50_audits/AUDIT_TIER_ROUTER.md`.
+
+Use APIVR and the 16 Elite Build Goals as mandatory guardrails. Do not claim completion without evidence and a final verdict.
