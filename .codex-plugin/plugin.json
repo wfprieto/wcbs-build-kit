@@ -1,0 +1,39 @@
+{
+  "name": "super-build-kit",
+  "version": "1.0.0",
+  "description": "LLM-agnostic APIVR and Elite Build Goals operating system for audited software work.",
+  "author": {
+    "name": "Bill Prieto",
+    "email": "wfprieto@gmail.com",
+    "url": "https://github.com/wfprieto"
+  },
+  "homepage": "https://github.com/wfprieto/wcbs-build-kit",
+  "repository": "https://github.com/wfprieto/wcbs-build-kit",
+  "license": "MIT",
+  "keywords": [
+    "apivr",
+    "audit",
+    "verification",
+    "agent",
+    "build-kit"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Super Build Kit",
+    "shortDescription": "APIVR and Elite Build Goals guardrails for agentic software work.",
+    "longDescription": "A portable LLM-agnostic operating system for planning, auditing, implementing, verifying, and releasing software with evidence-backed APIVR phases and Elite Build Goals.",
+    "developerName": "Bill Prieto",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/wfprieto/wcbs-build-kit",
+    "defaultPrompt": [
+      "Run an APIVR audit on this repo.",
+      "Plan this feature with Elite Build Goals.",
+      "Verify this change before release."
+    ],
+    "brandColor": "#2563EB"
+  }
+}
