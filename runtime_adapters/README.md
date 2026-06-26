@@ -7,10 +7,12 @@ These files activate the same Super Build Kit spine in common agent runtimes.
 - `AGENTS.md` - generic agent and Codex-style repository instructions.
 - `CLAUDE.md` - Claude project/runtime adapter.
 - `GEMINI.md` - Gemini runtime adapter.
+- `REPLIT.md` - Replit Agent runtime adapter.
 - `.codex-plugin/plugin.json` - Codex plugin metadata.
 - `skills/super-build-kit/SKILL.md` - Codex-compatible skill entrypoint.
 - `.cursor/rules/super-build-kit.mdc` - Cursor always-on project rule.
 - `.github/copilot-instructions.md` - GitHub Copilot repository instructions.
+- `runtime_adapters/REPLIT_AGENT.md` - detailed Replit Agent audit and implementation adapter.
 
 ## Rule
 
