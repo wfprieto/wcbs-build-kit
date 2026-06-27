@@ -10,6 +10,7 @@ Before planning, editing, auditing, verifying, or deploying:
 2. Read `00_start_here/SOURCE_OF_TRUTH.md`.
 3. Read `00_start_here/LOAD_ORDER.md`.
 4. Read `50_audits/AUDIT_TIER_ROUTER.md`.
+5. Read `skills/super-build-kit/SKILL.md`.
 
 ## Replit-Specific Rules
 
@@ -18,6 +19,8 @@ Before planning, editing, auditing, verifying, or deploying:
 - Do not modify secrets, production data, deployment settings, databases, or irreversible state without explicit authorization and rollback planning.
 - For UI work, verify the running app behavior, not only the code.
 - For deploy work, include rollback and post-deploy verification.
+- For implementation work, use `skills/writing-plans/SKILL.md` and `skills/test-driven-development/SKILL.md`.
+- For delegated work, use `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md`.
 
 ## Authority
 
