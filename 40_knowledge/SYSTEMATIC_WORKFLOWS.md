@@ -8,12 +8,14 @@ Merged from APIVR, WCBS, and Superpowers workflow mechanics.
 - Ask only questions that materially affect scope, success criteria, risk, or implementation.
 - Present alternatives when the choice changes architecture, risk, cost, or user outcome.
 - Write plans that an implementer can execute without inventing missing decisions.
+- Use `skills/writing-plans/SKILL.md` for implementation, audit-remediation, or handoff plans.
+- Plans for code work must embed failing test steps or an APIVR-approved evidence-first substitute.
 
 ## Implementation Discipline
 
 - Prefer the smallest safe change.
 - Preserve existing behavior unless a change is explicitly approved.
-- Use test-first or evidence-first development where practical.
+- Use test-first development for code changes as an APIVR Phase 3 requirement unless non-applicability is proved and alternate evidence is recorded.
 - Verify after meaningful steps.
 - Stop on new Critical risk.
 
@@ -52,7 +54,7 @@ When multiple domains overlap, load all applicable skills and preserve one APIVR
 
 ## Subagent Discipline
 
-Use subagents only when they reduce risk or context load. Each subagent must receive:
+Use `skills/dispatching-parallel-agents/SKILL.md` before deciding to split work. Use subagents only when they reduce risk, time, or context load. Each subagent must receive:
 
 - objective;
 - exact scope;
@@ -61,3 +63,5 @@ Use subagents only when they reduce risk or context load. Each subagent must rec
 - expected evidence;
 - stop conditions;
 - output format.
+
+Subagent outputs must use `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, or `BLOCKED`, then pass the two-stage review gate in `skills/subagent-driven-development/SKILL.md`.
