@@ -15,6 +15,7 @@ Activate:
 - Architect for source of truth, boundaries, dependencies, and scale fit.
 - Principal Engineer for implementation shape and maintainability.
 - QA Lead for test plan and verification evidence.
+- TDD Lead for Red-Green-Refactor order, test quality, and evidence states when code changes.
 
 Add when applicable:
 
@@ -27,6 +28,7 @@ Add when applicable:
 - Reporting/Data Output Lead for dashboards, exports, analytics outputs, compliance reports, and evidence artifacts.
 - Integration Lead for third-party APIs, SDKs, OAuth, API keys, rate limits, provider failures, and webhooks.
 - Media/Asset Lead for generated/retrieved assets, media delivery, CDN/cache, rights, optimization, and rendered asset quality.
+- Subagent Orchestrator for parallel dispatch, scoped delegation, status handling, and review gates.
 
 ## Audit Work
 
@@ -51,5 +53,7 @@ Critical work requires:
 
 - explicit decision owner;
 - challenge review;
+- test-first evidence or documented non-applicability rationale for code changes;
+- two-stage review for delegated implementation;
 - rollback or restoration method;
 - no release on unknown core safety evidence.
