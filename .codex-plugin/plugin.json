@@ -15,13 +15,14 @@
     "audit",
     "verification",
     "agent",
-    "build-kit"
+    "build-kit",
+    "worktrees"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Super Build Kit",
     "shortDescription": "APIVR and Elite Build Goals guardrails for agentic software work.",
-    "longDescription": "A portable LLM-agnostic operating system for planning, auditing, implementing, verifying, and releasing software with evidence-backed APIVR phases and Elite Build Goals.",
+    "longDescription": "A portable LLM-agnostic operating system for planning, auditing, implementing, verifying, and releasing software with evidence-backed APIVR phases, Elite Build Goals, and native-first worktree isolation.",
     "developerName": "Bill Prieto",
     "category": "Productivity",
     "capabilities": [
@@ -32,7 +33,7 @@
     "defaultPrompt": [
       "Run an APIVR audit on this repo.",
       "Plan this feature with Elite Build Goals.",
-      "Verify this change before release."
+      "Set up isolated worktree execution."
     ],
     "brandColor": "#2563EB"
   }
