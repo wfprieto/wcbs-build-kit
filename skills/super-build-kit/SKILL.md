@@ -18,6 +18,8 @@ Read these files in order:
 
 Then load only the task-specific files named by `LOAD_ORDER.md`.
 
+For feature implementation, plan execution, or risky edits, also load `skills/using-git-worktrees/SKILL.md` and prefer native worktree tooling before manual git fallback.
+
 ## Mandatory Behavior
 
 - State the APIVR tier before implementation or release claims.
