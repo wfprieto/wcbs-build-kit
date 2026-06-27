@@ -1,0 +1,21 @@
+{
+  "name": "@wfprieto/wcbs-build-kit",
+  "version": "1.1.0",
+  "private": true,
+  "description": "LLM-agnostic APIVR and Elite Build Goals Super Build Kit with optional verification tooling.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "doctor": "node scripts/wcbs-doctor.mjs",
+    "verify": "node scripts/wcbs-doctor.mjs --strict",
+    "wcbs:doctor": "node scripts/wcbs-doctor.mjs",
+    "wcbs:verify": "node scripts/wcbs-doctor.mjs --strict"
+  },
+  "keywords": [
+    "apivr",
+    "audit",
+    "agent",
+    "build-kit",
+    "verification"
+  ]
+}
