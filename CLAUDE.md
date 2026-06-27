@@ -10,8 +10,11 @@ At the start of any serious task, load:
 2. `00_start_here/SOURCE_OF_TRUTH.md`
 3. `00_start_here/LOAD_ORDER.md`
 4. `50_audits/AUDIT_TIER_ROUTER.md`
+5. `skills/super-build-kit/SKILL.md`
 
 Then load only the task-specific files named by `LOAD_ORDER.md`.
+
+For implementation work, load `skills/writing-plans/SKILL.md` and `skills/test-driven-development/SKILL.md`. Before splitting work, load `skills/dispatching-parallel-agents/SKILL.md`; when delegated agents are used, load `skills/subagent-driven-development/SKILL.md`.
 
 ## Authority
 
