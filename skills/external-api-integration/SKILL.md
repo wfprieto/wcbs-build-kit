@@ -28,6 +28,24 @@ Use this skill for third-party service integration under APIVR.
 4. Verify in sandbox or with safe test data when available.
 5. Record external dependency risk, provider limits, and recovery path.
 
+## Decision Graph
+
+```mermaid
+flowchart TD
+  A["Third-party integration"] --> B{"Privileged action or private data?"}
+  B -- "Yes" --> C["Comprehensive/Forensic tier as risk warrants"]
+  B -- "No" --> D["Standard tier unless low-risk read-only"]
+  C --> E{"Auth type?"}
+  D --> E
+  E -- "API key/secret" --> F["Server-side secret storage"]
+  E -- "OAuth" --> G["Scopes, consent, token refresh, revocation"]
+  E -- "Webhook" --> H["Signature verification and replay protection"]
+  F --> I["Timeout, retry, idempotency, rate limits"]
+  G --> I
+  H --> I
+  I --> J["Sandbox or contract verification"]
+```
+
 ## Guardrails
 
 - Do not hardcode secrets or expose them in logs, screenshots, commits, prompts, or reports.
@@ -35,6 +53,26 @@ Use this skill for third-party service integration under APIVR.
 - Do not implement unbounded retries or polling.
 - Do not accept webhooks without signature verification when provider supports it.
 - Treat payments, auth, private data, destructive actions, and revenue-critical integrations as Comprehensive or Forensic when warranted.
+
+## Good / Bad
+
+<Bad>
+Put the provider API key in frontend code and retry every failed request until it succeeds.
+</Bad>
+
+<Good>
+Store the provider secret server-side, call the provider through a backend boundary, set a timeout, retry only safe transient failures with a capped backoff, and record rate-limit behavior in the evidence ledger.
+</Good>
+
+## Worked Example
+
+Scenario: Add a CRM contact sync.
+
+- APIVR tier: Comprehensive if private customer data is written to a provider.
+- Plan: failing test proves a duplicate provider response does not create duplicate local records.
+- Implementation: server-side token use, scoped permissions, capped retries, idempotency key, safe logs.
+- Verification: sandbox sync, duplicate test, rate-limit simulation or documented provider limit, rollback for disabling sync.
+- Verdict: `PASS` only when auth, data integrity, rate limits, logging, and recovery evidence are Verified.
 
 ## Closeout
 
