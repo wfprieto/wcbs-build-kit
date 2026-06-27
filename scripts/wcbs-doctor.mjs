@@ -13,6 +13,7 @@ const requiredFiles = [
   "CLAUDE.md",
   "GEMINI.md",
   "REPLIT.md",
+  "Manus.md",
   "00_start_here/START_HERE.md",
   "00_start_here/SOURCE_OF_TRUTH.md",
   "00_start_here/LOAD_ORDER.md",
