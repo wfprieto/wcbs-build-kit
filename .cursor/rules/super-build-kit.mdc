@@ -11,5 +11,8 @@ Before planning, editing, auditing, verifying, or releasing:
 2. Read `00_start_here/SOURCE_OF_TRUTH.md`.
 3. Read `00_start_here/LOAD_ORDER.md`.
 4. Read `50_audits/AUDIT_TIER_ROUTER.md`.
+5. Read `skills/super-build-kit/SKILL.md`.
 
 Use APIVR and the 16 Elite Build Goals as mandatory guardrails. Do not claim completion without evidence and a final verdict.
+
+For implementation, use `skills/writing-plans/SKILL.md` and `skills/test-driven-development/SKILL.md`. For split or delegated work, use `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md`.
