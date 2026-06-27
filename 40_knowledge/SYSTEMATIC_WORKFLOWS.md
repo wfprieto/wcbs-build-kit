@@ -30,6 +30,18 @@ Review in this order:
 7. Performance, SEO, and cost
 8. Evidence completeness
 
+## Domain Routing Discipline
+
+Load the relevant specialist skill when the task includes:
+
+- deployment, hosting, runtime placement, cloud cost, or environment setup;
+- scheduled jobs, webhooks, queues, event-driven work, monitors, reminders, or always-on workers;
+- dashboards, exports, recurring reports, analytics outputs, or audit/compliance evidence;
+- third-party APIs, SDKs, OAuth, API keys, webhooks, provider limits, or external syncs;
+- generated, retrieved, transformed, cached, licensed, or delivered media/assets.
+
+When multiple domains overlap, load all applicable skills and preserve one APIVR evidence ledger.
+
 ## Debugging Discipline
 
 - Reproduce or directly observe the failure when possible.
@@ -49,4 +61,3 @@ Use subagents only when they reduce risk or context load. Each subagent must rec
 - expected evidence;
 - stop conditions;
 - output format.
-
