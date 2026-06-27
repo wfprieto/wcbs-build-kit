@@ -50,3 +50,16 @@ No adapter, agent persona, prompt template, convenience workflow, or older repos
 ## Completion Standard
 
 Work is not done until the applicable APIVR phases have run, evidence is recorded, release gates are classified, and the final verdict honestly reflects reality: `PASS`, `CONDITIONAL PASS`, `PARTIAL`, `FAIL`, or `BLOCKED`.
+
+## Optional Doctor
+
+This kit includes a private, zero-dependency `package.json` only for verification commands. It is not an app runtime package and does not add build dependencies.
+
+Run from the kit root:
+
+```bash
+npm run doctor
+npm run verify
+```
+
+These commands check required files, activation wiring, skill frontmatter, JSON validity, evidence vocabulary, and package safety.
