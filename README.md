@@ -17,6 +17,15 @@ Every agent must begin with:
 
 Then load only the task-specific governance, agent, audit, and template files named by the load order.
 
+Core operational skills:
+
+- `skills/super-build-kit/SKILL.md` - always-first orientation and skill invocation logic.
+- `skills/writing-plans/SKILL.md` - zero-placeholder APIVR implementation plans.
+- `skills/test-driven-development/SKILL.md` - APIVR Phase 3 test-first implementation gate.
+- `skills/dispatching-parallel-agents/SKILL.md` - safe parallelization decision protocol.
+- `skills/subagent-driven-development/SKILL.md` - delegated implementation, status handling, and two-stage review.
+- Domain skills for deployment, scheduling, reporting, external APIs, and media/assets.
+
 ## Permanent Authority Order
 
 1. `20_skills/apivr.skill` and `20_skills/apivr/`
@@ -31,6 +40,7 @@ No adapter, agent persona, prompt template, convenience workflow, or older repos
 - `00_start_here/` - source of truth, load order, activation rules
 - `10_governance/` - APIVR, Elite Build Goals, evidence rules, release gates
 - `20_skills/` - portable skill definitions and packaged APIVR skill
+- `skills/` - runtime-loadable operational skills
 - `30_agents/` - merged specialist agent roles
 - `40_knowledge/` - reusable knowledge and workflow source material
 - `50_audits/` - light through forensic audit protocols
@@ -40,4 +50,3 @@ No adapter, agent persona, prompt template, convenience workflow, or older repos
 ## Completion Standard
 
 Work is not done until the applicable APIVR phases have run, evidence is recorded, release gates are classified, and the final verdict honestly reflects reality: `PASS`, `CONDITIONAL PASS`, `PARTIAL`, `FAIL`, or `BLOCKED`.
-
