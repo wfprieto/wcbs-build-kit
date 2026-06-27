@@ -38,7 +38,22 @@ Check writes, migrations, null/legacy handling, idempotency, transactions, dupli
 
 Check logs, metrics, health checks, alerts, queues/jobs, incident response, rollback, recovery, and administrative repair paths.
 
+## Deployment / Hosting / Runtime Placement
+
+Check hosting tier, environment separation, persistent versus ephemeral workload routing, build/deploy commands, rollback, DNS/domains, cost drivers, scaling assumptions, and post-deploy verification.
+
+## Scheduling / Automation / Reporting
+
+Check cron/scheduler, webhook, queue, event-driven, worker, monitor, and always-on workload fit; retry, timeout, idempotency, duplicate prevention, observability, backfill, data freshness, output accuracy, permissions, and reporting horizon.
+
+## External API / Third-Party Integration
+
+Check provider contract, auth method, secret storage, scopes, validation, timeout, retry, rate-limit handling, idempotency, webhook verification, safe logging, sandbox/test mode, quota/cost, and dependency failure behavior.
+
+## Media / Asset Pipeline
+
+Check asset provenance, rights/licensing, generate versus retrieve versus reference decision, transformation, optimization, responsive delivery, caching/CDN, accessibility metadata, fallback behavior, and rendered output.
+
 ## Prompt / Skill / Agent Audit
 
 Check activation clarity, authority order, portability, missing inputs, output contracts, evidence requirements, and whether reusable instructions can trigger reliably.
-
