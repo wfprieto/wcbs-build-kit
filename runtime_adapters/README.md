@@ -14,6 +14,11 @@ These files activate the same Super Build Kit spine in common agent runtimes.
 - `.github/copilot-instructions.md` - GitHub Copilot repository instructions.
 - `runtime_adapters/REPLIT_AGENT.md` - detailed Replit Agent audit and implementation adapter.
 - `runtime_adapters/NATIVE_GIT_WORKTREES.md` - native-first worktree integration and manual fallback rules.
+- `skills/deployment-and-hosting-guidance/SKILL.md` - deployment, hosting, runtime, cost, and environment routing.
+- `skills/scheduling-and-automation-routing/SKILL.md` - cron, webhooks, events, queues, workers, monitors, and always-on routing.
+- `skills/data-output-and-reporting/SKILL.md` - dashboards, exports, recurring reports, analytics outputs, and evidence artifacts.
+- `skills/external-api-integration/SKILL.md` - third-party APIs, SDKs, OAuth, API keys, webhooks, and provider limits.
+- `skills/media-and-asset-pipeline/SKILL.md` - generated/retrieved assets, media delivery, rights, optimization, and fallback behavior.
 
 ## Rule
 
