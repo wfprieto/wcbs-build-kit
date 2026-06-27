@@ -13,9 +13,18 @@ Do not start from a fix. Start from the APIVR tier router, inspect the real syst
 1. Read `00_start_here/SOURCE_OF_TRUTH.md`.
 2. Read `00_start_here/LOAD_ORDER.md`.
 3. Read `50_audits/AUDIT_TIER_ROUTER.md`.
-4. Classify the request as Rapid, Standard, Comprehensive, or Forensic.
-5. Load the smallest complete file set required for the task.
-6. State the tier, applicable goals, and evidence requirements before implementation or release claims.
+4. Read `skills/super-build-kit/SKILL.md` when skill invocation, platform activation, planning, implementation, or delegation may affect the task.
+5. Classify the request as Rapid, Standard, Comprehensive, or Forensic.
+6. Load the smallest complete file set required for the task.
+7. State the tier, applicable goals, and evidence requirements before implementation or release claims.
+
+## Mandatory Skill Layer
+
+- Use `skills/writing-plans/SKILL.md` for APIVR Phase 2 implementation, remediation, or handoff plans.
+- Use `skills/test-driven-development/SKILL.md` for APIVR Phase 3 code work.
+- Use `skills/dispatching-parallel-agents/SKILL.md` before splitting work.
+- Use `skills/subagent-driven-development/SKILL.md` when delegated agents implement, review, or verify work.
+- Use domain skills when deployment, automation, reporting, external APIs, or media/assets are in scope.
 
 ## Stop Conditions
 
@@ -25,6 +34,8 @@ Stop and report instead of guessing when:
 - a destructive or irreversible action is requested without explicit authorization and rollback planning;
 - a material security, privacy, authorization, payment, data-integrity, or production-availability risk appears;
 - evidence is unavailable for a required completion claim;
+- code implementation is requested but test-first or alternate evidence cannot be established;
+- delegated work returns `NEEDS_CONTEXT` or `BLOCKED` and no safe reroute exists;
 - two sources of truth conflict and the conflict is not resolved by `SOURCE_OF_TRUTH.md`.
 
 ## Minimum Output for Any Work Cycle
@@ -37,4 +48,3 @@ Even the smallest Rapid task must end with:
 - verification performed or marked `Not Run` / `Blocked`;
 - final verdict;
 - single next required action.
-
