@@ -28,7 +28,7 @@ Check maintainability, complexity, naming, obsolete paths, hidden behavior, dupl
 
 ## Testing / QA / Verification
 
-Check test coverage by risk, regression paths, manual workflow evidence, browser verification for UI, build/type/lint checks, and unrun verification.
+Check test coverage by risk, test-first order, Red-Green-Refactor evidence, regression paths, manual workflow evidence, browser verification for UI, build/type/lint checks, and unrun verification.
 
 ## Data Integrity / Legacy Records / Cleanup Safety
 
@@ -56,4 +56,4 @@ Check asset provenance, rights/licensing, generate versus retrieve versus refere
 
 ## Prompt / Skill / Agent Audit
 
-Check activation clarity, authority order, portability, missing inputs, output contracts, evidence requirements, and whether reusable instructions can trigger reliably.
+Check activation clarity, authority order, portability, missing inputs, output contracts, evidence requirements, skill invocation logic, subagent dispatch safety, review gates, and whether reusable instructions can trigger reliably.
