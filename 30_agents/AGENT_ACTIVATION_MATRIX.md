@@ -22,6 +22,11 @@ Add when applicable:
 - Data Engineer for migrations, writes, consistency, retention, reconciliation.
 - UX/UI Lead for user-facing workflows, accessibility, visual quality, responsive behavior.
 - Operations Lead for logging, monitoring, rollback, health, incident response.
+- Deployment/Infrastructure Lead for hosting tier, runtime placement, environments, deployment, rollback, scaling, and cost.
+- Automation Lead for cron, webhooks, event-driven work, queues, workers, monitors, and recurring jobs.
+- Reporting/Data Output Lead for dashboards, exports, analytics outputs, compliance reports, and evidence artifacts.
+- Integration Lead for third-party APIs, SDKs, OAuth, API keys, rate limits, provider failures, and webhooks.
+- Media/Asset Lead for generated/retrieved assets, media delivery, CDN/cache, rights, optimization, and rendered asset quality.
 
 ## Audit Work
 
@@ -38,6 +43,7 @@ For Forensic audits, add:
 - Independent Challenger
 - Decision Owner
 - Evidence Custodian
+- Security/Data/Operations specialists for any API, automation, reporting, deployment, or asset pipeline with private data, money, auth, or regulated impact
 
 ## Critical Decisions
 
@@ -47,4 +53,3 @@ Critical work requires:
 - challenge review;
 - rollback or restoration method;
 - no release on unknown core safety evidence.
-
