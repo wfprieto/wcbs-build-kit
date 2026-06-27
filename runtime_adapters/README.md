@@ -8,6 +8,7 @@ These files activate the same Super Build Kit spine in common agent runtimes.
 - `CLAUDE.md` - Claude project/runtime adapter.
 - `GEMINI.md` - Gemini runtime adapter.
 - `REPLIT.md` - Replit Agent runtime adapter.
+- `Manus.md` - Manus Agent runtime adapter.
 - `.codex-plugin/plugin.json` - Codex plugin metadata.
 - `skills/super-build-kit/SKILL.md` - Codex-compatible skill entrypoint.
 - `.cursor/rules/super-build-kit.mdc` - Cursor always-on project rule.
