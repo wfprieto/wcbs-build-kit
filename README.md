@@ -63,3 +63,7 @@ npm run verify
 ```
 
 These commands check required files, activation wiring, skill frontmatter, JSON validity, evidence vocabulary, and package safety.
+
+## Runtime Adapters
+
+The kit includes direct adapter files for common agent runtimes, including `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `REPLIT.md`, and `Manus.md`.
