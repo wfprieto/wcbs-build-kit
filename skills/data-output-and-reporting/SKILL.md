@@ -29,12 +29,40 @@ Use this skill to choose the safest and most useful reporting/output format.
 4. Decide whether scheduling/automation or external API guidance also applies.
 5. Verify data accuracy, completeness, permissions, and business usefulness.
 
+## Decision Graph
+
+```mermaid
+flowchart TD
+  A["Data output needed"] --> B{"Who consumes it?"}
+  B -- "Human user" --> C["Dashboard/report with clear labels"]
+  B -- "External system" --> D["Export/API contract"]
+  B -- "Audit/compliance" --> E["Evidence artifact with provenance"]
+  C --> F{"Freshness requirement?"}
+  D --> F
+  E --> F
+  F -- "Real-time/near-real-time" --> G["Event or query-backed output"]
+  F -- "Periodic" --> H["Scheduled refresh"]
+  F -- "One-time" --> I["Generated artifact"]
+  G --> J["Validate accuracy, permissions, and failure state"]
+  H --> J
+  I --> J
+```
+
 ## Guardrails
 
 - Do not expose private or sensitive data without permission checks.
 - Do not report derived metrics without source definition and reconciliation.
 - Do not claim business outcome success from a generated report alone.
 - Do not create a second source of truth without migration and ownership.
+
+## Worked Example
+
+Scenario: Add a monthly revenue export.
+
+- Route: scheduled export with immutable evidence artifact.
+- Connected skills: scheduling for refresh, external API if billing provider data is pulled, TDD for transformation logic.
+- Evidence: sample export, reconciliation total, permission check, failed-run behavior, and retention location.
+- APIVR verdict: `PASS` only when accuracy, access control, freshness, and recovery are Verified.
 
 ## Closeout
 
