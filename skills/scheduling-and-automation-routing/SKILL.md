@@ -29,12 +29,43 @@ Use this skill to decide how automation should run and how it should be verified
 4. Decide whether the job requires deployment/hosting guidance or external API integration guidance.
 5. Verify both technical execution and the intended operational/business outcome.
 
+## Decision Graph
+
+```mermaid
+flowchart TD
+  A["Automation needed"] --> B{"What triggers it?"}
+  B -- "Known time/window" --> C["Cron or scheduler"]
+  B -- "External event" --> D["Webhook receiver"]
+  B -- "Internal state change" --> E["Event-driven function"]
+  B -- "Large/slow workload" --> F["Queue plus worker"]
+  B -- "Continuous connection/watch" --> G["Always-on process"]
+  C --> H["Define idempotency and retry"]
+  D --> I["Verify signature, replay, idempotency"]
+  E --> H
+  F --> J["Define queue limits, poison handling, backfill"]
+  G --> K["Define health checks, restart, cost ceiling"]
+  H --> L["Verify outcome and observability"]
+  I --> L
+  J --> L
+  K --> L
+```
+
 ## Guardrails
 
 - Do not create unbounded retries, unbounded queues, or unbounded polling.
 - Do not use always-on workers when scheduled or event-driven execution satisfies the objective.
 - Do not process external webhooks without verification, replay protection, and safe logging.
 - Do not mark automation complete until failure handling and observability are addressed.
+
+## Worked Example
+
+Scenario: Send a weekly customer-health report.
+
+- Route: scheduler, not always-on worker.
+- Data output skill applies because the report is the user-visible product.
+- TDD requirement: test that the same scheduled week cannot send duplicate reports.
+- Evidence: dry-run command, duplicate-prevention test, report output sample, log entry, and failure alert path.
+- APIVR verdict: `PASS` only when freshness, idempotency, output accuracy, and observability are Verified.
 
 ## Closeout
 
