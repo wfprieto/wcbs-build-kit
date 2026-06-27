@@ -13,6 +13,7 @@ These files activate the same Super Build Kit spine in common agent runtimes.
 - `.cursor/rules/super-build-kit.mdc` - Cursor always-on project rule.
 - `.github/copilot-instructions.md` - GitHub Copilot repository instructions.
 - `runtime_adapters/REPLIT_AGENT.md` - detailed Replit Agent audit and implementation adapter.
+- `runtime_adapters/NATIVE_GIT_WORKTREES.md` - native-first worktree integration and manual fallback rules.
 
 ## Rule
 
