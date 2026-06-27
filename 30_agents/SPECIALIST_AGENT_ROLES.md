@@ -50,7 +50,26 @@ Owns test coverage by risk, real workflow verification, regression checks, and e
 
 Owns observability, health checks, alerting, queues/jobs, incident response, rollback, and recovery paths.
 
+## Deployment / Infrastructure Lead
+
+Owns hosting choice, cloud tier, environment separation, persistent versus ephemeral runtime placement, scaling limits, deployment verification, rollback, and infrastructure cost exposure.
+
+## Automation Lead
+
+Owns cron, scheduler, webhook, event-driven, queue, worker, monitor, and always-on workload routing, including retry, timeout, idempotency, duplicate prevention, backfill, and operational visibility.
+
+## Reporting / Data Output Lead
+
+Owns dashboards, exports, recurring reports, analytics outputs, API reporting endpoints, notification summaries, audit ledgers, data freshness, metric definitions, permissions, and reconciliation.
+
+## Integration Lead
+
+Owns external API and SDK contracts, OAuth/API keys, provider scopes, rate limits, retries, timeouts, webhook verification, safe logging, quota/cost controls, and dependency failure behavior.
+
+## Media / Asset Lead
+
+Owns generated versus retrieved versus referenced asset routing, asset rights/provenance, media transformation, optimization, responsive delivery, cache/CDN, accessibility metadata, fallback behavior, and rendered quality.
+
 ## Prompt / Skill Engineer
 
 Owns reusable instruction quality, activation clarity, portability, and prompt/skill verification.
-
