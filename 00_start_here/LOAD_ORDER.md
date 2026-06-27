@@ -15,6 +15,7 @@ Load:
 
 - `10_governance/ELITE_BUILD_GOALS_SUMMARY.md`
 - `10_governance/RELEASE_GATES.md`
+- `skills/using-git-worktrees/SKILL.md` when work should be isolated
 - `30_agents/AGENT_ACTIVATION_MATRIX.md`
 - `60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md`
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
@@ -66,3 +67,12 @@ Load:
 
 Prompt and skill work must still define objective, audience, non-goals, evidence, and verification.
 
+## Isolated Feature Work Or Plan Execution
+
+Load:
+
+- `skills/using-git-worktrees/SKILL.md`
+- `runtime_adapters/NATIVE_GIT_WORKTREES.md`
+- `60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md`
+
+Detect existing isolation first. Prefer native worktree tools. Use manual `git worktree add` only as fallback.
