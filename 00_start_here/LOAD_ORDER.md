@@ -21,6 +21,7 @@ Load:
 - `skills/using-git-worktrees/SKILL.md` when work should be isolated
 - `skills/dispatching-parallel-agents/SKILL.md` when the work may benefit from parallel investigation, audit, implementation, or verification
 - `skills/subagent-driven-development/SKILL.md` when subagents will implement, review, or verify task slices
+- `skills/repeatable-agent-loops/SKILL.md` when work is recurring, iterative, monitor-like, or should repeat until a measurable condition is met or safely stopped
 - `skills/deployment-and-hosting-guidance/SKILL.md` when hosting, deploy, runtime, cost, or environment choices are involved
 - `skills/scheduling-and-automation-routing/SKILL.md` when jobs, webhooks, queues, reminders, monitors, or workers are involved
 - `skills/external-api-integration/SKILL.md` when third-party services, SDKs, webhooks, OAuth, API keys, or provider limits are involved
@@ -43,6 +44,7 @@ Load:
 - `50_audits/CANONICAL_AUDIT_PROTOCOLS.md`
 - `60_templates/EVIDENCE_LEDGER_TEMPLATE.md`
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
+- `skills/repeatable-agent-loops/SKILL.md` when the audit is a repeated sweep or iterative remediation loop
 
 For Comprehensive or Forensic audits, also load:
 
@@ -59,6 +61,7 @@ Load:
 - `skills/deployment-and-hosting-guidance/SKILL.md` for deployment/runtime/hosting incidents
 - `skills/scheduling-and-automation-routing/SKILL.md` for job, queue, webhook, worker, or monitor failures
 - `skills/external-api-integration/SKILL.md` for provider, webhook, API, auth, quota, or rate-limit failures
+- `skills/repeatable-agent-loops/SKILL.md` when diagnosis requires repeated observation, bounded retries, or stepwise remediation
 
 If the human declares an emergency, use APIVR break-glass rules and run a retroactive audit after stabilization.
 
@@ -71,8 +74,7 @@ Load:
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
 - `skills/deployment-and-hosting-guidance/SKILL.md` when release includes deploy or hosting changes
 - `skills/data-output-and-reporting/SKILL.md` when release success depends on reporting, analytics, or exported evidence
-- `skills/ui-ux-design-quality/SKILL.md` when release includes user-facing UI, UX, accessibility, visual quality, dashboards, forms, or interface copy
-- `skills/anti-ai-writing-quality/SKILL.md` when release includes client-facing, user-facing, report, email, prompt, or marketing copy
+- `skills/repeatable-agent-loops/SKILL.md` when release depends on repeated post-deploy checks, monitors, stabilization windows, or iterative evidence collection
 
 Do not claim `PASS` while any applicable release gate is failed, unknown, not run, or blocked without accepted non-critical risk.
 
@@ -83,6 +85,7 @@ Load:
 - `20_skills/PORTABLE_SKILL_CONTRACT.md`
 - `skills/super-build-kit/SKILL.md`
 - `skills/writing-plans/SKILL.md` when producing reusable implementation plans or agent handoff plans
+- `skills/repeatable-agent-loops/SKILL.md` when designing reusable recurring workflows, monitors, or iterative agent procedures
 - `skills/anti-ai-writing-quality/SKILL.md` when prompt, skill, agent, or report wording quality matters
 - `skills/strategist-writing-dna/SKILL.md` when prompts or handoffs must resist drift and require proof
 - `30_agents/SPECIALIST_AGENT_ROLES.md`
@@ -100,6 +103,7 @@ Load:
 - `skills/test-driven-development/SKILL.md`
 - `skills/dispatching-parallel-agents/SKILL.md` when work can be split safely
 - `skills/subagent-driven-development/SKILL.md` when subagents are dispatched
+- `skills/repeatable-agent-loops/SKILL.md` when the plan executes repeated bounded steps
 - `runtime_adapters/NATIVE_GIT_WORKTREES.md`
 - `60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md`
 
@@ -113,6 +117,7 @@ Load:
 - `skills/test-driven-development/SKILL.md` for any code implementation
 - `skills/dispatching-parallel-agents/SKILL.md` when the plan contains parallel task slices
 - `skills/subagent-driven-development/SKILL.md` when the plan delegates implementation or review
+- `skills/repeatable-agent-loops/SKILL.md` when the plan contains recurring checks, iterative sweeps, monitors, or repeat-until-stable work
 - `60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md`
 
 Plans must contain exact file paths, concrete test steps, evidence states, rollback conditions, and no placeholders.
@@ -132,10 +137,23 @@ Route persistent versus ephemeral work, cost risk, environments, rollback, and p
 Load:
 
 - `skills/scheduling-and-automation-routing/SKILL.md`
+- `skills/repeatable-agent-loops/SKILL.md` when the workflow repeats, monitors state, retries, sweeps, or runs until a condition is met
 - `skills/data-output-and-reporting/SKILL.md` when outputs or reports are part of the workflow
 - `40_knowledge/AUTOMATION_AND_REPORTING_PATTERNS.md`
+- `40_knowledge/REPEATABLE_AGENT_LOOP_PATTERNS.md` when loop design or stop conditions are in scope
 
 Define trigger, freshness, idempotency, retry, duplicate prevention, observability, data accuracy, and verification horizon.
+
+## Repeatable Agent Loops
+
+Load:
+
+- `skills/repeatable-agent-loops/SKILL.md`
+- `40_knowledge/REPEATABLE_AGENT_LOOP_PATTERNS.md`
+- `60_templates/LOOP_DESIGN_TEMPLATE.md` before running Standard and above loops
+- `60_templates/LOOP_RUN_RECEIPT_TEMPLATE.md` for every loop iteration
+
+Use for recurring audits, iterative remediation, quality sweeps, monitors, post-deploy stabilization checks, documentation checks, repeated test reliability checks, or bounded repeat-until-stable workflows. Define objective, scope, one-step action rule, evidence check, continue condition, stop conditions, iteration budget, receipt, and APIVR verdict.
 
 ## External APIs Or Media Assets
 
