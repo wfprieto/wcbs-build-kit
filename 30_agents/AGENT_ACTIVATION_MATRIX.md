@@ -22,6 +22,9 @@ Add when applicable:
 - Security Engineer for auth, permissions, privacy, secrets, abuse, integrations.
 - Data Engineer for migrations, writes, consistency, retention, reconciliation.
 - UX/UI Lead for user-facing workflows, accessibility, visual quality, responsive behavior.
+- Design Quality Lead for visual direction, anti-generic UI, design-system discipline, UI copy, and rendered review.
+- Writing Quality Lead for anti-AI tone, human rhythm, client-ready clarity, and copy evidence.
+- Strategist Voice Lead for verdict-first structure, executive clarity, anti-drift prompts, and proof-driven communication.
 - Operations Lead for logging, monitoring, rollback, health, incident response.
 - Deployment/Infrastructure Lead for hosting tier, runtime placement, environments, deployment, rollback, scaling, and cost.
 - Automation Lead for cron, webhooks, event-driven work, queues, workers, monitors, and recurring jobs.
@@ -57,3 +60,12 @@ Critical work requires:
 - two-stage review for delegated implementation;
 - rollback or restoration method;
 - no release on unknown core safety evidence.
+
+## Writing Or UI Work
+
+For user-facing interface or content work, activate:
+
+- UX/UI Lead;
+- Design Quality Lead;
+- Writing Quality Lead when copy, labels, reports, emails, prompts, or client-facing text are involved;
+- Strategist Voice Lead when the output must guide a decision, prevent drift, or define proof.
