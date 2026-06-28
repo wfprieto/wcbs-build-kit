@@ -23,6 +23,7 @@ Then load only the task-specific files named by `00_start_here/LOAD_ORDER.md`.
 - For code changes, use `skills/test-driven-development/SKILL.md`.
 - Before splitting work, use `skills/dispatching-parallel-agents/SKILL.md`.
 - When delegated or parallel agents are used, use `skills/subagent-driven-development/SKILL.md`.
+- For recurring audits, iterative remediation, monitors, quality sweeps, bounded retries, post-deploy stabilization checks, or repeat-until-stable workflows, use `skills/repeatable-agent-loops/SKILL.md`.
 - For deployment, automation, reporting, external APIs, or media/assets, load the corresponding specialist skill from `skills/`.
 - For frontend UI, UX, copy, reports, prompts, or strategic communication, load `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` as applicable.
 - Never claim a check passed unless it was actually run.
