@@ -13,6 +13,7 @@ Merged from APIVR, WCBS, and Superpowers workflow mechanics.
 - UI plans must use `skills/ui-ux-design-quality/SKILL.md` and define user, screen job, design direction, accessibility gates, responsive verification and anti-generic review.
 - Writing plans must use `skills/anti-ai-writing-quality/SKILL.md` when text quality matters and `skills/strategist-writing-dna/SKILL.md` when the output must move a decision or prevent drift.
 - Recurring, iterative, monitor-like, or repeat-until-stable plans must use `skills/repeatable-agent-loops/SKILL.md` and define objective, one-step action, evidence check, stop conditions, iteration budget, and receipts.
+- Long-running, tool-heavy, artifact-heavy, multi-stage, or handoff-sensitive plans must use `skills/long-horizon-agent-runtime/SKILL.md` and `skills/agent-observability-and-run-tracing/SKILL.md`.
 
 ## Implementation Discipline
 
@@ -46,7 +47,8 @@ Load the relevant specialist skill when the task includes:
 - dashboards, exports, recurring reports, analytics outputs, or audit/compliance evidence;
 - third-party APIs, SDKs, OAuth, API keys, webhooks, provider limits, or external syncs;
 - generated, retrieved, transformed, cached, licensed, or delivered media/assets;
-- recurring audits, repeated quality sweeps, monitors, post-deploy stabilization checks, or iterative remediation loops.
+- recurring audits, repeated quality sweeps, monitors, post-deploy stabilization checks, or iterative remediation loops;
+- setup, bootstrap, first-run commands, dependency installation, local services, MCP servers, plugin tools, connectors, tool auth, artifact boundaries, run traces, or long-horizon execution.
 
 When multiple domains overlap, load all applicable skills and preserve one APIVR evidence ledger.
 
@@ -88,3 +90,20 @@ Each loop must have:
 - one receipt per iteration.
 
 Stop instead of continuing when the loop hits its budget, repeats the same failure without new evidence, needs approval, leaves scope, or becomes unsafe.
+
+## Long-Horizon Runtime Discipline
+
+Use `skills/long-horizon-agent-runtime/SKILL.md` when work spans many stages, tools, subagents, loops, artifacts, or context windows.
+
+Every long-horizon run must define:
+
+- stage plan;
+- checkpoint cadence;
+- workspace, scratch, evidence, and final-output boundaries;
+- context that must not be summarized away;
+- tool and MCP boundaries;
+- trace template;
+- handoff format;
+- stop conditions.
+
+Do not rely on chat history as the evidence record. Use `skills/agent-observability-and-run-tracing/SKILL.md` when claims need to survive handoff, context compression, or audit.
