@@ -16,6 +16,8 @@ Then load only the task-specific files named by `LOAD_ORDER.md`.
 
 For implementation work, load `skills/writing-plans/SKILL.md` and `skills/test-driven-development/SKILL.md`. Before splitting work, load `skills/dispatching-parallel-agents/SKILL.md`; when delegated agents are used, load `skills/subagent-driven-development/SKILL.md`.
 
+For recurring audits, iterative remediation, monitors, quality sweeps, bounded retries, or repeat-until-stable workflows, load `skills/repeatable-agent-loops/SKILL.md`.
+
 For frontend UI, UX, copy, reports, prompts, or strategic communication, load `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` as applicable.
 
 ## Authority
