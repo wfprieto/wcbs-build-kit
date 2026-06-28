@@ -65,6 +65,21 @@ Required for code changes unless marked non-applicable with APIVR reason and alt
 
 ## Interfaces / Files / Systems
 
+## UI / UX / Writing Requirements
+
+Complete when user-facing interface, copy, reports, prompts, client-facing communication, dashboards, forms, landing pages or visual design are in scope.
+
+- Design brief:
+- UI/UX review checklist:
+- Writing quality skill:
+- Strategist voice requirement:
+- Audience:
+- Voice:
+- Proof standard:
+- Accessibility gates:
+- Responsive viewports:
+- Rendered verification:
+
 ## Dependencies
 
 ## Rollback Or Restoration
