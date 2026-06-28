@@ -21,6 +21,7 @@ Before planning, editing, auditing, verifying, or deploying:
 - For deploy work, include rollback and post-deploy verification.
 - For implementation work, use `skills/writing-plans/SKILL.md` and `skills/test-driven-development/SKILL.md`.
 - For delegated work, use `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md`.
+- For recurring audits, iterative remediation, monitors, bounded retries, post-deploy stabilization checks, or repeat-until-stable workflows, use `skills/repeatable-agent-loops/SKILL.md`.
 - For frontend UI, UX, copy, reports, prompts, or strategic communication, use `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` as applicable.
 
 ## Authority
