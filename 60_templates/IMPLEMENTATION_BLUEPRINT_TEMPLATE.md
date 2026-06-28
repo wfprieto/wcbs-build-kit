@@ -109,6 +109,18 @@ Required when any work is delegated.
 |---|---|---|---|---|---|
 |  |  |  |  |  | Pending / DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED |
 
+## Repeatable Loop Plan
+
+Required when work is recurring, iterative, monitor-like, or repeat-until-stable.
+
+- Loop design file or section:
+- One-step action rule:
+- Evidence check:
+- Continue condition:
+- Stop conditions:
+- Iteration budget:
+- Receipt location:
+
 ## Challenge Review
 
 Required for Important, Critical, Comprehensive, and Forensic work.
