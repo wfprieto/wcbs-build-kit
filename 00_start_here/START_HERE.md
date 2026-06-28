@@ -25,6 +25,10 @@ Do not start from a fix. Start from the APIVR tier router, inspect the real syst
 - Use `skills/dispatching-parallel-agents/SKILL.md` before splitting work.
 - Use `skills/subagent-driven-development/SKILL.md` when delegated agents implement, review, or verify work.
 - Use `skills/repeatable-agent-loops/SKILL.md` when work is recurring, iterative, monitor-like, or should repeat until a measurable condition is met or safely stopped.
+- Use `skills/long-horizon-agent-runtime/SKILL.md` when work spans many stages, tools, subagents, checkpoints, artifacts, or context windows.
+- Use `skills/project-bootstrap-and-setup/SKILL.md` before installing, bootstrapping, configuring, or starting a project.
+- Use `skills/mcp-tool-governance/SKILL.md` before enabling, configuring, or auditing MCP servers, plugins, connectors, or tool permissions.
+- Use `skills/agent-observability-and-run-tracing/SKILL.md` when serious work needs a durable run trace, tool record, evidence trail, or handoff audit.
 - Use `skills/ui-ux-design-quality/SKILL.md` when frontend UI, UX, visual design, accessibility, responsive behavior, dashboards, forms, landing pages or interface copy are in scope.
 - Use `skills/anti-ai-writing-quality/SKILL.md` when writing must sound human, direct, specific and free of generic AI tone.
 - Use `skills/strategist-writing-dna/SKILL.md` when writing must be verdict-first, strategic, scoped, proof-driven or anti-drift.
@@ -42,6 +46,9 @@ Stop and report instead of guessing when:
 - user-facing UI is requested but design direction, accessibility requirements or rendered verification cannot be established;
 - content is requested but proof, audience, voice or factual status cannot be established;
 - a repeatable loop lacks a measurable objective, one-step action rule, evidence check, stop condition, or iteration budget;
+- long-horizon work lacks checkpoints, workspace boundaries, trace rules, or artifact locations;
+- setup work would inspect secrets, overwrite config, mutate production resources, or exceed the setup boundary;
+- MCP/tool work lacks clear auth handling, permission scope, overlap resolution, or harmless verification;
 - delegated work returns `NEEDS_CONTEXT` or `BLOCKED` and no safe reroute exists;
 - two sources of truth conflict and the conflict is not resolved by `SOURCE_OF_TRUTH.md`.
 
