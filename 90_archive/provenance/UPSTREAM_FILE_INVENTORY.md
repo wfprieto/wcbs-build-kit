@@ -289,3 +289,18 @@ High-value files inspected for the 2026-06-28 integration pass. Concepts were ad
 | `skills/engineering/to-issues/SKILL.md` | merged | `skills/product-requirements-and-issue-slicing/SKILL.md`, `60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md` |
 | `skills/engineering/prototype/SKILL.md` | merged | `skills/throwaway-prototyping/SKILL.md` |
 | `skills/productivity/handoff/SKILL.md` | merged | `skills/devex-and-documentation-review/SKILL.md`, existing run-tracing and completion templates |
+
+## everyinc/compound-engineering-plugin
+
+High-value concepts inspected for the 2026-06-28 integration pass. Runtime-specific command wiring, local config conventions, scripts, and autonomous shipping behavior were not imported.
+
+| File / Area | Status | Canonical Destination |
+|---|---|---|
+| `README.md` and plugin overview | provenance-only | `90_archive/provenance/COMPOUND_ENGINEERING_SOURCE_NOTES.md` |
+| `ce-compound` learning loop concept | merged | `skills/compound-learning-capture/SKILL.md`, `40_knowledge/COMPOUND_LEARNING_GUIDANCE.md`, `60_templates/SOLVED_PROBLEM_LEARNING_TEMPLATE.md` |
+| `ce-compound-refresh` drift-control concept | merged | `skills/knowledge-refresh-and-drift-control/SKILL.md`, `60_templates/KNOWLEDGE_REFRESH_REPORT_TEMPLATE.md` |
+| brainstorm/plan synthesis and requirement identifiers | merged | `skills/writing-plans/SKILL.md` |
+| code-review finding lifecycle concepts | merged | `skills/code-review-and-review-army/SKILL.md` |
+| product pulse/reporting caution concepts | merged | `skills/data-output-and-reporting/SKILL.md` |
+| release closeout learning concept | merged | `skills/release-readiness-and-ship-gates/SKILL.md`, `50_audits/CANONICAL_AUDIT_PROTOCOLS.md` |
+| autonomous commit/push/PR/CI repair command behavior | excluded | Excluded by APIVR release gates and human authorization boundaries |

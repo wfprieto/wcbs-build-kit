@@ -19,6 +19,7 @@ Select only relevant reviewers:
 - Performance/Cost Reviewer: hot paths, query shape, caching, payload size, and unbounded work.
 - Maintainability Reviewer: module boundaries, naming, deletion test, and local patterns.
 - UX/QA Reviewer: user flow, accessibility, responsive behavior, and adverse states.
+- Learning Reviewer: checks whether findings reveal a reusable lesson, stale guidance, or duplicate source of truth that should route to compound learning or knowledge refresh after verification.
 
 ## Review Flow
 
@@ -30,7 +31,9 @@ flowchart TD
   D -- "Yes" --> E["Return to APIVR Phase 2 or 3"]
   D -- "No" --> F{"Any Important finding?"}
   F -- "Yes" --> G["Fix or record owner/risk acceptance"]
-  F -- "No" --> H["Proceed to Phase 5 verification"]
+  F -- "No" --> H["Check reusable learning"]
+  G --> H
+  H --> I["Proceed to Phase 5 verification"]
 ```
 
 ## Finding Format
@@ -43,7 +46,16 @@ Evidence:
 Affected file or behavior:
 Required action:
 Release gate impact:
+Reusable learning impact:
 ```
+
+## Finding Lifecycle
+
+- Blocking findings return to APIVR Phase 2 or Phase 3 before release.
+- Important findings must be fixed, explicitly accepted as non-critical risk, or assigned with an owner before release.
+- Advisory findings may be deferred, but repeated advisory patterns should trigger `skills/compound-learning-capture/SKILL.md`.
+- Findings that expose stale or duplicated kit guidance trigger `skills/knowledge-refresh-and-drift-control/SKILL.md`.
+- Do not capture a learning entry from a finding until the fix or accepted decision has evidence.
 
 ## Worked Example
 
@@ -52,5 +64,5 @@ Scenario: A webhook implementation passes tests.
 - API Contract Reviewer finds missing signature timestamp tolerance.
 - Security Reviewer marks replay protection `Unknown`.
 - Testing Reviewer asks for invalid-signature and replay tests.
+- Learning Reviewer routes the final verified replay lesson to canonical external API guidance instead of creating a duplicate note.
 - APIVR verdict: `CONDITIONAL PASS` only after those tests pass or the release owner explicitly accepts non-critical risk. For payment webhooks, this is normally Blocking.
-

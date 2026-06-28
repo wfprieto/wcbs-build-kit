@@ -28,6 +28,8 @@ Load:
 - `skills/qa-and-browser-verification/SKILL.md` when user-visible workflows, browser behavior, manual QA, screenshots, or adverse UI states are in scope
 - `skills/release-readiness-and-ship-gates/SKILL.md` before merge, deploy, publish, handoff, or done claims
 - `skills/devex-and-documentation-review/SKILL.md` when docs, setup, examples, onboarding, API docs, release notes, or handoffs are affected
+- `skills/compound-learning-capture/SKILL.md` after Standard and above work produces reusable verified learning
+- `skills/knowledge-refresh-and-drift-control/SKILL.md` when active guidance, lessons, templates, or references may be stale, duplicated, or drifting
 - `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` before changing code for bugs, regressions, flaky behavior, incidents, or unknown failures
 - `skills/throwaway-prototyping/SKILL.md` when work is a prototype, spike, experiment, provider trial, or proof of concept
 - `skills/using-git-worktrees/SKILL.md` when work should be isolated
@@ -56,6 +58,8 @@ Load:
 - `60_templates/ADR_TEMPLATE.md` when a durable architecture, provider, data, security, cost, or operational decision is made
 - `60_templates/QA_HEALTH_REPORT_TEMPLATE.md` when manual QA or browser verification is required
 - `60_templates/RELEASE_READINESS_DASHBOARD_TEMPLATE.md` before production-impacting release, deployment, or handoff
+- `60_templates/SOLVED_PROBLEM_LEARNING_TEMPLATE.md` when reusable learning is captured
+- `60_templates/KNOWLEDGE_REFRESH_REPORT_TEMPLATE.md` when knowledge refresh is performed
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
 - `60_templates/SECURITY_EVIDENCE_LEDGER_TEMPLATE.md` when security evidence is in scope
 
@@ -72,6 +76,7 @@ Load:
 - `60_templates/SECURITY_EVIDENCE_LEDGER_TEMPLATE.md` when security is in scope
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
 - `skills/repeatable-agent-loops/SKILL.md` when the audit is a repeated sweep or iterative remediation loop
+- `skills/knowledge-refresh-and-drift-control/SKILL.md` when the audit reviews skills, templates, knowledge files, lessons, load order, or stale/duplicated guidance
 - `skills/cybersecurity-risk-routing/SKILL.md` when cybersecurity, security release gates, dual-use, AI security, incident, supply-chain, MCP/tool security, or vulnerability work is in scope
 
 For Comprehensive or Forensic audits, also load:
@@ -107,6 +112,8 @@ Load:
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
 - `skills/release-readiness-and-ship-gates/SKILL.md`
 - `60_templates/RELEASE_READINESS_DASHBOARD_TEMPLATE.md`
+- `skills/compound-learning-capture/SKILL.md` when the release or verification produced a reusable lesson, repeated fix pattern, provider behavior, or new review rule
+- `60_templates/SOLVED_PROBLEM_LEARNING_TEMPLATE.md` when a reusable lesson is captured
 - `skills/code-review-and-review-army/SKILL.md` when implementation review or specialist review is required
 - `skills/qa-and-browser-verification/SKILL.md` when release depends on user-visible workflow or browser QA evidence
 - `skills/deployment-and-hosting-guidance/SKILL.md` when release includes deploy or hosting changes
@@ -134,6 +141,7 @@ Load:
 - `skills/cybersecurity-risk-routing/SKILL.md` when prompt, skill, or agent design affects security behavior, dual-use capability, tool authority, or data boundaries
 - `skills/ai-application-security/SKILL.md` when prompt, skill, or agent design includes LLM app security, RAG, model routing, prompt leakage, or AI tool risk
 - `skills/agent-observability-and-run-tracing/SKILL.md` when handoffs, traces, receipts, or durable audit trails are part of the design
+- `skills/knowledge-refresh-and-drift-control/SKILL.md` when prompt, skill, or agent work updates active reusable guidance or replaces older instructions
 - `skills/anti-ai-writing-quality/SKILL.md` when prompt, skill, agent, or report wording quality matters
 - `skills/strategist-writing-dna/SKILL.md` when prompts or handoffs must resist drift and require proof
 - `30_agents/SPECIALIST_AGENT_ROLES.md`
@@ -179,6 +187,21 @@ Load:
 
 Plans must contain exact file paths, concrete test steps, evidence states, rollback conditions, and no placeholders.
 
+For Standard and above plans, include a compound-learning decision: `capture`, `update canonical guidance`, or `do not preserve`. Use `skills/compound-learning-capture/SKILL.md` only after evidence exists.
+
+## Compound Learning Or Knowledge Refresh
+
+Load:
+
+- `skills/compound-learning-capture/SKILL.md` when completed APIVR work produced verified reusable learning
+- `skills/knowledge-refresh-and-drift-control/SKILL.md` when reviewing stale, duplicate, conflicting, or unreferenced guidance
+- `40_knowledge/COMPOUND_LEARNING_GUIDANCE.md`
+- `60_templates/SOLVED_PROBLEM_LEARNING_TEMPLATE.md` when capturing a lesson
+- `60_templates/KNOWLEDGE_REFRESH_REPORT_TEMPLATE.md` when refreshing active knowledge
+- `90_archive/provenance/PROVENANCE_MAP.md` when concepts came from external sources or prior kit files
+
+Use solved-problem learning only after evidence exists. If the lesson changes how all agents should behave, update the canonical skill, audit, template, governance, or load-order file instead of creating a parallel rule.
+
 ## Deployment, Hosting, Or Runtime Placement
 
 Load:
@@ -196,6 +219,7 @@ Load:
 - `skills/scheduling-and-automation-routing/SKILL.md`
 - `skills/repeatable-agent-loops/SKILL.md` when the workflow repeats, monitors state, retries, sweeps, or runs until a condition is met
 - `skills/data-output-and-reporting/SKILL.md` when outputs or reports are part of the workflow
+- `skills/compound-learning-capture/SKILL.md` when repeated automation/reporting failures or successful patterns should become reusable learning
 - `40_knowledge/AUTOMATION_AND_REPORTING_PATTERNS.md`
 - `40_knowledge/REPEATABLE_AGENT_LOOP_PATTERNS.md` when loop design or stop conditions are in scope
 
@@ -317,5 +341,7 @@ Load:
 - `skills/release-readiness-and-ship-gates/SKILL.md` before merge, deploy, publish, handoff, or done claims
 - `60_templates/RELEASE_READINESS_DASHBOARD_TEMPLATE.md` for production-impacting release or handoff
 - `skills/devex-and-documentation-review/SKILL.md` when developer experience, docs, setup, examples, API docs, release notes, or handoffs are affected
+- `skills/compound-learning-capture/SKILL.md` after verified fixes, incidents, release findings, QA patterns, or review findings produce reusable learning
+- `skills/knowledge-refresh-and-drift-control/SKILL.md` when architecture, QA, release, docs, or handoff guidance becomes stale or duplicated
 
 Define feedback loop, specialist review passes, QA matrix, release gate statuses, rollback, changelog, post-release horizon, and final APIVR verdict.

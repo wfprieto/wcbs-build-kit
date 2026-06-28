@@ -134,6 +134,10 @@ Check release gate dashboard, changelog, rollback trigger, post-release horizon,
 
 Check setup instructions, command accuracy, examples, README/API docs, release notes, handoff references, redaction, artifact links, stale duplication, and whether docs reference canonical sources instead of becoming parallel truth.
 
+## Compound Learning / Knowledge Refresh
+
+Check whether completed work produced reusable verified learning, whether that learning belongs in a canonical file or solved-problem entry, whether active guidance is stale or duplicated, whether refresh outcomes are Keep/Update/Consolidate/Replace/Archive/Delete From Active Use, whether private data and secrets are redacted, and whether future agents can find the lesson through load order or relevant skills.
+
 ## Prototype / Spike Safety
 
 Check prototype question, isolation, budget, one command to run, evidence produced, delete/archive/absorb decision, and whether prototype code is blocked from production until APIVR review.

@@ -33,6 +33,8 @@ Core operational skills:
 - `skills/qa-and-browser-verification/SKILL.md` - workflow QA, browser checks, issue taxonomy, and QA health reports.
 - `skills/release-readiness-and-ship-gates/SKILL.md` - release dashboards, changelog, rollback, and post-release checks.
 - `skills/devex-and-documentation-review/SKILL.md` - setup/docs/examples/API docs/release note/handoff review.
+- `skills/compound-learning-capture/SKILL.md` - evidence-backed lessons from solved problems, releases, audits, and incidents.
+- `skills/knowledge-refresh-and-drift-control/SKILL.md` - stale guidance, duplicate truth, and knowledge refresh control.
 - `skills/throwaway-prototyping/SKILL.md` - isolated disposable spikes and provider trials.
 - `skills/dispatching-parallel-agents/SKILL.md` - safe parallelization decision protocol.
 - `skills/subagent-driven-development/SKILL.md` - delegated implementation, status handling, and two-stage review.

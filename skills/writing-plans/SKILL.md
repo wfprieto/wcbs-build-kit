@@ -20,6 +20,7 @@ Do not produce a vague plan. Do not use placeholders such as TBD, later, as need
 - Exact files, commands, APIs, routes, schemas, assets, providers, jobs, or deployment surfaces in scope.
 - Evidence required for each material claim.
 - Rollback or restoration path for Standard and above.
+- Compound-learning decision for Standard and above: what kind of outcome would update canonical guidance, create a solved-problem lesson, or require no durable learning.
 
 ## Plan Structure
 
@@ -34,7 +35,8 @@ Do not produce a vague plan. Do not use placeholders such as TBD, later, as need
 9. Add engineering plan review, code review, QA, release readiness, and DevEx review steps when applicable.
 10. Add verification commands, manual checks, evidence states, and expected results.
 11. Add rollback triggers and restoration steps.
-12. Add challenge-review questions for Important, Critical, Comprehensive, or Forensic work.
+12. Add compound-learning capture or knowledge-refresh decision for Standard and above work.
+13. Add challenge-review questions for Important, Critical, Comprehensive, or Forensic work.
 
 ## Decision Flow
 
@@ -51,8 +53,9 @@ flowchart TD
   H -- "Yes" --> I["Load dispatching-parallel-agents and subagent-driven-development"]
   H -- "No" --> J["Write sequential APIVR blueprint"]
   I --> K["Write subagent scopes and review gates"]
-  J --> L["Validate zero-placeholder plan"]
+  J --> L["Add compound-learning decision"]
   K --> L
+  L --> M["Validate zero-placeholder plan"]
 ```
 
 ## Embedded Test Requirement
@@ -91,6 +94,21 @@ For Standard and above, include applicable review steps:
 - Release readiness dashboard before merge, deploy, publish, handoff, or done claims.
 - DevEx/documentation review when setup, docs, examples, API docs, release notes, or handoffs change.
 
+## Compound Learning Requirement
+
+For Standard and above plans, include this section:
+
+```text
+Compound learning decision:
+- Capture trigger:
+- Canonical file to update if lesson becomes universal:
+- Solved-problem learning entry needed: Yes / No / Later after evidence
+- Knowledge refresh needed: Yes / No
+- Privacy/redaction concern:
+```
+
+Capture only after evidence exists. If the plan changes active reusable guidance, route through `skills/knowledge-refresh-and-drift-control/SKILL.md` and verify load-order references.
+
 ## Good / Bad
 
 <Bad>
@@ -114,6 +132,7 @@ Scenario: Add webhook retry protection for a payment provider.
 - Plan writes a failing test proving duplicate webhook delivery creates one payment record.
 - Implementation step updates the webhook handler idempotency key.
 - Verification includes engineering plan review, specialist API/security review, test pass, safe replay check, log redaction check, QA if user-visible, and release gate review.
+- Compound learning decision: if duplicate delivery was not already covered in canonical API guidance, update `skills/external-api-integration/SKILL.md`; otherwise add no separate lesson.
 - APIVR verdict can be `PASS` only when duplicate prevention, secret handling, and replay evidence are Verified.
 
 ## Completion Standard

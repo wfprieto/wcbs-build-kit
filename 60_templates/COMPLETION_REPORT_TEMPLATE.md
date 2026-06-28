@@ -79,6 +79,17 @@ Complete when cybersecurity, app security, AI security, MCP/tool security, incid
 
 ## Outcome Status And Verification Horizon
 
+## Compound Learning / Knowledge Refresh Decision
+
+Complete for Standard and above work.
+
+- Reusable lesson found:
+- Canonical guidance updated:
+- Solved-problem learning entry:
+- Knowledge refresh report:
+- No durable learning captured because:
+- Redaction/privacy status:
+
 ## Final APIVR Verdict
 
 `PASS` / `CONDITIONAL PASS` / `PARTIAL` / `FAIL` / `BLOCKED`
