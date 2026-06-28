@@ -18,6 +18,8 @@ Classify the APIVR tier before implementation or release claims. Use the applica
 
 For implementation, use `skills/writing-plans/SKILL.md` and `skills/test-driven-development/SKILL.md`. For parallel or delegated work, use `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md`.
 
+For recurring audits, iterative remediation, monitors, quality sweeps, bounded retries, or repeat-until-stable workflows, use `skills/repeatable-agent-loops/SKILL.md`.
+
 For frontend UI, UX, copy, reports, prompts, or strategic communication, use `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` as applicable.
 
 Do not treat this adapter as a separate source of truth.
