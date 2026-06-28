@@ -24,6 +24,9 @@ Before planning, editing, auditing, verifying, or releasing:
 - Use `skills/dispatching-parallel-agents/SKILL.md` before splitting work.
 - Use `skills/subagent-driven-development/SKILL.md` when delegated agents are used.
 - Use `skills/repeatable-agent-loops/SKILL.md` for recurring audits, iterative remediation, monitors, quality sweeps, bounded retries, and repeat-until-stable workflows.
+- Use `skills/long-horizon-agent-runtime/SKILL.md` and `skills/agent-observability-and-run-tracing/SKILL.md` for long-running, multi-stage, tool-heavy, artifact-heavy, Comprehensive, Forensic, or handoff-sensitive work.
+- Use `skills/project-bootstrap-and-setup/SKILL.md` for install, bootstrap, config, first-run, dependency, or setup work.
+- Use `skills/mcp-tool-governance/SKILL.md` for MCP servers, plugin tools, connectors, tool auth, permission scope, overlap, and tool evidence.
 - Use `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` for user-facing UI, copy, reports, prompts, and strategic communication.
 - Use domain skills for deployment, automation, reporting, external APIs, and media/assets.
 
