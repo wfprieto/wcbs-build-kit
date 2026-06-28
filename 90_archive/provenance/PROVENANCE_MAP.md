@@ -15,6 +15,7 @@ This kit was created from four source streams.
 |---|---|---|
 | `wfprieto/wcbs-build-kit` | Inspected by GitHub API; canonical concepts merged; original files not copied wholesale | `00_start_here/`, `10_governance/`, `30_agents/`, `50_audits/`, `60_templates/` |
 | `obra/Superpowers` | Inspected by GitHub API; portable workflow concepts merged; original files not copied wholesale | `20_skills/`, `40_knowledge/`, `00_start_here/PORTABLE_ADAPTERS.md` |
+| `Forward-Future/loopy` | Inspected by GitHub; loop discipline adapted; original runtime/catalog/publishing system not copied | `skills/repeatable-agent-loops/SKILL.md`, `40_knowledge/REPEATABLE_AGENT_LOOP_PATTERNS.md`, `60_templates/LOOP_DESIGN_TEMPLATE.md`, `60_templates/LOOP_RUN_RECEIPT_TEMPLATE.md` |
 
 ## Deduplication Decisions
 
@@ -24,4 +25,3 @@ This kit was created from four source streams.
 - WCBS audit files are merged into one canonical audit protocol file plus tier router.
 - Superpowers planning, review, TDD, subagent, and portability mechanics are merged into systematic workflow and skill-contract docs.
 - Runtime-specific files are treated as adapter references, not source-of-truth files.
-
