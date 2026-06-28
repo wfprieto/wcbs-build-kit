@@ -31,6 +31,7 @@ Add when applicable:
 - Reporting/Data Output Lead for dashboards, exports, analytics outputs, compliance reports, and evidence artifacts.
 - Integration Lead for third-party APIs, SDKs, OAuth, API keys, rate limits, provider failures, and webhooks.
 - Media/Asset Lead for generated/retrieved assets, media delivery, CDN/cache, rights, optimization, and rendered asset quality.
+- Loop Steward for recurring audits, iterative remediation, monitors, bounded retries, stop conditions, receipts, and no-progress detection.
 - Subagent Orchestrator for parallel dispatch, scoped delegation, status handling, and review gates.
 
 ## Audit Work
