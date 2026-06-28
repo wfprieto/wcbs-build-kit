@@ -10,6 +10,8 @@ Merged from APIVR, WCBS, and Superpowers workflow mechanics.
 - Write plans that an implementer can execute without inventing missing decisions.
 - Use `skills/writing-plans/SKILL.md` for implementation, audit-remediation, or handoff plans.
 - Plans for code work must embed failing test steps or an APIVR-approved evidence-first substitute.
+- UI plans must use `skills/ui-ux-design-quality/SKILL.md` and define user, screen job, design direction, accessibility gates, responsive verification and anti-generic review.
+- Writing plans must use `skills/anti-ai-writing-quality/SKILL.md` when text quality matters and `skills/strategist-writing-dna/SKILL.md` when the output must move a decision or prevent drift.
 
 ## Implementation Discipline
 
@@ -36,6 +38,8 @@ Review in this order:
 
 Load the relevant specialist skill when the task includes:
 
+- frontend UI, UX, visual direction, design systems, forms, charts, dashboards, landing pages, accessibility, responsive behavior, or interface copy;
+- writing, rewriting, client-facing copy, email, reports, prompts, executive summaries, strategic recommendations, or anti-AI tone control;
 - deployment, hosting, runtime placement, cloud cost, or environment setup;
 - scheduled jobs, webhooks, queues, event-driven work, monitors, reminders, or always-on workers;
 - dashboards, exports, recurring reports, analytics outputs, or audit/compliance evidence;
