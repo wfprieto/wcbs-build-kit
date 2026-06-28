@@ -32,6 +32,10 @@ Add when applicable:
 - Integration Lead for third-party APIs, SDKs, OAuth, API keys, rate limits, provider failures, and webhooks.
 - Media/Asset Lead for generated/retrieved assets, media delivery, CDN/cache, rights, optimization, and rendered asset quality.
 - Loop Steward for recurring audits, iterative remediation, monitors, bounded retries, stop conditions, receipts, and no-progress detection.
+- Long-Horizon Runtime Lead for staged work, checkpoints, context preservation, artifact boundaries, and handoff control.
+- Bootstrap/Setup Lead for install, dependency, first-run, local service, config, and setup-boundary safety.
+- Tool Governance Lead for MCP servers, plugin tools, connectors, tool auth, permission scope, overlap, and traceability.
+- Run Trace Custodian for run ids, trace completeness, evidence survival, redaction, and artifact records.
 - Subagent Orchestrator for parallel dispatch, scoped delegation, status handling, and review gates.
 
 ## Audit Work
