@@ -121,6 +121,19 @@ Required when work is recurring, iterative, monitor-like, or repeat-until-stable
 - Iteration budget:
 - Receipt location:
 
+## Long-Horizon / Setup / Tooling Plan
+
+Complete when work spans multiple stages, tools, subagents, artifacts, context windows, setup steps, or MCP/tool governance.
+
+- Long-horizon run-control template:
+- Run trace template:
+- Workspace/scratch/evidence/final-output boundaries:
+- Checkpoint cadence:
+- Context that must not be summarized away:
+- Setup boundary and files not to read/overwrite:
+- MCP/tool permissions and auth handling:
+- Harmless verification command:
+
 ## Challenge Review
 
 Required for Important, Critical, Comprehensive, and Forensic work.
