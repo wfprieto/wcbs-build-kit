@@ -18,6 +18,16 @@ Use at the end of every APIVR cycle.
 
 ## Evidence Verdicts
 
+## Loop Summary
+
+Complete when a repeatable loop was used.
+
+- Loop status:
+- Iterations run:
+- Stop reason:
+- Receipt location:
+- No-progress or unsafe-to-continue finding:
+
 ## Release Gate Status
 
 | Gate | Status | Evidence / Risk |
