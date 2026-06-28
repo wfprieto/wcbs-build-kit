@@ -19,6 +19,7 @@ These files activate the same Super Build Kit spine in common agent runtimes.
 - `skills/test-driven-development/SKILL.md` - test-first APIVR Phase 3 implementation workflow.
 - `skills/dispatching-parallel-agents/SKILL.md` - parallel dispatch decision protocol.
 - `skills/subagent-driven-development/SKILL.md` - subagent implementation and two-stage review workflow.
+- `skills/repeatable-agent-loops/SKILL.md` - recurring audits, iterative remediation, monitors, quality sweeps, receipts, and stop conditions.
 - `skills/ui-ux-design-quality/SKILL.md` - frontend UI, UX, visual direction, accessibility, interface copy, and rendered verification.
 - `skills/anti-ai-writing-quality/SKILL.md` - human, direct, non-generic writing quality.
 - `skills/strategist-writing-dna/SKILL.md` - verdict-first strategic communication and anti-drift writing.
