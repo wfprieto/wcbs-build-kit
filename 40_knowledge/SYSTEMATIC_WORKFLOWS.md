@@ -12,6 +12,7 @@ Merged from APIVR, WCBS, and Superpowers workflow mechanics.
 - Plans for code work must embed failing test steps or an APIVR-approved evidence-first substitute.
 - UI plans must use `skills/ui-ux-design-quality/SKILL.md` and define user, screen job, design direction, accessibility gates, responsive verification and anti-generic review.
 - Writing plans must use `skills/anti-ai-writing-quality/SKILL.md` when text quality matters and `skills/strategist-writing-dna/SKILL.md` when the output must move a decision or prevent drift.
+- Recurring, iterative, monitor-like, or repeat-until-stable plans must use `skills/repeatable-agent-loops/SKILL.md` and define objective, one-step action, evidence check, stop conditions, iteration budget, and receipts.
 
 ## Implementation Discipline
 
@@ -44,7 +45,8 @@ Load the relevant specialist skill when the task includes:
 - scheduled jobs, webhooks, queues, event-driven work, monitors, reminders, or always-on workers;
 - dashboards, exports, recurring reports, analytics outputs, or audit/compliance evidence;
 - third-party APIs, SDKs, OAuth, API keys, webhooks, provider limits, or external syncs;
-- generated, retrieved, transformed, cached, licensed, or delivered media/assets.
+- generated, retrieved, transformed, cached, licensed, or delivered media/assets;
+- recurring audits, repeated quality sweeps, monitors, post-deploy stabilization checks, or iterative remediation loops.
 
 When multiple domains overlap, load all applicable skills and preserve one APIVR evidence ledger.
 
@@ -69,3 +71,20 @@ Use `skills/dispatching-parallel-agents/SKILL.md` before deciding to split work.
 - output format.
 
 Subagent outputs must use `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, or `BLOCKED`, then pass the two-stage review gate in `skills/subagent-driven-development/SKILL.md`.
+
+## Repeatable Loop Discipline
+
+Use `skills/repeatable-agent-loops/SKILL.md` when work repeats across files, records, environments, viewports, checks, or time windows.
+
+Each loop must have:
+
+- measurable objective;
+- explicit scope and non-scope;
+- one-step action rule;
+- evidence check after each action;
+- continue condition;
+- stop conditions;
+- iteration or time budget;
+- one receipt per iteration.
+
+Stop instead of continuing when the loop hits its budget, repeats the same failure without new evidence, needs approval, leaves scope, or becomes unsafe.
