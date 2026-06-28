@@ -28,6 +28,19 @@ Complete when a repeatable loop was used.
 - Receipt location:
 - No-progress or unsafe-to-continue finding:
 
+## Long-Horizon / Trace / Artifact Summary
+
+Complete when long-horizon runtime, setup, MCP/tool governance, or run tracing was used.
+
+- Run id:
+- Stages completed:
+- Checkpoints created:
+- Trace location:
+- Artifacts produced:
+- Workspace/scratch/evidence/final-output boundary status:
+- Setup/tooling boundary status:
+- Redactions or sensitive data handling:
+
 ## Release Gate Status
 
 | Gate | Status | Evidence / Risk |
