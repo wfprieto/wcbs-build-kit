@@ -47,7 +47,7 @@ For implementation plans, feature work, refactors, fixes, or risky edits:
 - Load `skills/using-git-worktrees/SKILL.md` and prefer native worktree tooling before manual git fallback.
 - Load `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md` before dispatching delegated work.
 
-For deployment, hosting, scheduling, automation, reporting, external APIs, or media/assets, load the corresponding specialist skill from `skills/` plus its `40_knowledge/` module before planning implementation.
+For deployment, hosting, scheduling, automation, reporting, external APIs, media/assets, UI/UX, frontend design, writing, copy, or strategic communication, load the corresponding specialist skill from `skills/` plus its `40_knowledge/` module or template before planning implementation.
 
 ## Platform Activation
 
@@ -68,7 +68,8 @@ For deployment, hosting, scheduling, automation, reporting, external APIs, or me
 4. Writing plans and TDD for implementation.
 5. Dispatch/subagent protocol when work is split.
 6. Domain skills for deployment, automation, reporting, APIs, and assets.
-7. Evidence templates and completion reports.
+7. UI/UX design quality and writing quality skills when user-facing experience or communication quality matters.
+8. Evidence templates and completion reports.
 
 ## Rationalization Rebuttals
 
@@ -92,6 +93,8 @@ For deployment, hosting, scheduling, automation, reporting, external APIs, or me
 - Use evidence states for material claims.
 - Write zero-placeholder plans for Standard and above.
 - Enforce test-first implementation for code changes unless APIVR records automated testing as non-applicable with reason.
+- Enforce UI/UX design briefs, anti-generic checks, accessibility gates and rendered verification for user-facing interface work.
+- Enforce anti-AI writing quality and strategist voice rules for copy, reports, prompts and decision-facing communication.
 - Run implementation audit and verification before calling work complete.
 - Stop instead of guessing when required evidence or authorization is missing.
 
