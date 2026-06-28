@@ -20,6 +20,10 @@ These files activate the same Super Build Kit spine in common agent runtimes.
 - `skills/dispatching-parallel-agents/SKILL.md` - parallel dispatch decision protocol.
 - `skills/subagent-driven-development/SKILL.md` - subagent implementation and two-stage review workflow.
 - `skills/repeatable-agent-loops/SKILL.md` - recurring audits, iterative remediation, monitors, quality sweeps, receipts, and stop conditions.
+- `skills/long-horizon-agent-runtime/SKILL.md` - staged long-running agent work, checkpoints, artifact boundaries, and handoff control.
+- `skills/project-bootstrap-and-setup/SKILL.md` - install, bootstrap, config, first-run, dependency, and setup-boundary safety.
+- `skills/mcp-tool-governance/SKILL.md` - MCP, plugin, connector, tool auth, permission, overlap, and evidence governance.
+- `skills/agent-observability-and-run-tracing/SKILL.md` - run ids, durable traces, tool records, evidence trails, redactions, and artifact records.
 - `skills/ui-ux-design-quality/SKILL.md` - frontend UI, UX, visual direction, accessibility, interface copy, and rendered verification.
 - `skills/anti-ai-writing-quality/SKILL.md` - human, direct, non-generic writing quality.
 - `skills/strategist-writing-dna/SKILL.md` - verdict-first strategic communication and anti-drift writing.
