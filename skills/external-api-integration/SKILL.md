@@ -24,9 +24,11 @@ Use this skill for third-party service integration under APIVR.
    - OAuth/user-authorized integration;
    - payment/revenue/security/data-critical integration;
    - batch sync or scheduled polling.
-3. Define auth, secret handling, validation, logging, retry, timeout, idempotency, rate-limit, and fallback behavior.
-4. Verify in sandbox or with safe test data when available.
-5. Record external dependency risk, provider limits, and recovery path.
+3. If the work includes security testing, live probing, abuse testing, or third-party target assessment, load `skills/cybersecurity-risk-routing/SKILL.md` and require authorization/scope.
+4. Define auth, secret handling, validation, logging, retry, timeout, idempotency, rate-limit, and fallback behavior.
+5. Apply OWASP API checks when API security matters: BOLA/IDOR, broken auth, BFLA, mass assignment, SSRF, unsafe consumption, inventory, abuse controls, and rate limits.
+6. Verify in sandbox or with safe test data when available.
+7. Record external dependency risk, provider limits, and recovery path.
 
 ## Decision Graph
 
@@ -53,6 +55,8 @@ flowchart TD
 - Do not implement unbounded retries or polling.
 - Do not accept webhooks without signature verification when provider supports it.
 - Treat payments, auth, private data, destructive actions, and revenue-critical integrations as Comprehensive or Forensic when warranted.
+- Do not run live BOLA/IDOR, auth bypass, fuzzing, SSRF, or rate-limit tests against systems outside owned/authorized scope.
+- Do not log full tokens, API keys, webhook secrets, session IDs, or sensitive provider payloads.
 
 ## Good / Bad
 

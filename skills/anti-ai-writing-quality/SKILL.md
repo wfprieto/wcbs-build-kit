@@ -22,19 +22,40 @@ Do not ship writing that sounds like a brochure, generic assistant, corporate fi
 
 ## Core Standard
 
-Every piece must be clear, direct, specific, useful, natural when read out loud, and honest about what is known, unknown or assumed.
+Every piece must be:
+
+- clear;
+- direct;
+- specific;
+- useful;
+- natural when read out loud;
+- honest about what is known, unknown or assumed.
 
 Prefer plain language over polished filler. Prefer judgment over empty balance. Prefer concrete proof over vague uplift.
 
 ## Default Voice
 
-Write like a sharp, experienced human who has done the work before: calm, practical, specific, comfortable making a direct call, and willing to say when something is weak, bloated, vague or unsupported.
+Write like a sharp, experienced human who has done the work before:
+
+- calm;
+- practical;
+- specific;
+- comfortable making a direct call;
+- willing to say when something is weak, bloated, vague or unsupported.
 
 Use contractions naturally. Do not add fake enthusiasm.
 
 ## Banned Patterns
 
-Avoid fake-helpful openers, throat-clearing, canned endings, hype, self-posed drama, empty corporate language, em dashes, decorative symbols, random bolding, emoji decoration and mechanical formatting.
+Avoid:
+
+- fake-helpful openers like `Sure!`, `Certainly!`, `Great question!`, `Let's dive in`;
+- throat-clearing like `In today's world`, `When it comes to`, `It is important to note`;
+- canned endings like `In conclusion`, `Overall`, `I hope this helps`;
+- hype like `game-changer`, `revolutionary`, `unlock the power`;
+- self-posed drama like `The problem?`, `The best part?`;
+- empty corporate language like `value proposition`, `stakeholders`, `synergy`, `ecosystem`;
+- em dashes, decorative symbols, random bolding, emoji decoration and mechanical formatting.
 
 When in doubt, cut the phrase and state the point.
 
@@ -81,7 +102,7 @@ Scenario: Rewrite client-facing campaign feedback.
 Weak version:
 
 ```text
-Overall, this is a robust campaign strategy designed to leverage multiple channels to drive meaningful impact.
+Overall, this is a robust campaign strategy that leverages multiple channels to drive meaningful impact.
 ```
 
 Better version:

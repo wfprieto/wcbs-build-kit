@@ -25,6 +25,10 @@ Before planning, editing, auditing, verifying, or deploying:
 - For long-running, multi-stage, tool-heavy, artifact-heavy, Comprehensive, Forensic, or handoff-sensitive work, use `skills/long-horizon-agent-runtime/SKILL.md` and `skills/agent-observability-and-run-tracing/SKILL.md`.
 - For install, bootstrap, config, first-run, dependency, or setup work, use `skills/project-bootstrap-and-setup/SKILL.md`.
 - For MCP servers, plugin tools, connectors, tool auth, permission scope, overlap, or tool evidence, use `skills/mcp-tool-governance/SKILL.md`.
+- For cybersecurity, app security, AI security, incidents, supply chain, vulnerability, scanning, red-team, phishing, credential, malware, prompt injection, MCP probing, or other dual-use work, use `skills/cybersecurity-risk-routing/SKILL.md`.
+- For LLM apps, RAG, vector stores, AI tools, model/data leakage, or prompt security, use `skills/ai-application-security/SKILL.md`.
+- For alerts, suspected compromise, unauthorized access, exfiltration, malware, ransomware, containment, or recovery, use `skills/security-incident-response/SKILL.md`.
+- For dependencies, CI/CD, containers, IaC, SBOMs, signatures, provenance, or release artifact trust, use `skills/supply-chain-and-build-provenance/SKILL.md`.
 - For frontend UI, UX, copy, reports, prompts, or strategic communication, use `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` as applicable.
 
 ## Authority

@@ -39,6 +39,12 @@ flowchart LR
 
 Evidence after each phase must use the kit evidence language: Verified, Likely, Suspected, Unknown, Not Run, or Blocked. If automation is genuinely non-applicable, record an applicability note plus the best available evidence state. Do not treat manual inspection as Verified automated behavior.
 
+## Public-Interface And Vertical Tracer Rule
+
+Prefer tests that prove behavior through the public interface of the module, API, CLI, UI, or workflow. Avoid testing private implementation details unless the private surface is the only practical risk boundary.
+
+For new features, start with a vertical tracer bullet: one thin behavior that crosses the real boundary and can fail for the right reason. Do not batch a large horizontal pile of tests before proving the first user/system behavior can go Red, Green, and Refactor.
+
 ## Required Checklist
 
 - Failing test exists before production change.
@@ -61,6 +67,8 @@ Evidence after each phase must use the kit evidence language: Verified, Likely, 
 | I will add tests after. | Phase 3 order violation. | Stop and write failing test first. |
 | It is just refactoring. | Regression evidence missing. | Run characterization tests before changing structure. |
 | The UI proves it works. | Partial evidence only. | Add component/e2e/API test as appropriate. |
+| I tested the helper directly. | Public behavior may be unproved. | Add or identify a public-interface test unless helper behavior is the true contract. |
+| I wrote all tests up front. | Feedback loop may be too wide. | Start with one vertical tracer bullet, then expand coverage by risk. |
 | The provider sandbox is unavailable. | Blocked external evidence. | Use contract tests/mocks and record provider verification as blocked. |
 | The test is flaky. | Verification unreliable. | Stabilize or isolate before claiming Verified. |
 | The deadline is urgent. | Release gate pressure. | Use Rapid tier only if risk permits; record explicit acceptance. |

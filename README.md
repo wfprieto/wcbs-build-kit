@@ -21,7 +21,19 @@ Core operational skills:
 
 - `skills/super-build-kit/SKILL.md` - always-first orientation and skill invocation logic.
 - `skills/writing-plans/SKILL.md` - zero-placeholder APIVR implementation plans.
+- `skills/requirements-grilling-and-alignment/SKILL.md` - one-question-at-a-time clarification for ambiguous work.
+- `skills/product-strategy-office-hours/SKILL.md` - product premise, user, buyer, alternatives, and smallest verifiable slice.
+- `skills/domain-modeling-and-shared-language/SKILL.md` - canonical vocabulary, states, events, invariants, and ADR routing.
+- `skills/product-requirements-and-issue-slicing/SKILL.md` - PRD/spec/audit conversion into vertical issue slices.
 - `skills/test-driven-development/SKILL.md` - APIVR Phase 3 test-first implementation gate.
+- `skills/codebase-design-and-deep-modules/SKILL.md` - architecture, deep modules, adapters, locality, and deletion tests.
+- `skills/engineering-plan-review/SKILL.md` - pre-implementation engineering review for executable technical plans.
+- `skills/code-review-and-review-army/SKILL.md` - APIVR Phase 4 specialist code review passes.
+- `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` - root-cause diagnosis with red-capable feedback loops.
+- `skills/qa-and-browser-verification/SKILL.md` - workflow QA, browser checks, issue taxonomy, and QA health reports.
+- `skills/release-readiness-and-ship-gates/SKILL.md` - release dashboards, changelog, rollback, and post-release checks.
+- `skills/devex-and-documentation-review/SKILL.md` - setup/docs/examples/API docs/release note/handoff review.
+- `skills/throwaway-prototyping/SKILL.md` - isolated disposable spikes and provider trials.
 - `skills/dispatching-parallel-agents/SKILL.md` - safe parallelization decision protocol.
 - `skills/subagent-driven-development/SKILL.md` - delegated implementation, status handling, and two-stage review.
 - `skills/repeatable-agent-loops/SKILL.md` - bounded recurring, iterative, monitor-like, and repeat-until-stable workflows with receipts and stop conditions.
@@ -29,10 +41,14 @@ Core operational skills:
 - `skills/project-bootstrap-and-setup/SKILL.md` - safe install, bootstrap, config, first-run, and setup-boundary handling.
 - `skills/mcp-tool-governance/SKILL.md` - MCP, plugin, connector, tool auth, permission, overlap, and evidence governance.
 - `skills/agent-observability-and-run-tracing/SKILL.md` - durable run traces, tool records, evidence trails, redactions, and artifact records.
+- `skills/cybersecurity-risk-routing/SKILL.md` - cybersecurity routing, tier selection, and dual-use authorization gates.
+- `skills/ai-application-security/SKILL.md` - LLM app, RAG, vector store, prompt, model, and AI tool security.
+- `skills/security-incident-response/SKILL.md` - incident triage, evidence preservation, containment, recovery, and forensic security routing.
+- `skills/supply-chain-and-build-provenance/SKILL.md` - dependencies, CI/CD, SBOMs, containers, IaC, signatures, and provenance.
 - `skills/ui-ux-design-quality/SKILL.md` - frontend UI, UX, visual direction, accessibility and anti-generic design quality.
 - `skills/anti-ai-writing-quality/SKILL.md` - human, direct, non-generic writing quality.
 - `skills/strategist-writing-dna/SKILL.md` - verdict-first strategic communication and anti-drift prompt writing.
-- Domain skills for deployment, scheduling, reporting, external APIs, and media/assets.
+- Domain skills for deployment, scheduling, reporting, external APIs, media/assets, and cybersecurity.
 
 ## Permanent Authority Order
 

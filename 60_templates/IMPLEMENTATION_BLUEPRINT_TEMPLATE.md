@@ -18,6 +18,39 @@ Rapid / Standard / Comprehensive / Forensic
 
 ## Root Cause
 
+Required for bugs, incidents, regressions, flaky behavior, or unknown failures:
+
+- Symptom:
+- Expected behavior:
+- Observed behavior:
+- Reproduction or trace:
+- Red-capable feedback loop:
+- Hypotheses tested:
+- Supported cause:
+
+## Product / Requirements Alignment
+
+Complete when product strategy, requirements, PRD, issue slicing, or ambiguous scope is in play.
+
+- User:
+- Buyer / decision owner:
+- Pain or job:
+- Highest-risk assumption:
+- Alternatives considered:
+- Success metric:
+- Smallest verifiable vertical slice:
+- Non-goals:
+
+## Domain Glossary / ADR Plan
+
+Complete when domain terms, states, events, roles, architecture, providers, data, security, operations, cost, or reversibility affect the work.
+
+- Domain glossary location:
+- Canonical terms introduced or changed:
+- ADR location:
+- Decision requiring ADR:
+- Reversal trigger:
+
 ## In Scope
 
 ## Out Of Scope
@@ -25,6 +58,14 @@ Rapid / Standard / Comprehensive / Forensic
 ## Preserved Behavior
 
 ## Smallest Safe Change
+
+## Issue Slices
+
+Required when the plan is larger than one independently verifiable unit.
+
+| Slice | User/System Outcome | Files Likely Affected | Evidence | Dependencies |
+|---|---|---|---|---|
+|  |  |  |  |  |
 
 ## Test-First Implementation Plan
 
@@ -65,6 +106,18 @@ Required for code changes unless marked non-applicable with APIVR reason and alt
 
 ## Interfaces / Files / Systems
 
+## Architecture / Module Boundary Plan
+
+Complete when architecture, modules, adapters, refactors, dependency direction, or deep module design are in scope.
+
+- Source-of-truth module:
+- Public interface:
+- Adapter boundary:
+- Dependency direction:
+- Deletion test:
+- Locality risk:
+- Codebase design evidence:
+
 ## UI / UX / Writing Requirements
 
 Complete when user-facing interface, copy, reports, prompts, client-facing communication, dashboards, forms, landing pages or visual design are in scope.
@@ -81,6 +134,21 @@ Complete when user-facing interface, copy, reports, prompts, client-facing commu
 - Rendered verification:
 
 ## Dependencies
+
+## Cybersecurity / Authorization / Supply Chain Plan
+
+Complete when cybersecurity, app security, AI security, MCP/tool security, incidents, dependencies, CI/CD, containers, IaC, SBOMs, live testing, or dual-use work is in scope.
+
+- Cybersecurity risk routing skill:
+- Security framework mapping:
+- Authorization/scope record:
+- Security evidence ledger:
+- Dual-use decision:
+- Security tests/checks:
+- AI security checks:
+- Incident response or containment plan:
+- Supply-chain/provenance checks:
+- Release-blocking unknowns:
 
 ## Rollback Or Restoration
 
@@ -134,6 +202,40 @@ Complete when work spans multiple stages, tools, subagents, artifacts, context w
 - MCP/tool permissions and auth handling:
 - Harmless verification command:
 
+## QA Health Plan
+
+Complete when user-visible workflow, browser behavior, rendered UI, manual QA, or adverse states matter.
+
+- QA health report:
+- Happy path:
+- Empty/loading/error states:
+- Permission/auth boundary:
+- Responsive viewports:
+- Accessibility checks:
+- Screenshot/video evidence:
+- Retest loop:
+
+## Release Readiness Plan
+
+Complete before merge, deploy, publish, handoff, or done claims.
+
+- Release readiness dashboard:
+- Gate A-H status:
+- Changelog/release note:
+- Rollback trigger:
+- Post-release checks:
+- Accepted risks:
+
+## DevEx / Documentation Plan
+
+Complete when setup, docs, examples, API docs, release notes, or handoffs are affected.
+
+- Docs to update:
+- Commands to verify:
+- Examples to verify:
+- Redaction requirements:
+- Canonical artifacts to reference:
+
 ## Challenge Review
 
 Required for Important, Critical, Comprehensive, and Forensic work.
@@ -143,5 +245,6 @@ Required for Important, Critical, Comprehensive, and Forensic work.
 - [ ] No TBD, later, as needed, or vague file references remain.
 - [ ] Exact files or discovery steps are named.
 - [ ] Tests or evidence-first substitutes are embedded.
+- [ ] Product/requirements, domain glossary, ADR, issue slicing, architecture, QA, release, and DevEx sections are completed or intentionally non-applicable.
 - [ ] Rollback trigger and restore path are defined.
 - [ ] Release gates are known or explicitly blocked.

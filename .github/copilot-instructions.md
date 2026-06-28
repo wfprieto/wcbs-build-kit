@@ -23,6 +23,10 @@ Read:
 - Use `skills/long-horizon-agent-runtime/SKILL.md` and `skills/agent-observability-and-run-tracing/SKILL.md` for long-running, multi-stage, tool-heavy, artifact-heavy, Comprehensive, Forensic, or handoff-sensitive work.
 - Use `skills/project-bootstrap-and-setup/SKILL.md` for install, bootstrap, config, first-run, dependency, or setup work.
 - Use `skills/mcp-tool-governance/SKILL.md` for MCP servers, plugin tools, connectors, tool auth, permission scope, overlap, and tool evidence.
+- Use `skills/cybersecurity-risk-routing/SKILL.md` for cybersecurity, app security, AI security, incidents, supply chain, vulnerability, scanning, red-team, phishing, credential, malware, prompt injection, MCP probing, or other dual-use work.
+- Use `skills/ai-application-security/SKILL.md` for LLM apps, RAG, vector stores, prompts, model routing, AI tools, and AI data leakage.
+- Use `skills/security-incident-response/SKILL.md` for alerts, suspected compromise, malware, ransomware, data leakage, unauthorized access, containment, recovery, and forensic security work.
+- Use `skills/supply-chain-and-build-provenance/SKILL.md` for dependencies, CI/CD, SBOMs, containers, IaC, artifact signing, and provenance.
 - Use `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` for frontend UI, copy, reports, prompts, and strategic communication.
 - Do not invent tests, results, files, APIs, screenshots, or behavior.
 - Report evidence state and final APIVR verdict.

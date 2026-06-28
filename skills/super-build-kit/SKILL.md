@@ -39,9 +39,12 @@ flowchart TD
   K --> L
   L -- "Long-running/tool-heavy" --> M["Load long-horizon runtime and run tracing"]
   L -- "Recurring/iterative" --> P["Load repeatable-agent-loops"]
-  L -- "No" --> N["Load domain skills by task"]
+  L -- "No" --> Q{"Security-sensitive or dual-use?"}
   M --> N
   P --> N
+  Q -- "Yes" --> R["Load cybersecurity risk routing and security skills"]
+  Q -- "No" --> N["Load domain skills by task"]
+  R --> N
   N --> O["Execute APIVR and report verdict"]
 ```
 
@@ -55,6 +58,10 @@ For implementation plans, feature work, refactors, fixes, or risky edits:
 - Load `skills/long-horizon-agent-runtime/SKILL.md` and `skills/agent-observability-and-run-tracing/SKILL.md` before long-running, multi-stage, tool-heavy, artifact-heavy, Comprehensive, Forensic, or handoff-sensitive work.
 - Load `skills/project-bootstrap-and-setup/SKILL.md` before install, bootstrap, config, first-run, dependency, or setup work.
 - Load `skills/mcp-tool-governance/SKILL.md` before enabling, configuring, or auditing MCP servers, plugin tools, connectors, tool auth, or permission boundaries.
+- Load `skills/cybersecurity-risk-routing/SKILL.md` before cybersecurity, app security, AI security, incident response, supply-chain, vulnerability, scanning, red-team, phishing, credential, malware, prompt injection, MCP probing, or other dual-use work.
+- Load `skills/ai-application-security/SKILL.md` for LLM apps, RAG, vector stores, prompt injection, system prompt leakage, model routing, AI tool abuse, or AI data leakage.
+- Load `skills/security-incident-response/SKILL.md` for alerts, suspected compromise, exfiltration, ransomware, malware, unauthorized access, containment, recovery, or forensic security work.
+- Load `skills/supply-chain-and-build-provenance/SKILL.md` for dependencies, CI/CD, SBOMs, containers, IaC, signatures, provenance, package publishing, or release artifact trust.
 
 For deployment, hosting, scheduling, automation, reporting, external APIs, media/assets, UI/UX, frontend design, writing, copy, or strategic communication, load the corresponding specialist skill from `skills/` plus its `40_knowledge/` module or template before planning implementation.
 
@@ -79,9 +86,10 @@ For deployment, hosting, scheduling, automation, reporting, external APIs, media
 6. Long-horizon run control, workspace boundaries, and trace rules when work spans stages, tools, artifacts, or handoffs.
 7. Repeatable loop rules when work is recurring, iterative, monitor-like, or bounded by a stop condition.
 8. Bootstrap/setup and MCP/tool governance when runtime setup or tool access matters.
-9. Domain skills for deployment, automation, reporting, APIs, and assets.
-10. UI/UX design quality and writing quality skills when user-facing experience or communication quality matters.
-11. Evidence templates and completion reports.
+9. Cybersecurity routing and security-specific skills when safety, auth, privacy, AI security, incidents, supply chain, or dual-use work matters.
+10. Domain skills for deployment, automation, reporting, APIs, and assets.
+11. UI/UX design quality and writing quality skills when user-facing experience or communication quality matters.
+12. Evidence templates and completion reports.
 
 ## Rationalization Rebuttals
 
@@ -98,6 +106,9 @@ For deployment, hosting, scheduling, automation, reporting, external APIs, media
 | The chat history is the trace. | Durable evidence and run trace missing. |
 | Setup is harmless. | Config, secret, dependency, or production boundary not audited. |
 | The tool is already installed. | Tool permission, auth, overlap, and evidence source not checked. |
+| This is just a security test. | Authorization, scope, and dual-use gate missing. |
+| The prompt is secret, so we are safe. | Prompt used as security boundary; server-side control missing. |
+| The artifact built successfully. | Supply-chain provenance and release evidence missing. |
 | The provider docs are obvious. | External dependency evidence Unknown. |
 | The asset looks fine. | Rendered/rights evidence missing. |
 | The user is in a hurry. | Risk acceptance not recorded. |
@@ -112,6 +123,9 @@ For deployment, hosting, scheduling, automation, reporting, external APIs, media
 - Enforce loop design, receipts, stop conditions, and iteration budgets for repeatable agent loops.
 - Enforce long-horizon checkpoints, workspace/artifact boundaries, context-preservation rules, and run traces for staged or serious work.
 - Enforce setup boundaries before install/config/first-run work and MCP/tool governance before tool access changes.
+- Enforce cybersecurity routing, authorization gates, security evidence ledgers, and dual-use stop conditions before security-sensitive or offensive-capable work.
+- Enforce AI security review for LLM apps, RAG, vector stores, prompts, models, and tool-using agents.
+- Enforce incident evidence preservation and supply-chain provenance checks when applicable.
 - Enforce UI/UX design briefs, anti-generic checks, accessibility gates and rendered verification for user-facing interface work.
 - Enforce anti-AI writing quality and strategist voice rules for copy, reports, prompts and decision-facing communication.
 - Run implementation audit and verification before calling work complete.

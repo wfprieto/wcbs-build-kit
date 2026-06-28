@@ -41,6 +41,21 @@ Complete when long-horizon runtime, setup, MCP/tool governance, or run tracing w
 - Setup/tooling boundary status:
 - Redactions or sensitive data handling:
 
+## Cybersecurity / Authorization / Supply Chain Summary
+
+Complete when cybersecurity, app security, AI security, MCP/tool security, incident response, vulnerabilities, dependencies, CI/CD, containers, IaC, SBOMs, live testing, or dual-use work was in scope.
+
+- Security scope:
+- Authorization status:
+- Dual-use decision:
+- Security evidence ledger:
+- Frameworks used:
+- Security checks run:
+- Security checks Not Run / Blocked:
+- Incident status, if any:
+- Supply-chain/provenance status:
+- Release-blocking unknowns:
+
 ## Release Gate Status
 
 | Gate | Status | Evidence / Risk |

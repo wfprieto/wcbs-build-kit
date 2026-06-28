@@ -22,6 +22,8 @@ For long-running, multi-stage, tool-heavy, artifact-heavy, Comprehensive, Forens
 
 For install, bootstrap, config, first-run, dependency, or setup work, load `skills/project-bootstrap-and-setup/SKILL.md`. For MCP servers, plugin tools, connectors, tool auth, permission scope, overlap, or tool evidence, load `skills/mcp-tool-governance/SKILL.md`.
 
+For cybersecurity, app security, AI security, incidents, supply chain, vulnerability, scanning, red-team, phishing, credential, malware, prompt injection, MCP probing, or other dual-use work, load `skills/cybersecurity-risk-routing/SKILL.md`. Load `skills/ai-application-security/SKILL.md`, `skills/security-incident-response/SKILL.md`, or `skills/supply-chain-and-build-provenance/SKILL.md` when those domains apply.
+
 For frontend UI, UX, copy, reports, prompts, or strategic communication, load `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` as applicable.
 
 ## Authority

@@ -1,0 +1,128 @@
+import base64
+import json
+import pathlib
+import subprocess
+import sys
+import urllib.error
+import urllib.request
+
+REPOSITORY = "wfprieto/wcbs-build-kit"
+BRANCH = "main"
+ROOT = pathlib.Path(__file__).resolve().parent
+GH = r"C:\Program Files\GitHub CLI\gh.exe"
+
+
+def gh_token() -> str:
+    try:
+        token = subprocess.check_output([GH, "auth", "token"], text=True).strip()
+    except Exception as exc:
+        raise SystemExit(f"Could not read GitHub token from gh: {exc}")
+    if not token:
+        raise SystemExit("gh returned an empty token. Run gh auth login first.")
+    return token
+
+
+TOKEN = gh_token()
+HEADERS = {
+    "Authorization": f"Bearer {TOKEN}",
+    "Accept": "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+    "User-Agent": "super-build-kit-publisher",
+}
+
+
+def api(method: str, path: str, body=None):
+    data = None
+    headers = dict(HEADERS)
+    if body is not None:
+        data = json.dumps(body).encode("utf-8")
+        headers["Content-Type"] = "application/json"
+
+    req = urllib.request.Request(
+        f"https://api.github.com/{path}",
+        data=data,
+        headers=headers,
+        method=method,
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=60) as response:
+            return json.load(response)
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise SystemExit(f"GitHub API {method} {path} failed: HTTP {exc.code}\n{detail}")
+
+
+def included_files():
+    excluded_names = {
+        "wcbs-build-kit-upgrade.bundle",
+        "publish-wcbs-upgrade.ps1",
+        "publish-wcbs-upgrade.py",
+    }
+    for path in sorted(ROOT.rglob("*")):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(ROOT).as_posix()
+        if rel.startswith(".git/") or rel.startswith(".agents/"):
+            continue
+        if path.name in excluded_names:
+            continue
+        yield rel, path
+
+
+def main():
+    ref = api("GET", f"repos/{REPOSITORY}/git/ref/heads/{BRANCH}")
+    parent_sha = ref["object"]["sha"]
+    print(f"Current {BRANCH}: {parent_sha}", flush=True)
+
+    entries = []
+    for rel, path in included_files():
+        print(f"Creating blob: {rel}", flush=True)
+        if rel == "20_skills/apivr.skill":
+            content = base64.b64encode(path.read_bytes()).decode("ascii")
+            blob = api(
+                "POST",
+                f"repos/{REPOSITORY}/git/blobs",
+                {"content": content, "encoding": "base64"},
+            )
+        else:
+            blob = api(
+                "POST",
+                f"repos/{REPOSITORY}/git/blobs",
+                {"content": path.read_text(encoding="utf-8"), "encoding": "utf-8"},
+            )
+
+        entries.append(
+            {"path": rel, "mode": "100644", "type": "blob", "sha": blob["sha"]}
+        )
+
+    print("Creating replacement tree...", flush=True)
+    tree = api("POST", f"repos/{REPOSITORY}/git/trees", {"tree": entries})
+
+    print("Creating commit...", flush=True)
+    commit = api(
+        "POST",
+        f"repos/{REPOSITORY}/git/commits",
+        {
+            "message": "Replace wcbs build kit with LLM agnostic Super Build Kit",
+            "tree": tree["sha"],
+            "parents": [parent_sha],
+        },
+    )
+
+    print(f"Fast-forwarding {BRANCH}...", flush=True)
+    updated = api(
+        "PATCH",
+        f"repos/{REPOSITORY}/git/refs/heads/{BRANCH}",
+        {"sha": commit["sha"], "force": False},
+    )
+
+    print("")
+    print("Published upgraded Super Build Kit.")
+    print(f"Commit: {commit['sha']}")
+    print(f"Files: {len(entries)}")
+    print(f"Ref: {updated['ref']} -> {updated['object']['sha']}")
+
+
+if __name__ == "__main__":
+    main()

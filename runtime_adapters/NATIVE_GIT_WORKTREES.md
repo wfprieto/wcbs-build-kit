@@ -49,3 +49,4 @@ If `git-dir` and `git-common-dir` differ and the repo is not a submodule, treat 
 ## Finish Rule
 
 For PR flow, keep the worktree. For local merge/discard, clean up only owned worktrees and only after evidence-based verification.
+

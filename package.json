@@ -24,6 +24,18 @@
     "repeatable-workflows",
     "long-horizon-agents",
     "mcp-governance",
-    "run-tracing"
+    "run-tracing",
+    "cybersecurity",
+    "ai-security",
+    "incident-response",
+    "supply-chain-security",
+    "product-strategy",
+    "requirements-alignment",
+    "domain-modeling",
+    "code-review",
+    "qa",
+    "release-readiness",
+    "debugging",
+    "devex"
   ]
 }

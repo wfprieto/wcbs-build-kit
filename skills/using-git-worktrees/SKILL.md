@@ -127,3 +127,4 @@ Never:
 - delete a branch before removing the worktree that references it;
 - clean up a harness-owned worktree manually;
 - proceed from failing baseline tests without recording evidence and user approval.
+

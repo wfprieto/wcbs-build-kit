@@ -26,3 +26,4 @@ Define dimensions, compression, responsive variants, lazy loading, alt text/capt
 ## Verification
 
 For user-facing media, inspect rendered output in representative viewports. For commercial/brand media, verify it supports the approved visual direction.
+

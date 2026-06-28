@@ -41,3 +41,4 @@ Every material automation should define:
 ## Reporting Controls
 
 Define source of truth, data freshness, permissions, metric definitions, reconciliation method, and outcome horizon.
+

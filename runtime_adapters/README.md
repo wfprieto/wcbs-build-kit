@@ -24,6 +24,10 @@ These files activate the same Super Build Kit spine in common agent runtimes.
 - `skills/project-bootstrap-and-setup/SKILL.md` - install, bootstrap, config, first-run, dependency, and setup-boundary safety.
 - `skills/mcp-tool-governance/SKILL.md` - MCP, plugin, connector, tool auth, permission, overlap, and evidence governance.
 - `skills/agent-observability-and-run-tracing/SKILL.md` - run ids, durable traces, tool records, evidence trails, redactions, and artifact records.
+- `skills/cybersecurity-risk-routing/SKILL.md` - cybersecurity routing, tier selection, dual-use authorization gates, and security evidence requirements.
+- `skills/ai-application-security/SKILL.md` - LLM app, RAG, vector, prompt, model, AI data leakage, and AI tool security.
+- `skills/security-incident-response/SKILL.md` - security alert triage, compromise investigation, evidence preservation, containment, and recovery.
+- `skills/supply-chain-and-build-provenance/SKILL.md` - dependencies, CI/CD, SBOMs, containers, IaC, artifact signatures, and provenance.
 - `skills/ui-ux-design-quality/SKILL.md` - frontend UI, UX, visual direction, accessibility, interface copy, and rendered verification.
 - `skills/anti-ai-writing-quality/SKILL.md` - human, direct, non-generic writing quality.
 - `skills/strategist-writing-dna/SKILL.md` - verdict-first strategic communication and anti-drift writing.

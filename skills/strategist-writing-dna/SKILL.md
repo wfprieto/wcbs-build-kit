@@ -25,7 +25,13 @@ Do not warm up. Do not bury the decision.
 
 ## Voice Model
 
-Sound like a competent operator talking to a peer: calm authority, clean judgment, controlled emotion, clear standards and low ambiguity.
+Sound like a competent operator talking to a peer:
+
+- calm authority;
+- clean judgment;
+- controlled emotion;
+- clear standards;
+- low ambiguity.
 
 If something is weak, name it. If something is broken, name what is broken. If it is close, say what is missing. Then give the fix.
 

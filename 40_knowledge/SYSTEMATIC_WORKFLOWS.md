@@ -6,6 +6,10 @@ Merged from APIVR, WCBS, and Superpowers workflow mechanics.
 
 - Explore the project context before proposing a solution.
 - Ask only questions that materially affect scope, success criteria, risk, or implementation.
+- Use `skills/requirements-grilling-and-alignment/SKILL.md` for ambiguous or assumption-heavy requests; ask one decision-making question at a time.
+- Use `skills/product-strategy-office-hours/SKILL.md` when product, buyer, user, premise, or strategic tradeoffs determine what should be built.
+- Use `skills/domain-modeling-and-shared-language/SKILL.md` and ADRs when durable vocabulary or decisions affect implementation.
+- Use `skills/product-requirements-and-issue-slicing/SKILL.md` to split large plans into vertical, independently verifiable slices.
 - Present alternatives when the choice changes architecture, risk, cost, or user outcome.
 - Write plans that an implementer can execute without inventing missing decisions.
 - Use `skills/writing-plans/SKILL.md` for implementation, audit-remediation, or handoff plans.
@@ -19,7 +23,9 @@ Merged from APIVR, WCBS, and Superpowers workflow mechanics.
 
 - Prefer the smallest safe change.
 - Preserve existing behavior unless a change is explicitly approved.
+- Use `skills/codebase-design-and-deep-modules/SKILL.md` when structure, module boundaries, adapters, or refactor shape affects risk.
 - Use test-first development for code changes as an APIVR Phase 3 requirement unless non-applicability is proved and alternate evidence is recorded.
+- Prefer vertical tracer bullets: prove one thin behavior through the public interface before broad horizontal buildout.
 - Verify after meaningful steps.
 - Stop on new Critical risk.
 
@@ -36,11 +42,14 @@ Review in this order:
 7. Performance, SEO, and cost
 8. Evidence completeness
 
+Use `skills/engineering-plan-review/SKILL.md` before high-risk implementation and `skills/code-review-and-review-army/SKILL.md` during APIVR Phase 4 when specialist passes reduce risk.
+
 ## Domain Routing Discipline
 
 Load the relevant specialist skill when the task includes:
 
 - frontend UI, UX, visual direction, design systems, forms, charts, dashboards, landing pages, accessibility, responsive behavior, or interface copy;
+- product strategy, requirements alignment, PRDs, issue slicing, domain modeling, ADRs, architecture/module boundaries, engineering plan review, specialist code review, debugging, prototype spikes, QA, release readiness, or DevEx documentation;
 - writing, rewriting, client-facing copy, email, reports, prompts, executive summaries, strategic recommendations, or anti-AI tone control;
 - deployment, hosting, runtime placement, cloud cost, or environment setup;
 - scheduled jobs, webhooks, queues, event-driven work, monitors, reminders, or always-on workers;
@@ -49,16 +58,32 @@ Load the relevant specialist skill when the task includes:
 - generated, retrieved, transformed, cached, licensed, or delivered media/assets;
 - recurring audits, repeated quality sweeps, monitors, post-deploy stabilization checks, or iterative remediation loops;
 - setup, bootstrap, first-run commands, dependency installation, local services, MCP servers, plugin tools, connectors, tool auth, artifact boundaries, run traces, or long-horizon execution.
+- cybersecurity, app security, AI security, incident response, supply chain security, vulnerability triage, live scanning, red-team, phishing, credential, malware, prompt injection, RAG, vector, MCP security, or dual-use work.
 
 When multiple domains overlap, load all applicable skills and preserve one APIVR evidence ledger.
+
+## Cybersecurity Discipline
+
+Use `skills/cybersecurity-risk-routing/SKILL.md` before security-sensitive work. If a request includes live testing, scanning, exploitation, phishing, credential testing, malware execution, MCP probing, prompt extraction, RAG poisoning, vector leakage, or third-party targets, require authorization and rules of engagement before proceeding.
+
+Security findings must separate facts, hypotheses, and unknowns. Do not claim security release readiness while core evidence is `Unknown`, `Not Run`, or `Blocked`.
 
 ## Debugging Discipline
 
 - Reproduce or directly observe the failure when possible.
+- Use `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` before changing code for a bug.
 - Trace root cause before changing code.
 - Distinguish symptom, cause, contributing factor, and unrelated issue.
 - Add defense-in-depth only when it addresses a real failure mode.
 - Verify the fix and scan for collateral damage.
+
+## Prototype Discipline
+
+Use `skills/throwaway-prototyping/SKILL.md` when learning is the goal. Define one question, isolate the prototype, set a budget, record evidence, and delete, archive, or convert through APIVR before production use.
+
+## QA And Release Discipline
+
+Use `skills/qa-and-browser-verification/SKILL.md` when user-visible workflows or rendered behavior matter. Use `skills/release-readiness-and-ship-gates/SKILL.md` before merge, deploy, publish, handoff, or done claims. Use `skills/devex-and-documentation-review/SKILL.md` when docs, setup, examples, API docs, release notes, or handoffs are affected.
 
 ## Subagent Discipline
 

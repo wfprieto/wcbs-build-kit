@@ -27,3 +27,4 @@ Set bounded timeouts, bounded retries, exponential backoff with jitter, rate-lim
 ## Verification
 
 Prefer provider sandbox/test mode. Verify both request success and downstream business effect. Record provider limits and dependency failure behavior.
+

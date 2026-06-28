@@ -255,3 +255,37 @@ Total files inspected: 173
 | `tests/opencode/test-tools.sh` | provenance-only | 90_archive/provenance only |
 | `tests/pi/test-pi-extension.mjs` | provenance-only | 90_archive/provenance only |
 | `tests/shell-lint/test-lint-shell.sh` | provenance-only | 90_archive/provenance only |
+
+## garrytan/gstack
+
+High-value files inspected for the 2026-06-28 integration pass. Runtime-specific gstack mechanics were not imported.
+
+| File | Status | Canonical Destination |
+|---|---|---|
+| `README.md` | provenance-only | `90_archive/provenance/GSTACK_SOURCE_NOTES.md` |
+| `office-hours/SKILL.md` | merged | `skills/product-strategy-office-hours/SKILL.md` |
+| `autoplan/SKILL.md` | merged | `skills/writing-plans/SKILL.md`, `skills/engineering-plan-review/SKILL.md`, `30_agents/AGENT_ACTIVATION_MATRIX.md` |
+| `plan-eng-review/SKILL.md` | merged | `skills/engineering-plan-review/SKILL.md`, `60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md` |
+| `review/SKILL.md` | merged | `skills/code-review-and-review-army/SKILL.md`, `50_audits/CANONICAL_AUDIT_PROTOCOLS.md` |
+| `qa/SKILL.md` | merged | `skills/qa-and-browser-verification/SKILL.md`, `60_templates/QA_HEALTH_REPORT_TEMPLATE.md` |
+| `ship/SKILL.md` | merged | `skills/release-readiness-and-ship-gates/SKILL.md`, `60_templates/RELEASE_READINESS_DASHBOARD_TEMPLATE.md`, `10_governance/RELEASE_GATES.md` |
+| `investigate/SKILL.md` | merged | `skills/diagnosing-bugs-and-feedback-loops/SKILL.md`, `40_knowledge/SYSTEMATIC_WORKFLOWS.md` |
+| `cso/SKILL.md` | merged | `skills/code-review-and-review-army/SKILL.md`, existing cybersecurity skills, `50_audits/CANONICAL_AUDIT_PROTOCOLS.md` |
+| `careful/SKILL.md`, `guard/SKILL.md` | provenance-only | Existing APIVR, release gates, setup safety, and MCP/tool governance already cover the safety concept |
+
+## mattpocock/skills
+
+High-value files inspected for the 2026-06-28 integration pass. Concepts were adapted into APIVR-native skills instead of copied wholesale.
+
+| File | Status | Canonical Destination |
+|---|---|---|
+| `skills/productivity/grilling/SKILL.md` | merged | `skills/requirements-grilling-and-alignment/SKILL.md` |
+| `skills/engineering/grill-with-docs/SKILL.md` | merged | `skills/requirements-grilling-and-alignment/SKILL.md` |
+| `skills/engineering/domain-modeling/SKILL.md` | merged | `skills/domain-modeling-and-shared-language/SKILL.md`, `40_knowledge/DOMAIN_MODELING_AND_ADR_GUIDANCE.md`, `60_templates/DOMAIN_GLOSSARY_TEMPLATE.md` |
+| `skills/engineering/codebase-design/SKILL.md` | merged | `skills/codebase-design-and-deep-modules/SKILL.md`, `40_knowledge/CODEBASE_DESIGN_DEEP_MODULES.md` |
+| `skills/engineering/diagnosing-bugs/SKILL.md` | merged | `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` |
+| `skills/engineering/tdd/SKILL.md` | merged | `skills/test-driven-development/SKILL.md` |
+| `skills/engineering/to-prd/SKILL.md` | merged | `skills/product-requirements-and-issue-slicing/SKILL.md`, `skills/writing-plans/SKILL.md` |
+| `skills/engineering/to-issues/SKILL.md` | merged | `skills/product-requirements-and-issue-slicing/SKILL.md`, `60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md` |
+| `skills/engineering/prototype/SKILL.md` | merged | `skills/throwaway-prototyping/SKILL.md` |
+| `skills/productivity/handoff/SKILL.md` | merged | `skills/devex-and-documentation-review/SKILL.md`, existing run-tracing and completion templates |

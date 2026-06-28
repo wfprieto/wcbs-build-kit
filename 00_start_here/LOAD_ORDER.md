@@ -16,8 +16,20 @@ Load:
 
 - `10_governance/ELITE_BUILD_GOALS_SUMMARY.md`
 - `10_governance/RELEASE_GATES.md`
+- `skills/requirements-grilling-and-alignment/SKILL.md` when requirements are ambiguous, broad, conflicting, assumption-heavy, or need one-question-at-a-time clarification
+- `skills/product-strategy-office-hours/SKILL.md` when product, founder, buyer, user, premise, or strategic decision clarity affects the work
+- `skills/domain-modeling-and-shared-language/SKILL.md` when durable business vocabulary, states, events, roles, domain boundaries, or ADRs affect design or naming
+- `skills/product-requirements-and-issue-slicing/SKILL.md` when plans, PRDs, or audits must become vertical, independently verifiable implementation slices
 - `skills/writing-plans/SKILL.md` for APIVR Phase 2 implementation plans
+- `skills/engineering-plan-review/SKILL.md` before implementing high-risk, multi-file, architecture, migration, or integration plans
 - `skills/test-driven-development/SKILL.md` for APIVR Phase 3 implementation work
+- `skills/codebase-design-and-deep-modules/SKILL.md` when module boundaries, adapters, dependency direction, refactors, or architectural leverage are in scope
+- `skills/code-review-and-review-army/SKILL.md` for APIVR Phase 4 implementation audit and specialist review passes
+- `skills/qa-and-browser-verification/SKILL.md` when user-visible workflows, browser behavior, manual QA, screenshots, or adverse UI states are in scope
+- `skills/release-readiness-and-ship-gates/SKILL.md` before merge, deploy, publish, handoff, or done claims
+- `skills/devex-and-documentation-review/SKILL.md` when docs, setup, examples, onboarding, API docs, release notes, or handoffs are affected
+- `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` before changing code for bugs, regressions, flaky behavior, incidents, or unknown failures
+- `skills/throwaway-prototyping/SKILL.md` when work is a prototype, spike, experiment, provider trial, or proof of concept
 - `skills/using-git-worktrees/SKILL.md` when work should be isolated
 - `skills/dispatching-parallel-agents/SKILL.md` when the work may benefit from parallel investigation, audit, implementation, or verification
 - `skills/subagent-driven-development/SKILL.md` when subagents will implement, review, or verify task slices
@@ -26,6 +38,10 @@ Load:
 - `skills/project-bootstrap-and-setup/SKILL.md` when setup, install, bootstrap, config, dependency, service, or first-run work is involved
 - `skills/mcp-tool-governance/SKILL.md` when MCP servers, plugin tools, connectors, tool auth, or permission boundaries are involved
 - `skills/agent-observability-and-run-tracing/SKILL.md` when run trace, durable audit trail, tool record, or checkpoint evidence is needed
+- `skills/cybersecurity-risk-routing/SKILL.md` when cybersecurity, app security, AI security, supply chain, incident, vulnerability, scanning, red-team, or dual-use risk is involved
+- `skills/ai-application-security/SKILL.md` when LLM apps, RAG, vector stores, prompts, model routing, AI tools, or AI data leakage are involved
+- `skills/security-incident-response/SKILL.md` when suspicious activity, alerts, compromise, exfiltration, malware, ransomware, or forensic security work is involved
+- `skills/supply-chain-and-build-provenance/SKILL.md` when dependencies, CI/CD, containers, IaC, SBOM, signatures, provenance, or release artifact trust is involved
 - `skills/deployment-and-hosting-guidance/SKILL.md` when hosting, deploy, runtime, cost, or environment choices are involved
 - `skills/scheduling-and-automation-routing/SKILL.md` when jobs, webhooks, queues, reminders, monitors, or workers are involved
 - `skills/external-api-integration/SKILL.md` when third-party services, SDKs, webhooks, OAuth, API keys, or provider limits are involved
@@ -36,7 +52,12 @@ Load:
 - `skills/strategist-writing-dna/SKILL.md` when writing must be decisive, tactical, executive-ready, anti-drift, scoped, or proof-driven
 - `30_agents/AGENT_ACTIVATION_MATRIX.md`
 - `60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md`
+- `60_templates/DOMAIN_GLOSSARY_TEMPLATE.md` when domain language affects implementation, UI, reports, tests, or decisions
+- `60_templates/ADR_TEMPLATE.md` when a durable architecture, provider, data, security, cost, or operational decision is made
+- `60_templates/QA_HEALTH_REPORT_TEMPLATE.md` when manual QA or browser verification is required
+- `60_templates/RELEASE_READINESS_DASHBOARD_TEMPLATE.md` before production-impacting release, deployment, or handoff
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
+- `60_templates/SECURITY_EVIDENCE_LEDGER_TEMPLATE.md` when security evidence is in scope
 
 Use APIVR phases 1-6 at the selected tier.
 
@@ -47,8 +68,11 @@ Load:
 - `50_audits/AUDIT_TIER_ROUTER.md`
 - `50_audits/CANONICAL_AUDIT_PROTOCOLS.md`
 - `60_templates/EVIDENCE_LEDGER_TEMPLATE.md`
+- `60_templates/QA_HEALTH_REPORT_TEMPLATE.md` when rendered workflow, browser, or manual QA evidence is part of the audit
+- `60_templates/SECURITY_EVIDENCE_LEDGER_TEMPLATE.md` when security is in scope
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
 - `skills/repeatable-agent-loops/SKILL.md` when the audit is a repeated sweep or iterative remediation loop
+- `skills/cybersecurity-risk-routing/SKILL.md` when cybersecurity, security release gates, dual-use, AI security, incident, supply-chain, MCP/tool security, or vulnerability work is in scope
 
 For Comprehensive or Forensic audits, also load:
 
@@ -62,9 +86,13 @@ Load:
 - `40_knowledge/SYSTEMATIC_WORKFLOWS.md`
 - `50_audits/CANONICAL_AUDIT_PROTOCOLS.md`
 - `60_templates/ROLLBACK_RECORD_TEMPLATE.md`
+- `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` before code changes for bugs, regressions, flaky behavior, or unknown failures
 - `skills/deployment-and-hosting-guidance/SKILL.md` for deployment/runtime/hosting incidents
 - `skills/scheduling-and-automation-routing/SKILL.md` for job, queue, webhook, worker, or monitor failures
 - `skills/external-api-integration/SKILL.md` for provider, webhook, API, auth, quota, or rate-limit failures
+- `skills/cybersecurity-risk-routing/SKILL.md` for any suspected security cause or security-sensitive incident
+- `skills/security-incident-response/SKILL.md` for suspected compromise, unauthorized access, malware, ransomware, data leakage, or security alert triage
+- `skills/ai-application-security/SKILL.md` for AI app, prompt, RAG, vector, model, or agent security incidents
 - `skills/repeatable-agent-loops/SKILL.md` when diagnosis requires repeated observation, bounded retries, or stepwise remediation
 - `skills/agent-observability-and-run-tracing/SKILL.md` when the incident requires durable trace, command history, tool history, or postmortem evidence
 
@@ -77,8 +105,14 @@ Load:
 - `10_governance/RELEASE_GATES.md`
 - `60_templates/EVIDENCE_LEDGER_TEMPLATE.md`
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
+- `skills/release-readiness-and-ship-gates/SKILL.md`
+- `60_templates/RELEASE_READINESS_DASHBOARD_TEMPLATE.md`
+- `skills/code-review-and-review-army/SKILL.md` when implementation review or specialist review is required
+- `skills/qa-and-browser-verification/SKILL.md` when release depends on user-visible workflow or browser QA evidence
 - `skills/deployment-and-hosting-guidance/SKILL.md` when release includes deploy or hosting changes
 - `skills/data-output-and-reporting/SKILL.md` when release success depends on reporting, analytics, or exported evidence
+- `skills/cybersecurity-risk-routing/SKILL.md` when release includes security-sensitive code, auth, privacy, payments, regulated data, APIs, AI systems, tools, CI/CD, or supply-chain risk
+- `skills/supply-chain-and-build-provenance/SKILL.md` when release depends on dependencies, CI/CD, containers, IaC, SBOMs, artifact signing, provenance, or package publishing
 - `skills/repeatable-agent-loops/SKILL.md` when release depends on repeated post-deploy checks, monitors, stabilization windows, or iterative evidence collection
 - `skills/agent-observability-and-run-tracing/SKILL.md` for Comprehensive, Forensic, production-impacting, multi-agent, or tool-heavy releases
 
@@ -91,9 +125,14 @@ Load:
 - `20_skills/PORTABLE_SKILL_CONTRACT.md`
 - `skills/super-build-kit/SKILL.md`
 - `skills/writing-plans/SKILL.md` when producing reusable implementation plans or agent handoff plans
+- `skills/requirements-grilling-and-alignment/SKILL.md` when prompt, skill, or agent design has ambiguous objectives, audiences, or scope
+- `skills/domain-modeling-and-shared-language/SKILL.md` when prompt, skill, or agent behavior depends on domain language or decisions
+- `skills/devex-and-documentation-review/SKILL.md` when instructions, docs, examples, adapters, or handoffs are created or changed
 - `skills/repeatable-agent-loops/SKILL.md` when designing reusable recurring workflows, monitors, or iterative agent procedures
 - `skills/long-horizon-agent-runtime/SKILL.md` when designing long-running staged agent procedures
 - `skills/mcp-tool-governance/SKILL.md` when prompts, skills, or agents depend on MCP servers, plugin tools, or connectors
+- `skills/cybersecurity-risk-routing/SKILL.md` when prompt, skill, or agent design affects security behavior, dual-use capability, tool authority, or data boundaries
+- `skills/ai-application-security/SKILL.md` when prompt, skill, or agent design includes LLM app security, RAG, model routing, prompt leakage, or AI tool risk
 - `skills/agent-observability-and-run-tracing/SKILL.md` when handoffs, traces, receipts, or durable audit trails are part of the design
 - `skills/anti-ai-writing-quality/SKILL.md` when prompt, skill, agent, or report wording quality matters
 - `skills/strategist-writing-dna/SKILL.md` when prompts or handoffs must resist drift and require proof
@@ -125,7 +164,12 @@ Detect existing isolation first. Prefer native worktree tools. Use manual `git w
 Load:
 
 - `skills/writing-plans/SKILL.md`
+- `skills/requirements-grilling-and-alignment/SKILL.md` when the plan inputs are ambiguous
+- `skills/product-strategy-office-hours/SKILL.md` when the plan depends on product, buyer, user, or premise decisions
+- `skills/product-requirements-and-issue-slicing/SKILL.md` when the plan must be split into vertical implementation slices
+- `skills/domain-modeling-and-shared-language/SKILL.md` when the plan introduces durable terms, states, or ADRs
 - `skills/test-driven-development/SKILL.md` for any code implementation
+- `skills/engineering-plan-review/SKILL.md` before handing off high-risk or multi-file plans
 - `skills/dispatching-parallel-agents/SKILL.md` when the plan contains parallel task slices
 - `skills/subagent-driven-development/SKILL.md` when the plan delegates implementation or review
 - `skills/repeatable-agent-loops/SKILL.md` when the plan contains recurring checks, iterative sweeps, monitors, or repeat-until-stable work
@@ -191,6 +235,23 @@ Load:
 
 Define setup boundary, files that must not be overwritten, secret-bearing files that must not be read, tool permissions, auth handling, harmless verification, and exact next command.
 
+## Cybersecurity, AI Security, Incident Response, Or Supply Chain
+
+Load:
+
+- `skills/cybersecurity-risk-routing/SKILL.md`
+- `40_knowledge/CYBERSECURITY_RISK_ROUTING_INDEX.md`
+- `40_knowledge/SECURITY_FRAMEWORK_MAPPING.md`
+- `60_templates/SECURITY_EVIDENCE_LEDGER_TEMPLATE.md` for Standard and above
+- `60_templates/SECURITY_AUTHORIZATION_AND_SCOPE_TEMPLATE.md` when live-system, dual-use, scanning, exploit, phishing, credential, malware, MCP probing, prompt extraction, RAG poisoning, vector leakage, or third-party testing may occur
+- `skills/ai-application-security/SKILL.md` for LLM apps, RAG, vector stores, model routing, prompt leakage, prompt injection, AI data leakage, or AI tool abuse
+- `skills/security-incident-response/SKILL.md` for alerts, compromise, exfiltration, malware, ransomware, unauthorized access, containment, recovery, or forensic security work
+- `skills/supply-chain-and-build-provenance/SKILL.md` for dependencies, lockfiles, CI/CD, SBOMs, secret scanning, containers, IaC, signatures, provenance, or artifact release trust
+- `skills/mcp-tool-governance/SKILL.md` for MCP/tool poisoning, tool shadowing, rug pulls, toxic flows, SSRF risk, unauthenticated MCP exposure, tool allowlists, or human approval gates
+- `skills/external-api-integration/SKILL.md` for API auth, OAuth, webhooks, BOLA/IDOR, mass assignment, rate limits, abuse controls, or unsafe third-party consumption
+
+Use Rapid only for narrow, non-live, reversible security review. Use Comprehensive or Forensic for private data, auth, payments, production, cloud/IAM, CI/CD, AI systems, incidents, or unknown core security evidence.
+
 ## External APIs Or Media Assets
 
 Load:
@@ -226,3 +287,35 @@ Load:
 - `skills/ui-ux-design-quality/SKILL.md` when the writing appears inside an interface or landing page
 
 Define audience, purpose, voice, proof standard, banned patterns, facts versus assumptions, final action, and evidence state.
+
+## Product Strategy, Requirements, Domain Modeling, Or Issue Slicing
+
+Load:
+
+- `skills/requirements-grilling-and-alignment/SKILL.md`
+- `skills/product-strategy-office-hours/SKILL.md` when product, founder, buyer, user, premise, or market clarity is needed
+- `skills/product-requirements-and-issue-slicing/SKILL.md` when converting ideas, PRDs, specs, or audits into vertical issues
+- `skills/domain-modeling-and-shared-language/SKILL.md` when vocabulary, entities, events, states, roles, or ADRs are in scope
+- `40_knowledge/DOMAIN_MODELING_AND_ADR_GUIDANCE.md`
+- `60_templates/DOMAIN_GLOSSARY_TEMPLATE.md` when domain terms affect code, UI, reports, data, tests, or decisions
+- `60_templates/ADR_TEMPLATE.md` when durable decisions affect architecture, providers, data, security, operations, cost, or reversibility
+
+Define one decision at a time, non-goals, acceptance criteria, highest-risk assumption, success metric, vertical slices, evidence states, and APIVR verdict.
+
+## Architecture, Engineering Review, Debugging, QA, Or Release Readiness
+
+Load:
+
+- `skills/codebase-design-and-deep-modules/SKILL.md` for architecture, module boundaries, adapters, refactors, dependency direction, locality, or deletion tests
+- `40_knowledge/CODEBASE_DESIGN_DEEP_MODULES.md`
+- `skills/engineering-plan-review/SKILL.md` before high-risk or multi-file implementation
+- `skills/code-review-and-review-army/SKILL.md` for APIVR Phase 4 specialist implementation review
+- `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` before fixing bugs, regressions, incidents, flaky behavior, or unknown failures
+- `skills/throwaway-prototyping/SKILL.md` for spikes, experiments, provider trials, or disposable proofs of concept
+- `skills/qa-and-browser-verification/SKILL.md` for manual QA, browser checks, user workflows, and rendered verification
+- `60_templates/QA_HEALTH_REPORT_TEMPLATE.md` for Standard and above QA work
+- `skills/release-readiness-and-ship-gates/SKILL.md` before merge, deploy, publish, handoff, or done claims
+- `60_templates/RELEASE_READINESS_DASHBOARD_TEMPLATE.md` for production-impacting release or handoff
+- `skills/devex-and-documentation-review/SKILL.md` when developer experience, docs, setup, examples, API docs, release notes, or handoffs are affected
+
+Define feedback loop, specialist review passes, QA matrix, release gate statuses, rollback, changelog, post-release horizon, and final APIVR verdict.

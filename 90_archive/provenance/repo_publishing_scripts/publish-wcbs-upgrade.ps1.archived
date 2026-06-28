@@ -1,0 +1,113 @@
+param(
+  [string]$Repository = "wfprieto/wcbs-build-kit",
+  [string]$Branch = "main"
+)
+
+$ErrorActionPreference = "Stop"
+
+$Root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$RootFull = (Resolve-Path -LiteralPath $Root).Path.TrimEnd("\")
+$Gh = "C:\Program Files\GitHub CLI\gh.exe"
+if (-not (Test-Path $Gh)) {
+  $Gh = "gh"
+}
+
+Write-Host "Checking GitHub authentication..."
+& $Gh auth status
+if ($LASTEXITCODE -ne 0) {
+  throw "GitHub CLI is not authenticated. Run gh auth login first."
+}
+
+$Token = (& $Gh auth token).Trim()
+if ([string]::IsNullOrWhiteSpace($Token)) {
+  throw "GitHub CLI did not return a token."
+}
+
+$Headers = @{
+  Authorization = "Bearer $Token"
+  Accept = "application/vnd.github+json"
+  "X-GitHub-Api-Version" = "2022-11-28"
+  "User-Agent" = "super-build-kit-publisher"
+}
+
+function Invoke-GitHubApi {
+  param(
+    [string]$Method,
+    [string]$Path,
+    [object]$Body = $null
+  )
+
+  $Uri = "https://api.github.com/$Path"
+  if ($null -eq $Body) {
+    return Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers -TimeoutSec 60
+  }
+
+  $Json = $Body | ConvertTo-Json -Depth 100
+  return Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers -ContentType "application/json" -Body $Json -TimeoutSec 60
+}
+
+$RefPath = "repos/$Repository/git/ref/heads/$Branch"
+$Ref = Invoke-GitHubApi -Method "GET" -Path $RefPath
+$ParentSha = $Ref.object.sha
+Write-Host "Current $Branch`: $ParentSha"
+
+$TreeEntries = @()
+$Files = Get-ChildItem -LiteralPath $Root -Recurse -File | Where-Object {
+  $FullName = (Resolve-Path -LiteralPath $_.FullName).Path
+  $Relative = $FullName.Substring($RootFull.Length + 1).Replace("\", "/")
+  -not $Relative.StartsWith(".git/") -and
+  -not $Relative.StartsWith(".agents/") -and
+  $Relative -ne "wcbs-build-kit-upgrade.bundle" -and
+  $Relative -ne "publish-wcbs-upgrade.ps1"
+} | Sort-Object FullName
+
+foreach ($File in $Files) {
+  $FullName = (Resolve-Path -LiteralPath $File.FullName).Path
+  $Relative = $FullName.Substring($RootFull.Length + 1).Replace("\", "/")
+  Write-Host "Creating blob: $Relative"
+
+  if ($Relative -eq "20_skills/apivr.skill") {
+    $Content = [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($File.FullName))
+    $Blob = Invoke-GitHubApi -Method "POST" -Path "repos/$Repository/git/blobs" -Body @{
+      content = $Content
+      encoding = "base64"
+    }
+  } else {
+    $Content = Get-Content -LiteralPath $File.FullName -Raw -Encoding UTF8
+    $Blob = Invoke-GitHubApi -Method "POST" -Path "repos/$Repository/git/blobs" -Body @{
+      content = $Content
+      encoding = "utf-8"
+    }
+  }
+
+  $TreeEntries += @{
+    path = $Relative
+    mode = "100644"
+    type = "blob"
+    sha = $Blob.sha
+  }
+}
+
+Write-Host "Creating replacement tree..."
+$Tree = Invoke-GitHubApi -Method "POST" -Path "repos/$Repository/git/trees" -Body @{
+  tree = $TreeEntries
+}
+
+Write-Host "Creating commit..."
+$Commit = Invoke-GitHubApi -Method "POST" -Path "repos/$Repository/git/commits" -Body @{
+  message = "Replace wcbs build kit with LLM agnostic Super Build Kit"
+  tree = $Tree.sha
+  parents = @($ParentSha)
+}
+
+Write-Host "Fast-forwarding $Branch..."
+$Updated = Invoke-GitHubApi -Method "PATCH" -Path "repos/$Repository/git/refs/heads/$Branch" -Body @{
+  sha = $Commit.sha
+  force = $false
+}
+
+Write-Host ""
+Write-Host "Published upgraded Super Build Kit."
+Write-Host "Commit: $($Commit.sha)"
+Write-Host "Files: $($TreeEntries.Count)"
+Write-Host "Ref: $($Updated.ref) -> $($Updated.object.sha)"

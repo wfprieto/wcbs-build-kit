@@ -37,3 +37,4 @@ When auditing or changing a Replit app, inspect:
 ## Required Closeout
 
 End with APIVR tier, applicable Elite Build Goals, verification performed, verification not performed, final verdict, and the single next required action.
+
