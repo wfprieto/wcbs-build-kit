@@ -24,7 +24,10 @@ Core operational skills:
 - `skills/test-driven-development/SKILL.md` - APIVR Phase 3 test-first implementation gate.
 - `skills/dispatching-parallel-agents/SKILL.md` - safe parallelization decision protocol.
 - `skills/subagent-driven-development/SKILL.md` - delegated implementation, status handling, and two-stage review.
-- Domain skills for deployment, scheduling, reporting, external APIs, and media/assets.
+- `skills/ui-ux-design-quality/SKILL.md` - frontend UI, UX, visual direction, accessibility and anti-generic design quality.
+- `skills/anti-ai-writing-quality/SKILL.md` - human, direct, non-generic writing quality.
+- `skills/strategist-writing-dna/SKILL.md` - verdict-first strategic communication and anti-drift prompt writing.
+- Domain skills for deployment, scheduling, reporting, external APIs and media/assets.
 
 ## Permanent Authority Order
 
