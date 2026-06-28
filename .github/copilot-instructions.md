@@ -20,6 +20,9 @@ Read:
 - Use `skills/writing-plans/SKILL.md` for plans and `skills/test-driven-development/SKILL.md` for code implementation.
 - Use `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md` for parallel/delegated work.
 - Use `skills/repeatable-agent-loops/SKILL.md` for recurring audits, iterative remediation, monitors, quality sweeps, bounded retries, and repeat-until-stable workflows.
+- Use `skills/long-horizon-agent-runtime/SKILL.md` and `skills/agent-observability-and-run-tracing/SKILL.md` for long-running, multi-stage, tool-heavy, artifact-heavy, Comprehensive, Forensic, or handoff-sensitive work.
+- Use `skills/project-bootstrap-and-setup/SKILL.md` for install, bootstrap, config, first-run, dependency, or setup work.
+- Use `skills/mcp-tool-governance/SKILL.md` for MCP servers, plugin tools, connectors, tool auth, permission scope, overlap, and tool evidence.
 - Use `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` for frontend UI, copy, reports, prompts, and strategic communication.
 - Do not invent tests, results, files, APIs, screenshots, or behavior.
 - Report evidence state and final APIVR verdict.
