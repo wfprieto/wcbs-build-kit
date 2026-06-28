@@ -30,13 +30,15 @@
     "frontend-design",
     "writing-quality",
     "copywriting",
-    "strategic-communication"
+    "strategic-communication",
+    "agent-loops",
+    "repeatable-workflows"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Super Build Kit",
     "shortDescription": "APIVR and Elite Build Goals guardrails for agentic software work.",
-    "longDescription": "A portable LLM-agnostic operating system for planning, auditing, implementing, verifying, and releasing software with evidence-backed APIVR phases, Elite Build Goals, zero-placeholder plans, test-first implementation, subagent review gates, native-first worktrees, UI/UX design quality, anti-AI writing quality, deployment, automation, reporting, integration, and media routing.",
+    "longDescription": "A portable LLM-agnostic operating system for planning, auditing, implementing, verifying, and releasing software with evidence-backed APIVR phases, Elite Build Goals, zero-placeholder plans, test-first implementation, subagent review gates, repeatable agent loops, native-first worktrees, UI/UX design quality, anti-AI writing quality, deployment, automation, reporting, integration, and media routing.",
     "developerName": "Bill Prieto",
     "category": "Productivity",
     "capabilities": [
@@ -49,6 +51,7 @@
       "Plan this feature with Elite Build Goals.",
       "Write a test-first implementation plan.",
       "Review this UI and copy for APIVR quality.",
+      "Design a bounded repeatable agent loop.",
       "Route hosting, jobs, APIs, assets, and subagents."
     ],
     "brandColor": "#2563EB"
