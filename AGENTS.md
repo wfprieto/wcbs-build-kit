@@ -23,6 +23,7 @@ Before planning, editing, auditing, verifying, or releasing:
 - Use `skills/test-driven-development/SKILL.md` for code changes.
 - Use `skills/dispatching-parallel-agents/SKILL.md` before splitting work.
 - Use `skills/subagent-driven-development/SKILL.md` when delegated agents are used.
+- Use `skills/repeatable-agent-loops/SKILL.md` for recurring audits, iterative remediation, monitors, quality sweeps, bounded retries, and repeat-until-stable workflows.
 - Use `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` for user-facing UI, copy, reports, prompts, and strategic communication.
 - Use domain skills for deployment, automation, reporting, external APIs, and media/assets.
 
