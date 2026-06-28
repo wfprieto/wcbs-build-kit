@@ -54,6 +54,18 @@ Check cron/scheduler, webhook, queue, event-driven, worker, monitor, and always-
 
 Check loop objective, scope, non-scope, one-step action rule, evidence check, continue condition, stop conditions, iteration budget, receipt quality, approval boundaries, no-progress detection, unsafe-to-continue handling, and whether the loop remains subordinate to APIVR.
 
+## Long-Horizon Agent Runtime / Traceability
+
+Check stage plan, checkpoints, context preservation, handoff summaries, subagent boundaries, loop boundaries, workspace/scratch/evidence/final-output separation, generated artifacts, run id, trace completeness, redaction, stop reasons, and whether final claims are backed by durable evidence instead of chat memory.
+
+## Project Bootstrap / Setup Safety
+
+Check package manager evidence, lockfiles, setup scripts, config preservation, secret-bearing files, environment examples, install/build commands, generated files, local services, production/resource mutation risk, exact next command, and whether setup claims are limited to verified setup evidence.
+
+## MCP / Tool Governance
+
+Check tool purpose, permission scope, filesystem/network/database/API reach, auth and secret handling, overlapping tool capabilities, destructive action gates, logging/redaction, harmless verification, and which tool produced which evidence.
+
 ## External API / Third-Party Integration
 
 Check provider contract, auth method, secret storage, scopes, validation, timeout, retry, rate-limit handling, idempotency, webhook verification, safe logging, sandbox/test mode, quota/cost, and dependency failure behavior.
