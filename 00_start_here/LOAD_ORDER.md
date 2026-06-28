@@ -26,6 +26,9 @@ Load:
 - `skills/external-api-integration/SKILL.md` when third-party services, SDKs, webhooks, OAuth, API keys, or provider limits are involved
 - `skills/media-and-asset-pipeline/SKILL.md` when images, video, audio, files, fonts, generated media, CDN, or asset rights are involved
 - `skills/data-output-and-reporting/SKILL.md` when dashboards, exports, reports, analytics outputs, or evidence artifacts are involved
+- `skills/ui-ux-design-quality/SKILL.md` when frontend UI, UX, visual direction, accessibility, dashboards, forms, navigation, charts, landing pages, or interface copy are involved
+- `skills/anti-ai-writing-quality/SKILL.md` when copy, reports, emails, client-facing text, website copy, UI microcopy, prompts, or completion reports must avoid generic AI tone
+- `skills/strategist-writing-dna/SKILL.md` when writing must be decisive, tactical, executive-ready, anti-drift, scoped, or proof-driven
 - `30_agents/AGENT_ACTIVATION_MATRIX.md`
 - `60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md`
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
@@ -68,6 +71,8 @@ Load:
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
 - `skills/deployment-and-hosting-guidance/SKILL.md` when release includes deploy or hosting changes
 - `skills/data-output-and-reporting/SKILL.md` when release success depends on reporting, analytics, or exported evidence
+- `skills/ui-ux-design-quality/SKILL.md` when release includes user-facing UI, UX, accessibility, visual quality, dashboards, forms, or interface copy
+- `skills/anti-ai-writing-quality/SKILL.md` when release includes client-facing, user-facing, report, email, prompt, or marketing copy
 
 Do not claim `PASS` while any applicable release gate is failed, unknown, not run, or blocked without accepted non-critical risk.
 
@@ -78,6 +83,8 @@ Load:
 - `20_skills/PORTABLE_SKILL_CONTRACT.md`
 - `skills/super-build-kit/SKILL.md`
 - `skills/writing-plans/SKILL.md` when producing reusable implementation plans or agent handoff plans
+- `skills/anti-ai-writing-quality/SKILL.md` when prompt, skill, agent, or report wording quality matters
+- `skills/strategist-writing-dna/SKILL.md` when prompts or handoffs must resist drift and require proof
 - `30_agents/SPECIALIST_AGENT_ROLES.md`
 - `40_knowledge/SYSTEMATIC_WORKFLOWS.md`
 - `00_start_here/PORTABLE_ADAPTERS.md`
@@ -140,3 +147,28 @@ Load:
 - `40_knowledge/MEDIA_AND_ASSET_PIPELINE_GUIDANCE.md` when media/assets are in scope
 
 Define secrets, auth, rate limits, retries, idempotency, rights, provenance, optimization, fallback, and rendered or provider-level verification.
+
+## Frontend UI, UX, Design, Or Interface Copy
+
+Load:
+
+- `skills/ui-ux-design-quality/SKILL.md`
+- `40_knowledge/UI_UX_DESIGN_SYSTEM_GUIDANCE.md`
+- `60_templates/DESIGN_DIRECTION_BRIEF_TEMPLATE.md` for Standard and above UI work
+- `60_templates/UI_UX_REVIEW_CHECKLIST.md` before final delivery
+- `skills/anti-ai-writing-quality/SKILL.md` when interface, marketing, client-facing, or report copy is involved
+- `skills/strategist-writing-dna/SKILL.md` when the UI work includes strategy, executive narrative, prompts, or decision support
+- `skills/media-and-asset-pipeline/SKILL.md` when images, icons, video, audio, fonts, generated media, or external assets are involved
+- `skills/data-output-and-reporting/SKILL.md` when dashboards, charts, reports, exports, or analytics outputs are involved
+
+Define user, screen job, design direction, accessibility gates, responsive viewports, UI copy standard, anti-generic review, rendered verification, and APIVR verdict.
+
+## Writing, Copy, Voice, Or Strategic Communication
+
+Load:
+
+- `skills/anti-ai-writing-quality/SKILL.md`
+- `skills/strategist-writing-dna/SKILL.md` when the work must be tactical, executive, scoped, proof-driven, or anti-drift
+- `skills/ui-ux-design-quality/SKILL.md` when the writing appears inside an interface or landing page
+
+Define audience, purpose, voice, proof standard, banned patterns, facts versus assumptions, final action, and evidence state.
