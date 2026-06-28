@@ -24,6 +24,9 @@ Do not start from a fix. Start from the APIVR tier router, inspect the real syst
 - Use `skills/test-driven-development/SKILL.md` for APIVR Phase 3 code work.
 - Use `skills/dispatching-parallel-agents/SKILL.md` before splitting work.
 - Use `skills/subagent-driven-development/SKILL.md` when delegated agents implement, review, or verify work.
+- Use `skills/ui-ux-design-quality/SKILL.md` when frontend UI, UX, visual design, accessibility, responsive behavior, dashboards, forms, landing pages or interface copy are in scope.
+- Use `skills/anti-ai-writing-quality/SKILL.md` when writing must sound human, direct, specific and free of generic AI tone.
+- Use `skills/strategist-writing-dna/SKILL.md` when writing must be verdict-first, strategic, scoped, proof-driven or anti-drift.
 - Use domain skills when deployment, automation, reporting, external APIs, or media/assets are in scope.
 
 ## Stop Conditions
@@ -35,6 +38,8 @@ Stop and report instead of guessing when:
 - a material security, privacy, authorization, payment, data-integrity, or production-availability risk appears;
 - evidence is unavailable for a required completion claim;
 - code implementation is requested but test-first or alternate evidence cannot be established;
+- user-facing UI is requested but design direction, accessibility requirements or rendered verification cannot be established;
+- content is requested but proof, audience, voice or factual status cannot be established;
 - delegated work returns `NEEDS_CONTEXT` or `BLOCKED` and no safe reroute exists;
 - two sources of truth conflict and the conflict is not resolved by `SOURCE_OF_TRUTH.md`.
 
