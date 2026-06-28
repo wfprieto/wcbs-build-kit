@@ -25,6 +25,10 @@ Core operational skills:
 - `skills/dispatching-parallel-agents/SKILL.md` - safe parallelization decision protocol.
 - `skills/subagent-driven-development/SKILL.md` - delegated implementation, status handling, and two-stage review.
 - `skills/repeatable-agent-loops/SKILL.md` - bounded recurring, iterative, monitor-like, and repeat-until-stable workflows with receipts and stop conditions.
+- `skills/long-horizon-agent-runtime/SKILL.md` - staged long-running agent work with checkpoints, artifact boundaries, and handoff control.
+- `skills/project-bootstrap-and-setup/SKILL.md` - safe install, bootstrap, config, first-run, and setup-boundary handling.
+- `skills/mcp-tool-governance/SKILL.md` - MCP, plugin, connector, tool auth, permission, overlap, and evidence governance.
+- `skills/agent-observability-and-run-tracing/SKILL.md` - durable run traces, tool records, evidence trails, redactions, and artifact records.
 - `skills/ui-ux-design-quality/SKILL.md` - frontend UI, UX, visual direction, accessibility and anti-generic design quality.
 - `skills/anti-ai-writing-quality/SKILL.md` - human, direct, non-generic writing quality.
 - `skills/strategist-writing-dna/SKILL.md` - verdict-first strategic communication and anti-drift prompt writing.
