@@ -50,6 +50,10 @@ Check hosting tier, environment separation, persistent versus ephemeral workload
 
 Check cron/scheduler, webhook, queue, event-driven, worker, monitor, and always-on workload fit; retry, timeout, idempotency, duplicate prevention, observability, backfill, data freshness, output accuracy, permissions, and reporting horizon.
 
+## Repeatable Agent Loops
+
+Check loop objective, scope, non-scope, one-step action rule, evidence check, continue condition, stop conditions, iteration budget, receipt quality, approval boundaries, no-progress detection, unsafe-to-continue handling, and whether the loop remains subordinate to APIVR.
+
 ## External API / Third-Party Integration
 
 Check provider contract, auth method, secret storage, scopes, validation, timeout, retry, rate-limit handling, idempotency, webhook verification, safe logging, sandbox/test mode, quota/cost, and dependency failure behavior.
