@@ -28,8 +28,10 @@ Use at the end of every APIVR cycle.
 | D Data Integrity |  |  |
 | E Reliability and Operations |  |  |
 | F Product, Accessibility, Visual, and Commercial Quality |  |  |
-| G Performance, SEO, and Cost |  |  |
-| H Verification and Handoff |  |  |
+| G UI/UX Design Quality |  |  |
+| H Writing, Voice, and Copy Quality |  |  |
+| I Performance, SEO, and Cost |  |  |
+| J Verification and Handoff |  |  |
 
 ## Deviations From Plan
 
@@ -44,4 +46,3 @@ Use at the end of every APIVR cycle.
 `PASS` / `CONDITIONAL PASS` / `PARTIAL` / `FAIL` / `BLOCKED`
 
 ## Single Next Required Action
-
