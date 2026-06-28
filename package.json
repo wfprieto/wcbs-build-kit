@@ -21,6 +21,9 @@
     "writing-quality",
     "design-system",
     "agent-loops",
-    "repeatable-workflows"
+    "repeatable-workflows",
+    "long-horizon-agents",
+    "mcp-governance",
+    "run-tracing"
   ]
 }
