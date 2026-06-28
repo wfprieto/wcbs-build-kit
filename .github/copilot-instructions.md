@@ -19,6 +19,7 @@ Read:
 - Preserve source-of-truth hierarchy.
 - Use `skills/writing-plans/SKILL.md` for plans and `skills/test-driven-development/SKILL.md` for code implementation.
 - Use `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md` for parallel/delegated work.
+- Use `skills/repeatable-agent-loops/SKILL.md` for recurring audits, iterative remediation, monitors, quality sweeps, bounded retries, and repeat-until-stable workflows.
 - Use `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` for frontend UI, copy, reports, prompts, and strategic communication.
 - Do not invent tests, results, files, APIs, screenshots, or behavior.
 - Report evidence state and final APIVR verdict.
