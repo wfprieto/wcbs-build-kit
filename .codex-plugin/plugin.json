@@ -32,13 +32,16 @@
     "copywriting",
     "strategic-communication",
     "agent-loops",
-    "repeatable-workflows"
+    "repeatable-workflows",
+    "long-horizon-agents",
+    "mcp-governance",
+    "run-tracing"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Super Build Kit",
     "shortDescription": "APIVR and Elite Build Goals guardrails for agentic software work.",
-    "longDescription": "A portable LLM-agnostic operating system for planning, auditing, implementing, verifying, and releasing software with evidence-backed APIVR phases, Elite Build Goals, zero-placeholder plans, test-first implementation, subagent review gates, repeatable agent loops, native-first worktrees, UI/UX design quality, anti-AI writing quality, deployment, automation, reporting, integration, and media routing.",
+    "longDescription": "A portable LLM-agnostic operating system for planning, auditing, implementing, verifying, and releasing software with evidence-backed APIVR phases, Elite Build Goals, zero-placeholder plans, test-first implementation, subagent review gates, repeatable agent loops, long-horizon run control, setup safety, MCP/tool governance, run tracing, native-first worktrees, UI/UX design quality, anti-AI writing quality, deployment, automation, reporting, integration, and media routing.",
     "developerName": "Bill Prieto",
     "category": "Productivity",
     "capabilities": [
@@ -52,6 +55,7 @@
       "Write a test-first implementation plan.",
       "Review this UI and copy for APIVR quality.",
       "Design a bounded repeatable agent loop.",
+      "Create a long-horizon run control plan.",
       "Route hosting, jobs, APIs, assets, and subagents."
     ],
     "brandColor": "#2563EB"
