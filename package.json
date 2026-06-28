@@ -19,6 +19,8 @@
     "verification",
     "ui-ux",
     "writing-quality",
-    "design-system"
+    "design-system",
+    "agent-loops",
+    "repeatable-workflows"
   ]
 }
