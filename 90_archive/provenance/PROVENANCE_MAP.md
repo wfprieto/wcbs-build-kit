@@ -16,6 +16,7 @@ This kit was created from four source streams.
 | `wfprieto/wcbs-build-kit` | Inspected by GitHub API; canonical concepts merged; original files not copied wholesale | `00_start_here/`, `10_governance/`, `30_agents/`, `50_audits/`, `60_templates/` |
 | `obra/Superpowers` | Inspected by GitHub API; portable workflow concepts merged; original files not copied wholesale | `20_skills/`, `40_knowledge/`, `00_start_here/PORTABLE_ADAPTERS.md` |
 | `Forward-Future/loopy` | Inspected by GitHub; loop discipline adapted; original runtime/catalog/publishing system not copied | `skills/repeatable-agent-loops/SKILL.md`, `40_knowledge/REPEATABLE_AGENT_LOOP_PATTERNS.md`, `60_templates/LOOP_DESIGN_TEMPLATE.md`, `60_templates/LOOP_RUN_RECEIPT_TEMPLATE.md` |
+| `bytedance/deer-flow` | Inspected by GitHub; long-horizon runtime, artifact boundary, setup, MCP governance, and tracing concepts adapted; runtime/platform not copied | `skills/long-horizon-agent-runtime/SKILL.md`, `skills/project-bootstrap-and-setup/SKILL.md`, `skills/mcp-tool-governance/SKILL.md`, `skills/agent-observability-and-run-tracing/SKILL.md`, `40_knowledge/`, `60_templates/` |
 
 ## Deduplication Decisions
 
