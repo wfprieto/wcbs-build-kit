@@ -34,10 +34,13 @@ flowchart TD
   H -- "Worktree needed" --> I["Load using-git-worktrees"]
   H -- "Subagents useful" --> J["Load dispatching-parallel-agents and subagent-driven-development"]
   H -- "No" --> K["Proceed sequentially"]
-  I --> L["Load domain skills by task"]
+  I --> L{"Is work recurring or iterative?"}
   J --> L
   K --> L
-  L --> M["Execute APIVR and report verdict"]
+  L -- "Yes" --> M["Load repeatable-agent-loops"]
+  L -- "No" --> N["Load domain skills by task"]
+  M --> N
+  N --> O["Execute APIVR and report verdict"]
 ```
 
 For implementation plans, feature work, refactors, fixes, or risky edits:
@@ -46,6 +49,7 @@ For implementation plans, feature work, refactors, fixes, or risky edits:
 - Load `skills/test-driven-development/SKILL.md` before APIVR Phase 3 code work.
 - Load `skills/using-git-worktrees/SKILL.md` and prefer native worktree tooling before manual git fallback.
 - Load `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md` before dispatching delegated work.
+- Load `skills/repeatable-agent-loops/SKILL.md` before recurring audits, iterative remediation, quality sweeps, monitors, post-deploy stabilization checks, or any repeat-until-stable workflow.
 
 For deployment, hosting, scheduling, automation, reporting, external APIs, media/assets, UI/UX, frontend design, writing, copy, or strategic communication, load the corresponding specialist skill from `skills/` plus its `40_knowledge/` module or template before planning implementation.
 
@@ -67,9 +71,10 @@ For deployment, hosting, scheduling, automation, reporting, external APIs, media
 3. Worktree/isolation rules when files may change.
 4. Writing plans and TDD for implementation.
 5. Dispatch/subagent protocol when work is split.
-6. Domain skills for deployment, automation, reporting, APIs, and assets.
-7. UI/UX design quality and writing quality skills when user-facing experience or communication quality matters.
-8. Evidence templates and completion reports.
+6. Repeatable loop rules when work is recurring, iterative, monitor-like, or bounded by a stop condition.
+7. Domain skills for deployment, automation, reporting, APIs, and assets.
+8. UI/UX design quality and writing quality skills when user-facing experience or communication quality matters.
+9. Evidence templates and completion reports.
 
 ## Rationalization Rebuttals
 
@@ -82,6 +87,7 @@ For deployment, hosting, scheduling, automation, reporting, external APIs, media
 | I will verify at the end. | Incremental evidence missing. |
 | Deployment is separate. | Release gate disconnected from implementation. |
 | A subagent said it passed. | Final APIVR verdict improperly delegated. |
+| I can let it keep trying until it works. | Loop stop condition and iteration budget missing. |
 | The provider docs are obvious. | External dependency evidence Unknown. |
 | The asset looks fine. | Rendered/rights evidence missing. |
 | The user is in a hurry. | Risk acceptance not recorded. |
@@ -93,6 +99,7 @@ For deployment, hosting, scheduling, automation, reporting, external APIs, media
 - Use evidence states for material claims.
 - Write zero-placeholder plans for Standard and above.
 - Enforce test-first implementation for code changes unless APIVR records automated testing as non-applicable with reason.
+- Enforce loop design, receipts, stop conditions, and iteration budgets for repeatable agent loops.
 - Enforce UI/UX design briefs, anti-generic checks, accessibility gates and rendered verification for user-facing interface work.
 - Enforce anti-AI writing quality and strategist voice rules for copy, reports, prompts and decision-facing communication.
 - Run implementation audit and verification before calling work complete.
