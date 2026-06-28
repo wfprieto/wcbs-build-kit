@@ -24,6 +24,7 @@ Then load only the task-specific files named by `00_start_here/LOAD_ORDER.md`.
 - Before splitting work, use `skills/dispatching-parallel-agents/SKILL.md`.
 - When delegated or parallel agents are used, use `skills/subagent-driven-development/SKILL.md`.
 - For deployment, automation, reporting, external APIs, or media/assets, load the corresponding specialist skill from `skills/`.
+- For frontend UI, UX, copy, reports, prompts, or strategic communication, load `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` as applicable.
 - Never claim a check passed unless it was actually run.
 - End material work with APIVR tier, applicable Elite Build Goals, evidence state, verification performed, release-gate status, final verdict, and the single next required action.
 
