@@ -16,6 +16,9 @@
     "audit",
     "agent",
     "build-kit",
-    "verification"
+    "verification",
+    "ui-ux",
+    "writing-quality",
+    "design-system"
   ]
 }
