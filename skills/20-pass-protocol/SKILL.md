@@ -9,6 +9,7 @@ Use this skill when the cost of a sloppy artifact is high. It applies to prompts
 
 <HARD-GATE>
 Do not claim `20 passes completed` unless the artifact was actually reviewed and improved through all 20 passes.
+Each pass must make at least one concrete improvement to the artifact itself. A passive review, agreement, score-only note, or "no change needed" does not count as a pass.
 </HARD-GATE>
 
 This protocol does not replace APIVR, TDD, code review, security review, release gates, or provider smoke tests. It strengthens them.
@@ -38,6 +39,10 @@ Use a compressed version only when APIVR tier is Rapid and the artifact is low-r
 ## 20 Passes
 
 Run these passes after the first draft or first implementation.
+
+A pass counts only when it changes the artifact in a useful way: clarifies language, removes ambiguity, tightens scope, adds missing evidence, corrects a source path, improves verification, adds a stop condition, removes duplication, strengthens safety, improves executability, or compresses without losing control.
+
+Do not make fake or cosmetic edits just to count a pass. If no safe, useful improvement remains before pass 20, stop and report the completed pass count instead of claiming all 20.
 
 | Pass | Focus | Required improvement question |
 |---:|---|---|
@@ -69,6 +74,7 @@ After the passes, provide a short visible summary. Do not expose private hidden 
 ```text
 20 Pass Protocol:
 - Passes completed: 20 / 20
+- Improvement proof: one useful artifact improvement was made in each counted pass
 - Main improvements made:
 - Remaining limitations:
 - Initial score: X / 10
