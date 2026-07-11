@@ -50,6 +50,7 @@ For new features, start with a vertical tracer bullet: one thin behavior that cr
 - Failing test exists before production change.
 - Failure was observed and matches the intended behavior.
 - Production change is the smallest safe change.
+- For high-stakes source files, `skills/20-pass-protocol/SKILL.md` was applied before final release claims.
 - Targeted test passes after implementation.
 - Relevant neighboring tests pass or are explicitly risk-accepted.
 - Refactor does not change behavior beyond the plan.

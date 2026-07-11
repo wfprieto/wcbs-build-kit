@@ -48,6 +48,7 @@ Do not start from a fix. Start from the APIVR tier router, inspect the real syst
 - Use `skills/ui-ux-design-quality/SKILL.md` when frontend UI, UX, visual design, accessibility, responsive behavior, dashboards, forms, landing pages or interface copy are in scope.
 - Use `skills/anti-ai-writing-quality/SKILL.md` when writing must sound human, direct, specific and free of generic AI tone.
 - Use `skills/strategist-writing-dna/SKILL.md` when writing must be verdict-first, strategic, scoped, proof-driven or anti-drift.
+- Use `skills/20-pass-protocol/SKILL.md` when creating, reviewing, improving, or finalizing high-stakes prompts, agents, skills, source files, plans, audits, runbooks, templates, release instructions, or any artifact where precision failure is expensive.
 - Use `skills/external-integration-launch-gate/SKILL.md` when outside systems call the app or the work touches Stripe, Resend, Supabase Auth, OAuth callbacks, cron routes, SMS/provider queues, webhooks, provider dashboard URLs, deployment protection, sandbox/live mode, or Preview/Production environment variables.
 - Use domain skills when deployment, automation, reporting, external APIs, or media/assets are in scope.
 

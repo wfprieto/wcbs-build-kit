@@ -1,0 +1,4 @@
+interface:
+  display_name: "20 Pass Protocol"
+  short_description: "Runs 20 precision passes on critical artifacts."
+  default_prompt: "Use the 20 Pass Protocol to create, review, improve, compress, and score high-stakes prompts, agents, skills, source files, plans, audits, runbooks, templates, or release instructions where accuracy and attention to detail are critical."

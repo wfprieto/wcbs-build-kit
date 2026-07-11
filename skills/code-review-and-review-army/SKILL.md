@@ -20,6 +20,7 @@ Select only relevant reviewers:
 - Maintainability Reviewer: module boundaries, naming, deletion test, and local patterns.
 - UX/QA Reviewer: user flow, accessibility, responsive behavior, and adverse states.
 - External Integration Gatekeeper: provider-facing route contracts, deployed provider delivery, deployment protection, middleware redirects, sandbox/live split, and machine-caller auth boundaries.
+- 20 Pass Reviewer: high-stakes source files, prompts, agents, skills, plans, runbooks, release instructions, and final reports have gone through the 20 Pass Protocol or have a justified compressed pass.
 - Learning Reviewer: checks whether findings reveal a reusable lesson, stale guidance, or duplicate source of truth that should route to compound learning or knowledge refresh after verification.
 
 ## Review Flow

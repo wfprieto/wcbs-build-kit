@@ -51,6 +51,7 @@ flowchart TD
 For implementation plans, feature work, refactors, fixes, or risky edits:
 
 - Load `skills/writing-plans/SKILL.md` before plan creation.
+- Load `skills/20-pass-protocol/SKILL.md` before finalizing high-stakes prompts, agents, skills, source files, plans, audits, runbooks, templates, release instructions, or other accuracy-critical artifacts.
 - Load `skills/test-driven-development/SKILL.md` before APIVR Phase 3 code work.
 - Load `skills/using-git-worktrees/SKILL.md` and prefer native worktree tooling before manual git fallback.
 - Load `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md` before dispatching delegated work.
@@ -82,14 +83,15 @@ For deployment, hosting, scheduling, automation, reporting, external APIs, media
 2. Audit tier and release gates.
 3. Worktree/isolation rules when files may change.
 4. Writing plans and TDD for implementation.
-5. Dispatch/subagent protocol when work is split.
-6. Long-horizon run control, workspace boundaries, and trace rules when work spans stages, tools, artifacts, or handoffs.
-7. Repeatable loop rules when work is recurring, iterative, monitor-like, or bounded by a stop condition.
-8. Bootstrap/setup and MCP/tool governance when runtime setup or tool access matters.
-9. Cybersecurity routing and security-specific skills when safety, auth, privacy, AI security, incidents, supply chain, or dual-use work matters.
-10. Domain skills for deployment, automation, reporting, APIs, and assets.
-11. UI/UX design quality and writing quality skills when user-facing experience or communication quality matters.
-12. Evidence templates and completion reports.
+5. 20 Pass Protocol when precision failure is expensive.
+6. Dispatch/subagent protocol when work is split.
+7. Long-horizon run control, workspace boundaries, and trace rules when work spans stages, tools, artifacts, or handoffs.
+8. Repeatable loop rules when work is recurring, iterative, monitor-like, or bounded by a stop condition.
+9. Bootstrap/setup and MCP/tool governance when runtime setup or tool access matters.
+10. Cybersecurity routing and security-specific skills when safety, auth, privacy, AI security, incidents, supply chain, or dual-use work matters.
+11. Domain skills for deployment, automation, reporting, APIs, and assets.
+12. UI/UX design quality and writing quality skills when user-facing experience or communication quality matters.
+13. Evidence templates and completion reports.
 
 ## Rationalization Rebuttals
 
@@ -98,6 +100,7 @@ For deployment, hosting, scheduling, automation, reporting, external APIs, media
 | This is too small for the kit. | Tier selection skipped. |
 | I know the answer already. | Phase 1 audit skipped. |
 | I can plan in my head. | Phase 2 evidence missing. |
+| I made it better but did not run the precision pass. | High-stakes artifact review skipped. |
 | Tests are optional here. | Phase 3 TDD gate violated unless non-applicability is proved. |
 | I will verify at the end. | Incremental evidence missing. |
 | Deployment is separate. | Release gate disconnected from implementation. |
@@ -119,6 +122,7 @@ For deployment, hosting, scheduling, automation, reporting, external APIs, media
 - Apply the relevant Elite Build Goals.
 - Use evidence states for material claims.
 - Write zero-placeholder plans for Standard and above.
+- Use the 20 Pass Protocol before finalizing high-stakes prompts, agents, skills, source files, plans, audits, runbooks, templates, release instructions, or other accuracy-critical artifacts.
 - Enforce test-first implementation for code changes unless APIVR records automated testing as non-applicable with reason.
 - Enforce loop design, receipts, stop conditions, and iteration budgets for repeatable agent loops.
 - Enforce long-horizon checkpoints, workspace/artifact boundaries, context-preservation rules, and run traces for staged or serious work.

@@ -19,7 +19,8 @@ Do not approve a plan that cannot be executed and verified without inventing mis
 4. Risk: security, data integrity, migration, performance, cost, release, and rollback.
 5. Operations: logs, metrics, health, retries, backfill, and incident recovery.
 6. External integration gate: for provider callbacks, webhooks, OAuth/Auth redirects, cron routes, payments, email/SMS providers, or Preview/Production env splits, confirm `skills/external-integration-launch-gate/SKILL.md` was applied and route contracts exist.
-7. Execution: exact files, commands, sequence, and stop conditions.
+7. 20 Pass Protocol: for high-stakes plans, agent handoffs, source-file precise remediation, release instructions, or forensic audit outputs, confirm `skills/20-pass-protocol/SKILL.md` was applied or a compressed pass is justified.
+8. Execution: exact files, commands, sequence, and stop conditions.
 
 ## Decision Flow
 

@@ -8,6 +8,7 @@ This contract defines how skills in this kit should behave across Codex, Claude,
 - Runtime-specific plugin copies are generated adapters.
 - APIVR remains the first required execution skill for any build, fix, audit, release, or verification task.
 - Skills may route, focus, or specialize work; they may not override source-of-truth authority.
+- High-stakes skills and agent instructions should use `skills/20-pass-protocol/SKILL.md` before finalization.
 
 ## Required Skill Header Fields
 
@@ -38,4 +39,5 @@ When a skill activates, it must:
 - Skipping verification because implementation appears obvious.
 - Using model-specific language that blocks portability.
 - Creating duplicate business rules or duplicate guardrails.
+- Claiming 20-pass review without actually completing the passes.
 

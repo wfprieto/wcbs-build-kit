@@ -37,6 +37,7 @@ Do not produce a vague plan. Do not use placeholders such as TBD, later, as need
 11. Add rollback triggers and restoration steps.
 12. Add compound-learning capture or knowledge-refresh decision for Standard and above work.
 13. Add challenge-review questions for Important, Critical, Comprehensive, or Forensic work.
+14. Apply `skills/20-pass-protocol/SKILL.md` before finalizing high-stakes, reusable, production-impacting, or agent-executed plans.
 
 ## Decision Flow
 
@@ -89,6 +90,7 @@ When naming, data states, business rules, or durable decisions matter, add:
 For Standard and above, include applicable review steps:
 
 - Engineering plan review before implementation for high-risk, multi-file, migration, architecture, or integration work.
+- 20 Pass Protocol before finalizing high-stakes plans, forensic prompts, agent handoffs, launch instructions, or source-file precise remediation plans.
 - APIVR Phase 4 code review and specialist review passes after implementation.
 - QA health report for rendered or user-visible workflows.
 - Release readiness dashboard before merge, deploy, publish, handoff, or done claims.
@@ -138,3 +140,4 @@ Scenario: Add webhook retry protection for a payment provider.
 ## Completion Standard
 
 A plan is complete when every action has an owner or executing agent, exact target, expected evidence state, and stop condition. Mark the plan `BLOCKED` instead of filling gaps with assumptions.
+For high-stakes plans, include the 20 Pass Protocol summary or state why the compressed version was sufficient.

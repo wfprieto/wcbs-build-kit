@@ -21,6 +21,7 @@ Load:
 - `skills/domain-modeling-and-shared-language/SKILL.md` when durable business vocabulary, states, events, roles, domain boundaries, or ADRs affect design or naming
 - `skills/product-requirements-and-issue-slicing/SKILL.md` when plans, PRDs, or audits must become vertical, independently verifiable implementation slices
 - `skills/writing-plans/SKILL.md` for APIVR Phase 2 implementation plans
+- `skills/20-pass-protocol/SKILL.md` when the plan, prompt, source-file edit, agent handoff, release instruction, or other artifact is high-stakes and precision failure is expensive
 - `skills/engineering-plan-review/SKILL.md` before implementing high-risk, multi-file, architecture, migration, or integration plans
 - `skills/test-driven-development/SKILL.md` for APIVR Phase 3 implementation work
 - `skills/codebase-design-and-deep-modules/SKILL.md` when module boundaries, adapters, dependency direction, refactors, or architectural leverage are in scope
@@ -78,6 +79,7 @@ Load:
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
 - `skills/repeatable-agent-loops/SKILL.md` when the audit is a repeated sweep or iterative remediation loop
 - `skills/knowledge-refresh-and-drift-control/SKILL.md` when the audit reviews skills, templates, knowledge files, lessons, load order, or stale/duplicated guidance
+- `skills/20-pass-protocol/SKILL.md` when the audit produces or reviews high-stakes prompts, agents, skills, source files, plans, runbooks, release instructions, or final reports
 - `skills/cybersecurity-risk-routing/SKILL.md` when cybersecurity, security release gates, dual-use, AI security, incident, supply-chain, MCP/tool security, or vulnerability work is in scope
 - `skills/external-integration-launch-gate/SKILL.md` when the audit includes provider callbacks, webhooks, OAuth redirects, payment/email/SMS providers, cron routes, deployment protection, provider dashboard URLs, or environment separation
 
@@ -114,6 +116,7 @@ Load:
 - `60_templates/EVIDENCE_LEDGER_TEMPLATE.md`
 - `60_templates/COMPLETION_REPORT_TEMPLATE.md`
 - `skills/release-readiness-and-ship-gates/SKILL.md`
+- `skills/20-pass-protocol/SKILL.md` when release evidence, launch instructions, rollback instructions, source-file changes, or final signoff claims require high precision
 - `60_templates/RELEASE_READINESS_DASHBOARD_TEMPLATE.md`
 - `skills/compound-learning-capture/SKILL.md` when the release or verification produced a reusable lesson, repeated fix pattern, provider behavior, or new review rule
 - `60_templates/SOLVED_PROBLEM_LEARNING_TEMPLATE.md` when a reusable lesson is captured
@@ -135,6 +138,7 @@ Load:
 
 - `20_skills/PORTABLE_SKILL_CONTRACT.md`
 - `skills/super-build-kit/SKILL.md`
+- `skills/20-pass-protocol/SKILL.md`
 - `skills/writing-plans/SKILL.md` when producing reusable implementation plans or agent handoff plans
 - `skills/requirements-grilling-and-alignment/SKILL.md` when prompt, skill, or agent design has ambiguous objectives, audiences, or scope
 - `skills/domain-modeling-and-shared-language/SKILL.md` when prompt, skill, or agent behavior depends on domain language or decisions
@@ -152,7 +156,7 @@ Load:
 - `40_knowledge/SYSTEMATIC_WORKFLOWS.md`
 - `00_start_here/PORTABLE_ADAPTERS.md`
 
-Prompt and skill work must still define objective, audience, non-goals, evidence, and verification.
+Prompt, skill, and agent work must still define objective, audience, non-goals, evidence, verification, and a 20 Pass Protocol summary for high-stakes artifacts.
 
 ## Isolated Feature Work Or Plan Execution
 
@@ -176,6 +180,7 @@ Detect existing isolation first. Prefer native worktree tools. Use manual `git w
 Load:
 
 - `skills/writing-plans/SKILL.md`
+- `skills/20-pass-protocol/SKILL.md` when the plan or handoff is high-stakes, reusable, production-impacting, or source-file precise
 - `skills/requirements-grilling-and-alignment/SKILL.md` when the plan inputs are ambiguous
 - `skills/product-strategy-office-hours/SKILL.md` when the plan depends on product, buyer, user, or premise decisions
 - `skills/product-requirements-and-issue-slicing/SKILL.md` when the plan must be split into vertical implementation slices
@@ -316,6 +321,7 @@ Define user, screen job, design direction, accessibility gates, responsive viewp
 Load:
 
 - `skills/anti-ai-writing-quality/SKILL.md`
+- `skills/20-pass-protocol/SKILL.md` when the writing is a high-stakes prompt, agent instruction, runbook, release note, executive decision artifact, or accuracy-critical report
 - `skills/strategist-writing-dna/SKILL.md` when the work must be tactical, executive, scoped, proof-driven, or anti-drift
 - `skills/ui-ux-design-quality/SKILL.md` when the writing appears inside an interface or landing page
 
@@ -342,6 +348,7 @@ Load:
 - `skills/codebase-design-and-deep-modules/SKILL.md` for architecture, module boundaries, adapters, refactors, dependency direction, locality, or deletion tests
 - `40_knowledge/CODEBASE_DESIGN_DEEP_MODULES.md`
 - `skills/engineering-plan-review/SKILL.md` before high-risk or multi-file implementation
+- `skills/20-pass-protocol/SKILL.md` when source-file changes, plans, reviews, or release claims are high-stakes and require extra precision
 - `skills/code-review-and-review-army/SKILL.md` for APIVR Phase 4 specialist implementation review
 - `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` before fixing bugs, regressions, incidents, flaky behavior, or unknown failures
 - `skills/throwaway-prototyping/SKILL.md` for spikes, experiments, provider trials, or disposable proofs of concept

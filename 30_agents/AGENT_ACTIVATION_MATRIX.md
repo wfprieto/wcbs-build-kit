@@ -39,6 +39,7 @@ Add when applicable:
 - Design Quality Lead for visual direction, anti-generic UI, design-system discipline, UI copy, and rendered review.
 - Writing Quality Lead for anti-AI tone, human rhythm, client-ready clarity, and copy evidence.
 - Strategist Voice Lead for verdict-first structure, executive clarity, anti-drift prompts, and proof-driven communication.
+- 20 Pass Reviewer for high-stakes prompts, agents, skills, source files, plans, audits, runbooks, templates, release instructions, and accuracy-critical artifacts.
 - Operations Lead for logging, monitoring, rollback, health, incident response.
 - Deployment/Infrastructure Lead for hosting tier, runtime placement, environments, deployment, rollback, scaling, and cost.
 - Automation Lead for cron, webhooks, event-driven work, queues, workers, monitors, and recurring jobs.
@@ -73,6 +74,7 @@ For Forensic audits, add:
 - Decision Owner
 - Evidence Custodian
 - Code Review Captain, Release Readiness Lead, and QA Lead for any implementation, release, or handoff with user, revenue, security, data, or production impact
+- 20 Pass Reviewer for final audit prompts, remediation plans, source-file corrections, release instructions, and final reports where precision failure would be expensive
 - Security Architect, Incident Commander, AppSec Lead, AI Security Lead, Supply Chain Security Lead, and Security/Data/Operations specialists for any API, automation, reporting, deployment, AI system, tool, supply-chain path, or asset pipeline with private data, money, auth, or regulated impact
 - External Integration Gatekeeper for any audit involving Stripe, Resend, Supabase Auth, OAuth, cron, SMS/provider queues, provider dashboards, webhooks, callbacks, or Preview/Production environment splits
 
@@ -95,3 +97,4 @@ For user-facing interface or content work, activate:
 - Design Quality Lead;
 - Writing Quality Lead when copy, labels, reports, emails, prompts, or client-facing text are involved;
 - Strategist Voice Lead when the output must guide a decision, prevent drift, or define proof.
+- 20 Pass Reviewer when the output is high-stakes, reusable, launch-facing, agent-facing, or accuracy-critical.

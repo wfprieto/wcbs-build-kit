@@ -33,6 +33,7 @@ flowchart TD
 - Evidence ledger or security evidence ledger when applicable.
 - Rollback trigger and restoration path.
 - Changelog or user-facing note when behavior changes.
+- 20 Pass Protocol summary when final release instructions, rollback instructions, launch prompts, source-file changes, or signoff claims are high-stakes.
 - Post-release verification horizon for production changes.
 - External integration launch gate verdict when provider callbacks, webhooks, cron routes, OAuth/Auth redirects, payment/email/SMS providers, deployment protection, or Preview/Production environment separation are in scope.
 - Compound-learning decision for Standard and above: update canonical guidance, create a solved-problem learning entry, schedule knowledge refresh, or do not preserve.

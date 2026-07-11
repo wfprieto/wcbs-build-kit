@@ -15,7 +15,8 @@ Use this skill for developer-facing workflows and durable docs.
 4. Confirm secrets, tokens, and private data are redacted.
 5. Ensure handoffs reference artifacts and evidence instead of replaying chat memory.
 6. For provider-facing routes, confirm docs name the route contract, deployed callback URL, provider account/environment, sandbox/live values, deployment-protection expectation, replay/idempotency behavior, and exact verification evidence.
-7. Classify evidence state for every claim that affects setup, release, or operation.
+7. Apply `skills/20-pass-protocol/SKILL.md` to high-stakes runbooks, setup instructions, release notes, prompts, agent handoffs, and accuracy-critical docs.
+8. Classify evidence state for every claim that affects setup, release, or operation.
 
 ## Documentation Types
 

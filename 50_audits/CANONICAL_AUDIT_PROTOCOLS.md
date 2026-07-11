@@ -128,6 +128,10 @@ Check asset provenance, rights/licensing, generate versus retrieve versus refere
 
 Check activation clarity, authority order, portability, missing inputs, output contracts, evidence requirements, skill invocation logic, subagent dispatch safety, review gates, and whether reusable instructions can trigger reliably.
 
+## 20 Pass Protocol Audit
+
+Check whether high-stakes prompts, agents, skills, source files, plans, audits, runbooks, templates, release instructions, and final reports received a full or justified compressed 20 Pass Protocol review. Verify the pass summary is honest, source-of-truth discipline is intact, verification requirements are explicit, and remaining limitations are named.
+
 ## Engineering Plan Review / Specialist Code Review
 
 Check zero-placeholder plan quality, file/path specificity, source-of-truth alignment, architecture fit, risk review, review-army specialist passes, scope drift, finding severity, and whether Blocking findings route back through APIVR before release.

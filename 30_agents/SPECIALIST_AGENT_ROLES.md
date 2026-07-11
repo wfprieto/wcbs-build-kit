@@ -77,3 +77,7 @@ Owns generated versus retrieved versus referenced asset routing, asset rights/pr
 ## Prompt / Skill Engineer
 
 Owns reusable instruction quality, activation clarity, portability, and prompt/skill verification.
+
+## 20 Pass Reviewer
+
+Owns 20-pass precision review for high-stakes prompts, agents, skills, source files, plans, audits, runbooks, templates, release instructions, completion reports, and other artifacts where accuracy failure is expensive.

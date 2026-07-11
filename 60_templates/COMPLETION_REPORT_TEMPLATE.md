@@ -41,6 +41,17 @@ Complete when long-horizon runtime, setup, MCP/tool governance, or run tracing w
 - Setup/tooling boundary status:
 - Redactions or sensitive data handling:
 
+## 20 Pass Protocol Summary
+
+Complete when high-stakes prompts, agents, skills, source files, plans, audits, runbooks, templates, release instructions, or accuracy-critical artifacts were created or finalized.
+
+- Protocol used: Full / Compressed / Not applicable
+- Passes completed:
+- Main improvements made:
+- Initial score:
+- Final score:
+- Remaining limitations:
+
 ## Cybersecurity / Authorization / Supply Chain Summary
 
 Complete when cybersecurity, app security, AI security, MCP/tool security, incident response, vulnerabilities, dependencies, CI/CD, containers, IaC, SBOMs, live testing, or dual-use work was in scope.
