@@ -47,6 +47,7 @@ Load:
 - `skills/deployment-and-hosting-guidance/SKILL.md` when hosting, deploy, runtime, cost, or environment choices are involved
 - `skills/scheduling-and-automation-routing/SKILL.md` when jobs, webhooks, queues, reminders, monitors, or workers are involved
 - `skills/external-api-integration/SKILL.md` when third-party services, SDKs, webhooks, OAuth, API keys, or provider limits are involved
+- `skills/external-integration-launch-gate/SKILL.md` when outside systems call the app or the work touches webhooks, callbacks, OAuth redirects, payments, email providers, cron routes, SMS/provider queues, deployment protection, provider sandbox/live mode, or Preview/Production environment splits
 - `skills/media-and-asset-pipeline/SKILL.md` when images, video, audio, files, fonts, generated media, CDN, or asset rights are involved
 - `skills/data-output-and-reporting/SKILL.md` when dashboards, exports, reports, analytics outputs, or evidence artifacts are involved
 - `skills/ui-ux-design-quality/SKILL.md` when frontend UI, UX, visual direction, accessibility, dashboards, forms, navigation, charts, landing pages, or interface copy are involved
@@ -78,6 +79,7 @@ Load:
 - `skills/repeatable-agent-loops/SKILL.md` when the audit is a repeated sweep or iterative remediation loop
 - `skills/knowledge-refresh-and-drift-control/SKILL.md` when the audit reviews skills, templates, knowledge files, lessons, load order, or stale/duplicated guidance
 - `skills/cybersecurity-risk-routing/SKILL.md` when cybersecurity, security release gates, dual-use, AI security, incident, supply-chain, MCP/tool security, or vulnerability work is in scope
+- `skills/external-integration-launch-gate/SKILL.md` when the audit includes provider callbacks, webhooks, OAuth redirects, payment/email/SMS providers, cron routes, deployment protection, provider dashboard URLs, or environment separation
 
 For Comprehensive or Forensic audits, also load:
 
@@ -95,6 +97,7 @@ Load:
 - `skills/deployment-and-hosting-guidance/SKILL.md` for deployment/runtime/hosting incidents
 - `skills/scheduling-and-automation-routing/SKILL.md` for job, queue, webhook, worker, or monitor failures
 - `skills/external-api-integration/SKILL.md` for provider, webhook, API, auth, quota, or rate-limit failures
+- `skills/external-integration-launch-gate/SKILL.md` for provider callback failures, webhook redirects, deployment-protection blocks, wrong callback URLs, preview-to-production redirects, or sandbox/live environment mixups
 - `skills/cybersecurity-risk-routing/SKILL.md` for any suspected security cause or security-sensitive incident
 - `skills/security-incident-response/SKILL.md` for suspected compromise, unauthorized access, malware, ransomware, data leakage, or security alert triage
 - `skills/ai-application-security/SKILL.md` for AI app, prompt, RAG, vector, model, or agent security incidents
@@ -118,6 +121,7 @@ Load:
 - `skills/qa-and-browser-verification/SKILL.md` when release depends on user-visible workflow or browser QA evidence
 - `skills/deployment-and-hosting-guidance/SKILL.md` when release includes deploy or hosting changes
 - `skills/data-output-and-reporting/SKILL.md` when release success depends on reporting, analytics, or exported evidence
+- `skills/external-integration-launch-gate/SKILL.md` when release depends on Stripe, Resend, Supabase Auth, OAuth, Vercel Cron, SMS/provider callbacks, webhooks, provider dashboard setup, or Preview/Production environment separation
 - `skills/cybersecurity-risk-routing/SKILL.md` when release includes security-sensitive code, auth, privacy, payments, regulated data, APIs, AI systems, tools, CI/CD, or supply-chain risk
 - `skills/supply-chain-and-build-provenance/SKILL.md` when release depends on dependencies, CI/CD, containers, IaC, SBOMs, artifact signing, provenance, or package publishing
 - `skills/repeatable-agent-loops/SKILL.md` when release depends on repeated post-deploy checks, monitors, stabilization windows, or iterative evidence collection
@@ -177,6 +181,7 @@ Load:
 - `skills/product-requirements-and-issue-slicing/SKILL.md` when the plan must be split into vertical implementation slices
 - `skills/domain-modeling-and-shared-language/SKILL.md` when the plan introduces durable terms, states, or ADRs
 - `skills/test-driven-development/SKILL.md` for any code implementation
+- `skills/external-integration-launch-gate/SKILL.md` when the plan includes provider callbacks, webhooks, auth redirects, cron, payments, email delivery, deployment protection, or Production/Preview env splits
 - `skills/engineering-plan-review/SKILL.md` before handing off high-risk or multi-file plans
 - `skills/dispatching-parallel-agents/SKILL.md` when the plan contains parallel task slices
 - `skills/subagent-driven-development/SKILL.md` when the plan delegates implementation or review
@@ -208,6 +213,7 @@ Load:
 
 - `skills/deployment-and-hosting-guidance/SKILL.md`
 - `40_knowledge/DEPLOYMENT_AND_HOSTING_GUIDANCE.md`
+- `skills/external-integration-launch-gate/SKILL.md` when deployment work includes provider-facing routes, callbacks, webhooks, OAuth/Auth redirects, cron routes, deployment protection, provider dashboard URLs, or Preview/Production environment splits
 - `60_templates/ROLLBACK_RECORD_TEMPLATE.md`
 
 Route persistent versus ephemeral work, cost risk, environments, rollback, and post-deploy verification through APIVR.
@@ -217,6 +223,7 @@ Route persistent versus ephemeral work, cost risk, environments, rollback, and p
 Load:
 
 - `skills/scheduling-and-automation-routing/SKILL.md`
+- `skills/external-integration-launch-gate/SKILL.md` when scheduled, webhook, provider, or event-driven work must be reachable from outside the app
 - `skills/repeatable-agent-loops/SKILL.md` when the workflow repeats, monitors state, retries, sweeps, or runs until a condition is met
 - `skills/data-output-and-reporting/SKILL.md` when outputs or reports are part of the workflow
 - `skills/compound-learning-capture/SKILL.md` when repeated automation/reporting failures or successful patterns should become reusable learning
@@ -273,6 +280,7 @@ Load:
 - `skills/supply-chain-and-build-provenance/SKILL.md` for dependencies, lockfiles, CI/CD, SBOMs, secret scanning, containers, IaC, signatures, provenance, or artifact release trust
 - `skills/mcp-tool-governance/SKILL.md` for MCP/tool poisoning, tool shadowing, rug pulls, toxic flows, SSRF risk, unauthenticated MCP exposure, tool allowlists, or human approval gates
 - `skills/external-api-integration/SKILL.md` for API auth, OAuth, webhooks, BOLA/IDOR, mass assignment, rate limits, abuse controls, or unsafe third-party consumption
+- `skills/external-integration-launch-gate/SKILL.md` for provider inbound routes, OAuth callbacks, webhook reachability, deployment protection, sandbox/live separation, or external-world smoke tests
 
 Use Rapid only for narrow, non-live, reversible security review. Use Comprehensive or Forensic for private data, auth, payments, production, cloud/IAM, CI/CD, AI systems, incidents, or unknown core security evidence.
 
@@ -281,6 +289,7 @@ Use Rapid only for narrow, non-live, reversible security review. Use Comprehensi
 Load:
 
 - `skills/external-api-integration/SKILL.md`
+- `skills/external-integration-launch-gate/SKILL.md` when the API integration has provider callbacks, webhooks, OAuth redirects, machine-to-machine inbound calls, provider dashboard URLs, sandbox/live mode, or Preview/Production environment differences
 - `40_knowledge/EXTERNAL_API_INTEGRATION_GUIDANCE.md`
 - `skills/media-and-asset-pipeline/SKILL.md` when assets are generated, retrieved, transformed, stored, cached, licensed, or delivered
 - `40_knowledge/MEDIA_AND_ASSET_PIPELINE_GUIDANCE.md` when media/assets are in scope

@@ -135,6 +135,29 @@ Complete when user-facing interface, copy, reports, prompts, client-facing commu
 
 ## Dependencies
 
+## External Integration Launch Gate
+
+Complete when an outside system calls the app or the work touches provider callbacks, webhooks, OAuth/Auth redirects, cron/scheduler calls, SMS/provider queues, payment/email providers, provider dashboard URLs, deployment protection, sandbox/live mode, or Preview/Production environment variables.
+
+- External integration launch gate skill:
+- Provider/caller:
+- Provider account/environment:
+- Deployed callback URL:
+- Route contract location:
+- Human login required: Yes / No
+- Machine protection:
+- Middleware/layout/deployment protection expectation:
+- Provider dashboard test:
+- Expected success response:
+- Expected missing/invalid protection response:
+- Database effect:
+- User-visible effect:
+- Idempotency/retry evidence:
+- Production value:
+- Preview value:
+- Local value:
+- Blocking unknowns:
+
 ## Cybersecurity / Authorization / Supply Chain Plan
 
 Complete when cybersecurity, app security, AI security, MCP/tool security, incidents, dependencies, CI/CD, containers, IaC, SBOMs, live testing, or dual-use work is in scope.

@@ -80,6 +80,10 @@ Check hosting tier, environment separation, persistent versus ephemeral workload
 
 Check cron/scheduler, webhook, queue, event-driven, worker, monitor, and always-on workload fit; retry, timeout, idempotency, duplicate prevention, observability, backfill, data freshness, output accuracy, permissions, and reporting horizon.
 
+## External Integration Launch Gate
+
+Check every route that an outside system calls: provider dashboard URL, deployed environment, hosting/deployment protection, middleware, app layouts, route handler, provider signature or shared-secret validation, idempotency, database effect, user-visible effect, logs, and retry/replay behavior. Verify machine callers are not forced through human login, and verify Preview/Production environment values intentionally separate sandbox/test and live provider modes.
+
 ## Repeatable Agent Loops
 
 Check loop objective, scope, non-scope, one-step action rule, evidence check, continue condition, stop conditions, iteration budget, receipt quality, approval boundaries, no-progress detection, unsafe-to-continue handling, and whether the loop remains subordinate to APIVR.
@@ -113,6 +117,8 @@ Check exploitation status, public PoC, CISA KEV/EPSS where applicable, technical
 ## External API / Third-Party Integration
 
 Check provider contract, auth method, secret storage, scopes, validation, timeout, retry, rate-limit handling, idempotency, webhook verification, safe logging, sandbox/test mode, quota/cost, and dependency failure behavior.
+
+For inbound provider routes, also apply the External Integration Launch Gate: direct handler tests are insufficient unless the deployed provider-to-app path is verified or explicitly blocked with owner-approved risk.
 
 ## Media / Asset Pipeline
 

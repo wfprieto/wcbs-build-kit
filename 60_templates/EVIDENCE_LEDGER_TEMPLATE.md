@@ -14,4 +14,5 @@ Use for all Standard, Comprehensive, and Forensic work. Use a compressed version
 - Separate observed result from interpretation.
 - Redact secrets and private data.
 - Update the ledger when later evidence changes the verdict.
+- For provider-facing routes, use one row per route and include deployed URL, provider account/environment, provider event ID or delivery log, app log, database effect, user-visible effect, and Preview/Production separation evidence.
 

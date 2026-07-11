@@ -1,6 +1,6 @@
 # External API Integration Guidance
 
-Use this module with `skills/external-api-integration/SKILL.md`.
+Use this module with `skills/external-api-integration/SKILL.md`. For inbound provider routes, webhooks, callbacks, cron calls, OAuth/Auth redirects, provider dashboard URLs, deployment protection, or sandbox/live environment splits, also use `skills/external-integration-launch-gate/SKILL.md`.
 
 ## Integration Route
 
@@ -12,6 +12,7 @@ Use this module with `skills/external-api-integration/SKILL.md`.
 | OAuth integration | least privilege scopes, token refresh, revocation |
 | Batch sync | checkpoints, backoff, reconciliation |
 | Payment/auth/private data | Comprehensive or Forensic APIVR controls |
+| Provider inbound route | route contract, no human-login dependency, provider signature/secret, deployed provider smoke test |
 
 ## Secret Management
 
@@ -26,5 +27,4 @@ Set bounded timeouts, bounded retries, exponential backoff with jitter, rate-lim
 
 ## Verification
 
-Prefer provider sandbox/test mode. Verify both request success and downstream business effect. Record provider limits and dependency failure behavior.
-
+Prefer provider sandbox/test mode. Verify both request success and downstream business effect. For inbound provider routes, direct handler tests are not enough: verify provider dashboard or sandbox delivery through the deployed URL, hosting protection, middleware, route handler, database effect, user-visible result, and logs. Record provider limits and dependency failure behavior.

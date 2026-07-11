@@ -28,7 +28,8 @@ Use this skill to route deployment and hosting decisions through APIVR.
    - always-on realtime process.
 3. Decide whether the workload needs persistent compute, ephemeral execution, managed platform hosting, container hosting, or dedicated infrastructure.
 4. Identify environment requirements: local, preview, staging, production, rollback, secrets, logs, monitoring, and domain/DNS.
-5. Record deployment evidence in the evidence ledger and completion report.
+5. If any deployed route is called by a provider, scheduler, webhook, OAuth/Auth redirect, or external machine caller, load `skills/external-integration-launch-gate/SKILL.md` and require a route contract before release.
+6. Record deployment evidence in the evidence ledger and completion report.
 
 ## Decision Graph
 
@@ -56,6 +57,7 @@ flowchart TD
 - Do not choose always-on infrastructure for work that can safely be event-driven or scheduled.
 - Do not choose ephemeral/serverless hosting for workloads that require durable in-memory state, long-running sockets, or local filesystem persistence.
 - Do not claim deployment success until the deployed URL or service behavior is verified.
+- Do not put provider-facing routes behind human login, route-group auth, middleware redirects, or deployment protection unless the provider has a documented machine bypass.
 - Treat production deployment, DNS, database migration, payment/auth changes, and destructive infrastructure changes as Comprehensive or Forensic when consequences warrant.
 
 ## Worked Example
@@ -67,6 +69,13 @@ Scenario: A reporting dashboard also needs a nightly refresh.
 - Connected skills: `scheduling-and-automation-routing`, `data-output-and-reporting`, and `test-driven-development` for code changes.
 - Evidence: preview URL verified, scheduled job dry-run verified, logs visible, rollback path documented.
 - APIVR verdict: `PASS` only after deployed dashboard and refresh behavior are Verified.
+
+Scenario: A Stripe webhook fails on a preview deployment.
+
+- Hosting route: provider-facing route on deployed app URL.
+- Connected skill: `external-integration-launch-gate`.
+- Evidence required: provider dashboard delivery to the exact deployed URL, no `/login` redirect, no deployment-protection block, valid signature handling, database/user-visible proof, app log, and provider event ID.
+- APIVR verdict: `Blocked` until the provider-to-deployed-app path is verified.
 
 ## Closeout
 

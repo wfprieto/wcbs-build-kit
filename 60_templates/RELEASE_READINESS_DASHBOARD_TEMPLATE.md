@@ -16,6 +16,7 @@
 | F Product Accessibility Visual Commercial Quality | Pass / Fail / Unknown / Blocked |  |  |  |
 | G Performance SEO Cost | Pass / Fail / Unknown / Blocked |  |  |  |
 | H Verification And Handoff | Pass / Fail / Unknown / Blocked |  |  |  |
+| External Integration Launch Gate, if applicable | Pass / Fail / Unknown / Blocked / N/A | Route contracts, provider delivery logs, app logs, database/user-visible proof |  | Required for Stripe, Resend, Supabase Auth, OAuth, cron, SMS/provider callbacks, webhooks, deployment protection, or Preview/Production env splits |
 
 ## Changelog / Release Note
 

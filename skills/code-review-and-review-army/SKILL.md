@@ -19,6 +19,7 @@ Select only relevant reviewers:
 - Performance/Cost Reviewer: hot paths, query shape, caching, payload size, and unbounded work.
 - Maintainability Reviewer: module boundaries, naming, deletion test, and local patterns.
 - UX/QA Reviewer: user flow, accessibility, responsive behavior, and adverse states.
+- External Integration Gatekeeper: provider-facing route contracts, deployed provider delivery, deployment protection, middleware redirects, sandbox/live split, and machine-caller auth boundaries.
 - Learning Reviewer: checks whether findings reveal a reusable lesson, stale guidance, or duplicate source of truth that should route to compound learning or knowledge refresh after verification.
 
 ## Review Flow
@@ -64,5 +65,6 @@ Scenario: A webhook implementation passes tests.
 - API Contract Reviewer finds missing signature timestamp tolerance.
 - Security Reviewer marks replay protection `Unknown`.
 - Testing Reviewer asks for invalid-signature and replay tests.
+- External Integration Gatekeeper blocks release if the provider dashboard has not delivered an event into the deployed URL or if the route redirects to login.
 - Learning Reviewer routes the final verified replay lesson to canonical external API guidance instead of creating a duplicate note.
 - APIVR verdict: `CONDITIONAL PASS` only after those tests pass or the release owner explicitly accepts non-critical risk. For payment webhooks, this is normally Blocking.

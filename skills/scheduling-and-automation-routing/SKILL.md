@@ -27,7 +27,8 @@ Use this skill to decide how automation should run and how it should be verified
    - monitor/reminder/follow-up.
 3. Define idempotency, retry, timeout, duplicate prevention, observability, and recovery behavior.
 4. Decide whether the job requires deployment/hosting guidance or external API integration guidance.
-5. Verify both technical execution and the intended operational/business outcome.
+5. If the trigger is a webhook, provider callback, cron route, or external scheduler hitting a deployed URL, load `skills/external-integration-launch-gate/SKILL.md` and require a route contract plus deployed-path verification.
+6. Verify both technical execution and the intended operational/business outcome.
 
 ## Decision Graph
 
@@ -55,6 +56,7 @@ flowchart TD
 - Do not create unbounded retries, unbounded queues, or unbounded polling.
 - Do not use always-on workers when scheduled or event-driven execution satisfies the objective.
 - Do not process external webhooks without verification, replay protection, and safe logging.
+- Do not require human login for machine-triggered cron, webhook, queue, or provider routes. Use the appropriate signature, shared secret, or platform auth and verify the deployed route does not redirect to login.
 - Do not mark automation complete until failure handling and observability are addressed.
 
 ## Worked Example

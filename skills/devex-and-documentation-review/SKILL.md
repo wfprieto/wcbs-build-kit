@@ -14,7 +14,8 @@ Use this skill for developer-facing workflows and durable docs.
 3. Check that docs reference canonical files instead of duplicating stale instructions.
 4. Confirm secrets, tokens, and private data are redacted.
 5. Ensure handoffs reference artifacts and evidence instead of replaying chat memory.
-6. Classify evidence state for every claim that affects setup, release, or operation.
+6. For provider-facing routes, confirm docs name the route contract, deployed callback URL, provider account/environment, sandbox/live values, deployment-protection expectation, replay/idempotency behavior, and exact verification evidence.
+7. Classify evidence state for every claim that affects setup, release, or operation.
 
 ## Documentation Types
 
@@ -27,7 +28,7 @@ Use this skill for developer-facing workflows and durable docs.
 
 Scenario: A new webhook integration changes env vars and retry behavior.
 
-- DevEx review requires `.env.example` update, provider setup notes, local replay command, safe logging note, and rollback section.
+- DevEx review requires `.env.example` update, provider setup notes, route contract, deployed callback URL, local replay command, safe logging note, and rollback section.
 - Claims about provider behavior are `Likely` until sandbox replay is run.
 - Completion report links docs changed and evidence state.
 

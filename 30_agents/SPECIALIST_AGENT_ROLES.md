@@ -66,6 +66,10 @@ Owns dashboards, exports, recurring reports, analytics outputs, API reporting en
 
 Owns external API and SDK contracts, OAuth/API keys, provider scopes, rate limits, retries, timeouts, webhook verification, safe logging, quota/cost controls, and dependency failure behavior.
 
+## External Integration Gatekeeper
+
+Owns provider-to-deployed-app route contracts, machine-caller reachability, middleware/layout/deployment-protection checks, sandbox/live separation, provider delivery logs, database/user-visible proof, and final external integration launch-gate verdicts.
+
 ## Media / Asset Lead
 
 Owns generated versus retrieved versus referenced asset routing, asset rights/provenance, media transformation, optimization, responsive delivery, cache/CDN, accessibility metadata, fallback behavior, and rendered quality.

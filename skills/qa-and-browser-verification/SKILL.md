@@ -7,6 +7,10 @@ description: Use for QA planning, manual workflow verification, browser testing,
 
 Use this skill when success depends on a user-visible workflow, rendered interface, browser behavior, or manual acceptance path.
 
+<HARD-GATE>
+Browser QA alone cannot PASS workflows that depend on outside providers calling the app. For webhooks, OAuth/Auth callbacks, cron routes, payment/email/SMS providers, deployment protection, or Preview/Production environment splits, also use `skills/external-integration-launch-gate/SKILL.md`.
+</HARD-GATE>
+
 ## QA Flow
 
 ```mermaid
@@ -28,6 +32,7 @@ flowchart TD
 - Loading state.
 - Error state.
 - Permission or auth boundary.
+- External provider callback boundary when applicable.
 - Responsive viewport checks.
 - Accessibility checks.
 - Data accuracy checks when reporting or analytics are visible.
@@ -47,4 +52,10 @@ Scenario: A new admin report page.
 - Finding: mobile table overflows and export button is hidden.
 - APIVR state: UI release gate is `Blocked` until fixed and retested.
 - Final verdict: `PASS` only when screenshot evidence, export evidence, and adverse-state checks are recorded.
+
+Scenario: A premium upgrade flow returns from Stripe.
+
+- Browser QA verifies the user-visible checkout return and premium card state.
+- External integration launch gate verifies Stripe webhook delivery into the deployed URL, no login redirect, correct signature handling, database update, provider event ID, and app log.
+- Final verdict: `PASS` only when both the browser result and provider callback path are Verified.
 

@@ -34,6 +34,7 @@ flowchart TD
 - Rollback trigger and restoration path.
 - Changelog or user-facing note when behavior changes.
 - Post-release verification horizon for production changes.
+- External integration launch gate verdict when provider callbacks, webhooks, cron routes, OAuth/Auth redirects, payment/email/SMS providers, deployment protection, or Preview/Production environment separation are in scope.
 - Compound-learning decision for Standard and above: update canonical guidance, create a solved-problem learning entry, schedule knowledge refresh, or do not preserve.
 
 ## Worked Example
@@ -46,6 +47,14 @@ Scenario: Shipping a subscription cancellation fix.
 - Gate H: evidence ledger complete.
 - Compound learning: capture the provider replay lesson only if it is not already covered by canonical external API guidance.
 - Verdict: `PASS` after targeted tests and provider sandbox replay are Verified.
+
+Scenario: Shipping a Stripe webhook or OAuth callback.
+
+- External integration launch gate applies.
+- Gate C: provider route contract proves no human login is required and provider signature/state validation remains enforced.
+- Gate E: provider dashboard delivery into the deployed URL is verified; no 307 `/login`, Vercel protection block, or wrong-domain redirect remains.
+- Gate H: provider event ID, deployed URL, database effect, app log, and user-visible proof are recorded.
+- Verdict: `PASS` only after the real deployed provider-to-app path is Verified.
 
 ## Knowledge Closeout
 

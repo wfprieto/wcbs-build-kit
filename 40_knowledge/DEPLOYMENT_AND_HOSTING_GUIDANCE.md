@@ -34,7 +34,21 @@ Standard and above should define:
 - health checks/logs;
 - post-deploy verification.
 
+## External Caller Guidance
+
+When a deployed route is called by Stripe, Resend, Supabase Auth, OAuth, Vercel Cron, SMS gateways, provider webhooks, or another machine caller, also use `skills/external-integration-launch-gate/SKILL.md`.
+
+Required checks:
+
+- exact provider dashboard URL matches the intended deployed route;
+- machine callers do not require browser login;
+- middleware, route groups, layouts, domain redirects, and deployment protection do not block the call;
+- provider signature, shared secret, state/nonce, or platform auth still protects the route;
+- Preview and Production use intentionally separate sandbox/live values;
+- provider delivery logs, app logs, database proof, and user-visible proof are recorded.
+
 ## APIVR Evidence
 
 Deployment is not verified until the deployed service or URL is observed in the intended environment. A successful build is only build evidence.
+For provider-facing routes, deployment is not verified until the provider or sandbox successfully reaches the deployed route and the downstream state change is proven.
 

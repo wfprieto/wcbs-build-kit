@@ -26,6 +26,7 @@ A release is Done only when all applicable gates pass or non-critical residual r
 - No unaccepted release-blocking exposure remains.
 - Cybersecurity work has documented authorization, scope, and dual-use decision when applicable.
 - AI apps, MCP/tools, external APIs, auth, webhooks, and security-sensitive integrations have applicable security evidence.
+- Provider-facing routes, including Stripe, Resend, OAuth/Auth callbacks, cron, SMS/provider queues, and external webhooks, have explicit route contracts: no human-login dependency for machine callers, correct provider signature/secret protection, and documented expected success/failure responses.
 - Unknown core security evidence blocks release unless a decision owner explicitly accepts non-critical residual risk.
 
 ## Gate D: Data Integrity
@@ -39,6 +40,7 @@ A release is Done only when all applicable gates pass or non-critical residual r
 - Material failures are observable.
 - Recovery and rollback are available according to risk.
 - Bugs and incidents have a red-capable feedback loop or documented evidence-first substitute before fix claims.
+- Outside-provider workflows are verified through the deployed URL path from provider to hosting/deployment protection to middleware to route handler to downstream state. Handler-only tests do not satisfy this gate for provider callbacks, webhooks, cron routes, or auth redirects.
 
 ## Gate F: Product, Accessibility, Visual, And Commercial Quality
 
@@ -60,6 +62,7 @@ A release is Done only when all applicable gates pass or non-critical residual r
 - Evidence ledger is complete.
 - Documentation reflects durable behavior.
 - Owners, known risks, and next actions are clear.
+- For external integrations, the handoff records provider account/environment, deployed callback URL, provider event IDs or delivery logs, app logs, database/user-visible proof, and Preview/Production environment separation.
 - No unrelated change remains hidden.
 - Security evidence, incident records, provenance checks, vulnerability exceptions, and authorization/scope records are included when applicable.
 - Supply-chain releases identify dependency, CI/CD, artifact, SBOM, signing, or provenance evidence, or explicitly record approved gaps.

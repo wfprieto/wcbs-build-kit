@@ -24,11 +24,12 @@ Use this skill for third-party service integration under APIVR.
    - OAuth/user-authorized integration;
    - payment/revenue/security/data-critical integration;
    - batch sync or scheduled polling.
-3. If the work includes security testing, live probing, abuse testing, or third-party target assessment, load `skills/cybersecurity-risk-routing/SKILL.md` and require authorization/scope.
-4. Define auth, secret handling, validation, logging, retry, timeout, idempotency, rate-limit, and fallback behavior.
-5. Apply OWASP API checks when API security matters: BOLA/IDOR, broken auth, BFLA, mass assignment, SSRF, unsafe consumption, inventory, abuse controls, and rate limits.
-6. Verify in sandbox or with safe test data when available.
-7. Record external dependency risk, provider limits, and recovery path.
+3. If an outside system calls the app, load `skills/external-integration-launch-gate/SKILL.md` before planning, implementation, audit, release, or done claims. This includes provider webhooks, OAuth/Auth callbacks, cron/scheduler calls, SMS/provider queue callbacks, provider dashboard URLs, deployment protection, and sandbox/live environment separation.
+4. If the work includes security testing, live probing, abuse testing, or third-party target assessment, load `skills/cybersecurity-risk-routing/SKILL.md` and require authorization/scope.
+5. Define auth, secret handling, validation, logging, retry, timeout, idempotency, rate-limit, and fallback behavior.
+6. Apply OWASP API checks when API security matters: BOLA/IDOR, broken auth, BFLA, mass assignment, SSRF, unsafe consumption, inventory, abuse controls, and rate limits.
+7. Verify in sandbox or with safe test data when available.
+8. Record external dependency risk, provider limits, and recovery path.
 
 ## Decision Graph
 
@@ -54,6 +55,8 @@ flowchart TD
 - Do not trust client-side API calls for privileged operations.
 - Do not implement unbounded retries or polling.
 - Do not accept webhooks without signature verification when provider supports it.
+- Do not declare inbound provider work complete from direct handler tests alone; verify the deployed provider-to-app path or apply `external-integration-launch-gate`.
+- Do not let machine callers depend on human login. Webhooks, cron, and provider callbacks must use provider signatures, shared secrets, or platform auth instead.
 - Treat payments, auth, private data, destructive actions, and revenue-critical integrations as Comprehensive or Forensic when warranted.
 - Do not run live BOLA/IDOR, auth bypass, fuzzing, SSRF, or rate-limit tests against systems outside owned/authorized scope.
 - Do not log full tokens, API keys, webhook secrets, session IDs, or sensitive provider payloads.
@@ -77,6 +80,13 @@ Scenario: Add a CRM contact sync.
 - Implementation: server-side token use, scoped permissions, capped retries, idempotency key, safe logs.
 - Verification: sandbox sync, duplicate test, rate-limit simulation or documented provider limit, rollback for disabling sync.
 - Verdict: `PASS` only when auth, data integrity, rate limits, logging, and recovery evidence are Verified.
+
+Scenario: Add a Stripe webhook.
+
+- Pair with `external-integration-launch-gate`.
+- Route contract: Stripe calls deployed `/api/.../webhook`; human login is not required; Stripe signature is required.
+- Verification: provider dashboard sends or replays an event into the deployed URL; response is 200 for valid signed event and 400 for invalid signature; database and user-visible state update once.
+- Verdict: `PASS` only when middleware, deployment protection, handler verification, database update, provider delivery log, and app log are Verified.
 
 ## Closeout
 
