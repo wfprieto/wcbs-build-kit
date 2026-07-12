@@ -8,10 +8,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  verify-and-bundle:
+  verify-and-publish-evidence:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -19,13 +19,19 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true
+
+      - name: Initialize external evidence directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/wcbs-verification-evidence
+          mkdir -p /tmp/wcbs-verification-evidence/logs
 
       - name: Record repository state
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p verification-evidence/logs
           {
             echo 'HEAD:'
             git rev-parse HEAD
@@ -38,7 +44,7 @@ jobs:
             echo
             echo 'TRACKED FILES:'
             git ls-files
-          } | tee verification-evidence/logs/repository-state.txt
+          } | tee /tmp/wcbs-verification-evidence/logs/repository-state.txt
           test ! -e .wcbs-bootstrap
           test ! -e .github/workflows/wcbs-recover-main.yml
           test -s 20_PASS_WHOLE_KIT_AUDIT.md
@@ -48,24 +54,25 @@ jobs:
         run: |
           set -euo pipefail
           git clean -xfd
-          npm run check 2>&1 | tee verification-evidence/logs/npm-run-check-clean.txt
+          test -z "$(git status --short)"
+          npm run check 2>&1 | tee /tmp/wcbs-verification-evidence/logs/npm-run-check-clean.txt
 
       - name: Critical suites
         shell: bash
         run: |
           set -euo pipefail
-          node --test scripts/tests/controller-contract.test.mjs 2>&1 | tee verification-evidence/logs/controller-contract.txt
-          node --test scripts/tests/adapter-contract.test.mjs 2>&1 | tee verification-evidence/logs/adapter-contract.txt
-          node --test scripts/tests/schema-enforcement.test.mjs 2>&1 | tee verification-evidence/logs/schema-enforcement.txt
-          node --test scripts/tests/artifact-bundle.test.mjs 2>&1 | tee verification-evidence/logs/artifact-bundle.txt
-          node --test scripts/tests/wcbs-doctor.test.mjs 2>&1 | tee verification-evidence/logs/wcbs-doctor.txt
-          python3 -m unittest discover -s skills/subagent-driven-development/tests -v 2>&1 | tee verification-evidence/logs/python-tests.txt
+          node --test scripts/tests/controller-contract.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/controller-contract.txt
+          node --test scripts/tests/adapter-contract.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/adapter-contract.txt
+          node --test scripts/tests/schema-enforcement.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/schema-enforcement.txt
+          node --test scripts/tests/artifact-bundle.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/artifact-bundle.txt
+          node --test scripts/tests/wcbs-doctor.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/wcbs-doctor.txt
+          python3 -m unittest discover -s skills/subagent-driven-development/tests -v 2>&1 | tee /tmp/wcbs-verification-evidence/logs/python-tests.txt
 
       - name: F-012 adversarial checks
         shell: bash
         run: |
           set -euo pipefail
-          cat > /tmp/f012-adversarial.mjs <<'EOF'
+          cat > .wcbs-f012-adversarial.mjs <<'EOF'
           import assert from 'node:assert/strict';
           import { validateAgainstSchema } from './scripts/lib/json-schema.mjs';
 
@@ -93,7 +100,8 @@ jobs:
           }
           console.log('F-012 adversarial checks: PASS (9 cases)');
           EOF
-          node /tmp/f012-adversarial.mjs 2>&1 | tee verification-evidence/logs/f012-adversarial.txt
+          node .wcbs-f012-adversarial.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/f012-adversarial.txt
+          rm .wcbs-f012-adversarial.mjs
 
       - name: F-011 hermetic checks
         shell: bash
@@ -101,25 +109,27 @@ jobs:
           set -euo pipefail
           rm -rf .wcbs
           test ! -e .wcbs
-          node --test scripts/tests/artifact-bundle.test.mjs 2>&1 | tee verification-evidence/logs/f011-artifact-no-live-bundle.txt
-          npm run check 2>&1 | tee verification-evidence/logs/f011-full-check-no-live-bundle.txt
+          node --test scripts/tests/artifact-bundle.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/f011-artifact-no-live-bundle.txt
+          npm run check 2>&1 | tee /tmp/wcbs-verification-evidence/logs/f011-full-check-no-live-bundle.txt
           test ! -e .wcbs
-          echo 'F-011 hermetic checks: PASS' | tee verification-evidence/logs/f011-summary.txt
+          echo 'F-011 hermetic checks: PASS' | tee /tmp/wcbs-verification-evidence/logs/f011-summary.txt
 
-      - name: Package exact repository and evidence
+      - name: Package exact repository and publish evidence commit
         shell: bash
         run: |
           set -euo pipefail
           git diff --check
-          git status --short | tee verification-evidence/logs/final-status.txt
-          git bundle create verification-evidence/wcbs-build-kit.bundle --all
-          git archive --format=tar.gz --output=verification-evidence/wcbs-build-kit-main.tar.gz HEAD
-          sha256sum verification-evidence/wcbs-build-kit.bundle verification-evidence/wcbs-build-kit-main.tar.gz | tee verification-evidence/logs/checksums.txt
+          test -z "$(git status --short)"
+          git bundle create /tmp/wcbs-verification-evidence/wcbs-build-kit.bundle --all
+          git archive --format=tar.gz --output=/tmp/wcbs-verification-evidence/wcbs-build-kit-main.tar.gz HEAD
+          sha256sum /tmp/wcbs-verification-evidence/wcbs-build-kit.bundle /tmp/wcbs-verification-evidence/wcbs-build-kit-main.tar.gz | tee /tmp/wcbs-verification-evidence/logs/checksums.txt
+          printf '%s\n' "$(git rev-parse HEAD)" > /tmp/wcbs-verification-evidence/verified-head.txt
 
-      - name: Upload verification evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: wcbs-verification-bridge-${{ github.sha }}
-          path: verification-evidence/
-          if-no-files-found: error
-          retention-days: 7
+          rm -rf .wcbs-verification
+          mkdir -p .wcbs-verification
+          cp -a /tmp/wcbs-verification-evidence/. .wcbs-verification/
+          git config user.name 'WCBS Verification Bridge'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -f .wcbs-verification
+          git commit -m 'Record WCBS clean-checkout verification evidence'
+          git push origin HEAD:main
