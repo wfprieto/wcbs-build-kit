@@ -8,7 +8,7 @@
  * actually be validated against those schemas.
  *
  * Zero third-party dependencies: package.json must stay dependency-free, and
- * `checkPackageIsSafe()` enforces that.
+ * `checkPackage()` enforces that.
  *
  * Supported keywords:
  *   type, enum, const, required, properties, additionalProperties,
@@ -16,9 +16,9 @@
  *   minimum, maximum, format (date-time), $ref (local $defs), $defs
  *
  * The complete schema is preflighted before instance validation. Any unsupported
- * keyword or format fails even when it appears in an absent optional property or
- * an unused $defs entry. `$ref` is conjunctive with sibling assertions, matching
- * draft 2020-12 behavior.
+ * keyword, unsupported format, or malformed supported keyword fails even when it
+ * appears in an absent optional property or an unused $defs entry. `$ref` is
+ * conjunctive with sibling assertions, matching draft 2020-12 behavior.
  */
 
 const typeOf = (value) => {
@@ -44,10 +44,32 @@ function resolveRef(root, ref) {
   return node;
 }
 const SUPPORTED_KEYWORDS = new Set(["type","enum","const","required","properties","additionalProperties","items","minItems","maxItems","minLength","maxLength","pattern","minimum","maximum","format","$schema","$id","$ref","$defs","title","description","default","examples"]);
+const VALID_TYPES = new Set(["null","boolean","object","array","number","integer","string"]);
+const isSchema = (value) => value === true || value === false || Boolean(value && typeof value === "object" && !Array.isArray(value));
+const isPlainObject = (value) => Boolean(value && typeof value === "object" && !Array.isArray(value));
 function assertSupported(schema, schemaPath) {
   for (const keyword of Object.keys(schema)) {
     if (!SUPPORTED_KEYWORDS.has(keyword)) throw new Error(`${schemaPath}: unsupported schema keyword "${keyword}": this validator would silently ignore it. Implement it in scripts/lib/json-schema.mjs, or remove it from the schema. A published-but-unenforced keyword is not a contract.`);
   }
+}
+function assertKeywordShapes(schema, schemaPath) {
+  const bad = (keyword, expected) => { throw new Error(`${schemaPath}.${keyword}: malformed supported keyword; expected ${expected}`); };
+  if (schema.type !== undefined) {
+    const values = Array.isArray(schema.type) ? schema.type : [schema.type];
+    if (values.length === 0 || values.some((value) => typeof value !== "string" || !VALID_TYPES.has(value)) || new Set(values).size !== values.length) bad("type", "a valid type name or a non-empty array of unique valid type names");
+  }
+  if (schema.enum !== undefined && (!Array.isArray(schema.enum) || schema.enum.length === 0)) bad("enum", "a non-empty array");
+  if (schema.required !== undefined && (!Array.isArray(schema.required) || schema.required.some((value) => typeof value !== "string") || new Set(schema.required).size !== schema.required.length)) bad("required", "an array of unique strings");
+  for (const keyword of ["properties","$defs"]) if (schema[keyword] !== undefined && !isPlainObject(schema[keyword])) bad(keyword, "an object whose values are schemas");
+  if (schema.additionalProperties !== undefined && !isSchema(schema.additionalProperties)) bad("additionalProperties", "a boolean or schema");
+  if (schema.items !== undefined && !isSchema(schema.items)) bad("items", "a boolean or schema");
+  for (const keyword of ["minItems","maxItems","minLength","maxLength"]) if (schema[keyword] !== undefined && (!Number.isInteger(schema[keyword]) || schema[keyword] < 0)) bad(keyword, "a non-negative integer");
+  for (const keyword of ["minimum","maximum"]) if (schema[keyword] !== undefined && (typeof schema[keyword] !== "number" || !Number.isFinite(schema[keyword]))) bad(keyword, "a finite number");
+  for (const keyword of ["pattern","format","$schema","$id","$ref","title","description"]) if (schema[keyword] !== undefined && typeof schema[keyword] !== "string") bad(keyword, "a string");
+  if (schema.examples !== undefined && !Array.isArray(schema.examples)) bad("examples", "an array");
+  if (schema.minItems !== undefined && schema.maxItems !== undefined && schema.minItems > schema.maxItems) throw new Error(`${schemaPath}: minItems cannot exceed maxItems`);
+  if (schema.minLength !== undefined && schema.maxLength !== undefined && schema.minLength > schema.maxLength) throw new Error(`${schemaPath}: minLength cannot exceed maxLength`);
+  if (schema.minimum !== undefined && schema.maximum !== undefined && schema.minimum > schema.maximum) throw new Error(`${schemaPath}: minimum cannot exceed maximum`);
 }
 const DATE_TIME = /^(\d{4})-(\d{2})-(\d{2})[Tt](\d{2}):(\d{2}):(\d{2})(\.\d+)?([Zz]|([+-])(\d{2}):(\d{2}))$/;
 const isLeapYear = (year) => year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
@@ -70,7 +92,10 @@ function preflightSchema(root) {
   const visit=(schema,schemaPath)=>{
     if (schema===true||schema===false) return;
     if (!schema||typeof schema!=="object"||Array.isArray(schema)) throw new Error(`${schemaPath}: schema must be an object or boolean`);
-    if (seen.has(schema)) return; seen.add(schema); assertSupported(schema,schemaPath);
+    if (seen.has(schema)) return;
+    seen.add(schema);
+    assertSupported(schema,schemaPath);
+    assertKeywordShapes(schema,schemaPath);
     if (schema.format!==undefined&&!FORMAT_CHECKS[schema.format]) throw new Error(`${schemaPath}: unsupported format "${schema.format}": this validator would silently ignore it. Implement it, or remove it from the schema.`);
     if (schema.pattern!==undefined) { try { new RegExp(schema.pattern); } catch(error) { throw new Error(`${schemaPath}: invalid pattern ${JSON.stringify(schema.pattern)}: ${error.message}`); } }
     if (schema.$ref!==undefined) resolveRef(root,schema.$ref);
