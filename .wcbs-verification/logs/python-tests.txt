@@ -15,6 +15,6 @@ test_untracked_paths_with_awkward_names_are_captured (test_make_review_package.H
 test_working_tree_mode_separates_committed_and_uncommitted (test_make_review_package.HelperCase.test_working_tree_mode_separates_committed_and_uncommitted) ... ok
 
 ----------------------------------------------------------------------
-Ran 15 tests in 2.698s
+Ran 15 tests in 1.016s
 
 OK

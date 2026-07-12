@@ -2,241 +2,241 @@ TAP version 13
 # Subtest: every shipped manifest validates against the published schema
 ok 1 - every shipped manifest validates against the published schema
   ---
-  duration_ms: 4.441415
+  duration_ms: 4.28287
   type: 'test'
   ...
 # Subtest: every shipped tool mapping validates against the published schema
 ok 2 - every shipped tool mapping validates against the published schema
   ---
-  duration_ms: 1.979157
+  duration_ms: 2.128072
   type: 'test'
   ...
 # Subtest: invalid install_scope is rejected
 ok 3 - invalid install_scope is rejected
   ---
-  duration_ms: 0.563143
+  duration_ms: 0.623059
   type: 'test'
   ...
 # Subtest: unsupported operating system is rejected
 ok 4 - unsupported operating system is rejected
   ---
-  duration_ms: 0.310699
+  duration_ms: 0.325715
   type: 'test'
   ...
 # Subtest: empty operating-system list is rejected
 ok 5 - empty operating-system list is rejected
   ---
-  duration_ms: 0.33687
+  duration_ms: 0.316825
   type: 'test'
   ...
 # Subtest: non-boolean modifies_user_files is rejected
 ok 6 - non-boolean modifies_user_files is rejected
   ---
-  duration_ms: 0.2926
+  duration_ms: 0.351619
   type: 'test'
   ...
 # Subtest: runtime_id violating its pattern is rejected
 ok 7 - runtime_id violating its pattern is rejected
   ---
-  duration_ms: 0.269251
+  duration_ms: 0.321706
   type: 'test'
   ...
 # Subtest: invalid capability availability is rejected
 ok 8 - invalid capability availability is rejected
   ---
-  duration_ms: 0.277819
+  duration_ms: 0.308648
   type: 'test'
   ...
 # Subtest: undeclared manifest property is rejected
 ok 9 - undeclared manifest property is rejected
   ---
-  duration_ms: 0.442648
+  duration_ms: 0.465378
   type: 'test'
   ...
 # Subtest: undeclared mapping property is rejected
 ok 10 - undeclared mapping property is rejected
   ---
-  duration_ms: 0.850373
+  duration_ms: 0.710914
   type: 'test'
   ...
 # Subtest: undeclared action property is rejected
 ok 11 - undeclared action property is rejected
   ---
-  duration_ms: 0.370752
+  duration_ms: 0.299058
   type: 'test'
   ...
 # Subtest: undeclared action name is rejected
 ok 12 - undeclared action name is rejected
   ---
-  duration_ms: 0.244253
+  duration_ms: 0.235715
   type: 'test'
   ...
 # Subtest: missing required manifest field is rejected
 ok 13 - missing required manifest field is rejected
   ---
-  duration_ms: 0.200285
+  duration_ms: 0.25234
   type: 'test'
   ...
 # Subtest: action missing required_parameters is rejected
 ok 14 - action missing required_parameters is rejected
   ---
-  duration_ms: 0.176416
+  duration_ms: 0.21421
   type: 'test'
   ...
 # Subtest: action missing evidence_produced is rejected
 ok 15 - action missing evidence_produced is rejected
   ---
-  duration_ms: 0.216703
+  duration_ms: 0.20472
   type: 'test'
   ...
 # Subtest: missing required capability key is rejected
 ok 16 - missing required capability key is rejected
   ---
-  duration_ms: 0.250193
+  duration_ms: 0.212376
   type: 'test'
   ...
 # Subtest: activation marker must match the exact documented form
 ok 17 - activation marker must match the exact documented form
   ---
-  duration_ms: 0.322499
+  duration_ms: 0.30473
   type: 'test'
   ...
 # Subtest: shipped markers match WCBS_KIT_ACTIVE:<runtime-id> exactly
 ok 18 - shipped markers match WCBS_KIT_ACTIVE:<runtime-id> exactly
   ---
-  duration_ms: 0.318777
+  duration_ms: 0.259124
   type: 'test'
   ...
 # Subtest: baseline fixtures are schema-valid
 ok 19 - baseline fixtures are schema-valid
   ---
-  duration_ms: 1.07287
+  duration_ms: 0.850087
   type: 'test'
   ...
 # Subtest: minimum is enforced: repair_budget below 1 is rejected
 ok 20 - minimum is enforced: repair_budget below 1 is rejected
   ---
-  duration_ms: 0.241152
+  duration_ms: 0.212968
   type: 'test'
   ...
 # Subtest: minimum is enforced: negative repair_rounds_used is rejected
 ok 21 - minimum is enforced: negative repair_rounds_used is rejected
   ---
-  duration_ms: 0.185486
+  duration_ms: 0.222137
   type: 'test'
   ...
 # Subtest: minimum is enforced: negative ledger counters are rejected
 ok 22 - minimum is enforced: negative ledger counters are rejected
   ---
-  duration_ms: 0.160212
+  duration_ms: 0.201033
   type: 'test'
   ...
 # Subtest: format date-time is enforced on a finding timestamp
 ok 23 - format date-time is enforced on a finding timestamp
   ---
-  duration_ms: 0.153956
+  duration_ms: 0.198467
   type: 'test'
   ...
 # Subtest: format date-time is enforced on a ledger timestamp
 ok 24 - format date-time is enforced on a ledger timestamp
   ---
-  duration_ms: 0.171625
+  duration_ms: 0.36653
   type: 'test'
   ...
 # Subtest: a valid RFC 3339 timestamp with an offset is accepted
 ok 25 - a valid RFC 3339 timestamp with an offset is accepted
   ---
-  duration_ms: 0.387748
+  duration_ms: 0.164586
   type: 'test'
   ...
 # Subtest: a real date with an impossible day is rejected
 ok 26 - a real date with an impossible day is rejected
   ---
-  duration_ms: 0.158271
+  duration_ms: 0.1761
   type: 'test'
   ...
 # Subtest: the validator rejects an unsupported keyword in a visited property
 ok 27 - the validator rejects an unsupported keyword in a visited property
   ---
-  duration_ms: 0.388749
+  duration_ms: 0.36191
   type: 'test'
   ...
 # Subtest: the validator rejects an unsupported keyword in an absent optional property
 ok 28 - the validator rejects an unsupported keyword in an absent optional property
   ---
-  duration_ms: 0.131138
+  duration_ms: 0.136617
   type: 'test'
   ...
 # Subtest: the validator rejects an unsupported keyword in an unused $defs entry
 ok 29 - the validator rejects an unsupported keyword in an unused $defs entry
   ---
-  duration_ms: 0.08726
+  duration_ms: 0.113749
   type: 'test'
   ...
 # Subtest: $ref sibling assertions are enforced
 ok 30 - $ref sibling assertions are enforced
   ---
-  duration_ms: 0.104941
+  duration_ms: 0.121976
   type: 'test'
   ...
 # Subtest: RFC 3339 date-time rejects out-of-range timezone offsets
 ok 31 - RFC 3339 date-time rejects out-of-range timezone offsets
   ---
-  duration_ms: 0.327844
+  duration_ms: 0.366039
   type: 'test'
   ...
 # Subtest: RFC 3339 date-time accepts valid boundary offsets
 ok 32 - RFC 3339 date-time accepts valid boundary offsets
   ---
-  duration_ms: 0.258501
+  duration_ms: 0.234192
   type: 'test'
   ...
 # Subtest: leap second 60 is accepted only at an offset-adjusted month boundary
 ok 33 - leap second 60 is accepted only at an offset-adjusted month boundary
   ---
-  duration_ms: 0.305758
+  duration_ms: 0.307456
   type: 'test'
   ...
 # Subtest: malformed supported keywords are rejected during preflight
 ok 34 - malformed supported keywords are rejected during preflight
   ---
-  duration_ms: 0.222453
+  duration_ms: 0.250636
   type: 'test'
   ...
 # Subtest: contradictory numeric bounds are rejected during preflight
 ok 35 - contradictory numeric bounds are rejected during preflight
   ---
-  duration_ms: 0.190055
+  duration_ms: 0.217707
   type: 'test'
   ...
 # Subtest: cleared lifecycle timestamps must be RFC 3339 date-time
 ok 36 - cleared lifecycle timestamps must be RFC 3339 date-time
   ---
-  duration_ms: 0.189228
+  duration_ms: 0.172312
   type: 'test'
   ...
 # Subtest: finding history timestamps must be RFC 3339 date-time
 ok 37 - finding history timestamps must be RFC 3339 date-time
   ---
-  duration_ms: 0.274715
+  duration_ms: 0.21899
   type: 'test'
   ...
 # Subtest: a fix agent cannot be recorded as the clearing authority
 ok 38 - a fix agent cannot be recorded as the clearing authority
   ---
-  duration_ms: 0.228592
+  duration_ms: 0.146227
   type: 'test'
   ...
 # Subtest: progress-ledger test evidence requires a result
 ok 39 - progress-ledger test evidence requires a result
   ---
-  duration_ms: 0.223533
+  duration_ms: 0.179187
   type: 'test'
   ...
 # Subtest: task artifacts require immutable-brief contract fields
 ok 40 - task artifacts require immutable-brief contract fields
   ---
-  duration_ms: 0.328868
+  duration_ms: 0.213779
   type: 'test'
   ...
 1..40
@@ -247,4 +247,4 @@ ok 40 - task artifacts require immutable-brief contract fields
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 87.987811
+# duration_ms 90.062059

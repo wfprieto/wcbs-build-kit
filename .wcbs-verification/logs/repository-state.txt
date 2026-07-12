@@ -1,5 +1,5 @@
 HEAD:
-7125927d9b2e3216418836040d7a05f907cfabd7
+b2f3c0c2272f2ecca33632b4f424401b0c24193d
 
 STATUS BEFORE TESTS:
 D  .wcbs-verification/logs/adapter-contract.txt
@@ -18,7 +18,11 @@ D  .wcbs-verification/logs/wcbs-doctor.txt
 D  .wcbs-verification/verified-head.txt
 
 LOG:
-7125927 (HEAD -> main, origin/main) Verify WCBS cross-platform and artifact corrections
+b2f3c0c (HEAD -> main, origin/main) Run final WCBS publication-candidate verification
+33dc2cf Replace stale audit with independent whole-kit verification
+3dd9d88 Document the complete portable verification gate
+1b44a10 Record WCBS cross-platform verification evidence
+7125927 Verify WCBS cross-platform and artifact corrections
 7e978e5 Document complete hermetic fixture contract
 5a93bae Wire cross-platform Python launcher into doctor gate
 06b9809 Use cross-platform Python launcher in npm gate
@@ -29,10 +33,6 @@ bbdf058 Run post-remediation WCBS verification bridge
 504b2e8 Prove strict mode, package wiring, and task artifact integration
 353d86f Validate committed task artifacts hermetically
 d0a0576 Add regression coverage for schema preflight and durable artifacts
-a59aa04 Reject malformed supported JSON Schema keywords
-80a8d29 Enforce strict verification and complete artifact wiring
-e4b187b Wire machine-readable task artifacts into bundle contract
-b58c353 Add hermetic task artifact fixture
 
 TRACKED FILES AFTER TEMPORARY EVIDENCE REMOVAL:
 .codex-plugin/plugin.json

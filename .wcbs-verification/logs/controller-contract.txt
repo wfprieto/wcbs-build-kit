@@ -2,79 +2,79 @@ TAP version 13
 # Subtest: every role prompt exists
 ok 1 - every role prompt exists
   ---
-  duration_ms: 1.45001
+  duration_ms: 1.567588
   type: 'test'
   ...
 # Subtest: every controller artifact schema exists and is valid JSON
 ok 2 - every controller artifact schema exists and is valid JSON
   ---
-  duration_ms: 0.598272
+  duration_ms: 0.551112
   type: 'test'
   ...
 # Subtest: every durable controller template exists
 ok 3 - every durable controller template exists
   ---
-  duration_ms: 0.253222
+  duration_ms: 0.222602
   type: 'test'
   ...
 # Subtest: no controller guidance recommends HEAD~1 shortcut refs
 ok 4 - no controller guidance recommends HEAD~1 shortcut refs
   ---
-  duration_ms: 0.807532
+  duration_ms: 0.874073
   type: 'test'
   ...
 # Subtest: controller skill mandates a final whole-branch review
 ok 5 - controller skill mandates a final whole-branch review
   ---
-  duration_ms: 0.27393
+  duration_ms: 0.279046
   type: 'test'
   ...
 # Subtest: controller skill mandates material-finding re-review, not fix-attempt clearing
 ok 6 - controller skill mandates material-finding re-review, not fix-attempt clearing
   ---
-  duration_ms: 0.1796
+  duration_ms: 0.209202
   type: 'test'
   ...
 # Subtest: controller skill defines pre-flight conflict scan before task 1
 ok 7 - controller skill defines pre-flight conflict scan before task 1
   ---
-  duration_ms: 0.157801
+  duration_ms: 0.189222
   type: 'test'
   ...
 # Subtest: controller skill defines a bounded repair budget
 ok 8 - controller skill defines a bounded repair budget
   ---
-  duration_ms: 0.192018
+  duration_ms: 0.216984
   type: 'test'
   ...
 # Subtest: controller skill defines CANNOT_VERIFY_FROM_DIFF mapped to Unknown
 ok 9 - controller skill defines CANNOT_VERIFY_FROM_DIFF mapped to Unknown
   ---
-  duration_ms: 0.283767
+  duration_ms: 0.336231
   type: 'test'
   ...
 # Subtest: controller skill enforces reviewer neutrality and independence
 ok 10 - controller skill enforces reviewer neutrality and independence
   ---
-  duration_ms: 0.365948
+  duration_ms: 0.416481
   type: 'test'
   ...
 # Subtest: controller skill enforces context-cost controls via file-based handoff
 ok 11 - controller skill enforces context-cost controls via file-based handoff
   ---
-  duration_ms: 0.264246
+  duration_ms: 0.305496
   type: 'test'
   ...
 # Subtest: artifact contract exists and forbids secrets in artifacts
 ok 12 - artifact contract exists and forbids secrets in artifacts
   ---
-  duration_ms: 0.704165
+  duration_ms: 0.935365
   type: 'test'
   ...
 # Subtest: controller skill uses only canonical evidence vocabulary
 ok 13 - controller skill uses only canonical evidence vocabulary
   ---
-  duration_ms: 0.160538
+  duration_ms: 0.171566
   type: 'test'
   ...
 1..13
@@ -85,4 +85,4 @@ ok 13 - controller skill uses only canonical evidence vocabulary
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 55.81033
+# duration_ms 59.91525
