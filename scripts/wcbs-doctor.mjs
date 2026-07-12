@@ -39,6 +39,7 @@ const requiredFiles = [
   "scripts/generate-capability-matrix.mjs","scripts/lib/adapter-contract.mjs","scripts/lib/json-schema.mjs",
   ...["controller-contract","adapter-contract","schema-enforcement","wcbs-doctor","artifact-bundle"].map(x=>`scripts/tests/${x}.test.mjs`),
   "scripts/tests/fixtures/run-bundle/findings.json","scripts/tests/fixtures/run-bundle/progress-ledger.jsonl",
+  "scripts/tests/fixtures/run-bundle/tasks/T-01/task-artifact.json",
   ".codex-plugin/plugin.json",".cursor/rules/super-build-kit.mdc",".github/copilot-instructions.md"
 ];
 
@@ -53,7 +54,16 @@ function checkPackage() {
   if (p.private !== true) fail("package.json must remain private.");
   for (const k of ["dependencies","devDependencies","peerDependencies","optionalDependencies"])
     if (p[k] && Object.keys(p[k]).length) fail(`package.json should not add install dependencies; found ${k}.`);
-  if (!p.scripts?.doctor || !p.scripts?.verify) fail("package.json must expose doctor and verify scripts.");
+  const expectedScripts = {
+    doctor: "node scripts/wcbs-doctor.mjs",
+    verify: "node scripts/wcbs-doctor.mjs --strict",
+    "check:matrix": "node scripts/generate-capability-matrix.mjs --check",
+    "test:node": "node --test scripts/tests/*.test.mjs",
+    "test:python": "python3 -m unittest discover -s skills/subagent-driven-development/tests -v",
+    test: "npm run test:node && npm run test:python",
+    check: "npm run doctor && npm run check:matrix && npm run test"
+  };
+  for (const [name, command] of Object.entries(expectedScripts)) if (p.scripts?.[name] !== command) fail(`package.json script ${name} must be exactly: ${command}`);
 }
 function checkSkills() {
   const dir=resolve("skills"); if(!fs.existsSync(dir)){fail("Missing skills directory.");return;}
@@ -64,7 +74,8 @@ function checkWiring() {
     ["00_start_here/LOAD_ORDER.md",["skills/subagent-driven-development/SKILL.md","runtime_adapters/PORTABILITY_CONTRACT.md","runtime_adapters/PORTING_GUIDE.md"]],
     ["00_start_here/START_HERE.md",["Audit wide. Fix narrow. Prove everything.","skills/subagent-driven-development/SKILL.md","runtime_adapters/PORTABILITY_CONTRACT.md"]],
     ["runtime_adapters/README.md",["runtime_adapters/PORTABILITY_CONTRACT.md","runtime_adapters/PORTING_GUIDE.md","runtime_adapters/CAPABILITY_MATRIX.md","runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md"]],
-    ["skills/subagent-driven-development/SKILL.md",["A fix attempt does not clear a finding","FIXED_PENDING_REVIEW","CANNOT_VERIFY_FROM_DIFF","plan_base_sha..branch_head_sha","pre-flight conflict scan","repair budget","neutrality","verbatim","file-based handoff","skills/subagent-driven-development/prompts/final-reviewer-prompt.md"]]
+    ["skills/subagent-driven-development/SKILL.md",["A fix attempt does not clear a finding","FIXED_PENDING_REVIEW","CANNOT_VERIFY_FROM_DIFF","plan_base_sha..branch_head_sha","pre-flight conflict scan","repair budget","neutrality","verbatim","file-based handoff","skills/subagent-driven-development/prompts/final-reviewer-prompt.md"]],
+    ["skills/subagent-driven-development/ARTIFACT_CONTRACT.md",["task-artifact.json","task-artifact.schema.json","exact command, the exit status, and the result"]]
   ]);
   for(const [file,terms] of required){if(!exists(file))continue;const c=read(file);for(const t of terms)if(!c.toLowerCase().includes(t.toLowerCase()))fail(`${display(file)} does not define the ${t==="A fix attempt does not clear a finding"?"material-finding re-review":`required activation text: ${t}`}.`);}
   const src=read("skills/subagent-driven-development/scripts/make-review-package.py");
@@ -91,13 +102,24 @@ function checkAdapters(){
   if(exists(matrix)){const c=read(matrix);if(!/GENERATED FILE/i.test(c))fail(`${matrix} is missing its generated-file warning; it must not be hand-authored.`);else if(c.trim()!==renderCapabilityMatrix(loadManifests(root)).trim())fail(`${matrix} is stale or hand-edited. Manifests are canonical. Regenerate with: npm run generate:matrix`);}
 }
 function checkBundles(){
-  const fschema=schema("skills/subagent-driven-development/schemas/review-finding.schema.json"), lschema=schema("skills/subagent-driven-development/schemas/progress-ledger.schema.json"); if(!fschema||!lschema)return;
+  const tschema=schema("skills/subagent-driven-development/schemas/task-artifact.schema.json"), fschema=schema("skills/subagent-driven-development/schemas/review-finding.schema.json"), lschema=schema("skills/subagent-driven-development/schemas/progress-ledger.schema.json"); if(!tschema||!fschema||!lschema)return;
   const bundles=["scripts/tests/fixtures/run-bundle"], live=resolve(".wcbs/runs"); if(fs.existsSync(live))for(const x of fs.readdirSync(live))if(fs.statSync(path.join(live,x)).isDirectory())bundles.push(`.wcbs/runs/${x}`);
-  for(const b of bundles){const fp=`${b}/findings.json`,lp=`${b}/progress-ledger.jsonl`;if(exists(fp)){const a=json(fp);if(a)for(const f of a)for(const e of validateAgainstSchema(fschema,f))fail(`${fp} finding ${f.finding_id} violates review-finding.schema.json: ${e}`);}if(exists(lp))read(lp).split("\n").filter(Boolean).forEach((line,i)=>{let v;try{v=JSON.parse(line);}catch(e){fail(`${lp} line ${i+1} is not valid JSON: ${e.message}`);return;}for(const e of validateAgainstSchema(lschema,v))fail(`${lp} line ${i+1} violates progress-ledger.schema.json: ${e}`);});}
+  for(const b of bundles){
+    const fp=`${b}/findings.json`,lp=`${b}/progress-ledger.jsonl`,tasks=resolve(`${b}/tasks`);
+    if(exists(fp)){const a=json(fp);if(a)for(const f of a)for(const e of validateAgainstSchema(fschema,f))fail(`${fp} finding ${f.finding_id} violates review-finding.schema.json: ${e}`);}
+    if(exists(lp))read(lp).split("\n").filter(Boolean).forEach((line,i)=>{let v;try{v=JSON.parse(line);}catch(e){fail(`${lp} line ${i+1} is not valid JSON: ${e.message}`);return;}for(const e of validateAgainstSchema(lschema,v))fail(`${lp} line ${i+1} violates progress-ledger.schema.json: ${e}`);});
+    if(!fs.existsSync(tasks)){fail(`${b} is missing its tasks directory and machine-readable task artifacts.`);continue;}
+    for(const entry of fs.readdirSync(tasks,{withFileTypes:true})) if(entry.isDirectory()){
+      const tp=`${b}/tasks/${entry.name}/task-artifact.json`;
+      if(!exists(tp)){fail(`Missing required task artifact: ${tp}`);continue;}
+      const task=json(tp); if(task)for(const e of validateAgainstSchema(tschema,task))fail(`${tp} violates task-artifact.schema.json: ${e}`);
+    }
+  }
 }
 function checkMarkdown(){const walk=d=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){if([".git",".agents","node_modules","90_archive"].includes(e.name))continue;const f=path.join(d,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith(".md")){const c=fs.readFileSync(f,"utf8"),re=/`((?:00_|10_|20_|30_|40_|50_|60_|90_|skills\/|runtime_adapters\/|\.codex-plugin\/|\.cursor\/|\.github\/|AGENTS\.md|CLAUDE\.md|GEMINI\.md|REPLIT\.md|README\.md)[^`]+)`/g;for(const m of c.matchAll(re)){const p=m[1];if(!p.includes("*")&&!p.endsWith("/")&&!exists(p))warn(`${display(path.relative(root,f))} references missing path: ${p}`);}}}};walk(root);}
 
 checkRequiredFiles(); json(".codex-plugin/plugin.json"); checkPackage(); checkSkills(); checkWiring(); checkEvidenceVocabulary(); checkAdapters(); checkBundles(); checkMarkdown();
+if(strict) for(const warning of warnings) fail(`Strict mode rejects warning: ${warning}`);
 console.log("WCBS Super Build Kit Doctor");console.log(`Mode: ${strict?"verify":"doctor"}`);console.log(`Root: ${root}\n`);
 if(warnings.length){console.log("Warnings:");for(const x of warnings)console.log(`- ${x}`);console.log();}
-if(errors.length){console.log("Failures:");for(const x of errors)console.log(`- ${x}`);process.exitCode=1;}else console.log("PASS: kit files, activation wiring, skill frontmatter, JSON, evidence terms, controller contracts, adapter manifests, tool mappings, capability matrix, and optional package safety checks passed.");
+if(errors.length){console.log("Failures:");for(const x of errors)console.log(`- ${x}`);process.exitCode=1;}else console.log("PASS: kit files, activation wiring, skill frontmatter, JSON, evidence terms, controller contracts, adapter manifests, tool mappings, capability matrix, artifact schemas, package gates, and optional package safety checks passed.");
