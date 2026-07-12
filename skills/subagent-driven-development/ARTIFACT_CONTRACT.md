@@ -25,6 +25,7 @@ Artifacts on disk solve both. They also make the run recoverable by a different 
   tasks/
     <task-id>/
       task-brief.md
+      task-artifact.json
       task-base-head.json
       implementer-report.md
       diff.patch
@@ -48,6 +49,7 @@ Artifacts on disk solve both. They also make the run recoverable by a different 
 - The default directory is **project-local** and should be gitignored, unless the project explicitly retains evidence in version control.
 - **Original user input is preserved and never overwritten.**
 - **Each task brief is immutable after dispatch.** A correction creates a new revision with a reason and a timestamp. Silently editing a dispatched brief destroys the audit trail.
+- `task-brief.md` is the human-readable brief. Its paired `task-artifact.json` is the machine-readable record validated against `skills/subagent-driven-development/schemas/task-artifact.schema.json`. Neither replaces the other.
 - Every artifact records `run_id`, `task_id`, creation time, source commit or diff range, and producer role.
 - **Large plans, diffs, logs, and reports remain on disk.** Controller messages carry paths and concise status only. This is the context-cost control: pasting a diff into the controller prompt is how long runs degrade.
 - **Secrets, tokens, credentials, API keys, and private data must never be written into artifacts.** Redact before writing. An artifact is a durable record, so a leaked secret in one is a durable leak.
@@ -55,11 +57,11 @@ Artifacts on disk solve both. They also make the run recoverable by a different 
 
 ## Artifacts Must Satisfy Their Own Schemas
 
-Every packaged finding validates against `skills/subagent-driven-development/schemas/review-finding.schema.json`, and every progress-ledger entry against `skills/subagent-driven-development/schemas/progress-ledger.schema.json`, **before** the bundle is written.
+Every task artifact validates against `skills/subagent-driven-development/schemas/task-artifact.schema.json`, every packaged finding validates against `skills/subagent-driven-development/schemas/review-finding.schema.json`, and every progress-ledger entry validates against `skills/subagent-driven-development/schemas/progress-ledger.schema.json` **before** the bundle is written.
 
 This rule exists because it was broken. A finding ledger once shipped hash-valid but schema-invalid: non-canonical `opened_by` roles and an undeclared `note` property. The kit published a schema and then produced evidence that violated it, which is the same failure as publishing a contract and not enforcing it.
 
-`npm run doctor` validates every bundle under `.wcbs/runs/`. Durable evidence must satisfy the contract it is evidence for.
+`npm run doctor` validates the committed hermetic fixture and every applicable bundle under `.wcbs/runs/`. Durable evidence must satisfy the contract it is evidence for.
 
 ## Evidence Rule
 
