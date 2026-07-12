@@ -30,11 +30,13 @@ test("action missing evidence_produced is rejected",()=>{const mp=okMapping();de
 test("missing required capability key is rejected",()=>{const m=okManifest();delete m.capabilities.subagents;expectInvalid(MANIFEST_SCHEMA,m,/subagents/,"required capability");});
 test("activation marker must match the exact documented form",()=>{const m=okManifest();m.activation_marker="claude";expectInvalid(MANIFEST_SCHEMA,m,/activation_marker/,"marker pattern");});
 test("shipped markers match WCBS_KIT_ACTIVE:<runtime-id> exactly",()=>{for(const r of REQUIRED_RUNTIMES)assert.equal(read(`runtime_adapters/manifests/${r}.json`).activation_marker,`WCBS_KIT_ACTIVE:${r}`);});
+const TASK_SCHEMA=read("skills/subagent-driven-development/schemas/task-artifact.schema.json");
 const FINDING_SCHEMA=read("skills/subagent-driven-development/schemas/review-finding.schema.json");
 const LEDGER_SCHEMA=read("skills/subagent-driven-development/schemas/progress-ledger.schema.json");
+const okTask=()=>read("scripts/tests/fixtures/run-bundle/tasks/T-01/task-artifact.json");
 const okFinding=()=>({finding_id:"F-100",run_id:"R",task_id:"T",severity:"IMPORTANT",state:"OPEN",summary:"s",evidence:[{file:"a.js",line:1}],opened_by:"final_reviewer",opened_utc:"2026-07-11T00:00:00Z",repair_budget:3,repair_rounds_used:0});
-const okLedger=()=>({run_id:"R",task_id:"T",recorded_utc:"2026-07-11T00:00:00Z",task_base_sha:"0".repeat(40),status:"DONE",review_verdict:"PASS",evidence_state:"Verified",findings_opened:0});
-test("baseline fixtures are schema-valid",()=>{assert.deepEqual(validateAgainstSchema(FINDING_SCHEMA,okFinding()),[]);assert.deepEqual(validateAgainstSchema(LEDGER_SCHEMA,okLedger()),[]);});
+const okLedger=()=>({run_id:"R",task_id:"T",recorded_utc:"2026-07-11T00:00:00Z",task_base_sha:"0".repeat(40),status:"DONE",review_verdict:"PASS",evidence_state:"Verified",findings_opened:0,tests_run:[{command:"npm test",exit_status:0,result:"all passed"}]});
+test("baseline fixtures are schema-valid",()=>{assert.deepEqual(validateAgainstSchema(TASK_SCHEMA,okTask()),[]);assert.deepEqual(validateAgainstSchema(FINDING_SCHEMA,okFinding()),[]);assert.deepEqual(validateAgainstSchema(LEDGER_SCHEMA,okLedger()),[]);});
 test("minimum is enforced: repair_budget below 1 is rejected",()=>{const f=okFinding();f.repair_budget=0;expectInvalid(FINDING_SCHEMA,f,/repair_budget/,"minimum: 1");});
 test("minimum is enforced: negative repair_rounds_used is rejected",()=>{const f=okFinding();f.repair_rounds_used=-1;expectInvalid(FINDING_SCHEMA,f,/repair_rounds_used/,"minimum: 0");});
 test("minimum is enforced: negative ledger counters are rejected",()=>{const l=okLedger();l.findings_opened=-1;expectInvalid(LEDGER_SCHEMA,l,/findings_opened/,"minimum: 0");});
@@ -49,3 +51,10 @@ test("$ref sibling assertions are enforced",()=>{const s={$defs:{n:{type:"number
 test("RFC 3339 date-time rejects out-of-range timezone offsets",()=>{for(const v of ["2026-07-11T12:30:00+99:00","2026-07-11T12:30:00+02:99"]){const f=okFinding();f.opened_utc=v;expectInvalid(FINDING_SCHEMA,f,/opened_utc/,v);}});
 test("RFC 3339 date-time accepts valid boundary offsets",()=>{for(const v of ["2026-07-11T12:30:00+23:59","2026-07-11T12:30:00-23:59"]){const f=okFinding();f.opened_utc=v;assert.deepEqual(validateAgainstSchema(FINDING_SCHEMA,f),[]);}});
 test("leap second 60 is accepted only at an offset-adjusted month boundary",()=>{const valid=okFinding();valid.opened_utc="2026-06-30T23:59:60Z";assert.deepEqual(validateAgainstSchema(FINDING_SCHEMA,valid),[]);for(const v of ["2026-06-30T12:00:60Z","2026-06-29T23:59:60Z"]){const f=okFinding();f.opened_utc=v;expectInvalid(FINDING_SCHEMA,f,/opened_utc/,v);}});
+test("malformed supported keywords are rejected during preflight",()=>{for(const schema of [{type:"object",properties:[]},{type:"object",required:"x"},{type:"number",minimum:"5"},{enum:"x"},{type:[]}])assert.throws(()=>validateAgainstSchema(schema,{}),/malformed supported keyword/i);});
+test("contradictory numeric bounds are rejected during preflight",()=>{assert.throws(()=>validateAgainstSchema({type:"number",minimum:10,maximum:1},5),/minimum cannot exceed maximum/i);});
+test("cleared lifecycle timestamps must be RFC 3339 date-time",()=>{const f=okFinding();f.state="CLEARED";f.cleared_by="final_reviewer";f.cleared_utc="yesterday";expectInvalid(FINDING_SCHEMA,f,/cleared_utc/,"cleared timestamp");});
+test("finding history timestamps must be RFC 3339 date-time",()=>{const f=okFinding();f.history=[{from:"OPEN",to:"FIXED_PENDING_REVIEW",actor:"fix_agent",utc:"soon"}];expectInvalid(FINDING_SCHEMA,f,/history.*utc|not a valid date-time/,"history timestamp");});
+test("a fix agent cannot be recorded as the clearing authority",()=>{const f=okFinding();f.cleared_by="fix_agent";expectInvalid(FINDING_SCHEMA,f,/cleared_by/,"clearing authority");});
+test("progress-ledger test evidence requires a result",()=>{const l=okLedger();delete l.tests_run[0].result;expectInvalid(LEDGER_SCHEMA,l,/result/,"test evidence result");});
+test("task artifacts require immutable-brief contract fields",()=>{const task=okTask();delete task.brief_revision;expectInvalid(TASK_SCHEMA,task,/brief_revision/,"brief revision");});
