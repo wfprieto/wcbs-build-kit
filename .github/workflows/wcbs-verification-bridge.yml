@@ -1,4 +1,4 @@
-name: WCBS Verification Bridge
+name: WCBS Final Candidate Verification
 
 on:
   push:
@@ -116,7 +116,7 @@ jobs:
           test ! -e .wcbs
           echo 'F-011 hermetic checks: PASS' | tee /tmp/wcbs-verification-evidence/logs/f011-summary.txt
 
-      - name: Publish post-remediation evidence
+      - name: Publish final candidate evidence
         shell: bash
         run: |
           set -euo pipefail
@@ -129,5 +129,5 @@ jobs:
           git config user.name 'WCBS Verification Bridge'
           git config user.email 'actions@users.noreply.github.com'
           git add -A .wcbs-verification
-          git commit -m 'Record WCBS cross-platform verification evidence'
+          git commit -m 'Record WCBS final candidate verification evidence'
           git push origin HEAD:main
