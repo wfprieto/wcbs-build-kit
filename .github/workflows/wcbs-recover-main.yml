@@ -1,6 +1,7 @@
 name: WCBS Recover Main
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
@@ -41,6 +42,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          printf '%s\n' "${GITHUB_SHA}" > /tmp/wcbs-payload/staging-head
           git config user.name 'William Prieto'
           git config user.email 'wfprieto@gmail.com'
           git reset --hard 6771ebb6b876b658a69eb9e8416fc1a5712808b2
@@ -118,7 +120,7 @@ jobs:
           pass 13 'Activation-marker exact binding' node --input-type=module -e 'import {loadManifests,validateActivationMarkerUniqueness} from "./scripts/lib/adapter-contract.mjs"; const m=loadManifests(process.cwd()); validateActivationMarkerUniqueness(m); for (const x of m) if (x.activation_marker !== `WCBS_KIT_ACTIVE:${x.runtime_id}`) process.exit(1); console.log(`${m.length} exact markers verified`);'
           pass 14 'Manifest-to-tool-mapping agreement' node --input-type=module -e 'import fs from "node:fs"; import {loadManifests,validateManifestMappingConsistency} from "./scripts/lib/adapter-contract.mjs"; const m=loadManifests(process.cwd()); for (const x of m) validateManifestMappingConsistency(x, JSON.parse(fs.readFileSync(x.tool_mapping_path,"utf8"))); console.log(`${m.length} manifest/mapping pairs verified`);'
           pass 15 'Dependency and package safety' node --input-type=module -e 'const p=JSON.parse(await (await import("node:fs/promises")).readFile("package.json","utf8")); for (const k of ["dependencies","devDependencies","peerDependencies","optionalDependencies"]) if (p[k] && Object.keys(p[k]).length) process.exit(1); if (!p.private || !p.scripts?.check) process.exit(1); console.log("dependency-free private package with full check gate");'
-          pass 16 'Generated and transient artifact hygiene' bash -c 'test -f .gitignore; ! git ls-files | grep -E "(__pycache__|\\.pyc$|^\\.wcbs/)"; printf "no transient artifacts tracked\n"'
+          pass 16 'Generated and transient artifact hygiene' bash -c 'test -f .gitignore; ! git ls-files | grep -E "(__pycache__|\.pyc$|^\.wcbs/)"; printf "no transient artifacts tracked\n"'
           pass 17 'Bootstrap debris removed' bash -c 'test ! -e .wcbs-bootstrap; test ! -e .github/workflows/wcbs-recover-main.yml; printf "temporary recovery files absent\n"'
           pass 18 'Markdown reference integrity and strict doctor' npm run verify
           pass 19 'Complete clean-room test gate replay' npm run check
@@ -138,14 +140,15 @@ jobs:
           git add "$report"
           git commit -m 'Document whole-kit 20-pass verification'
 
-      - name: Publish corrected main and erase staging history
+      - name: Publish verified tree as a normal main commit
         shell: bash
-        env:
-          EXPECTED_STAGING_HEAD: ${{ github.sha }}
         run: |
           set -euo pipefail
-          git status --short
-          git push origin HEAD:main --force-with-lease=refs/heads/main:${EXPECTED_STAGING_HEAD}
+          staging_head="$(cat /tmp/wcbs-payload/staging-head)"
+          verified_tree="$(git rev-parse 'HEAD^{tree}')"
+          final_commit="$(printf '%s\n' 'Complete WCBS controller and portability upgrade' | git commit-tree "$verified_tree" -p "$staging_head")"
+          git push origin "$final_commit":refs/heads/main
+          printf '%s\n' "$final_commit" > /tmp/wcbs-payload/final-commit
 
       - name: Retain verification evidence
         if: always()
@@ -154,5 +157,6 @@ jobs:
           name: wcbs-main-recovery-evidence
           path: |
             /tmp/npm-run-check.log
+            /tmp/wcbs-payload/final-commit
             20_PASS_WHOLE_KIT_AUDIT.md
           if-no-files-found: warn
