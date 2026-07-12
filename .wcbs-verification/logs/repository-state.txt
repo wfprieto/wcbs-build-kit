@@ -1,26 +1,30 @@
 HEAD:
-bbdf058c81a256e9dddd9fa232b9ca9374daf7c1
+7125927d9b2e3216418836040d7a05f907cfabd7
 
 STATUS BEFORE TESTS:
 D  .wcbs-verification/logs/adapter-contract.txt
 D  .wcbs-verification/logs/artifact-bundle.txt
-D  .wcbs-verification/logs/checksums.txt
 D  .wcbs-verification/logs/controller-contract.txt
 D  .wcbs-verification/logs/f011-artifact-no-live-bundle.txt
 D  .wcbs-verification/logs/f011-full-check-no-live-bundle.txt
 D  .wcbs-verification/logs/f011-summary.txt
 D  .wcbs-verification/logs/f012-adversarial.txt
 D  .wcbs-verification/logs/npm-run-check-clean.txt
+D  .wcbs-verification/logs/npm-run-verify.txt
 D  .wcbs-verification/logs/python-tests.txt
 D  .wcbs-verification/logs/repository-state.txt
 D  .wcbs-verification/logs/schema-enforcement.txt
 D  .wcbs-verification/logs/wcbs-doctor.txt
 D  .wcbs-verification/verified-head.txt
-D  .wcbs-verification/wcbs-build-kit-main.tar.gz
-D  .wcbs-verification/wcbs-build-kit.bundle
 
 LOG:
-bbdf058 (HEAD -> main, origin/main) Run post-remediation WCBS verification bridge
+7125927 (HEAD -> main, origin/main) Verify WCBS cross-platform and artifact corrections
+7e978e5 Document complete hermetic fixture contract
+5a93bae Wire cross-platform Python launcher into doctor gate
+06b9809 Use cross-platform Python launcher in npm gate
+c3439f6 Add cross-platform Python test launcher
+8a21d7d Record WCBS post-remediation verification evidence
+bbdf058 Run post-remediation WCBS verification bridge
 76dd550 Complete hermetic task artifact fixture inventory
 504b2e8 Prove strict mode, package wiring, and task artifact integration
 353d86f Validate committed task artifacts hermetically
@@ -29,12 +33,6 @@ a59aa04 Reject malformed supported JSON Schema keywords
 80a8d29 Enforce strict verification and complete artifact wiring
 e4b187b Wire machine-readable task artifacts into bundle contract
 b58c353 Add hermetic task artifact fixture
-09c7755 Make task artifact schema match immutable brief contract
-2aac800 Require complete test evidence in progress ledger
-548576b Tighten WCBS durable artifact enforcement
-606804c Record WCBS clean-checkout verification evidence
-76e234b Correct temporary verification bridge evidence handling
-2754f3c Add temporary WCBS verification bridge
 
 TRACKED FILES AFTER TEMPORARY EVIDENCE REMOVAL:
 .codex-plugin/plugin.json
@@ -150,6 +148,7 @@ runtime_adapters/tool_mappings/replit.json
 scripts/generate-capability-matrix.mjs
 scripts/lib/adapter-contract.mjs
 scripts/lib/json-schema.mjs
+scripts/run-python-tests.mjs
 scripts/tests/adapter-contract.test.mjs
 scripts/tests/artifact-bundle.test.mjs
 scripts/tests/controller-contract.test.mjs

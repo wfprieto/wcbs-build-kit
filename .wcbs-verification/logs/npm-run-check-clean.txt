@@ -28,739 +28,739 @@ TAP version 13
 # Subtest: invalid support level fails
 ok 1 - invalid support level fails
   ---
-  duration_ms: 1.757546
+  duration_ms: 1.756124
   type: 'test'
   ...
 # Subtest: Full adapter with manual bootstrap fails
 ok 2 - Full adapter with manual bootstrap fails
   ---
-  duration_ms: 0.340958
+  duration_ms: 0.377793
   type: 'test'
   ...
 # Subtest: Full adapter missing an essential capability fails
 ok 3 - Full adapter missing an essential capability fails
   ---
-  duration_ms: 0.308047
+  duration_ms: 0.231914
   type: 'test'
   ...
 # Subtest: Partial adapter missing an essential capability fails
 ok 4 - Partial adapter missing an essential capability fails
   ---
-  duration_ms: 0.351417
+  duration_ms: 0.397526
   type: 'test'
   ...
 # Subtest: unsupported essential capability must be labeled Unsupported
 ok 5 - unsupported essential capability must be labeled Unsupported
   ---
-  duration_ms: 0.257752
+  duration_ms: 0.265364
   type: 'test'
   ...
 # Subtest: manifest referencing a missing bootstrap path fails
 ok 6 - manifest referencing a missing bootstrap path fails
   ---
-  duration_ms: 0.357248
+  duration_ms: 0.30383
   type: 'test'
   ...
 # Subtest: manifest referencing a missing tool mapping fails
 ok 7 - manifest referencing a missing tool mapping fails
   ---
-  duration_ms: 0.341699
+  duration_ms: 0.393926
   type: 'test'
   ...
 # Subtest: degradable or unavailable capability without a fallback fails
 ok 8 - degradable or unavailable capability without a fallback fails
   ---
-  duration_ms: 0.212397
+  duration_ms: 0.225845
   type: 'test'
   ...
 # Subtest: missing lifecycle field fails
 ok 9 - missing lifecycle field fails
   ---
-  duration_ms: 0.475449
+  duration_ms: 0.454799
   type: 'test'
   ...
 # Subtest: mapping missing a required action fails
 ok 10 - mapping missing a required action fails
   ---
-  duration_ms: 0.906254
+  duration_ms: 0.725287
   type: 'test'
   ...
 # Subtest: mapping containing an undeclared action fails
 ok 11 - mapping containing an undeclared action fails
   ---
-  duration_ms: 0.340085
+  duration_ms: 0.392486
   type: 'test'
   ...
 # Subtest: non-native mapping action without a fallback fails
 ok 12 - non-native mapping action without a fallback fails
   ---
-  duration_ms: 1.316742
+  duration_ms: 0.341287
   type: 'test'
   ...
 # Subtest: every required runtime has a manifest and a tool mapping
 ok 13 - every required runtime has a manifest and a tool mapping
   ---
-  duration_ms: 0.458528
+  duration_ms: 0.509153
   type: 'test'
   ...
 # Subtest: every shipped manifest validates against the contract
 ok 14 - every shipped manifest validates against the contract
   ---
-  duration_ms: 1.429693
+  duration_ms: 1.677486
   type: 'test'
   ...
 # Subtest: every shipped tool mapping validates against the contract
 ok 15 - every shipped tool mapping validates against the contract
   ---
-  duration_ms: 0.690781
+  duration_ms: 0.463551
   type: 'test'
   ...
 # Subtest: adapter JSON schemas exist and are valid JSON
 ok 16 - adapter JSON schemas exist and are valid JSON
   ---
-  duration_ms: 0.539809
+  duration_ms: 0.405291
   type: 'test'
   ...
 # Subtest: capability matrix is generated from manifests and not hand-edited
 ok 17 - capability matrix is generated from manifests and not hand-edited
   ---
-  duration_ms: 1.179957
+  duration_ms: 0.825097
   type: 'test'
   ...
 # Subtest: portability contract and porting guide exist with binding sections
 ok 18 - portability contract and porting guide exist with binding sections
   ---
-  duration_ms: 0.517688
+  duration_ms: 0.349022
   type: 'test'
   ...
 # Subtest: runtime adapter README is a router, not a duplicated skill inventory
 ok 19 - runtime adapter README is a router, not a duplicated skill inventory
   ---
-  duration_ms: 0.31589
+  duration_ms: 0.213978
   type: 'test'
   ...
 # Subtest: a manifest capability contradicting its mapped action fails
 ok 20 - a manifest capability contradicting its mapped action fails
   ---
-  duration_ms: 0.266989
+  duration_ms: 0.283168
   type: 'test'
   ...
 # Subtest: a manifest capability matching its mapped action passes
 ok 21 - a manifest capability matching its mapped action passes
   ---
-  duration_ms: 0.261539
+  duration_ms: 0.212691
   type: 'test'
   ...
 # Subtest: every shipped manifest agrees with its shipped tool mapping
 ok 22 - every shipped manifest agrees with its shipped tool mapping
   ---
-  duration_ms: 0.513901
+  duration_ms: 0.492432
   type: 'test'
   ...
 # Subtest: capability-to-action mapping covers every equivalent pair
 ok 23 - capability-to-action mapping covers every equivalent pair
   ---
-  duration_ms: 0.125465
+  duration_ms: 0.150915
   type: 'test'
   ...
 # Subtest: duplicate activation markers across runtimes fail
 ok 24 - duplicate activation markers across runtimes fail
   ---
-  duration_ms: 0.253734
+  duration_ms: 0.247361
   type: 'test'
   ...
 # Subtest: a marker that does not name its runtime fails
 ok 25 - a marker that does not name its runtime fails
   ---
-  duration_ms: 0.178484
+  duration_ms: 0.169066
   type: 'test'
   ...
 # Subtest: every shipped manifest has a unique, runtime-specific activation marker
 ok 26 - every shipped manifest has a unique, runtime-specific activation marker
   ---
-  duration_ms: 0.339445
+  duration_ms: 0.33106
   type: 'test'
   ...
 # Subtest: the committed run-bundle fixture exists
 ok 27 - the committed run-bundle fixture exists
   ---
-  duration_ms: 1.886267
+  duration_ms: 0.836718
   type: 'test'
   ...
 # Subtest: the test gate does not depend on a gitignored directory
 ok 28 - the test gate does not depend on a gitignored directory
   ---
-  duration_ms: 0.610772
+  duration_ms: 0.279286
   type: 'test'
   ...
 # Subtest: every packaged task artifact validates against task-artifact.schema.json
 ok 29 - every packaged task artifact validates against task-artifact.schema.json
   ---
-  duration_ms: 4.51408
+  duration_ms: 2.183235
   type: 'test'
   ...
 # Subtest: every packaged finding validates against review-finding.schema.json
 ok 30 - every packaged finding validates against review-finding.schema.json
   ---
-  duration_ms: 2.886537
+  duration_ms: 1.230453
   type: 'test'
   ...
 # Subtest: every packaged progress-ledger entry validates against progress-ledger.schema.json
 ok 31 - every packaged progress-ledger entry validates against progress-ledger.schema.json
   ---
-  duration_ms: 1.077635
+  duration_ms: 0.517741
   type: 'test'
   ...
 # Subtest: a task artifact missing its immutable brief revision is rejected
 ok 32 - a task artifact missing its immutable brief revision is rejected
   ---
-  duration_ms: 0.596135
+  duration_ms: 0.253456
   type: 'test'
   ...
 # Subtest: packaged findings use only canonical reviewer roles
 ok 33 - packaged findings use only canonical reviewer roles
   ---
-  duration_ms: 0.761414
+  duration_ms: 0.466947
   type: 'test'
   ...
 # Subtest: a finding with a non-canonical role is rejected
 ok 34 - a finding with a non-canonical role is rejected
   ---
-  duration_ms: 0.528017
+  duration_ms: 0.397319
   type: 'test'
   ...
 # Subtest: a finding with an undeclared top-level property is rejected
 ok 35 - a finding with an undeclared top-level property is rejected
   ---
-  duration_ms: 0.942062
+  duration_ms: 0.447072
   type: 'test'
   ...
 # Subtest: the declared note field is permitted
 ok 36 - the declared note field is permitted
   ---
-  duration_ms: 1.835402
+  duration_ms: 0.65957
   type: 'test'
   ...
 # Subtest: a ledger entry with an invalid verdict is rejected
 ok 37 - a ledger entry with an invalid verdict is rejected
   ---
-  duration_ms: 4.498712
+  duration_ms: 0.841428
   type: 'test'
   ...
 # Subtest: incomplete test evidence is rejected
 ok 38 - incomplete test evidence is rejected
   ---
-  duration_ms: 0.590124
+  duration_ms: 0.349565
   type: 'test'
   ...
 # Subtest: a marker naming a different runtime is rejected
 ok 39 - a marker naming a different runtime is rejected
   ---
-  duration_ms: 1.739212
+  duration_ms: 1.054692
   type: 'test'
   ...
 # Subtest: the exact documented markers are accepted
 ok 40 - the exact documented markers are accepted
   ---
-  duration_ms: 0.714936
+  duration_ms: 0.379032
   type: 'test'
   ...
 # Subtest: every shipped marker equals WCBS_KIT_ACTIVE:<runtime_id> exactly
 ok 41 - every shipped marker equals WCBS_KIT_ACTIVE:<runtime_id> exactly
   ---
-  duration_ms: 2.287848
+  duration_ms: 0.222126
   type: 'test'
   ...
 # Subtest: every role prompt exists
 ok 42 - every role prompt exists
   ---
-  duration_ms: 2.965445
+  duration_ms: 2.532467
   type: 'test'
   ...
 # Subtest: every controller artifact schema exists and is valid JSON
 ok 43 - every controller artifact schema exists and is valid JSON
   ---
-  duration_ms: 1.102331
+  duration_ms: 0.823139
   type: 'test'
   ...
 # Subtest: every durable controller template exists
 ok 44 - every durable controller template exists
   ---
-  duration_ms: 0.512478
+  duration_ms: 0.311326
   type: 'test'
   ...
 # Subtest: no controller guidance recommends HEAD~1 shortcut refs
 ok 45 - no controller guidance recommends HEAD~1 shortcut refs
   ---
-  duration_ms: 2.367126
+  duration_ms: 2.684493
   type: 'test'
   ...
 # Subtest: controller skill mandates a final whole-branch review
 ok 46 - controller skill mandates a final whole-branch review
   ---
-  duration_ms: 0.467174
+  duration_ms: 0.30765
   type: 'test'
   ...
 # Subtest: controller skill mandates material-finding re-review, not fix-attempt clearing
 ok 47 - controller skill mandates material-finding re-review, not fix-attempt clearing
   ---
-  duration_ms: 0.380922
+  duration_ms: 0.298818
   type: 'test'
   ...
 # Subtest: controller skill defines pre-flight conflict scan before task 1
 ok 48 - controller skill defines pre-flight conflict scan before task 1
   ---
-  duration_ms: 0.376144
+  duration_ms: 0.255485
   type: 'test'
   ...
 # Subtest: controller skill defines a bounded repair budget
 ok 49 - controller skill defines a bounded repair budget
   ---
-  duration_ms: 0.412512
+  duration_ms: 0.298093
   type: 'test'
   ...
 # Subtest: controller skill defines CANNOT_VERIFY_FROM_DIFF mapped to Unknown
 ok 50 - controller skill defines CANNOT_VERIFY_FROM_DIFF mapped to Unknown
   ---
-  duration_ms: 0.592768
+  duration_ms: 0.461984
   type: 'test'
   ...
 # Subtest: controller skill enforces reviewer neutrality and independence
 ok 51 - controller skill enforces reviewer neutrality and independence
   ---
-  duration_ms: 0.742238
+  duration_ms: 0.608291
   type: 'test'
   ...
 # Subtest: controller skill enforces context-cost controls via file-based handoff
 ok 52 - controller skill enforces context-cost controls via file-based handoff
   ---
-  duration_ms: 0.526455
+  duration_ms: 0.418791
   type: 'test'
   ...
 # Subtest: artifact contract exists and forbids secrets in artifacts
 ok 53 - artifact contract exists and forbids secrets in artifacts
   ---
-  duration_ms: 1.894292
+  duration_ms: 0.266147
   type: 'test'
   ...
 # Subtest: controller skill uses only canonical evidence vocabulary
 ok 54 - controller skill uses only canonical evidence vocabulary
   ---
-  duration_ms: 0.254535
+  duration_ms: 0.28105
   type: 'test'
   ...
 # Subtest: every shipped manifest validates against the published schema
 ok 55 - every shipped manifest validates against the published schema
   ---
-  duration_ms: 6.432848
+  duration_ms: 4.56267
   type: 'test'
   ...
 # Subtest: every shipped tool mapping validates against the published schema
 ok 56 - every shipped tool mapping validates against the published schema
   ---
-  duration_ms: 3.035415
+  duration_ms: 1.867116
   type: 'test'
   ...
 # Subtest: invalid install_scope is rejected
 ok 57 - invalid install_scope is rejected
   ---
-  duration_ms: 0.766523
+  duration_ms: 0.540462
   type: 'test'
   ...
 # Subtest: unsupported operating system is rejected
 ok 58 - unsupported operating system is rejected
   ---
-  duration_ms: 0.719626
+  duration_ms: 0.303013
   type: 'test'
   ...
 # Subtest: empty operating-system list is rejected
 ok 59 - empty operating-system list is rejected
   ---
-  duration_ms: 0.687535
+  duration_ms: 0.27095
   type: 'test'
   ...
 # Subtest: non-boolean modifies_user_files is rejected
 ok 60 - non-boolean modifies_user_files is rejected
   ---
-  duration_ms: 0.664092
+  duration_ms: 0.516596
   type: 'test'
   ...
 # Subtest: runtime_id violating its pattern is rejected
 ok 61 - runtime_id violating its pattern is rejected
   ---
-  duration_ms: 0.672327
+  duration_ms: 0.496472
   type: 'test'
   ...
 # Subtest: invalid capability availability is rejected
 ok 62 - invalid capability availability is rejected
   ---
-  duration_ms: 0.658111
+  duration_ms: 0.46748
   type: 'test'
   ...
 # Subtest: undeclared manifest property is rejected
 ok 63 - undeclared manifest property is rejected
   ---
-  duration_ms: 0.736296
+  duration_ms: 0.497723
   type: 'test'
   ...
 # Subtest: undeclared mapping property is rejected
 ok 64 - undeclared mapping property is rejected
   ---
-  duration_ms: 1.145632
+  duration_ms: 0.798945
   type: 'test'
   ...
 # Subtest: undeclared action property is rejected
 ok 65 - undeclared action property is rejected
   ---
-  duration_ms: 0.467024
+  duration_ms: 0.305884
   type: 'test'
   ...
 # Subtest: undeclared action name is rejected
 ok 66 - undeclared action name is rejected
   ---
-  duration_ms: 0.334696
+  duration_ms: 0.341366
   type: 'test'
   ...
 # Subtest: missing required manifest field is rejected
 ok 67 - missing required manifest field is rejected
   ---
-  duration_ms: 0.310491
+  duration_ms: 0.305251
   type: 'test'
   ...
 # Subtest: action missing required_parameters is rejected
 ok 68 - action missing required_parameters is rejected
   ---
-  duration_ms: 0.348141
+  duration_ms: 0.213783
   type: 'test'
   ...
 # Subtest: action missing evidence_produced is rejected
 ok 69 - action missing evidence_produced is rejected
   ---
-  duration_ms: 0.382626
+  duration_ms: 0.1767
   type: 'test'
   ...
 # Subtest: missing required capability key is rejected
 ok 70 - missing required capability key is rejected
   ---
-  duration_ms: 0.472644
+  duration_ms: 0.169398
   type: 'test'
   ...
 # Subtest: activation marker must match the exact documented form
 ok 71 - activation marker must match the exact documented form
   ---
-  duration_ms: 0.364621
+  duration_ms: 0.203786
   type: 'test'
   ...
 # Subtest: shipped markers match WCBS_KIT_ACTIVE:<runtime-id> exactly
 ok 72 - shipped markers match WCBS_KIT_ACTIVE:<runtime-id> exactly
   ---
-  duration_ms: 0.362478
+  duration_ms: 0.222122
   type: 'test'
   ...
 # Subtest: baseline fixtures are schema-valid
 ok 73 - baseline fixtures are schema-valid
   ---
-  duration_ms: 1.221313
+  duration_ms: 0.802439
   type: 'test'
   ...
 # Subtest: minimum is enforced: repair_budget below 1 is rejected
 ok 74 - minimum is enforced: repair_budget below 1 is rejected
   ---
-  duration_ms: 0.335498
+  duration_ms: 0.194968
   type: 'test'
   ...
 # Subtest: minimum is enforced: negative repair_rounds_used is rejected
 ok 75 - minimum is enforced: negative repair_rounds_used is rejected
   ---
-  duration_ms: 0.284562
+  duration_ms: 0.1623
   type: 'test'
   ...
 # Subtest: minimum is enforced: negative ledger counters are rejected
 ok 76 - minimum is enforced: negative ledger counters are rejected
   ---
-  duration_ms: 0.321521
+  duration_ms: 0.148674
   type: 'test'
   ...
 # Subtest: format date-time is enforced on a finding timestamp
 ok 77 - format date-time is enforced on a finding timestamp
   ---
-  duration_ms: 0.267319
+  duration_ms: 0.149554
   type: 'test'
   ...
 # Subtest: format date-time is enforced on a ledger timestamp
 ok 78 - format date-time is enforced on a ledger timestamp
   ---
-  duration_ms: 0.237975
+  duration_ms: 0.128744
   type: 'test'
   ...
 # Subtest: a valid RFC 3339 timestamp with an offset is accepted
 ok 79 - a valid RFC 3339 timestamp with an offset is accepted
   ---
-  duration_ms: 0.559687
+  duration_ms: 0.183194
   type: 'test'
   ...
 # Subtest: a real date with an impossible day is rejected
 ok 80 - a real date with an impossible day is rejected
   ---
-  duration_ms: 0.241341
+  duration_ms: 0.202662
   type: 'test'
   ...
 # Subtest: the validator rejects an unsupported keyword in a visited property
 ok 81 - the validator rejects an unsupported keyword in a visited property
   ---
-  duration_ms: 0.539108
+  duration_ms: 0.351487
   type: 'test'
   ...
 # Subtest: the validator rejects an unsupported keyword in an absent optional property
 ok 82 - the validator rejects an unsupported keyword in an absent optional property
   ---
-  duration_ms: 0.209361
+  duration_ms: 0.152336
   type: 'test'
   ...
 # Subtest: the validator rejects an unsupported keyword in an unused $defs entry
 ok 83 - the validator rejects an unsupported keyword in an unused $defs entry
   ---
-  duration_ms: 0.174917
+  duration_ms: 0.089123
   type: 'test'
   ...
 # Subtest: $ref sibling assertions are enforced
 ok 84 - $ref sibling assertions are enforced
   ---
-  duration_ms: 0.185808
+  duration_ms: 0.106124
   type: 'test'
   ...
 # Subtest: RFC 3339 date-time rejects out-of-range timezone offsets
 ok 85 - RFC 3339 date-time rejects out-of-range timezone offsets
   ---
-  duration_ms: 0.500115
+  duration_ms: 0.320057
   type: 'test'
   ...
 # Subtest: RFC 3339 date-time accepts valid boundary offsets
 ok 86 - RFC 3339 date-time accepts valid boundary offsets
   ---
-  duration_ms: 0.329326
+  duration_ms: 0.257497
   type: 'test'
   ...
 # Subtest: leap second 60 is accepted only at an offset-adjusted month boundary
 ok 87 - leap second 60 is accepted only at an offset-adjusted month boundary
   ---
-  duration_ms: 0.494705
+  duration_ms: 0.501994
   type: 'test'
   ...
 # Subtest: malformed supported keywords are rejected during preflight
 ok 88 - malformed supported keywords are rejected during preflight
   ---
-  duration_ms: 0.335157
+  duration_ms: 0.269729
   type: 'test'
   ...
 # Subtest: contradictory numeric bounds are rejected during preflight
 ok 89 - contradictory numeric bounds are rejected during preflight
   ---
-  duration_ms: 0.302295
+  duration_ms: 0.204743
   type: 'test'
   ...
 # Subtest: cleared lifecycle timestamps must be RFC 3339 date-time
 ok 90 - cleared lifecycle timestamps must be RFC 3339 date-time
   ---
-  duration_ms: 0.280435
+  duration_ms: 0.203717
   type: 'test'
   ...
 # Subtest: finding history timestamps must be RFC 3339 date-time
 ok 91 - finding history timestamps must be RFC 3339 date-time
   ---
-  duration_ms: 0.392013
+  duration_ms: 0.219463
   type: 'test'
   ...
 # Subtest: a fix agent cannot be recorded as the clearing authority
 ok 92 - a fix agent cannot be recorded as the clearing authority
   ---
-  duration_ms: 0.379539
+  duration_ms: 0.141643
   type: 'test'
   ...
 # Subtest: progress-ledger test evidence requires a result
 ok 93 - progress-ledger test evidence requires a result
   ---
-  duration_ms: 0.338092
+  duration_ms: 0.132106
   type: 'test'
   ...
 # Subtest: task artifacts require immutable-brief contract fields
 ok 94 - task artifacts require immutable-brief contract fields
   ---
-  duration_ms: 0.440785
+  duration_ms: 0.178067
   type: 'test'
   ...
 # Subtest: the unmutated repository passes the doctor
 ok 95 - the unmutated repository passes the doctor
   ---
-  duration_ms: 140.766308
+  duration_ms: 203.363473
   type: 'test'
   ...
 # Subtest: strict verify mode fails markdown-reference warnings that doctor only reports
 ok 96 - strict verify mode fails markdown-reference warnings that doctor only reports
   ---
-  duration_ms: 174.532407
+  duration_ms: 115.656988
   type: 'test'
   ...
 # Subtest: doctor rejects a Full adapter with a manual bootstrap
 ok 97 - doctor rejects a Full adapter with a manual bootstrap
   ---
-  duration_ms: 171.014888
+  duration_ms: 108.398229
   type: 'test'
   ...
 # Subtest: doctor rejects a supported adapter missing an essential capability
 ok 98 - doctor rejects a supported adapter missing an essential capability
   ---
-  duration_ms: 171.490867
+  duration_ms: 109.017673
   type: 'test'
   ...
 # Subtest: doctor rejects a non-native capability with no fallback
 ok 99 - doctor rejects a non-native capability with no fallback
   ---
-  duration_ms: 168.17486
+  duration_ms: 105.090501
   type: 'test'
   ...
 # Subtest: doctor rejects an undeclared manifest property
 ok 100 - doctor rejects an undeclared manifest property
   ---
-  duration_ms: 171.007414
+  duration_ms: 107.140921
   type: 'test'
   ...
 # Subtest: doctor rejects an unsupported operating system
 ok 101 - doctor rejects an unsupported operating system
   ---
-  duration_ms: 165.810886
+  duration_ms: 107.996569
   type: 'test'
   ...
 # Subtest: doctor rejects a mapping action missing evidence_produced
 ok 102 - doctor rejects a mapping action missing evidence_produced
   ---
-  duration_ms: 166.375092
+  duration_ms: 106.27727
   type: 'test'
   ...
 # Subtest: doctor rejects a mapping missing a required action
 ok 103 - doctor rejects a mapping missing a required action
   ---
-  duration_ms: 166.047702
+  duration_ms: 148.418713
   type: 'test'
   ...
 # Subtest: doctor rejects a manifest capability contradicting its mapped action
 ok 104 - doctor rejects a manifest capability contradicting its mapped action
   ---
-  duration_ms: 170.870077
+  duration_ms: 112.768052
   type: 'test'
   ...
 # Subtest: doctor rejects duplicate activation markers
 ok 105 - doctor rejects duplicate activation markers
   ---
-  duration_ms: 166.421228
+  duration_ms: 140.813483
   type: 'test'
   ...
 # Subtest: doctor rejects a marker that does not match the documented form
 ok 106 - doctor rejects a marker that does not match the documented form
   ---
-  duration_ms: 170.579546
+  duration_ms: 110.471783
   type: 'test'
   ...
 # Subtest: doctor rejects a hand-edited capability matrix
 ok 107 - doctor rejects a hand-edited capability matrix
   ---
-  duration_ms: 171.409224
+  duration_ms: 125.913112
   type: 'test'
   ...
 # Subtest: doctor rejects a matrix that drops its generated-file warning
 ok 108 - doctor rejects a matrix that drops its generated-file warning
   ---
-  duration_ms: 161.248457
+  duration_ms: 182.145494
   type: 'test'
   ...
 # Subtest: doctor rejects removal of the material-finding re-review rule
 ok 109 - doctor rejects removal of the material-finding re-review rule
   ---
-  duration_ms: 167.305652
+  duration_ms: 110.96913
   type: 'test'
   ...
 # Subtest: doctor rejects HEAD~1 recommended as review guidance
 ok 110 - doctor rejects HEAD~1 recommended as review guidance
   ---
-  duration_ms: 166.590246
+  duration_ms: 109.797281
   type: 'test'
   ...
 # Subtest: doctor rejects reintroduction of the hand-supplied --diff interface
 ok 111 - doctor rejects reintroduction of the hand-supplied --diff interface
   ---
-  duration_ms: 166.086375
+  duration_ms: 133.812707
   type: 'test'
   ...
 # Subtest: doctor rejects a missing role prompt
 ok 112 - doctor rejects a missing role prompt
   ---
-  duration_ms: 168.491359
+  duration_ms: 109.880514
   type: 'test'
   ...
 # Subtest: doctor rejects an added npm dependency
 ok 113 - doctor rejects an added npm dependency
   ---
-  duration_ms: 165.750694
+  duration_ms: 105.766129
   type: 'test'
   ...
 # Subtest: doctor rejects weakened check-script wiring
 ok 114 - doctor rejects weakened check-script wiring
   ---
-  duration_ms: 166.262574
+  duration_ms: 111.442176
   type: 'test'
   ...
 # Subtest: doctor rejects a near-match activation marker (F-010)
 ok 115 - doctor rejects a near-match activation marker (F-010)
   ---
-  duration_ms: 496.587825
+  duration_ms: 311.724527
   type: 'test'
   ...
 # Subtest: doctor rejects a packaged finding with a non-canonical role (F-006)
 ok 116 - doctor rejects a packaged finding with a non-canonical role (F-006)
   ---
-  duration_ms: 174.878057
+  duration_ms: 105.607052
   type: 'test'
   ...
 # Subtest: doctor rejects a packaged finding with an undeclared property (F-006)
 ok 117 - doctor rejects a packaged finding with an undeclared property (F-006)
   ---
-  duration_ms: 175.009799
+  duration_ms: 106.280453
   type: 'test'
   ...
 # Subtest: doctor rejects a progress-ledger entry violating its schema (F-006)
 ok 118 - doctor rejects a progress-ledger entry violating its schema (F-006)
   ---
-  duration_ms: 170.159367
+  duration_ms: 106.464427
   type: 'test'
   ...
 # Subtest: doctor rejects a ledger counter below its schema minimum (F-012)
 ok 119 - doctor rejects a ledger counter below its schema minimum (F-012)
   ---
-  duration_ms: 173.819982
+  duration_ms: 184.963359
   type: 'test'
   ...
 # Subtest: doctor rejects an invalid timestamp in a durable ledger (F-012)
 ok 120 - doctor rejects an invalid timestamp in a durable ledger (F-012)
   ---
-  duration_ms: 172.622183
+  duration_ms: 118.377425
   type: 'test'
   ...
 # Subtest: doctor rejects a malformed machine-readable task artifact
 ok 121 - doctor rejects a malformed machine-readable task artifact
   ---
-  duration_ms: 174.369559
+  duration_ms: 108.877356
   type: 'test'
   ...
 # Subtest: the committed fixture bundle itself passes the doctor (F-011)
 ok 122 - the committed fixture bundle itself passes the doctor (F-011)
   ---
-  duration_ms: 107.218651
+  duration_ms: 59.315596
   type: 'test'
   ...
 # Subtest: doctor rejects removal of the doctor or verify script
 ok 123 - doctor rejects removal of the doctor or verify script
   ---
-  duration_ms: 166.730647
+  duration_ms: 105.596433
   type: 'test'
   ...
 1..123
@@ -771,10 +771,10 @@ ok 123 - doctor rejects removal of the doctor or verify script
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 5381.395624
+# duration_ms 3835.945266
 
 > @wfprieto/wcbs-build-kit@1.1.0 test:python
-> python3 -m unittest discover -s skills/subagent-driven-development/tests -v
+> node scripts/run-python-tests.mjs
 
 test_artifact_hashes_are_written (test_make_review_package.HelperCase.test_artifact_hashes_are_written) ... ok
 test_dirty_worktree_fails_by_default (test_make_review_package.HelperCase.test_dirty_worktree_fails_by_default) ... ok
@@ -793,6 +793,6 @@ test_untracked_paths_with_awkward_names_are_captured (test_make_review_package.H
 test_working_tree_mode_separates_committed_and_uncommitted (test_make_review_package.HelperCase.test_working_tree_mode_separates_committed_and_uncommitted) ... ok
 
 ----------------------------------------------------------------------
-Ran 15 tests in 1.279s
+Ran 15 tests in 1.373s
 
 OK

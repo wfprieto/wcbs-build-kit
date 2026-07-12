@@ -2,157 +2,157 @@ TAP version 13
 # Subtest: invalid support level fails
 ok 1 - invalid support level fails
   ---
-  duration_ms: 1.72201
+  duration_ms: 1.241869
   type: 'test'
   ...
 # Subtest: Full adapter with manual bootstrap fails
 ok 2 - Full adapter with manual bootstrap fails
   ---
-  duration_ms: 0.469688
+  duration_ms: 0.261452
   type: 'test'
   ...
 # Subtest: Full adapter missing an essential capability fails
 ok 3 - Full adapter missing an essential capability fails
   ---
-  duration_ms: 0.325608
+  duration_ms: 0.200868
   type: 'test'
   ...
 # Subtest: Partial adapter missing an essential capability fails
 ok 4 - Partial adapter missing an essential capability fails
   ---
-  duration_ms: 0.359823
+  duration_ms: 0.246944
   type: 'test'
   ...
 # Subtest: unsupported essential capability must be labeled Unsupported
 ok 5 - unsupported essential capability must be labeled Unsupported
   ---
-  duration_ms: 0.258874
+  duration_ms: 0.172729
   type: 'test'
   ...
 # Subtest: manifest referencing a missing bootstrap path fails
 ok 6 - manifest referencing a missing bootstrap path fails
   ---
-  duration_ms: 0.318756
+  duration_ms: 0.181422
   type: 'test'
   ...
 # Subtest: manifest referencing a missing tool mapping fails
 ok 7 - manifest referencing a missing tool mapping fails
   ---
-  duration_ms: 0.339624
+  duration_ms: 0.254
   type: 'test'
   ...
 # Subtest: degradable or unavailable capability without a fallback fails
 ok 8 - degradable or unavailable capability without a fallback fails
   ---
-  duration_ms: 0.215944
+  duration_ms: 0.150912
   type: 'test'
   ...
 # Subtest: missing lifecycle field fails
 ok 9 - missing lifecycle field fails
   ---
-  duration_ms: 0.457124
+  duration_ms: 0.26889
   type: 'test'
   ...
 # Subtest: mapping missing a required action fails
 ok 10 - mapping missing a required action fails
   ---
-  duration_ms: 0.649134
+  duration_ms: 0.471213
   type: 'test'
   ...
 # Subtest: mapping containing an undeclared action fails
 ok 11 - mapping containing an undeclared action fails
   ---
-  duration_ms: 0.317564
+  duration_ms: 0.245142
   type: 'test'
   ...
 # Subtest: non-native mapping action without a fallback fails
 ok 12 - non-native mapping action without a fallback fails
   ---
-  duration_ms: 1.265696
+  duration_ms: 0.249246
   type: 'test'
   ...
 # Subtest: every required runtime has a manifest and a tool mapping
 ok 13 - every required runtime has a manifest and a tool mapping
   ---
-  duration_ms: 0.515875
+  duration_ms: 0.394227
   type: 'test'
   ...
 # Subtest: every shipped manifest validates against the contract
 ok 14 - every shipped manifest validates against the contract
   ---
-  duration_ms: 1.081162
+  duration_ms: 0.931054
   type: 'test'
   ...
 # Subtest: every shipped tool mapping validates against the contract
 ok 15 - every shipped tool mapping validates against the contract
   ---
-  duration_ms: 0.490096
+  duration_ms: 0.486861
   type: 'test'
   ...
 # Subtest: adapter JSON schemas exist and are valid JSON
 ok 16 - adapter JSON schemas exist and are valid JSON
   ---
-  duration_ms: 0.414454
+  duration_ms: 0.372499
   type: 'test'
   ...
 # Subtest: capability matrix is generated from manifests and not hand-edited
 ok 17 - capability matrix is generated from manifests and not hand-edited
   ---
-  duration_ms: 0.81819
+  duration_ms: 0.847686
   type: 'test'
   ...
 # Subtest: portability contract and porting guide exist with binding sections
 ok 18 - portability contract and porting guide exist with binding sections
   ---
-  duration_ms: 0.316522
+  duration_ms: 0.361386
   type: 'test'
   ...
 # Subtest: runtime adapter README is a router, not a duplicated skill inventory
 ok 19 - runtime adapter README is a router, not a duplicated skill inventory
   ---
-  duration_ms: 0.27277
+  duration_ms: 0.274558
   type: 'test'
   ...
 # Subtest: a manifest capability contradicting its mapped action fails
 ok 20 - a manifest capability contradicting its mapped action fails
   ---
-  duration_ms: 0.302235
+  duration_ms: 0.202034
   type: 'test'
   ...
 # Subtest: a manifest capability matching its mapped action passes
 ok 21 - a manifest capability matching its mapped action passes
   ---
-  duration_ms: 0.196698
+  duration_ms: 0.126496
   type: 'test'
   ...
 # Subtest: every shipped manifest agrees with its shipped tool mapping
 ok 22 - every shipped manifest agrees with its shipped tool mapping
   ---
-  duration_ms: 0.499634
+  duration_ms: 0.310427
   type: 'test'
   ...
 # Subtest: capability-to-action mapping covers every equivalent pair
 ok 23 - capability-to-action mapping covers every equivalent pair
   ---
-  duration_ms: 0.153698
+  duration_ms: 0.099591
   type: 'test'
   ...
 # Subtest: duplicate activation markers across runtimes fail
 ok 24 - duplicate activation markers across runtimes fail
   ---
-  duration_ms: 0.223778
+  duration_ms: 0.160298
   type: 'test'
   ...
 # Subtest: a marker that does not name its runtime fails
 ok 25 - a marker that does not name its runtime fails
   ---
-  duration_ms: 0.177763
+  duration_ms: 0.093275
   type: 'test'
   ...
 # Subtest: every shipped manifest has a unique, runtime-specific activation marker
 ok 26 - every shipped manifest has a unique, runtime-specific activation marker
   ---
-  duration_ms: 0.339695
+  duration_ms: 0.199533
   type: 'test'
   ...
 1..26
@@ -163,4 +163,4 @@ ok 26 - every shipped manifest has a unique, runtime-specific activation marker
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 93.641269
+# duration_ms 63.962278
