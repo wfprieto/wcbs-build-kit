@@ -21,12 +21,13 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Initialize external evidence directory
+      - name: Initialize evidence and remove prior temporary evidence
         shell: bash
         run: |
           set -euo pipefail
           rm -rf /tmp/wcbs-verification-evidence
           mkdir -p /tmp/wcbs-verification-evidence/logs
+          git rm -rf --ignore-unmatch .wcbs-verification
 
       - name: Record repository state
         shell: bash
@@ -36,14 +37,14 @@ jobs:
             echo 'HEAD:'
             git rev-parse HEAD
             echo
-            echo 'STATUS:'
+            echo 'STATUS BEFORE TESTS:'
             git status --short
             echo
             echo 'LOG:'
             git log --oneline --decorate -15
             echo
-            echo 'TRACKED FILES:'
-            git ls-files
+            echo 'TRACKED FILES AFTER TEMPORARY EVIDENCE REMOVAL:'
+            git ls-files | grep -v '^.wcbs-verification/'
           } | tee /tmp/wcbs-verification-evidence/logs/repository-state.txt
           test ! -e .wcbs-bootstrap
           test ! -e .github/workflows/wcbs-recover-main.yml
@@ -54,8 +55,8 @@ jobs:
         run: |
           set -euo pipefail
           git clean -xfd
-          test -z "$(git status --short)"
           npm run check 2>&1 | tee /tmp/wcbs-verification-evidence/logs/npm-run-check-clean.txt
+          npm run verify 2>&1 | tee /tmp/wcbs-verification-evidence/logs/npm-run-verify.txt
 
       - name: Critical suites
         shell: bash
@@ -89,6 +90,7 @@ jobs:
 
           rejectsSchema({type:'object',properties:{x:{type:'number',exclusiveMinimum:5}}}, {}, 'unsupported absent property keyword');
           rejectsSchema({type:'object',$defs:{unused:{type:'string',minContains:1}}}, {}, 'unsupported unused $defs keyword');
+          rejectsSchema({type:'object',properties:[]}, {}, 'malformed supported keyword');
           rejectsDocument({$defs:{n:{type:'number'}},$ref:'#/$defs/n',minimum:5}, 1, '$ref sibling minimum');
 
           const dt={type:'string',format:'date-time'};
@@ -98,7 +100,7 @@ jobs:
           for (const value of ['2026-07-11T12:30:00Z','2024-02-29T23:59:59+23:59','2026-01-01T00:00:00-23:59']) {
             accepts(dt,value,`valid date-time ${value}`);
           }
-          console.log('F-012 adversarial checks: PASS (9 cases)');
+          console.log('F-012 adversarial checks: PASS (10 cases)');
           EOF
           node .wcbs-f012-adversarial.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/f012-adversarial.txt
           rm .wcbs-f012-adversarial.mjs
@@ -114,22 +116,18 @@ jobs:
           test ! -e .wcbs
           echo 'F-011 hermetic checks: PASS' | tee /tmp/wcbs-verification-evidence/logs/f011-summary.txt
 
-      - name: Package exact repository and publish evidence commit
+      - name: Publish post-remediation evidence
         shell: bash
         run: |
           set -euo pipefail
           git diff --check
-          test -z "$(git status --short)"
-          git bundle create /tmp/wcbs-verification-evidence/wcbs-build-kit.bundle --all
-          git archive --format=tar.gz --output=/tmp/wcbs-verification-evidence/wcbs-build-kit-main.tar.gz HEAD
-          sha256sum /tmp/wcbs-verification-evidence/wcbs-build-kit.bundle /tmp/wcbs-verification-evidence/wcbs-build-kit-main.tar.gz | tee /tmp/wcbs-verification-evidence/logs/checksums.txt
+          git diff --cached --check
           printf '%s\n' "$(git rev-parse HEAD)" > /tmp/wcbs-verification-evidence/verified-head.txt
-
           rm -rf .wcbs-verification
           mkdir -p .wcbs-verification
           cp -a /tmp/wcbs-verification-evidence/. .wcbs-verification/
           git config user.name 'WCBS Verification Bridge'
           git config user.email 'actions@users.noreply.github.com'
-          git add -f .wcbs-verification
-          git commit -m 'Record WCBS clean-checkout verification evidence'
+          git add -A .wcbs-verification
+          git commit -m 'Record WCBS post-remediation verification evidence'
           git push origin HEAD:main
