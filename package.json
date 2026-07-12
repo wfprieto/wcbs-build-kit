@@ -13,7 +13,7 @@
     "generate:matrix": "node scripts/generate-capability-matrix.mjs",
     "check:matrix": "node scripts/generate-capability-matrix.mjs --check",
     "test:node": "node --test scripts/tests/*.test.mjs",
-    "test:python": "python3 -m unittest discover -s skills/subagent-driven-development/tests -v",
+    "test:python": "node scripts/run-python-tests.mjs",
     "test": "npm run test:node && npm run test:python",
     "check": "npm run doctor && npm run check:matrix && npm run test"
   },
