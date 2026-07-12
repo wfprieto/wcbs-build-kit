@@ -1,133 +1,34 @@
-name: WCBS Final Candidate Verification
+name: WCBS Verification Bridge Cleanup
 
 on:
   push:
     branches: [main]
     paths:
       - '.github/workflows/wcbs-verification-bridge.yml'
-  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  verify-and-publish-evidence:
+  remove-temporary-verification-files:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
-      - name: Checkout clean main
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Initialize evidence and remove prior temporary evidence
+      - name: Verify final evidence and remove temporary files
         shell: bash
         run: |
           set -euo pipefail
-          rm -rf /tmp/wcbs-verification-evidence
-          mkdir -p /tmp/wcbs-verification-evidence/logs
-          git rm -rf --ignore-unmatch .wcbs-verification
-
-      - name: Record repository state
-        shell: bash
-        run: |
-          set -euo pipefail
-          {
-            echo 'HEAD:'
-            git rev-parse HEAD
-            echo
-            echo 'STATUS BEFORE TESTS:'
-            git status --short
-            echo
-            echo 'LOG:'
-            git log --oneline --decorate -15
-            echo
-            echo 'TRACKED FILES AFTER TEMPORARY EVIDENCE REMOVAL:'
-            git ls-files | grep -v '^.wcbs-verification/'
-          } | tee /tmp/wcbs-verification-evidence/logs/repository-state.txt
-          test ! -e .wcbs-bootstrap
-          test ! -e .github/workflows/wcbs-recover-main.yml
-          test -s 20_PASS_WHOLE_KIT_AUDIT.md
-
-      - name: Clean checkout gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          git clean -xfd
-          npm run check 2>&1 | tee /tmp/wcbs-verification-evidence/logs/npm-run-check-clean.txt
-          npm run verify 2>&1 | tee /tmp/wcbs-verification-evidence/logs/npm-run-verify.txt
-
-      - name: Critical suites
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --test scripts/tests/controller-contract.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/controller-contract.txt
-          node --test scripts/tests/adapter-contract.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/adapter-contract.txt
-          node --test scripts/tests/schema-enforcement.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/schema-enforcement.txt
-          node --test scripts/tests/artifact-bundle.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/artifact-bundle.txt
-          node --test scripts/tests/wcbs-doctor.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/wcbs-doctor.txt
-          python3 -m unittest discover -s skills/subagent-driven-development/tests -v 2>&1 | tee /tmp/wcbs-verification-evidence/logs/python-tests.txt
-
-      - name: F-012 adversarial checks
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > .wcbs-f012-adversarial.mjs <<'EOF'
-          import assert from 'node:assert/strict';
-          import { validateAgainstSchema } from './scripts/lib/json-schema.mjs';
-
-          function rejectsSchema(schema, document, label) {
-            assert.throws(() => validateAgainstSchema(schema, document), undefined, label);
-          }
-          function rejectsDocument(schema, document, label) {
-            const errors = validateAgainstSchema(schema, document);
-            assert.ok(errors.length > 0, `${label}: expected validation errors`);
-          }
-          function accepts(schema, document, label) {
-            assert.deepEqual(validateAgainstSchema(schema, document), [], label);
-          }
-
-          rejectsSchema({type:'object',properties:{x:{type:'number',exclusiveMinimum:5}}}, {}, 'unsupported absent property keyword');
-          rejectsSchema({type:'object',$defs:{unused:{type:'string',minContains:1}}}, {}, 'unsupported unused $defs keyword');
-          rejectsSchema({type:'object',properties:[]}, {}, 'malformed supported keyword');
-          rejectsDocument({$defs:{n:{type:'number'}},$ref:'#/$defs/n',minimum:5}, 1, '$ref sibling minimum');
-
-          const dt={type:'string',format:'date-time'};
-          for (const value of ['2026-07-11T12:30:00+99:00','2026-07-11T12:30:00+02:99','2026-02-31T00:00:00Z']) {
-            rejectsDocument(dt,value,`invalid date-time ${value}`);
-          }
-          for (const value of ['2026-07-11T12:30:00Z','2024-02-29T23:59:59+23:59','2026-01-01T00:00:00-23:59']) {
-            accepts(dt,value,`valid date-time ${value}`);
-          }
-          console.log('F-012 adversarial checks: PASS (10 cases)');
-          EOF
-          node .wcbs-f012-adversarial.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/f012-adversarial.txt
-          rm .wcbs-f012-adversarial.mjs
-
-      - name: F-011 hermetic checks
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -rf .wcbs
-          test ! -e .wcbs
-          node --test scripts/tests/artifact-bundle.test.mjs 2>&1 | tee /tmp/wcbs-verification-evidence/logs/f011-artifact-no-live-bundle.txt
-          npm run check 2>&1 | tee /tmp/wcbs-verification-evidence/logs/f011-full-check-no-live-bundle.txt
-          test ! -e .wcbs
-          echo 'F-011 hermetic checks: PASS' | tee /tmp/wcbs-verification-evidence/logs/f011-summary.txt
-
-      - name: Publish final candidate evidence
-        shell: bash
-        run: |
-          set -euo pipefail
-          git diff --check
+          test "$(cat .wcbs-verification/verified-head.txt)" = "b2f3c0c2272f2ecca33632b4f424401b0c24193d"
+          grep -q 'F-011 hermetic checks: PASS' .wcbs-verification/logs/f011-summary.txt
+          grep -q 'F-012 adversarial checks: PASS (10 cases)' .wcbs-verification/logs/f012-adversarial.txt
+          git rm -rf .wcbs-verification .github/workflows/wcbs-verification-bridge.yml
           git diff --cached --check
-          printf '%s\n' "$(git rev-parse HEAD)" > /tmp/wcbs-verification-evidence/verified-head.txt
-          rm -rf .wcbs-verification
-          mkdir -p .wcbs-verification
-          cp -a /tmp/wcbs-verification-evidence/. .wcbs-verification/
           git config user.name 'WCBS Verification Bridge'
           git config user.email 'actions@users.noreply.github.com'
-          git add -A .wcbs-verification
-          git commit -m 'Record WCBS final candidate verification evidence'
+          git commit -m 'Remove temporary WCBS verification bridge and evidence'
           git push origin HEAD:main
