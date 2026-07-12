@@ -27,11 +27,11 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["command","exit_status"],
+        "required": ["command","exit_status","result"],
         "properties": {
           "command": { "type": "string", "minLength": 1 },
           "exit_status": { "type": "integer" },
-          "result": { "type": "string" }
+          "result": { "type": "string", "minLength": 1 }
         }
       }
     },
