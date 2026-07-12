@@ -22,6 +22,12 @@ Use this module when an agent handles uploads, generated files, scratch work, ev
 - Treat binary/media artifacts through `skills/media-and-asset-pipeline/SKILL.md`.
 - Treat reports/exports through `skills/data-output-and-reporting/SKILL.md`.
 
+## Delegated Work
+
+When work is delegated to subagents, `skills/subagent-driven-development/ARTIFACT_CONTRACT.md` extends this module with the controller run layout (`.wcbs/runs/<run-id>/`), task-brief immutability, and the file-based handoff rule that keeps large plans, diffs, and reports on disk rather than in controller messages.
+
+That contract specializes these boundaries. It does not replace them: the rules above still bind.
+
 ## Audit Checks
 
 - Are original inputs preserved?

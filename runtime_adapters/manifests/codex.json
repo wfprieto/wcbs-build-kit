@@ -1,0 +1,39 @@
+{
+  "runtime_id": "codex",
+  "display_name": "OpenAI Codex",
+  "owner": "wfprieto",
+  "support_level": "Full",
+  "integration_shape": "in_process_plugin",
+  "native_install_mechanism": "Codex plugin (.codex-plugin/plugin.json) with skills directory",
+  "install_scope": "project",
+  "bootstrap_path": ".codex-plugin/plugin.json",
+  "bootstrap_mode": "automatic",
+  "activation_marker": "WCBS_KIT_ACTIVE:codex",
+  "tool_mapping_path": "runtime_adapters/tool_mappings/codex.json",
+  "capabilities": {
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "native",
+    "task_tracking": "native",
+    "web_access": "native",
+    "browser_verification": "native",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "native"
+  },
+  "fallbacks": {},
+  "supported_runtime_versions": "Codex CLI and Codex app with plugin support",
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
+  "modifies_user_files": false,
+  "install": "Install the plugin from .codex-plugin/plugin.json; the skills/ directory is registered automatically.",
+  "update": "Pull the repository and reload the plugin; plugin.json version drives the upgrade.",
+  "uninstall": "Remove the plugin from the Codex plugin list. No files outside the project are touched.",
+  "rollback": "Reinstall the previously tagged commit of .codex-plugin/plugin.json and skills/.",
+  "limitations": "Plugin skill discovery requires the Codex plugin runtime to be enabled for the workspace.",
+  "deprecation": "None. Adapter is active and supported."
+}

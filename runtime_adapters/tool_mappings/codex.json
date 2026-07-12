@@ -1,0 +1,14 @@
+{
+  "runtime_id": "codex",
+  "actions": {
+    "read_skill": {"availability":"native","mechanism":"Codex plugin skill loader (skills/<name>/SKILL.md)","required_parameters":["skill_path"],"fallback":null,"limitations":"none","evidence_produced":"skill load record"},
+    "read_file": {"availability":"native","mechanism":"read_file","required_parameters":["path"],"fallback":null,"limitations":"none","evidence_produced":"file contents"},
+    "write_file": {"availability":"native","mechanism":"create_file","required_parameters":["path","content"],"fallback":null,"limitations":"none","evidence_produced":"written path"},
+    "edit_file": {"availability":"native","mechanism":"apply_patch","required_parameters":["path","patch"],"fallback":null,"limitations":"none","evidence_produced":"applied patch"},
+    "execute_command": {"availability":"native","mechanism":"shell","required_parameters":["command"],"fallback":null,"limitations":"none","evidence_produced":"stdout, stderr, exit code"},
+    "dispatch_agent": {"availability":"native","mechanism":"Codex subagent dispatch","required_parameters":["prompt","scope"],"fallback":null,"limitations":"none","evidence_produced":"subagent transcript"},
+    "create_task": {"availability":"native","mechanism":"Codex task list","required_parameters":["title","status"],"fallback":null,"limitations":"none","evidence_produced":"task entry"},
+    "record_artifact": {"availability":"native","mechanism":"filesystem write to .wcbs/runs/<run-id>/","required_parameters":["path","content"],"fallback":null,"limitations":"none","evidence_produced":"artifact path and hash"},
+    "request_human_approval": {"availability":"native","mechanism":"Codex approval prompt","required_parameters":["action","reason"],"fallback":null,"limitations":"none","evidence_produced":"approval record"}
+  }
+}

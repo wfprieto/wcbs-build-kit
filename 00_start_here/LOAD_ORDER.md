@@ -10,6 +10,10 @@ Load the smallest complete set. Do not load the entire kit by default.
 4. `10_governance/APIVR_EXECUTION_LIFECYCLE.md`
 5. `skills/super-build-kit/SKILL.md` when skills, platform activation, or method selection may affect the work
 
+## Runtime Bootstrap
+
+At session start, load only the **active** runtime's manifest and tool mapping from `runtime_adapters/`. Do not load every adapter document, and do not load the portability contract by default. It loads only for adapter design, installation, troubleshooting, or porting.
+
 ## Build Or Fix
 
 Load:
@@ -36,6 +40,8 @@ Load:
 - `skills/using-git-worktrees/SKILL.md` when work should be isolated
 - `skills/dispatching-parallel-agents/SKILL.md` when the work may benefit from parallel investigation, audit, implementation, or verification
 - `skills/subagent-driven-development/SKILL.md` when subagents will implement, review, or verify task slices
+- `runtime_adapters/PORTABILITY_CONTRACT.md` when designing, installing, updating, troubleshooting, or porting a runtime adapter, or when a support level or capability fallback is claimed
+- `runtime_adapters/PORTING_GUIDE.md` when adding support for a new runtime
 - `skills/repeatable-agent-loops/SKILL.md` when work is recurring, iterative, monitor-like, or should repeat until a measurable condition is met or safely stopped
 - `skills/long-horizon-agent-runtime/SKILL.md` when work spans many stages, tools, subagents, checkpoints, artifacts, or context windows
 - `skills/project-bootstrap-and-setup/SKILL.md` when setup, install, bootstrap, config, dependency, service, or first-run work is involved
@@ -95,7 +101,7 @@ Load:
 - `40_knowledge/SYSTEMATIC_WORKFLOWS.md`
 - `50_audits/CANONICAL_AUDIT_PROTOCOLS.md`
 - `60_templates/ROLLBACK_RECORD_TEMPLATE.md`
-- `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` before code changes for bugs, regressions, flaky behavior, or unknown failures
+- `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` before code changes for bugs, regressions, flaky behavior, incidents, or unknown failures
 - `skills/deployment-and-hosting-guidance/SKILL.md` for deployment/runtime/hosting incidents
 - `skills/scheduling-and-automation-routing/SKILL.md` for job, queue, webhook, worker, or monitor failures
 - `skills/external-api-integration/SKILL.md` for provider, webhook, API, auth, quota, or rate-limit failures

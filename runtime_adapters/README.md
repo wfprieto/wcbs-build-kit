@@ -1,45 +1,65 @@
 # Runtime Adapters
 
-These files activate the same Super Build Kit spine in common agent runtimes.
+Adapters activate the same Super Build Kit spine across agent runtimes. They are **routers, not sources of truth.**
 
-## Files
+This README does not inventory skills. `00_start_here/LOAD_ORDER.md` owns skill routing; duplicating it here creates a second source of truth that silently rots.
 
-- `AGENTS.md` - generic agent and Codex-style repository instructions.
-- `CLAUDE.md` - Claude project/runtime adapter.
-- `GEMINI.md` - Gemini runtime adapter.
-- `REPLIT.md` - Replit Agent runtime adapter.
-- `Manus.md` - Manus Agent runtime adapter.
-- `.codex-plugin/plugin.json` - Codex plugin metadata.
-- `skills/super-build-kit/SKILL.md` - Codex-compatible skill entrypoint.
-- `.cursor/rules/super-build-kit.mdc` - Cursor always-on project rule.
-- `.github/copilot-instructions.md` - GitHub Copilot repository instructions.
-- `runtime_adapters/REPLIT_AGENT.md` - detailed Replit Agent audit and implementation adapter.
-- `runtime_adapters/NATIVE_GIT_WORKTREES.md` - native-first worktree integration and manual fallback rules.
-- `skills/writing-plans/SKILL.md` - zero-placeholder APIVR planning and handoff workflow.
-- `skills/test-driven-development/SKILL.md` - test-first APIVR Phase 3 implementation workflow.
-- `skills/dispatching-parallel-agents/SKILL.md` - parallel dispatch decision protocol.
-- `skills/subagent-driven-development/SKILL.md` - subagent implementation and two-stage review workflow.
-- `skills/repeatable-agent-loops/SKILL.md` - recurring audits, iterative remediation, monitors, quality sweeps, receipts, and stop conditions.
-- `skills/long-horizon-agent-runtime/SKILL.md` - staged long-running agent work, checkpoints, artifact boundaries, and handoff control.
-- `skills/project-bootstrap-and-setup/SKILL.md` - install, bootstrap, config, first-run, dependency, and setup-boundary safety.
-- `skills/mcp-tool-governance/SKILL.md` - MCP, plugin, connector, tool auth, permission, overlap, and evidence governance.
-- `skills/agent-observability-and-run-tracing/SKILL.md` - run ids, durable traces, tool records, evidence trails, redactions, and artifact records.
-- `skills/cybersecurity-risk-routing/SKILL.md` - cybersecurity routing, tier selection, dual-use authorization gates, and security evidence requirements.
-- `skills/ai-application-security/SKILL.md` - LLM app, RAG, vector, prompt, model, AI data leakage, and AI tool security.
-- `skills/security-incident-response/SKILL.md` - security alert triage, compromise investigation, evidence preservation, containment, and recovery.
-- `skills/supply-chain-and-build-provenance/SKILL.md` - dependencies, CI/CD, SBOMs, containers, IaC, artifact signatures, and provenance.
-- `skills/ui-ux-design-quality/SKILL.md` - frontend UI, UX, visual direction, accessibility, interface copy, and rendered verification.
-- `skills/anti-ai-writing-quality/SKILL.md` - human, direct, non-generic writing quality.
-- `skills/strategist-writing-dna/SKILL.md` - verdict-first strategic communication and anti-drift writing.
-- `skills/deployment-and-hosting-guidance/SKILL.md` - deployment, hosting, runtime, cost, and environment routing.
-- `skills/scheduling-and-automation-routing/SKILL.md` - cron, webhooks, events, queues, workers, monitors, and always-on routing.
-- `skills/data-output-and-reporting/SKILL.md` - dashboards, exports, recurring reports, analytics outputs, and evidence artifacts.
-- `skills/external-api-integration/SKILL.md` - third-party APIs, SDKs, OAuth, API keys, webhooks, and provider limits.
-- `skills/media-and-asset-pipeline/SKILL.md` - generated/retrieved assets, media delivery, rights, optimization, and fallback behavior.
+## Start Here
+
+| You want to | Read |
+|---|---|
+| Understand the adapter architecture and its binding rules | `runtime_adapters/PORTABILITY_CONTRACT.md` |
+| Know what your runtime can and cannot do | runtime_adapters/manifests/&lt;runtime&gt;.json |
+| Know the real tool names for your runtime | runtime_adapters/tool_mappings/&lt;runtime&gt;.json |
+| Compare runtimes, or pick a fallback | `runtime_adapters/CAPABILITY_MATRIX.md` (generated) |
+| Add support for a new runtime | `runtime_adapters/PORTING_GUIDE.md` |
+| Submit an adapter change | `runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md` |
+
+## Session Bootstrap Loads The Minimum
+
+At session start, load **only** the active runtime's manifest and tool mapping. Do not load every adapter document, and do not load the portability contract. The contract loads for adapter design, installation, troubleshooting, or porting.
+
+## Support Levels
+
+| Level | Meaning |
+|---|---|
+| **Full** | Automatic native bootstrap; all essential and optional capabilities native. |
+| **Partial** | Automatic bootstrap; all essential capabilities native; at least one optional capability degraded or unavailable, with an exact fallback. |
+| **Manual** | Essential capabilities present, but activation requires a user action each session. |
+| **Unsupported** | An essential capability is unavailable, or no compliant native install path exists. |
+
+**A file's existence does not imply support.** An instruction file in the repository proves a file exists. It does not prove the runtime reads it at session start. Current levels are in `runtime_adapters/CAPABILITY_MATRIX.md`, derived from the manifests.
+
+## Activation Entry Points
+
+| Runtime | Native mechanism |
+|---|---|
+| Codex | `.codex-plugin/plugin.json` |
+| Cursor | `.cursor/rules/super-build-kit.mdc` |
+| GitHub Copilot | `.github/copilot-instructions.md` |
+| Claude / Claude Code | `CLAUDE.md` |
+| Gemini CLI | `GEMINI.md` |
+| Replit Agent | `REPLIT.md` |
+| Manus Agent | `Manus.md` |
+| Generic agent | `AGENTS.md` |
+
+Runtime-specific detail: `runtime_adapters/REPLIT_AGENT.md`, `runtime_adapters/NATIVE_GIT_WORKTREES.md`.
+
+## Lifecycle
+
+Every manifest documents install, update, uninstall, and rollback. Adapters use the runtime's **native** mechanism only; editing a shell profile or unrelated global config to simulate integration is prohibited.
+
+Regenerate the capability matrix after any manifest change:
+
+```bash
+npm run generate:matrix
+```
+
+Never hand-edit `CAPABILITY_MATRIX.md`. Manifests are canonical, and `npm run verify` enforces it.
 
 ## Rule
 
-Adapters are not sources of truth. They only point agents back to:
+Adapters are not sources of truth. They point agents back to:
 
 1. `00_start_here/START_HERE.md`
 2. `00_start_here/SOURCE_OF_TRUTH.md`

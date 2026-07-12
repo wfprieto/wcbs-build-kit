@@ -1,0 +1,14 @@
+{
+  "runtime_id": "cursor",
+  "actions": {
+    "read_skill": {"availability":"native","mechanism":"Read the SKILL.md path named by LOAD_ORDER.md","required_parameters":["skill_path"],"fallback":null,"limitations":"none","evidence_produced":"skill load record"},
+    "read_file": {"availability":"native","mechanism":"Read file","required_parameters":["path"],"fallback":null,"limitations":"none","evidence_produced":"file contents"},
+    "write_file": {"availability":"native","mechanism":"Create file","required_parameters":["path","content"],"fallback":null,"limitations":"none","evidence_produced":"written path"},
+    "edit_file": {"availability":"native","mechanism":"Edit file / apply diff","required_parameters":["path","edit"],"fallback":null,"limitations":"none","evidence_produced":"applied edit"},
+    "execute_command": {"availability":"native","mechanism":"Run terminal command","required_parameters":["command"],"fallback":null,"limitations":"none","evidence_produced":"terminal output"},
+    "dispatch_agent": {"availability":"native","mechanism":"Cursor background agent","required_parameters":["prompt","scope"],"fallback":null,"limitations":"Independence requires a separate agent session, not a nested chat turn.","evidence_produced":"agent transcript"},
+    "create_task": {"availability":"native","mechanism":"Cursor to-do list","required_parameters":["title","status"],"fallback":null,"limitations":"none","evidence_produced":"task entry"},
+    "record_artifact": {"availability":"native","mechanism":"filesystem write to .wcbs/runs/<run-id>/","required_parameters":["path","content"],"fallback":null,"limitations":"none","evidence_produced":"artifact path and hash"},
+    "request_human_approval": {"availability":"native","mechanism":"Command approval prompt","required_parameters":["action","reason"],"fallback":null,"limitations":"none","evidence_produced":"approval record"}
+  }
+}

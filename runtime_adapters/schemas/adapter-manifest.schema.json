@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/wfprieto/wcbs-build-kit/runtime_adapters/schemas/adapter-manifest.schema.json",
+  "title": "WCBS Adapter Manifest",
+  "description": "Canonical source of truth for one runtime adapter. runtime_adapters/CAPABILITY_MATRIX.md is generated from these files and must never be hand-edited. Enforced by scripts/lib/adapter-contract.mjs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "runtime_id",
+    "display_name",
+    "owner",
+    "support_level",
+    "integration_shape",
+    "native_install_mechanism",
+    "install_scope",
+    "bootstrap_path",
+    "bootstrap_mode",
+    "activation_marker",
+    "tool_mapping_path",
+    "capabilities",
+    "fallbacks",
+    "supported_runtime_versions",
+    "supported_operating_systems",
+    "modifies_user_files",
+    "install",
+    "update",
+    "uninstall",
+    "rollback",
+    "limitations",
+    "deprecation"
+  ],
+  "properties": {
+    "runtime_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "support_level": {
+      "enum": [
+        "Full",
+        "Partial",
+        "Manual",
+        "Unsupported"
+      ],
+      "description": "Full: automatic native bootstrap, all essential AND all optional capabilities native. Partial: automatic bootstrap, all essential native, >=1 optional degraded/unavailable WITH an exact fallback. Manual: essential capabilities present but activation needs a per-session user action. Unsupported: an essential capability is unavailable. A file's existence does not imply any level."
+    },
+    "integration_shape": {
+      "enum": [
+        "session_start_hook",
+        "in_process_plugin",
+        "always_on_instruction_file",
+        "hybrid"
+      ]
+    },
+    "native_install_mechanism": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The platform's own plugin/extension/marketplace/hook/instruction-file mechanism. Editing a user's shell profile or unrelated global config to simulate integration is prohibited."
+    },
+    "install_scope": {
+      "enum": [
+        "project",
+        "global"
+      ]
+    },
+    "bootstrap_path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Repository-relative path. Must exist on disk."
+    },
+    "bootstrap_mode": {
+      "enum": [
+        "automatic",
+        "manual"
+      ],
+      "description": "automatic = enters model context at clean-session start with no pasted prompt and no remembered command. Full and Partial require automatic."
+    },
+    "activation_marker": {
+      "type": "string",
+      "pattern": "^WCBS_KIT_ACTIVE:[a-z0-9-]+$",
+      "description": "Unique, runtime-specific marker a clean-session scenario greps for to prove WHICH adapter loaded. A shared marker proves some kit instruction loaded, not which adapter loaded."
+    },
+    "tool_mapping_path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Repository-relative path. Must exist on disk."
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file_read",
+        "file_write",
+        "file_edit",
+        "execute_command",
+        "subagents",
+        "task_tracking",
+        "web_access",
+        "browser_verification",
+        "durable_artifact_storage",
+        "human_approval_gates"
+      ],
+      "properties": {
+        "file_read": {"$ref": "#/$defs/availability"},
+        "file_write": {"$ref": "#/$defs/availability"},
+        "file_edit": {"$ref": "#/$defs/availability"},
+        "execute_command": {"$ref": "#/$defs/availability"},
+        "subagents": {"$ref": "#/$defs/availability"},
+        "task_tracking": {"$ref": "#/$defs/availability"},
+        "web_access": {"$ref": "#/$defs/availability"},
+        "browser_verification": {"$ref": "#/$defs/availability"},
+        "durable_artifact_storage": {"$ref": "#/$defs/availability"},
+        "human_approval_gates": {"$ref": "#/$defs/availability"}
+      }
+    },
+    "fallbacks": {
+      "type": "object",
+      "description": "Every capability that is not native MUST have an exact fallback here, or state that no safe fallback exists. This is what prevents an agent inventing an unsupported tool.",
+      "additionalProperties": {"type": "string", "minLength": 1}
+    },
+    "supported_runtime_versions": {"type": "string", "minLength": 1},
+    "supported_operating_systems": {"type": "array", "minItems": 1, "items": {"enum": ["macos", "linux", "windows"]}},
+    "modifies_user_files": {"type": "boolean", "description": "True only if files outside the project are created or modified. Must be disclosed."},
+    "install": {"type": "string", "minLength": 1},
+    "update": {"type": "string", "minLength": 1},
+    "uninstall": {"type": "string", "minLength": 1},
+    "rollback": {"type": "string", "minLength": 1},
+    "limitations": {"type": "string", "minLength": 1},
+    "deprecation": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "availability": {"enum": ["native", "degradable", "unavailable"]}
+  }
+}

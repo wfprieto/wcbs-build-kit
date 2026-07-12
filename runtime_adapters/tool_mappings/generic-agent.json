@@ -1,0 +1,14 @@
+{
+  "runtime_id": "generic-agent",
+  "actions": {
+    "read_skill": {"availability":"native","mechanism":"Operator attaches or the agent reads the SKILL.md path","required_parameters":["skill_path"],"fallback":null,"limitations":"none","evidence_produced":"skill load record"},
+    "read_file": {"availability":"native","mechanism":"Agent file read","required_parameters":["path"],"fallback":null,"limitations":"none","evidence_produced":"file contents"},
+    "write_file": {"availability":"native","mechanism":"Agent file write","required_parameters":["path","content"],"fallback":null,"limitations":"none","evidence_produced":"written path"},
+    "edit_file": {"availability":"native","mechanism":"Agent file edit","required_parameters":["path","edit"],"fallback":null,"limitations":"none","evidence_produced":"applied edit"},
+    "execute_command": {"availability":"native","mechanism":"Agent shell","required_parameters":["command"],"fallback":null,"limitations":"If unavailable, the runtime is Unsupported.","evidence_produced":"shell output"},
+    "dispatch_agent": {"availability":"unavailable","mechanism":"Not assumed to exist","required_parameters":["prompt","scope"],"fallback":"Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer.","limitations":"Reviews are NOT independent. Report degraded independence.","evidence_produced":"fresh-context review report"},
+    "create_task": {"availability":"unavailable","mechanism":"Not assumed to exist","required_parameters":["title","status"],"fallback":"Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list.","limitations":"Task state must live on disk.","evidence_produced":"progress-ledger.jsonl entry"},
+    "record_artifact": {"availability":"degradable","mechanism":"Filesystem persistence is not guaranteed","required_parameters":["path","content"],"fallback":"Write durable artifacts to the project-local .wcbs/runs/<run-id>/ tree on the filesystem.","limitations":"If the filesystem does not persist, evidence is Blocked.","evidence_produced":"artifact path and hash"},
+    "request_human_approval": {"availability":"degradable","mechanism":"No native gate assumed","required_parameters":["action","reason"],"fallback":"Halt, print the exact pending action, and require an explicit human reply before proceeding.","limitations":"Relies on the agent honoring a halt instruction.","evidence_produced":"approval record"}
+  }
+}

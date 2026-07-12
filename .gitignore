@@ -1,0 +1,7 @@
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Controller run artifacts (durable evidence; retained per project decision)
+.wcbs/

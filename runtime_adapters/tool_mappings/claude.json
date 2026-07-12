@@ -1,0 +1,77 @@
+{
+  "runtime_id": "claude",
+  "actions": {
+    "read_skill": {
+      "availability": "native",
+      "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+      "required_parameters": ["skill_path"],
+      "fallback": null,
+      "limitations": "none",
+      "evidence_produced": "skill load record"
+    },
+    "read_file": {
+      "availability": "native",
+      "mechanism": "Read",
+      "required_parameters": ["file_path"],
+      "fallback": null,
+      "limitations": "none",
+      "evidence_produced": "file contents"
+    },
+    "write_file": {
+      "availability": "native",
+      "mechanism": "Write",
+      "required_parameters": ["file_path","content"],
+      "fallback": null,
+      "limitations": "none",
+      "evidence_produced": "written path"
+    },
+    "edit_file": {
+      "availability": "native",
+      "mechanism": "Edit",
+      "required_parameters": ["file_path","old_string","new_string"],
+      "fallback": null,
+      "limitations": "none",
+      "evidence_produced": "applied edit"
+    },
+    "execute_command": {
+      "availability": "native",
+      "mechanism": "Bash",
+      "required_parameters": ["command"],
+      "fallback": null,
+      "limitations": "none",
+      "evidence_produced": "stdout, stderr, exit code"
+    },
+    "dispatch_agent": {
+      "availability": "native",
+      "mechanism": "Task subagent dispatch",
+      "required_parameters": ["prompt","subagent_type"],
+      "fallback": null,
+      "limitations": "Subagent gets a fresh context window; pass artifact paths, not pasted content.",
+      "evidence_produced": "subagent report"
+    },
+    "create_task": {
+      "availability": "native",
+      "mechanism": "TodoWrite",
+      "required_parameters": ["todos"],
+      "fallback": null,
+      "limitations": "Ephemeral; mirror durable state into the progress ledger.",
+      "evidence_produced": "todo state"
+    },
+    "record_artifact": {
+      "availability": "native",
+      "mechanism": "Write to .wcbs/runs/<run-id>/",
+      "required_parameters": ["file_path","content"],
+      "fallback": null,
+      "limitations": "none",
+      "evidence_produced": "artifact path and hash"
+    },
+    "request_human_approval": {
+      "availability": "native",
+      "mechanism": "Tool permission prompt",
+      "required_parameters": ["action","reason"],
+      "fallback": null,
+      "limitations": "none",
+      "evidence_produced": "approval record"
+    }
+  }
+}

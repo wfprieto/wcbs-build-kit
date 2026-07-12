@@ -1,0 +1,39 @@
+{
+  "runtime_id": "cursor",
+  "display_name": "Cursor",
+  "owner": "wfprieto",
+  "support_level": "Full",
+  "integration_shape": "always_on_instruction_file",
+  "native_install_mechanism": "Cursor project rule (.cursor/rules/*.mdc with alwaysApply: true)",
+  "install_scope": "project",
+  "bootstrap_path": ".cursor/rules/super-build-kit.mdc",
+  "bootstrap_mode": "automatic",
+  "activation_marker": "WCBS_KIT_ACTIVE:cursor",
+  "tool_mapping_path": "runtime_adapters/tool_mappings/cursor.json",
+  "capabilities": {
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "native",
+    "task_tracking": "native",
+    "web_access": "native",
+    "browser_verification": "native",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "native"
+  },
+  "fallbacks": {},
+  "supported_runtime_versions": "Cursor with Project Rules (.cursor/rules) support",
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
+  "modifies_user_files": false,
+  "install": "Commit .cursor/rules/super-build-kit.mdc. alwaysApply: true loads it every session.",
+  "update": "Update the rule file in the repository; Cursor re-reads it next session.",
+  "uninstall": "Delete .cursor/rules/super-build-kit.mdc. Nothing outside the project is modified.",
+  "rollback": "Restore the previous revision of the rule file from version control.",
+  "limitations": "Rule content competes for context with other always-on rules in very large workspaces.",
+  "deprecation": "None. Adapter is active and supported."
+}

@@ -1,0 +1,43 @@
+{
+  "runtime_id": "github-copilot",
+  "display_name": "GitHub Copilot",
+  "owner": "wfprieto",
+  "support_level": "Partial",
+  "integration_shape": "always_on_instruction_file",
+  "native_install_mechanism": "Repository custom instructions (.github/copilot-instructions.md)",
+  "install_scope": "project",
+  "bootstrap_path": ".github/copilot-instructions.md",
+  "bootstrap_mode": "automatic",
+  "activation_marker": "WCBS_KIT_ACTIVE:github-copilot",
+  "tool_mapping_path": "runtime_adapters/tool_mappings/github-copilot.json",
+  "capabilities": {
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "unavailable",
+    "task_tracking": "degradable",
+    "web_access": "native",
+    "browser_verification": "unavailable",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "native"
+  },
+  "fallbacks": {
+    "subagents": "Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer.",
+    "browser_verification": "Substitute command-line verification (curl, HTTP status, scripted DOM snapshot) and record rendered-UI evidence as Not Run.",
+    "task_tracking": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list."
+  },
+  "supported_runtime_versions": "GitHub Copilot Chat with repository custom-instructions support",
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
+  "modifies_user_files": false,
+  "install": "Commit .github/copilot-instructions.md. Copilot Chat loads it automatically for the repository.",
+  "update": "Edit the instructions file in the repository.",
+  "uninstall": "Delete .github/copilot-instructions.md.",
+  "rollback": "Restore the previous revision from version control.",
+  "limitations": "No independent subagents: task and final review run as fresh-context sequential passes and MUST be reported as degraded independence. No native browser verification.",
+  "deprecation": "None. Adapter is active and supported."
+}

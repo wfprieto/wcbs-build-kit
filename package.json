@@ -9,7 +9,13 @@
     "doctor": "node scripts/wcbs-doctor.mjs",
     "verify": "node scripts/wcbs-doctor.mjs --strict",
     "wcbs:doctor": "node scripts/wcbs-doctor.mjs",
-    "wcbs:verify": "node scripts/wcbs-doctor.mjs --strict"
+    "wcbs:verify": "node scripts/wcbs-doctor.mjs --strict",
+    "generate:matrix": "node scripts/generate-capability-matrix.mjs",
+    "check:matrix": "node scripts/generate-capability-matrix.mjs --check",
+    "test:node": "node --test scripts/tests/*.test.mjs",
+    "test:python": "python3 -m unittest discover -s skills/subagent-driven-development/tests -v",
+    "test": "npm run test:node && npm run test:python",
+    "check": "npm run doctor && npm run check:matrix && npm run test"
   },
   "keywords": [
     "apivr",

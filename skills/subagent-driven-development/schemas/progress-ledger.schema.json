@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/wfprieto/wcbs-build-kit/skills/subagent-driven-development/schemas/progress-ledger.schema.json",
+  "title": "WCBS Progress Ledger Entry",
+  "description": "One JSONL line per task. The recoverability artifact: it lets a different agent, in a different session, resume the run and audit what actually happened. Feeds 60_templates/EVIDENCE_LEDGER_TEMPLATE.md and 60_templates/COMPLETION_REPORT_TEMPLATE.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["run_id","task_id","recorded_utc","task_base_sha","status","review_verdict","evidence_state"],
+  "properties": {
+    "run_id": { "type": "string", "minLength": 1 },
+    "task_id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string" },
+    "recorded_utc": { "type": "string", "format": "date-time" },
+    "task_base_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "task_head_sha": { "type": ["string","null"], "pattern": "^[0-9a-f]{40}$" },
+    "status": { "enum": ["DONE","DONE_WITH_CONCERNS","NEEDS_CONTEXT","BLOCKED","COMPLETE"] },
+    "review_verdict": { "enum": ["PASS","CONDITIONAL PASS","PARTIAL","FAIL","BLOCKED"] },
+    "findings_opened": { "type": "integer", "minimum": 0 },
+    "findings_cleared": { "type": "integer", "minimum": 0 },
+    "findings_open": { "type": "integer", "minimum": 0 },
+    "findings_blocked": { "type": "integer", "minimum": 0 },
+    "findings_cannot_verify": { "type": "integer", "minimum": 0, "description": "Each maps to evidence state Unknown and blocks a final PASS until resolved." },
+    "repair_rounds_used": { "type": "integer", "minimum": 0 },
+    "tests_run": {
+      "type": "array",
+      "description": "Exact commands and results. A narrative summary of a test run is not evidence of a test run.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["command","exit_status"],
+        "properties": {
+          "command": { "type": "string", "minLength": 1 },
+          "exit_status": { "type": "integer" },
+          "result": { "type": "string" }
+        }
+      }
+    },
+    "evidence_state": { "enum": ["Verified","Likely","Suspected","Unknown","Not Run","Blocked"] },
+    "artifact_paths": { "type": "object", "additionalProperties": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}

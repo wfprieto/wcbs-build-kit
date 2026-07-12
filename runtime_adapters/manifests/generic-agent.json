@@ -1,0 +1,46 @@
+{
+  "runtime_id": "generic-agent",
+  "display_name": "Generic LLM Agent",
+  "owner": "wfprieto",
+  "support_level": "Manual",
+  "integration_shape": "always_on_instruction_file",
+  "native_install_mechanism": "Operator attaches the activation spine",
+  "install_scope": "project",
+  "bootstrap_path": "00_start_here/START_HERE.md",
+  "bootstrap_mode": "manual",
+  "activation_marker": "WCBS_KIT_ACTIVE:generic-agent",
+  "tool_mapping_path": "runtime_adapters/tool_mappings/generic-agent.json",
+  "capabilities": {
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "unavailable",
+    "task_tracking": "unavailable",
+    "web_access": "degradable",
+    "browser_verification": "unavailable",
+    "durable_artifact_storage": "degradable",
+    "human_approval_gates": "degradable"
+  },
+  "fallbacks": {
+    "subagents": "Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer.",
+    "task_tracking": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list.",
+    "web_access": "Require the human to supply source material; record the evidence state as Unknown rather than guessing.",
+    "browser_verification": "Substitute command-line verification (curl, HTTP status, scripted DOM snapshot) and record rendered-UI evidence as Not Run.",
+    "durable_artifact_storage": "Write durable artifacts to the project-local .wcbs/runs/<run-id>/ tree on the filesystem.",
+    "human_approval_gates": "Halt, print the exact pending action, and require an explicit human reply before proceeding."
+  },
+  "supported_runtime_versions": "Any LLM agent with file read, write, edit, and command execution",
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
+  "modifies_user_files": false,
+  "install": "Attach START_HERE.md, SOURCE_OF_TRUTH.md, LOAD_ORDER.md, and AUDIT_TIER_ROUTER.md at the start of every session.",
+  "update": "Re-attach the updated files.",
+  "uninstall": "Stop attaching the files. Nothing is installed.",
+  "rollback": "Attach the prior revision of the kit files.",
+  "limitations": "No native mechanism places the kit in context automatically, so this is Manual by definition. If command execution is unavailable, the runtime is Unsupported.",
+  "deprecation": "None. Baseline fallback adapter."
+}

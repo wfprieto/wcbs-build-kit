@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/wfprieto/wcbs-build-kit/skills/subagent-driven-development/schemas/review-finding.schema.json",
+  "title": "WCBS Review Finding",
+  "description": "One review finding and its lifecycle. A fix attempt does not clear a finding: OPEN -> FIXED_PENDING_REVIEW -> CLEARED requires an independent re-review of the same scope.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "finding_id",
+    "run_id",
+    "task_id",
+    "severity",
+    "state",
+    "summary",
+    "evidence",
+    "opened_by",
+    "opened_utc"
+  ],
+  "properties": {
+    "finding_id": {"type":"string","minLength":1},
+    "run_id": {"type":"string","minLength":1},
+    "task_id": {"type":"string","minLength":1},
+    "severity": {"enum":["BLOCKING","CRITICAL","IMPORTANT","MINOR","OBSERVATION"],"description":"BLOCKING, CRITICAL and IMPORTANT are material: each must complete fix -> named covering tests -> recorded result -> same-scope re-review."},
+    "state": {"enum":["OPEN","FIXED_PENDING_REVIEW","CLEARED","CANNOT_VERIFY_FROM_DIFF","ACCEPTED_RISK","BLOCKED"],"description":"CANNOT_VERIFY_FROM_DIFF maps to evidence state Unknown and blocks a final PASS until resolved or explicitly accepted."},
+    "summary": {"type":"string","minLength":1},
+    "evidence": {
+      "type":"array","minItems":1,"description":"File-and-line evidence is mandatory. A finding without a location is not a finding.",
+      "items":{"type":"object","additionalProperties":false,"required":["file","line"],"properties":{"file":{"type":"string","minLength":1},"line":{"type":["integer","string"]},"excerpt":{"type":"string"}}}
+    },
+    "evidence_state": {"enum":["Verified","Likely","Suspected","Unknown","Not Run","Blocked"]},
+    "required_fix": {"type":"string"},
+    "covering_tests": {"type":"array","items":{"type":"string"},"description":"Named tests the fix agent must rerun and record."},
+    "repair_rounds_used": {"type":"integer","minimum":0,"default":0},
+    "repair_budget": {"type":"integer","minimum":1,"default":3},
+    "opened_by": {"enum":["task_reviewer","final_reviewer","controller"],"description":"Canonical role that opened the finding. An external or independent reviewer performing the final cumulative review records as final_reviewer; a task-scoped reviewer records as task_reviewer."},
+    "opened_utc": {"type":"string","format":"date-time"},
+    "cleared_by": {"type":["string","null"],"description":"Must be a reviewer role, never the fix agent."},
+    "cleared_utc": {"type":["string","null"]},
+    "acceptance_authority": {"type":["string","null"],"description":"Required when state is ACCEPTED_RISK."},
+    "history": {"type":"array","items":{"type":"object","additionalProperties":false,"required":["from","to","actor","utc"],"properties":{"from":{"type":"string"},"to":{"type":"string"},"actor":{"type":"string"},"utc":{"type":"string"},"note":{"type":"string"}}}},
+    "note": {"type":"string","description":"Free-text rationale: why the finding matters, how it was found, or why a disposition was chosen. Declared explicitly so a finding ledger does not have to violate this schema to record it."}
+  }
+}

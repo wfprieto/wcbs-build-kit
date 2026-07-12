@@ -1,368 +1,103 @@
 #!/usr/bin/env node
-
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import {
+  loadManifests, renderCapabilityMatrix, validateManifest, validateToolMapping,
+  validateManifestMappingConsistency, validateActivationMarkerUniqueness
+} from "./lib/adapter-contract.mjs";
+import { validateAgainstSchema } from "./lib/json-schema.mjs";
 
 const root = process.cwd();
 const strict = process.argv.includes("--strict");
-
-const requiredFiles = [
-  "README.md",
-  "AGENTS.md",
-  "CLAUDE.md",
-  "GEMINI.md",
-  "REPLIT.md",
-  "Manus.md",
-  "00_start_here/START_HERE.md",
-  "00_start_here/SOURCE_OF_TRUTH.md",
-  "00_start_here/LOAD_ORDER.md",
-  "10_governance/APIVR_EXECUTION_LIFECYCLE.md",
-  "10_governance/ELITE_BUILD_GOALS_SUMMARY.md",
-  "10_governance/RELEASE_GATES.md",
-  "10_governance/source_of_truth/Elite_Build_Goals_v3.md",
-  "20_skills/apivr.skill",
-  "20_skills/apivr/SKILL.md",
-  "20_skills/apivr/references/playbook.md",
-  "30_agents/AGENT_ACTIVATION_MATRIX.md",
-  "40_knowledge/SYSTEMATIC_WORKFLOWS.md",
-  "50_audits/AUDIT_TIER_ROUTER.md",
-  "50_audits/CANONICAL_AUDIT_PROTOCOLS.md",
-  "60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md",
-  "60_templates/EVIDENCE_LEDGER_TEMPLATE.md",
-  "60_templates/COMPLETION_REPORT_TEMPLATE.md",
-  "skills/super-build-kit/SKILL.md",
-  "skills/writing-plans/SKILL.md",
-  "skills/requirements-grilling-and-alignment/SKILL.md",
-  "skills/product-strategy-office-hours/SKILL.md",
-  "skills/domain-modeling-and-shared-language/SKILL.md",
-  "skills/product-requirements-and-issue-slicing/SKILL.md",
-  "skills/test-driven-development/SKILL.md",
-  "skills/test-driven-development/references/testing-anti-patterns.md",
-  "skills/codebase-design-and-deep-modules/SKILL.md",
-  "skills/engineering-plan-review/SKILL.md",
-  "skills/code-review-and-review-army/SKILL.md",
-  "skills/diagnosing-bugs-and-feedback-loops/SKILL.md",
-  "skills/qa-and-browser-verification/SKILL.md",
-  "skills/release-readiness-and-ship-gates/SKILL.md",
-  "skills/devex-and-documentation-review/SKILL.md",
-  "skills/compound-learning-capture/SKILL.md",
-  "skills/knowledge-refresh-and-drift-control/SKILL.md",
-  "skills/throwaway-prototyping/SKILL.md",
-  "skills/dispatching-parallel-agents/SKILL.md",
-  "skills/subagent-driven-development/SKILL.md",
-  "skills/subagent-driven-development/scripts/make-review-package.py",
-  "skills/repeatable-agent-loops/SKILL.md",
-  "skills/long-horizon-agent-runtime/SKILL.md",
-  "skills/project-bootstrap-and-setup/SKILL.md",
-  "skills/mcp-tool-governance/SKILL.md",
-  "skills/agent-observability-and-run-tracing/SKILL.md",
-  "skills/cybersecurity-risk-routing/SKILL.md",
-  "skills/ai-application-security/SKILL.md",
-  "skills/security-incident-response/SKILL.md",
-  "skills/supply-chain-and-build-provenance/SKILL.md",
-  "skills/ui-ux-design-quality/SKILL.md",
-  "skills/anti-ai-writing-quality/SKILL.md",
-  "skills/strategist-writing-dna/SKILL.md",
-  "skills/using-git-worktrees/SKILL.md",
-  "skills/deployment-and-hosting-guidance/SKILL.md",
-  "skills/scheduling-and-automation-routing/SKILL.md",
-  "skills/data-output-and-reporting/SKILL.md",
-  "skills/external-api-integration/SKILL.md",
-  "skills/media-and-asset-pipeline/SKILL.md",
-  "40_knowledge/REPEATABLE_AGENT_LOOP_PATTERNS.md",
-  "40_knowledge/LONG_HORIZON_AGENT_RUNTIME_PATTERNS.md",
-  "40_knowledge/AGENT_WORKSPACE_AND_ARTIFACT_BOUNDARIES.md",
-  "40_knowledge/UI_UX_DESIGN_SYSTEM_GUIDANCE.md",
-  "40_knowledge/DOMAIN_MODELING_AND_ADR_GUIDANCE.md",
-  "40_knowledge/CODEBASE_DESIGN_DEEP_MODULES.md",
-  "40_knowledge/COMPOUND_LEARNING_GUIDANCE.md",
-  "40_knowledge/CYBERSECURITY_RISK_ROUTING_INDEX.md",
-  "40_knowledge/SECURITY_FRAMEWORK_MAPPING.md",
-  "60_templates/LOOP_DESIGN_TEMPLATE.md",
-  "60_templates/LOOP_RUN_RECEIPT_TEMPLATE.md",
-  "60_templates/LONG_HORIZON_RUN_CONTROL_TEMPLATE.md",
-  "60_templates/AGENT_RUN_TRACE_TEMPLATE.md",
-  "60_templates/DESIGN_DIRECTION_BRIEF_TEMPLATE.md",
-  "60_templates/UI_UX_REVIEW_CHECKLIST.md",
-  "60_templates/DOMAIN_GLOSSARY_TEMPLATE.md",
-  "60_templates/ADR_TEMPLATE.md",
-  "60_templates/QA_HEALTH_REPORT_TEMPLATE.md",
-  "60_templates/RELEASE_READINESS_DASHBOARD_TEMPLATE.md",
-  "60_templates/SOLVED_PROBLEM_LEARNING_TEMPLATE.md",
-  "60_templates/KNOWLEDGE_REFRESH_REPORT_TEMPLATE.md",
-  "60_templates/SECURITY_EVIDENCE_LEDGER_TEMPLATE.md",
-  "60_templates/SECURITY_AUTHORIZATION_AND_SCOPE_TEMPLATE.md",
-  "runtime_adapters/README.md",
-  "runtime_adapters/NATIVE_GIT_WORKTREES.md",
-  ".codex-plugin/plugin.json",
-  ".cursor/rules/super-build-kit.mdc",
-  ".github/copilot-instructions.md"
-];
-
-const requiredMentions = new Map([
-  ["00_start_here/LOAD_ORDER.md", [
-    "skills/super-build-kit/SKILL.md",
-    "skills/writing-plans/SKILL.md",
-    "skills/requirements-grilling-and-alignment/SKILL.md",
-    "skills/product-strategy-office-hours/SKILL.md",
-    "skills/domain-modeling-and-shared-language/SKILL.md",
-    "skills/product-requirements-and-issue-slicing/SKILL.md",
-    "skills/test-driven-development/SKILL.md",
-    "skills/codebase-design-and-deep-modules/SKILL.md",
-    "skills/engineering-plan-review/SKILL.md",
-    "skills/code-review-and-review-army/SKILL.md",
-    "skills/diagnosing-bugs-and-feedback-loops/SKILL.md",
-    "skills/qa-and-browser-verification/SKILL.md",
-    "skills/release-readiness-and-ship-gates/SKILL.md",
-    "skills/devex-and-documentation-review/SKILL.md",
-    "skills/compound-learning-capture/SKILL.md",
-    "skills/knowledge-refresh-and-drift-control/SKILL.md",
-    "skills/throwaway-prototyping/SKILL.md",
-    "skills/dispatching-parallel-agents/SKILL.md",
-    "skills/subagent-driven-development/SKILL.md",
-    "skills/repeatable-agent-loops/SKILL.md",
-    "skills/long-horizon-agent-runtime/SKILL.md",
-    "skills/project-bootstrap-and-setup/SKILL.md",
-    "skills/mcp-tool-governance/SKILL.md",
-    "skills/agent-observability-and-run-tracing/SKILL.md",
-    "skills/cybersecurity-risk-routing/SKILL.md",
-    "skills/ai-application-security/SKILL.md",
-    "skills/security-incident-response/SKILL.md",
-    "skills/supply-chain-and-build-provenance/SKILL.md",
-    "skills/ui-ux-design-quality/SKILL.md",
-    "skills/anti-ai-writing-quality/SKILL.md",
-    "skills/strategist-writing-dna/SKILL.md"
-  ]],
-  ["00_start_here/START_HERE.md", [
-    "Audit wide. Fix narrow. Prove everything.",
-    "skills/writing-plans/SKILL.md",
-    "skills/test-driven-development/SKILL.md",
-    "skills/dispatching-parallel-agents/SKILL.md",
-    "skills/subagent-driven-development/SKILL.md",
-    "skills/cybersecurity-risk-routing/SKILL.md"
-  ]],
-  ["skills/super-build-kit/SKILL.md", [
-    "Skill Invocation Flow",
-    "Platform Activation",
-    "Rationalization Rebuttals",
-    "APIVR verdict"
-  ]],
-  ["60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md", [
-    "Test-First Implementation Plan",
-    "Product / Requirements Alignment",
-    "Domain Glossary / ADR Plan",
-    "Architecture / Module Boundary Plan",
-    "QA Health Plan",
-    "Release Readiness Plan",
-    "DevEx / Documentation Plan",
-    "Red Phase",
-    "Green Phase",
-    "Refactor Phase",
-    "Cybersecurity / Authorization / Supply Chain Plan",
-    "Zero-Placeholder Check"
-  ]]
-]);
-
-const allowedEvidenceStates = [
-  "Verified",
-  "Likely",
-  "Suspected",
-  "Unknown",
-  "Not Run",
-  "Blocked"
-];
-
 const errors = [];
 const warnings = [];
+const display = p => p.replaceAll("\\", "/");
+const resolve = p => path.join(root, ...p.split("/"));
+const exists = p => fs.existsSync(resolve(p));
+const read = p => fs.readFileSync(resolve(p), "utf8");
+const fail = message => errors.push(message);
+const warn = message => warnings.push(message);
 
-function display(relativePath) {
-  return relativePath.replaceAll("\\", "/");
+const runtimes = ["codex","cursor","github-copilot","claude","gemini","replit","manus","generic-agent"];
+const requiredFiles = [
+  "README.md","AGENTS.md","CLAUDE.md","GEMINI.md","REPLIT.md","Manus.md",
+  "00_start_here/START_HERE.md","00_start_here/SOURCE_OF_TRUTH.md","00_start_here/LOAD_ORDER.md",
+  "10_governance/APIVR_EXECUTION_LIFECYCLE.md","10_governance/ELITE_BUILD_GOALS_SUMMARY.md","10_governance/RELEASE_GATES.md",
+  "50_audits/AUDIT_TIER_ROUTER.md","50_audits/CANONICAL_AUDIT_PROTOCOLS.md",
+  "skills/super-build-kit/SKILL.md","skills/subagent-driven-development/SKILL.md",
+  "skills/subagent-driven-development/ARTIFACT_CONTRACT.md",
+  "skills/subagent-driven-development/scripts/make-review-package.py",
+  ...["implementer","task-reviewer","fix-agent","final-reviewer"].map(x=>`skills/subagent-driven-development/prompts/${x}-prompt.md`),
+  ...["task-artifact","review-finding","progress-ledger"].map(x=>`skills/subagent-driven-development/schemas/${x}.schema.json`),
+  "skills/subagent-driven-development/tests/test_make_review_package.py",
+  ...["PRE_FLIGHT_CONFLICT_REPORT","TASK_BRIEF","IMPLEMENTER_REPORT","TASK_REVIEW_REPORT","FIX_REPORT","FINAL_BRANCH_REVIEW"].map(x=>`60_templates/${x}_TEMPLATE.md`),
+  "60_templates/PROGRESS_LEDGER_TEMPLATE.jsonl",
+  "runtime_adapters/README.md","runtime_adapters/PORTABILITY_CONTRACT.md","runtime_adapters/PORTING_GUIDE.md",
+  "runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md","runtime_adapters/CAPABILITY_MATRIX.md",
+  "runtime_adapters/schemas/adapter-manifest.schema.json","runtime_adapters/schemas/tool-mapping.schema.json",
+  "scripts/generate-capability-matrix.mjs","scripts/lib/adapter-contract.mjs","scripts/lib/json-schema.mjs",
+  ...["controller-contract","adapter-contract","schema-enforcement","wcbs-doctor","artifact-bundle"].map(x=>`scripts/tests/${x}.test.mjs`),
+  "scripts/tests/fixtures/run-bundle/findings.json","scripts/tests/fixtures/run-bundle/progress-ledger.jsonl",
+  ".codex-plugin/plugin.json",".cursor/rules/super-build-kit.mdc",".github/copilot-instructions.md"
+];
+
+function json(p) {
+  if (!exists(p)) return null;
+  try { return JSON.parse(read(p)); }
+  catch (e) { fail(`Invalid JSON in ${display(p)}: ${e.message}`); return null; }
 }
-
-function resolve(relativePath) {
-  return path.join(root, ...relativePath.split("/"));
+function checkRequiredFiles() { for (const p of requiredFiles) if (!exists(p)) fail(`Missing required file: ${display(p)}`); }
+function checkPackage() {
+  const p = json("package.json"); if (!p) return;
+  if (p.private !== true) fail("package.json must remain private.");
+  for (const k of ["dependencies","devDependencies","peerDependencies","optionalDependencies"])
+    if (p[k] && Object.keys(p[k]).length) fail(`package.json should not add install dependencies; found ${k}.`);
+  if (!p.scripts?.doctor || !p.scripts?.verify) fail("package.json must expose doctor and verify scripts.");
 }
-
-function exists(relativePath) {
-  return fs.existsSync(resolve(relativePath));
+function checkSkills() {
+  const dir=resolve("skills"); if(!fs.existsSync(dir)){fail("Missing skills directory.");return;}
+  const walk=d=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){const f=path.join(d,e.name);if(e.isDirectory())walk(f);else if(e.name==="SKILL.md"){const c=fs.readFileSync(f,"utf8"),r=display(path.relative(root,f));if(!c.startsWith("---\n"))fail(`Skill missing YAML frontmatter: ${r}`);if(!/^name:\s*[a-z0-9-]+$/m.test(c))fail(`Skill missing valid name field: ${r}`);if(!/^description:\s*\S.+$/m.test(c))fail(`Skill missing description field: ${r}`);}}};walk(dir);
 }
-
-function read(relativePath) {
-  return fs.readFileSync(resolve(relativePath), "utf8");
+function checkWiring() {
+  const required = new Map([
+    ["00_start_here/LOAD_ORDER.md",["skills/subagent-driven-development/SKILL.md","runtime_adapters/PORTABILITY_CONTRACT.md","runtime_adapters/PORTING_GUIDE.md"]],
+    ["00_start_here/START_HERE.md",["Audit wide. Fix narrow. Prove everything.","skills/subagent-driven-development/SKILL.md","runtime_adapters/PORTABILITY_CONTRACT.md"]],
+    ["runtime_adapters/README.md",["runtime_adapters/PORTABILITY_CONTRACT.md","runtime_adapters/PORTING_GUIDE.md","runtime_adapters/CAPABILITY_MATRIX.md","runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md"]],
+    ["skills/subagent-driven-development/SKILL.md",["A fix attempt does not clear a finding","FIXED_PENDING_REVIEW","CANNOT_VERIFY_FROM_DIFF","plan_base_sha..branch_head_sha","pre-flight conflict scan","repair budget","neutrality","verbatim","file-based handoff","skills/subagent-driven-development/prompts/final-reviewer-prompt.md"]]
+  ]);
+  for(const [file,terms] of required){if(!exists(file))continue;const c=read(file);for(const t of terms)if(!c.toLowerCase().includes(t.toLowerCase()))fail(`${display(file)} does not define the ${t==="A fix attempt does not clear a finding"?"material-finding re-review":`required activation text: ${t}`}.`);}
+  const src=read("skills/subagent-driven-development/scripts/make-review-package.py");
+  if(src.includes('"--diff"')) fail("skills/subagent-driven-development/scripts/make-review-package.py still accepts a hand-supplied --diff; the review range must be generated from base..head.");
+  for(const file of ["skills/subagent-driven-development/SKILL.md","skills/subagent-driven-development/ARTIFACT_CONTRACT.md",...requiredFiles.filter(x=>x.includes("/prompts/"))]) if(exists(file)) for(const line of read(file).split("\n")) if(line.includes("HEAD~1")&&!/prohibit|forbidden|must not|never|reject|do not/i.test(line)) fail(`${display(file)} recommends a shortcut review range (HEAD~1) outside a prohibition.`);
 }
-
-function fail(message) {
-  errors.push(message);
-}
-
-function warn(message) {
-  warnings.push(message);
-}
-
-function checkRequiredFiles() {
-  for (const file of requiredFiles) {
-    if (!exists(file)) fail(`Missing required file: ${display(file)}`);
+function checkEvidenceVocabulary(){const s=read("00_start_here/SOURCE_OF_TRUTH.md");for(const x of ["Verified","Likely","Suspected","Unknown","Not Run","Blocked"])if(!s.includes(x))fail(`SOURCE_OF_TRUTH.md does not define evidence state: ${x}`);for(const p of ["00_start_here/START_HERE.md","00_start_here/LOAD_ORDER.md","skills/super-build-kit/SKILL.md","skills/subagent-driven-development/SKILL.md"])if(exists(p))for(const x of ["Inconclusive","Not Applicable"])if(read(p).includes(x))fail(`${display(p)} uses non-canonical evidence term: ${x}`);}
+function schema(p){return json(p);}
+function checkAdapters(){
+  const ms=schema("runtime_adapters/schemas/adapter-manifest.schema.json"), ts=schema("runtime_adapters/schemas/tool-mapping.schema.json"); if(!ms||!ts)return;
+  const manifests=[];
+  for(const id of runtimes){
+    const mf=`runtime_adapters/manifests/${id}.json`, tf=`runtime_adapters/tool_mappings/${id}.json`;
+    if(!exists(mf)){fail(`Missing adapter manifest for claimed runtime: ${mf}`);continue;} if(!exists(tf)){fail(`Missing tool mapping for claimed runtime: ${tf}`);continue;}
+    const m=json(mf),t=json(tf); if(!m||!t)continue; manifests.push(m);
+    for(const e of validateAgainstSchema(ms,m))fail(`${mf} violates adapter-manifest.schema.json: ${e}`);
+    for(const e of validateAgainstSchema(ts,t))fail(`${tf} violates tool-mapping.schema.json: ${e}`);
+    try{validateManifest(m,{root});}catch(e){fail(`Adapter contract violation: ${e.message}`);}
+    try{validateToolMapping(t);}catch(e){fail(`Tool mapping violation: ${e.message}`);}
+    try{validateManifestMappingConsistency(m,t);}catch(e){fail(`Adapter consistency violation: ${e.message}`);}
   }
+  try{validateActivationMarkerUniqueness(manifests);}catch(e){fail(`Activation marker violation: ${e.message}`);}
+  const matrix="runtime_adapters/CAPABILITY_MATRIX.md";
+  if(exists(matrix)){const c=read(matrix);if(!/GENERATED FILE/i.test(c))fail(`${matrix} is missing its generated-file warning; it must not be hand-authored.`);else if(c.trim()!==renderCapabilityMatrix(loadManifests(root)).trim())fail(`${matrix} is stale or hand-edited. Manifests are canonical. Regenerate with: npm run generate:matrix`);}
 }
-
-function checkJson(file) {
-  if (!exists(file)) return;
-  try {
-    JSON.parse(read(file));
-  } catch (error) {
-    fail(`Invalid JSON in ${display(file)}: ${error.message}`);
-  }
+function checkBundles(){
+  const fschema=schema("skills/subagent-driven-development/schemas/review-finding.schema.json"), lschema=schema("skills/subagent-driven-development/schemas/progress-ledger.schema.json"); if(!fschema||!lschema)return;
+  const bundles=["scripts/tests/fixtures/run-bundle"], live=resolve(".wcbs/runs"); if(fs.existsSync(live))for(const x of fs.readdirSync(live))if(fs.statSync(path.join(live,x)).isDirectory())bundles.push(`.wcbs/runs/${x}`);
+  for(const b of bundles){const fp=`${b}/findings.json`,lp=`${b}/progress-ledger.jsonl`;if(exists(fp)){const a=json(fp);if(a)for(const f of a)for(const e of validateAgainstSchema(fschema,f))fail(`${fp} finding ${f.finding_id} violates review-finding.schema.json: ${e}`);}if(exists(lp))read(lp).split("\n").filter(Boolean).forEach((line,i)=>{let v;try{v=JSON.parse(line);}catch(e){fail(`${lp} line ${i+1} is not valid JSON: ${e.message}`);return;}for(const e of validateAgainstSchema(lschema,v))fail(`${lp} line ${i+1} violates progress-ledger.schema.json: ${e}`);});}
 }
+function checkMarkdown(){const walk=d=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){if([".git",".agents","node_modules","90_archive"].includes(e.name))continue;const f=path.join(d,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith(".md")){const c=fs.readFileSync(f,"utf8"),re=/`((?:00_|10_|20_|30_|40_|50_|60_|90_|skills\/|runtime_adapters\/|\.codex-plugin\/|\.cursor\/|\.github\/|AGENTS\.md|CLAUDE\.md|GEMINI\.md|REPLIT\.md|README\.md)[^`]+)`/g;for(const m of c.matchAll(re)){const p=m[1];if(!p.includes("*")&&!p.endsWith("/")&&!exists(p))warn(`${display(path.relative(root,f))} references missing path: ${p}`);}}}};walk(root);}
 
-function checkSkillFrontmatter() {
-  const skillsDir = resolve("skills");
-  if (!fs.existsSync(skillsDir)) {
-    fail("Missing skills directory.");
-    return;
-  }
-
-  const skillFiles = [];
-  const walk = (dir) => {
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) walk(full);
-      if (entry.isFile() && entry.name === "SKILL.md") skillFiles.push(full);
-    }
-  };
-  walk(skillsDir);
-
-  for (const file of skillFiles) {
-    const relative = path.relative(root, file).replaceAll(path.sep, "/");
-    const content = fs.readFileSync(file, "utf8");
-    if (!content.startsWith("---\n")) {
-      fail(`Skill missing YAML frontmatter: ${relative}`);
-      continue;
-    }
-    if (!/^name:\s*[a-z0-9-]+$/m.test(content)) {
-      fail(`Skill missing valid name field: ${relative}`);
-    }
-    if (!/^description:\s*\S.+$/m.test(content)) {
-      fail(`Skill missing description field: ${relative}`);
-    }
-  }
-}
-
-function checkRequiredMentions() {
-  for (const [file, mentions] of requiredMentions.entries()) {
-    if (!exists(file)) continue;
-    const content = read(file);
-    for (const mention of mentions) {
-      if (!content.includes(mention)) {
-        fail(`${display(file)} does not mention required activation text: ${mention}`);
-      }
-    }
-  }
-}
-
-function checkPackageIsSafe() {
-  if (!exists("package.json")) return;
-  const pkg = JSON.parse(read("package.json"));
-  if (pkg.private !== true) fail("package.json must remain private.");
-  for (const key of ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"]) {
-    if (pkg[key] && Object.keys(pkg[key]).length > 0) {
-      fail(`package.json should not add install dependencies; found ${key}.`);
-    }
-  }
-  if (!pkg.scripts?.doctor || !pkg.scripts?.verify) {
-    fail("package.json must expose doctor and verify scripts.");
-  }
-}
-
-function checkEvidenceVocabulary() {
-  const filesToScan = [
-    "00_start_here/START_HERE.md",
-    "00_start_here/SOURCE_OF_TRUTH.md",
-    "00_start_here/LOAD_ORDER.md",
-    "skills/super-build-kit/SKILL.md",
-    "skills/test-driven-development/SKILL.md",
-    "skills/subagent-driven-development/SKILL.md",
-    "60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md"
-  ];
-
-  const forbiddenEvidenceTerms = ["Inconclusive", "Not Applicable"];
-  for (const file of filesToScan) {
-    if (!exists(file)) continue;
-    const content = read(file);
-    for (const term of forbiddenEvidenceTerms) {
-      if (content.includes(term)) {
-        fail(`${display(file)} uses non-canonical evidence term: ${term}`);
-      }
-    }
-  }
-
-  const sourceOfTruth = exists("00_start_here/SOURCE_OF_TRUTH.md")
-    ? read("00_start_here/SOURCE_OF_TRUTH.md")
-    : "";
-  for (const state of allowedEvidenceStates) {
-    if (!sourceOfTruth.includes(state)) {
-      fail(`SOURCE_OF_TRUTH.md does not define evidence state: ${state}`);
-    }
-  }
-}
-
-function checkMarkdownReferences() {
-  const markdownFiles = [];
-  const walk = (dir) => {
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        if ([".git", ".agents", "node_modules", "90_archive"].includes(entry.name)) continue;
-        walk(full);
-      }
-      if (entry.isFile() && entry.name.endsWith(".md")) markdownFiles.push(full);
-    }
-  };
-  walk(root);
-
-  const referencePattern = /`((?:00_|10_|20_|30_|40_|50_|60_|90_|skills\/|runtime_adapters\/|\.codex-plugin\/|\.cursor\/|\.github\/|AGENTS\.md|CLAUDE\.md|GEMINI\.md|REPLIT\.md|README\.md)[^`]+)`/g;
-  for (const file of markdownFiles) {
-    const content = fs.readFileSync(file, "utf8");
-    for (const match of content.matchAll(referencePattern)) {
-      const reference = match[1];
-      if (reference.includes("*") || reference.endsWith("/")) continue;
-      if (!exists(reference)) {
-        const relative = path.relative(root, file).replaceAll(path.sep, "/");
-        warn(`${relative} references missing path: ${reference}`);
-      }
-    }
-  }
-}
-
-function main() {
-  checkRequiredFiles();
-  checkJson("package.json");
-  checkJson(".codex-plugin/plugin.json");
-  checkPackageIsSafe();
-  checkSkillFrontmatter();
-  checkRequiredMentions();
-  checkEvidenceVocabulary();
-  checkMarkdownReferences();
-
-  console.log("WCBS Super Build Kit Doctor");
-  console.log(`Mode: ${strict ? "verify" : "doctor"}`);
-  console.log(`Root: ${root}`);
-  console.log("");
-
-  if (warnings.length) {
-    console.log("Warnings:");
-    for (const item of warnings) console.log(`- ${item}`);
-    console.log("");
-  }
-
-  if (errors.length) {
-    console.log("Failures:");
-    for (const item of errors) console.log(`- ${item}`);
-    process.exitCode = 1;
-    return;
-  }
-
-  console.log("PASS: kit files, activation wiring, skill frontmatter, JSON, evidence terms, and optional package safety checks passed.");
-}
-
-main();
+checkRequiredFiles(); json(".codex-plugin/plugin.json"); checkPackage(); checkSkills(); checkWiring(); checkEvidenceVocabulary(); checkAdapters(); checkBundles(); checkMarkdown();
+console.log("WCBS Super Build Kit Doctor");console.log(`Mode: ${strict?"verify":"doctor"}`);console.log(`Root: ${root}\n`);
+if(warnings.length){console.log("Warnings:");for(const x of warnings)console.log(`- ${x}`);console.log();}
+if(errors.length){console.log("Failures:");for(const x of errors)console.log(`- ${x}`);process.exitCode=1;}else console.log("PASS: kit files, activation wiring, skill frontmatter, JSON, evidence terms, controller contracts, adapter manifests, tool mappings, capability matrix, and optional package safety checks passed.");

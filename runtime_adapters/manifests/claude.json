@@ -1,0 +1,39 @@
+{
+  "runtime_id": "claude",
+  "display_name": "Claude and Claude Code",
+  "owner": "wfprieto",
+  "support_level": "Full",
+  "integration_shape": "always_on_instruction_file",
+  "native_install_mechanism": "CLAUDE.md project memory file read at session start",
+  "install_scope": "project",
+  "bootstrap_path": "CLAUDE.md",
+  "bootstrap_mode": "automatic",
+  "activation_marker": "WCBS_KIT_ACTIVE:claude",
+  "tool_mapping_path": "runtime_adapters/tool_mappings/claude.json",
+  "capabilities": {
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "native",
+    "task_tracking": "native",
+    "web_access": "native",
+    "browser_verification": "native",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "native"
+  },
+  "fallbacks": {},
+  "supported_runtime_versions": "Claude Code, and Claude surfaces that read CLAUDE.md project memory",
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
+  "modifies_user_files": false,
+  "install": "Commit CLAUDE.md at the repository root. Claude Code loads it automatically as project memory.",
+  "update": "Edit CLAUDE.md in the repository.",
+  "uninstall": "Delete CLAUDE.md. No global or shell configuration is modified.",
+  "rollback": "Restore the previous revision of CLAUDE.md from version control.",
+  "limitations": "Automatic load is established in Claude Code. Surfaces that do not read project memory fall back to Manual activation for that session.",
+  "deprecation": "None. Adapter is active and supported."
+}

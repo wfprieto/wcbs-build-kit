@@ -1,0 +1,43 @@
+{
+  "runtime_id": "gemini",
+  "display_name": "Gemini CLI",
+  "owner": "wfprieto",
+  "support_level": "Partial",
+  "integration_shape": "always_on_instruction_file",
+  "native_install_mechanism": "GEMINI.md context file loaded at session start",
+  "install_scope": "project",
+  "bootstrap_path": "GEMINI.md",
+  "bootstrap_mode": "automatic",
+  "activation_marker": "WCBS_KIT_ACTIVE:gemini",
+  "tool_mapping_path": "runtime_adapters/tool_mappings/gemini.json",
+  "capabilities": {
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "unavailable",
+    "task_tracking": "degradable",
+    "web_access": "native",
+    "browser_verification": "unavailable",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "native"
+  },
+  "fallbacks": {
+    "subagents": "Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer.",
+    "task_tracking": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list.",
+    "browser_verification": "Substitute command-line verification (curl, HTTP status, scripted DOM snapshot) and record rendered-UI evidence as Not Run."
+  },
+  "supported_runtime_versions": "Gemini CLI with GEMINI.md hierarchical context support",
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
+  "modifies_user_files": false,
+  "install": "Commit GEMINI.md at the repository root. Gemini CLI loads it as hierarchical context.",
+  "update": "Edit GEMINI.md in the repository.",
+  "uninstall": "Delete GEMINI.md.",
+  "rollback": "Restore the previous revision from version control.",
+  "limitations": "No independent subagents; reviews degrade to fresh-context sequential passes. No native browser verification.",
+  "deprecation": "None. Adapter is active and supported."
+}

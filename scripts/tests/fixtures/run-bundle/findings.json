@@ -1,0 +1,41 @@
+[
+  {
+    "finding_id": "F-001",
+    "run_id": "RUN-FIXTURE",
+    "task_id": "T-01",
+    "severity": "CRITICAL",
+    "state": "OPEN",
+    "summary": "Committed fixture: a material finding awaiting independent re-review.",
+    "evidence": [{"file":"src/example.js","line":42,"excerpt":"unchecked input"}],
+    "evidence_state": "Verified",
+    "required_fix": "Validate the input before use.",
+    "covering_tests": ["tests/example.test.js"],
+    "repair_budget": 3,
+    "repair_rounds_used": 0,
+    "opened_by": "task_reviewer",
+    "opened_utc": "2026-07-11T00:00:00Z",
+    "cleared_by": null,
+    "cleared_utc": null,
+    "note": "A fix attempt does not clear a finding; only an independent re-review can."
+  },
+  {
+    "finding_id": "F-002",
+    "run_id": "RUN-FIXTURE",
+    "task_id": "T-01",
+    "severity": "IMPORTANT",
+    "state": "CLEARED",
+    "summary": "Committed fixture: a finding cleared by an independent reviewer.",
+    "evidence": [{"file":"src/other.js","line":7}],
+    "evidence_state": "Verified",
+    "repair_budget": 3,
+    "repair_rounds_used": 1,
+    "opened_by": "final_reviewer",
+    "opened_utc": "2026-07-11T00:00:00Z",
+    "cleared_by": "final_reviewer",
+    "cleared_utc": "2026-07-11T01:00:00Z",
+    "history": [
+      {"from":"OPEN","to":"FIXED_PENDING_REVIEW","actor":"fix_agent","utc":"2026-07-11T00:30:00Z"},
+      {"from":"FIXED_PENDING_REVIEW","to":"CLEARED","actor":"final_reviewer","utc":"2026-07-11T01:00:00Z","note":"independent re-review of the same scope"}
+    ]
+  }
+]

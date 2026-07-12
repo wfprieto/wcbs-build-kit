@@ -1,0 +1,14 @@
+{
+  "runtime_id": "replit",
+  "actions": {
+    "read_skill": {"availability":"native","mechanism":"Read the SKILL.md path named by LOAD_ORDER.md","required_parameters":["skill_path"],"fallback":null,"limitations":"none","evidence_produced":"skill load record"},
+    "read_file": {"availability":"native","mechanism":"Workspace file read","required_parameters":["path"],"fallback":null,"limitations":"none","evidence_produced":"file contents"},
+    "write_file": {"availability":"native","mechanism":"Workspace file create","required_parameters":["path","content"],"fallback":null,"limitations":"none","evidence_produced":"written path"},
+    "edit_file": {"availability":"native","mechanism":"Workspace edit","required_parameters":["path","edit"],"fallback":null,"limitations":"none","evidence_produced":"applied edit"},
+    "execute_command": {"availability":"native","mechanism":"Repl shell","required_parameters":["command"],"fallback":null,"limitations":"Linux container only.","evidence_produced":"shell output"},
+    "dispatch_agent": {"availability":"unavailable","mechanism":"No independent subagent mechanism","required_parameters":["prompt","scope"],"fallback":"Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer.","limitations":"Reviews are NOT independent. Report degraded independence.","evidence_produced":"fresh-context review report"},
+    "create_task": {"availability":"native","mechanism":"Agent task list","required_parameters":["title","status"],"fallback":null,"limitations":"Mirror durable state into the progress ledger.","evidence_produced":"task entry"},
+    "record_artifact": {"availability":"native","mechanism":"filesystem write to .wcbs/runs/<run-id>/","required_parameters":["path","content"],"fallback":null,"limitations":"none","evidence_produced":"artifact path and hash"},
+    "request_human_approval": {"availability":"native","mechanism":"Agent confirmation prompt","required_parameters":["action","reason"],"fallback":null,"limitations":"none","evidence_produced":"approval record"}
+  }
+}

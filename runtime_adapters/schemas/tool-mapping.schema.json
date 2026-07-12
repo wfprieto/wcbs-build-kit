@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/wfprieto/wcbs-build-kit/runtime_adapters/schemas/tool-mapping.schema.json",
+  "title": "WCBS Tool Mapping",
+  "description": "Translates the Kit's canonical actions into one runtime's real tool names and parameters. Agents may not invent a tool that is absent from this mapping.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["runtime_id","actions"],
+  "properties": {
+    "runtime_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["read_skill","read_file","write_file","edit_file","execute_command","dispatch_agent","create_task","record_artifact","request_human_approval"],
+      "properties": {
+        "read_skill": { "$ref": "#/$defs/action" },
+        "read_file": { "$ref": "#/$defs/action" },
+        "write_file": { "$ref": "#/$defs/action" },
+        "edit_file": { "$ref": "#/$defs/action" },
+        "execute_command": { "$ref": "#/$defs/action" },
+        "dispatch_agent": { "$ref": "#/$defs/action" },
+        "create_task": { "$ref": "#/$defs/action" },
+        "record_artifact": { "$ref": "#/$defs/action" },
+        "request_human_approval": { "$ref": "#/$defs/action" }
+      }
+    }
+  },
+  "$defs": {
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["availability","mechanism","required_parameters","fallback","limitations","evidence_produced"],
+      "properties": {
+        "availability": { "enum": ["native","degradable","unavailable"] },
+        "mechanism": { "type": "string", "minLength": 1, "description": "The actual runtime tool name or mechanism." },
+        "required_parameters": { "type": "array", "items": { "type": "string" } },
+        "fallback": { "type": ["string","null"], "description": "Required (non-null) whenever availability is not native." },
+        "limitations": { "type": "string" },
+        "evidence_produced": { "type": "string" }
+      }
+    }
+  }
+}

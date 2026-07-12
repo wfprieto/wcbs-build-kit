@@ -1,0 +1,44 @@
+{
+  "runtime_id": "manus",
+  "display_name": "Manus Agent",
+  "owner": "wfprieto",
+  "support_level": "Manual",
+  "integration_shape": "always_on_instruction_file",
+  "native_install_mechanism": "Manus.md repository instruction file",
+  "install_scope": "project",
+  "bootstrap_path": "Manus.md",
+  "bootstrap_mode": "manual",
+  "activation_marker": "WCBS_KIT_ACTIVE:manus",
+  "tool_mapping_path": "runtime_adapters/tool_mappings/manus.json",
+  "capabilities": {
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "unavailable",
+    "task_tracking": "degradable",
+    "web_access": "native",
+    "browser_verification": "degradable",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "degradable"
+  },
+  "fallbacks": {
+    "subagents": "Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer.",
+    "task_tracking": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list.",
+    "browser_verification": "Capture a screenshot or page text through the agent's browsing capability and attach it as evidence; automated assertions are unavailable.",
+    "human_approval_gates": "Halt, print the exact pending action, and require an explicit human reply before proceeding."
+  },
+  "supported_runtime_versions": "Manus Agent (version-dependent)",
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
+  "modifies_user_files": false,
+  "install": "Commit Manus.md at the repository root and attach it, or point the agent at it, at session start.",
+  "update": "Edit Manus.md in the repository.",
+  "uninstall": "Delete Manus.md.",
+  "rollback": "Restore the previous revision from version control.",
+  "limitations": "Automatic session-start ingestion of Manus.md is NOT established. The operator must attach or reference the file each session, so this adapter is Manual by definition, not Full. Upgrade only after a clean-session activation scenario passes.",
+  "deprecation": "None. Adapter is active but requires per-session activation."
+}

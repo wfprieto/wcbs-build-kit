@@ -54,7 +54,8 @@ For implementation plans, feature work, refactors, fixes, or risky edits:
 - Load `skills/20-pass-protocol/SKILL.md` before finalizing high-stakes prompts, agents, skills, source files, plans, audits, runbooks, templates, release instructions, or other accuracy-critical artifacts.
 - Load `skills/test-driven-development/SKILL.md` before APIVR Phase 3 code work.
 - Load `skills/using-git-worktrees/SKILL.md` and prefer native worktree tooling before manual git fallback.
-- Load `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md` before dispatching delegated work.
+- Load `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md` before dispatching delegated work. `skills/subagent-driven-development/SKILL.md` owns the deterministic controller protocol: pre-flight conflict scan, durable task briefs, exact base..head review packages, mandatory fix and re-review of material findings, bounded repair budgets, and a final independent whole-branch review.
+- Load `runtime_adapters/PORTABILITY_CONTRACT.md` before adapter design, installation, update, troubleshooting, or porting work, and before claiming any runtime support level or capability fallback.
 - Load `skills/repeatable-agent-loops/SKILL.md` before recurring audits, iterative remediation, quality sweeps, monitors, post-deploy stabilization checks, or any repeat-until-stable workflow.
 - Load `skills/long-horizon-agent-runtime/SKILL.md` and `skills/agent-observability-and-run-tracing/SKILL.md` before long-running, multi-stage, tool-heavy, artifact-heavy, Comprehensive, Forensic, or handoff-sensitive work.
 - Load `skills/project-bootstrap-and-setup/SKILL.md` before install, bootstrap, config, first-run, dependency, or setup work.
