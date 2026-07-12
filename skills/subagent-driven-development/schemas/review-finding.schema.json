@@ -34,10 +34,24 @@
     "repair_budget": {"type":"integer","minimum":1,"default":3},
     "opened_by": {"enum":["task_reviewer","final_reviewer","controller"],"description":"Canonical role that opened the finding. An external or independent reviewer performing the final cumulative review records as final_reviewer; a task-scoped reviewer records as task_reviewer."},
     "opened_utc": {"type":"string","format":"date-time"},
-    "cleared_by": {"type":["string","null"],"description":"Must be a reviewer role, never the fix agent."},
-    "cleared_utc": {"type":["string","null"]},
+    "cleared_by": {"enum":["task_reviewer","final_reviewer","controller",null],"description":"Must be a reviewer or controller role, never the fix agent."},
+    "cleared_utc": {"type":["string","null"],"format":"date-time"},
     "acceptance_authority": {"type":["string","null"],"description":"Required when state is ACCEPTED_RISK."},
-    "history": {"type":"array","items":{"type":"object","additionalProperties":false,"required":["from","to","actor","utc"],"properties":{"from":{"type":"string"},"to":{"type":"string"},"actor":{"type":"string"},"utc":{"type":"string"},"note":{"type":"string"}}}},
+    "history": {
+      "type":"array",
+      "items":{
+        "type":"object",
+        "additionalProperties":false,
+        "required":["from","to","actor","utc"],
+        "properties":{
+          "from":{"enum":["OPEN","FIXED_PENDING_REVIEW","CLEARED","CANNOT_VERIFY_FROM_DIFF","ACCEPTED_RISK","BLOCKED"]},
+          "to":{"enum":["OPEN","FIXED_PENDING_REVIEW","CLEARED","CANNOT_VERIFY_FROM_DIFF","ACCEPTED_RISK","BLOCKED"]},
+          "actor":{"enum":["controller","task_reviewer","fix_agent","final_reviewer"]},
+          "utc":{"type":"string","format":"date-time"},
+          "note":{"type":"string"}
+        }
+      }
+    },
     "note": {"type":"string","description":"Free-text rationale: why the finding matters, how it was found, or why a disposition was chosen. Declared explicitly so a finding ledger does not have to violate this schema to record it."}
   }
 }
