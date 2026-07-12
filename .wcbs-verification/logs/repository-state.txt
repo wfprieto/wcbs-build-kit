@@ -1,26 +1,42 @@
 HEAD:
-76e234b0addd89e557e2043c685fdef20d009481
+bbdf058c81a256e9dddd9fa232b9ca9374daf7c1
 
-STATUS:
+STATUS BEFORE TESTS:
+D  .wcbs-verification/logs/adapter-contract.txt
+D  .wcbs-verification/logs/artifact-bundle.txt
+D  .wcbs-verification/logs/checksums.txt
+D  .wcbs-verification/logs/controller-contract.txt
+D  .wcbs-verification/logs/f011-artifact-no-live-bundle.txt
+D  .wcbs-verification/logs/f011-full-check-no-live-bundle.txt
+D  .wcbs-verification/logs/f011-summary.txt
+D  .wcbs-verification/logs/f012-adversarial.txt
+D  .wcbs-verification/logs/npm-run-check-clean.txt
+D  .wcbs-verification/logs/python-tests.txt
+D  .wcbs-verification/logs/repository-state.txt
+D  .wcbs-verification/logs/schema-enforcement.txt
+D  .wcbs-verification/logs/wcbs-doctor.txt
+D  .wcbs-verification/verified-head.txt
+D  .wcbs-verification/wcbs-build-kit-main.tar.gz
+D  .wcbs-verification/wcbs-build-kit.bundle
 
 LOG:
-76e234b (HEAD -> main, origin/main) Correct temporary verification bridge evidence handling
+bbdf058 (HEAD -> main, origin/main) Run post-remediation WCBS verification bridge
+76dd550 Complete hermetic task artifact fixture inventory
+504b2e8 Prove strict mode, package wiring, and task artifact integration
+353d86f Validate committed task artifacts hermetically
+d0a0576 Add regression coverage for schema preflight and durable artifacts
+a59aa04 Reject malformed supported JSON Schema keywords
+80a8d29 Enforce strict verification and complete artifact wiring
+e4b187b Wire machine-readable task artifacts into bundle contract
+b58c353 Add hermetic task artifact fixture
+09c7755 Make task artifact schema match immutable brief contract
+2aac800 Require complete test evidence in progress ledger
+548576b Tighten WCBS durable artifact enforcement
+606804c Record WCBS clean-checkout verification evidence
+76e234b Correct temporary verification bridge evidence handling
 2754f3c Add temporary WCBS verification bridge
-017edf5 Complete WCBS controller and portability upgrade
-72b2a18 Correct WCBS recovery trigger and preserve main history
-2ff7d8f Trigger controlled WCBS recovery
-fc9a044 Run controlled WCBS main recovery
-9aff5b4 Stage WCBS final payload 04/13
-4f3e105 Stage WCBS final payload 03/23
-b608d7a Stage WCBS final payload 02/23
-cd3ab61 Stage WCBS final payload 01/11
-ff0d4c0 Stage WCBS main upgrade payload 04/14
-7df93a9 Stage WCBS main upgrade payload 03/14
-2305fa8 Stage WCBS main upgrade payload 02/14
-550d0a1 Stage WCBS main upgrade payload 01/14
-6771ebb Require improvements in every 20 Pass Protocol pass
 
-TRACKED FILES:
+TRACKED FILES AFTER TEMPORARY EVIDENCE REMOVAL:
 .codex-plugin/plugin.json
 .cursor/rules/super-build-kit.mdc
 .github/copilot-instructions.md
@@ -140,6 +156,8 @@ scripts/tests/controller-contract.test.mjs
 scripts/tests/fixtures/run-bundle/README.md
 scripts/tests/fixtures/run-bundle/findings.json
 scripts/tests/fixtures/run-bundle/progress-ledger.jsonl
+scripts/tests/fixtures/run-bundle/tasks/T-01/task-artifact.json
+scripts/tests/fixtures/run-bundle/tasks/T-02/task-artifact.json
 scripts/tests/schema-enforcement.test.mjs
 scripts/tests/wcbs-doctor.test.mjs
 scripts/wcbs-doctor.mjs

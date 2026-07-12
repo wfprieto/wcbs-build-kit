@@ -1,0 +1,9 @@
+
+> @wfprieto/wcbs-build-kit@1.1.0 verify
+> node scripts/wcbs-doctor.mjs --strict
+
+WCBS Super Build Kit Doctor
+Mode: verify
+Root: /home/runner/work/wcbs-build-kit/wcbs-build-kit
+
+PASS: kit files, activation wiring, skill frontmatter, JSON, evidence terms, controller contracts, adapter manifests, tool mappings, capability matrix, artifact schemas, package gates, and optional package safety checks passed.

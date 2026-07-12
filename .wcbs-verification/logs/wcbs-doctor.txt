@@ -2,165 +2,183 @@ TAP version 13
 # Subtest: the unmutated repository passes the doctor
 ok 1 - the unmutated repository passes the doctor
   ---
-  duration_ms: 105.136156
+  duration_ms: 122.113853
+  type: 'test'
+  ...
+# Subtest: strict verify mode fails markdown-reference warnings that doctor only reports
+ok 2 - strict verify mode fails markdown-reference warnings that doctor only reports
+  ---
+  duration_ms: 174.642562
   type: 'test'
   ...
 # Subtest: doctor rejects a Full adapter with a manual bootstrap
-ok 2 - doctor rejects a Full adapter with a manual bootstrap
+ok 3 - doctor rejects a Full adapter with a manual bootstrap
   ---
-  duration_ms: 149.80605
+  duration_ms: 168.498124
   type: 'test'
   ...
 # Subtest: doctor rejects a supported adapter missing an essential capability
-ok 3 - doctor rejects a supported adapter missing an essential capability
+ok 4 - doctor rejects a supported adapter missing an essential capability
   ---
-  duration_ms: 151.925408
+  duration_ms: 179.635357
   type: 'test'
   ...
 # Subtest: doctor rejects a non-native capability with no fallback
-ok 4 - doctor rejects a non-native capability with no fallback
+ok 5 - doctor rejects a non-native capability with no fallback
   ---
-  duration_ms: 148.155199
+  duration_ms: 168.391262
   type: 'test'
   ...
 # Subtest: doctor rejects an undeclared manifest property
-ok 5 - doctor rejects an undeclared manifest property
+ok 6 - doctor rejects an undeclared manifest property
   ---
-  duration_ms: 144.149911
+  duration_ms: 177.141323
   type: 'test'
   ...
 # Subtest: doctor rejects an unsupported operating system
-ok 6 - doctor rejects an unsupported operating system
+ok 7 - doctor rejects an unsupported operating system
   ---
-  duration_ms: 142.216422
+  duration_ms: 162.593512
   type: 'test'
   ...
 # Subtest: doctor rejects a mapping action missing evidence_produced
-ok 7 - doctor rejects a mapping action missing evidence_produced
+ok 8 - doctor rejects a mapping action missing evidence_produced
   ---
-  duration_ms: 144.260961
+  duration_ms: 169.596226
   type: 'test'
   ...
 # Subtest: doctor rejects a mapping missing a required action
-ok 8 - doctor rejects a mapping missing a required action
+ok 9 - doctor rejects a mapping missing a required action
   ---
-  duration_ms: 144.957102
+  duration_ms: 170.714978
   type: 'test'
   ...
 # Subtest: doctor rejects a manifest capability contradicting its mapped action
-ok 9 - doctor rejects a manifest capability contradicting its mapped action
+ok 10 - doctor rejects a manifest capability contradicting its mapped action
   ---
-  duration_ms: 144.095618
+  duration_ms: 168.837437
   type: 'test'
   ...
 # Subtest: doctor rejects duplicate activation markers
-ok 10 - doctor rejects duplicate activation markers
+ok 11 - doctor rejects duplicate activation markers
   ---
-  duration_ms: 144.842076
+  duration_ms: 167.0309
   type: 'test'
   ...
 # Subtest: doctor rejects a marker that does not match the documented form
-ok 11 - doctor rejects a marker that does not match the documented form
+ok 12 - doctor rejects a marker that does not match the documented form
   ---
-  duration_ms: 138.522087
+  duration_ms: 172.439973
   type: 'test'
   ...
 # Subtest: doctor rejects a hand-edited capability matrix
-ok 12 - doctor rejects a hand-edited capability matrix
+ok 13 - doctor rejects a hand-edited capability matrix
   ---
-  duration_ms: 144.596437
+  duration_ms: 166.979291
   type: 'test'
   ...
 # Subtest: doctor rejects a matrix that drops its generated-file warning
-ok 13 - doctor rejects a matrix that drops its generated-file warning
+ok 14 - doctor rejects a matrix that drops its generated-file warning
   ---
-  duration_ms: 149.600163
+  duration_ms: 168.535344
   type: 'test'
   ...
 # Subtest: doctor rejects removal of the material-finding re-review rule
-ok 14 - doctor rejects removal of the material-finding re-review rule
+ok 15 - doctor rejects removal of the material-finding re-review rule
   ---
-  duration_ms: 140.253166
+  duration_ms: 172.776871
   type: 'test'
   ...
 # Subtest: doctor rejects HEAD~1 recommended as review guidance
-ok 15 - doctor rejects HEAD~1 recommended as review guidance
+ok 16 - doctor rejects HEAD~1 recommended as review guidance
   ---
-  duration_ms: 140.306074
+  duration_ms: 167.662111
   type: 'test'
   ...
 # Subtest: doctor rejects reintroduction of the hand-supplied --diff interface
-ok 16 - doctor rejects reintroduction of the hand-supplied --diff interface
+ok 17 - doctor rejects reintroduction of the hand-supplied --diff interface
   ---
-  duration_ms: 144.051153
+  duration_ms: 169.055765
   type: 'test'
   ...
 # Subtest: doctor rejects a missing role prompt
-ok 17 - doctor rejects a missing role prompt
+ok 18 - doctor rejects a missing role prompt
   ---
-  duration_ms: 140.383283
+  duration_ms: 166.755934
   type: 'test'
   ...
 # Subtest: doctor rejects an added npm dependency
-ok 18 - doctor rejects an added npm dependency
+ok 19 - doctor rejects an added npm dependency
   ---
-  duration_ms: 144.063881
+  duration_ms: 159.302248
+  type: 'test'
+  ...
+# Subtest: doctor rejects weakened check-script wiring
+ok 20 - doctor rejects weakened check-script wiring
+  ---
+  duration_ms: 164.147218
   type: 'test'
   ...
 # Subtest: doctor rejects a near-match activation marker (F-010)
-ok 19 - doctor rejects a near-match activation marker (F-010)
+ok 21 - doctor rejects a near-match activation marker (F-010)
   ---
-  duration_ms: 427.597736
+  duration_ms: 500.657338
   type: 'test'
   ...
 # Subtest: doctor rejects a packaged finding with a non-canonical role (F-006)
-ok 20 - doctor rejects a packaged finding with a non-canonical role (F-006)
+ok 22 - doctor rejects a packaged finding with a non-canonical role (F-006)
   ---
-  duration_ms: 140.769197
+  duration_ms: 174.698786
   type: 'test'
   ...
 # Subtest: doctor rejects a packaged finding with an undeclared property (F-006)
-ok 21 - doctor rejects a packaged finding with an undeclared property (F-006)
+ok 23 - doctor rejects a packaged finding with an undeclared property (F-006)
   ---
-  duration_ms: 141.736368
+  duration_ms: 170.162041
   type: 'test'
   ...
 # Subtest: doctor rejects a progress-ledger entry violating its schema (F-006)
-ok 22 - doctor rejects a progress-ledger entry violating its schema (F-006)
+ok 24 - doctor rejects a progress-ledger entry violating its schema (F-006)
   ---
-  duration_ms: 141.471093
+  duration_ms: 176.063296
   type: 'test'
   ...
 # Subtest: doctor rejects a ledger counter below its schema minimum (F-012)
-ok 23 - doctor rejects a ledger counter below its schema minimum (F-012)
+ok 25 - doctor rejects a ledger counter below its schema minimum (F-012)
   ---
-  duration_ms: 144.256544
+  duration_ms: 171.104234
   type: 'test'
   ...
 # Subtest: doctor rejects an invalid timestamp in a durable ledger (F-012)
-ok 24 - doctor rejects an invalid timestamp in a durable ledger (F-012)
+ok 26 - doctor rejects an invalid timestamp in a durable ledger (F-012)
   ---
-  duration_ms: 146.026426
+  duration_ms: 167.618407
+  type: 'test'
+  ...
+# Subtest: doctor rejects a malformed machine-readable task artifact
+ok 27 - doctor rejects a malformed machine-readable task artifact
+  ---
+  duration_ms: 172.222264
   type: 'test'
   ...
 # Subtest: the committed fixture bundle itself passes the doctor (F-011)
-ok 25 - the committed fixture bundle itself passes the doctor (F-011)
+ok 28 - the committed fixture bundle itself passes the doctor (F-011)
   ---
-  duration_ms: 90.972655
+  duration_ms: 106.085562
   type: 'test'
   ...
 # Subtest: doctor rejects removal of the doctor or verify script
-ok 26 - doctor rejects removal of the doctor or verify script
+ok 29 - doctor rejects removal of the doctor or verify script
   ---
-  duration_ms: 139.702404
+  duration_ms: 174.693235
   type: 'test'
   ...
-1..26
-# tests 26
+1..29
+# tests 29
 # suites 0
-# pass 26
+# pass 29
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 4013.912865
+# duration_ms 5237.513381
