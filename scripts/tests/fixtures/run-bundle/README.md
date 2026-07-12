@@ -18,9 +18,12 @@ The doctor integration tests copy this fixture into a temporary fixture repo's
 
 ## Contract
 
-Every file here must validate against the published schemas:
+Every machine-readable artifact here must validate against its published schema:
 
+- `tasks/<task-id>/task-artifact.json` -> `skills/subagent-driven-development/schemas/task-artifact.schema.json`
 - `findings.json` -> `skills/subagent-driven-development/schemas/review-finding.schema.json`
 - `progress-ledger.jsonl` -> `skills/subagent-driven-development/schemas/progress-ledger.schema.json`
+
+Every task ID in `progress-ledger.jsonl` must have a matching task artifact. The fixture is intentionally a minimal schema-and-wiring fixture, not a complete example of every human-readable file in the full run layout.
 
 `npm run doctor` enforces this. If a schema changes, this fixture must change with it.
