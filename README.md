@@ -77,18 +77,22 @@ No adapter, agent persona, prompt template, convenience workflow, or older repos
 
 Work is not done until the applicable APIVR phases have run, evidence is recorded, release gates are classified, and the final verdict honestly reflects reality: `PASS`, `CONDITIONAL PASS`, `PARTIAL`, `FAIL`, or `BLOCKED`.
 
-## Optional Doctor
+## Verification
 
-This kit includes a private, zero-dependency `package.json` only for verification commands. It is not an app runtime package and does not add build dependencies.
+This kit includes a private, zero-dependency `package.json` only for verification commands. It is not an application runtime package and does not add build dependencies.
 
 Run from the kit root:
 
 ```bash
-npm run doctor
+npm run check
 npm run verify
 ```
 
-These commands check required files, activation wiring, skill frontmatter, JSON validity, evidence vocabulary, and package safety.
+`npm run check` executes the doctor, generated capability-matrix check, complete Node suite, and Python review-package suite. The npm gate launches Python through `scripts/run-python-tests.mjs`, which selects `python3`, `python`, or `py -3` without invoking a shell, so the same gate can run on Linux, macOS, and Windows when Python 3 is installed.
+
+`npm run verify` runs the doctor in strict mode. Missing document references that are warnings in ordinary doctor mode become failures in strict mode.
+
+For independent diagnosis, the component commands remain available as `npm run doctor`, `npm run check:matrix`, `npm run test:node`, and `npm run test:python`.
 
 ## Runtime Adapters
 
