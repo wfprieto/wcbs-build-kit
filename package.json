@@ -1,6 +1,6 @@
 {
   "name": "@wfprieto/wcbs-build-kit",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "LLM-agnostic APIVR and Elite Build Goals Super Build Kit with optional verification tooling.",
   "license": "MIT",
@@ -14,8 +14,13 @@
     "check:matrix": "node scripts/generate-capability-matrix.mjs --check",
     "test:node": "node --test scripts/tests/*.test.mjs",
     "test:python": "node scripts/run-python-tests.mjs",
+    "system-test": "node scripts/wcbs-system-test.mjs",
+    "check-install": "node scripts/check-install.mjs",
+    "install-adapter": "node scripts/install-adapter.mjs",
     "test": "npm run test:node && npm run test:python",
-    "check": "npm run doctor && npm run check:matrix && npm run test"
+    "check": "npm run doctor && npm run check:matrix && npm run test",
+    "release-check": "npm run check && npm run system-test",
+    "wcbs:system-test": "node scripts/wcbs-system-test.mjs"
   },
   "keywords": [
     "apivr",
@@ -42,6 +47,9 @@
     "qa",
     "release-readiness",
     "debugging",
-    "devex"
+    "devex",
+    "software-system",
+    "installer",
+    "ci"
   ]
 }

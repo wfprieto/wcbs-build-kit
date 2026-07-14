@@ -5,3 +5,23 @@ __pycache__/
 
 # Controller run artifacts (durable evidence; retained per project decision)
 .wcbs/
+
+# Local scratch and generated run artifacts
+Updates/
+*.tar.gz
+*.tar1.gz
+*.tar2.gz
+*.zip
+
+# Dependency and build outputs
+node_modules/
+dist/
+build/
+coverage/
+
+# Local environment and editor state
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db

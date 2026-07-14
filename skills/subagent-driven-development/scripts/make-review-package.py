@@ -45,7 +45,7 @@ def git(repo: Path, *args: str, allow_fail: bool = False, env: dict | None = Non
     if env:
         child_env = os.environ.copy()
         child_env.update(env)
-    result = subprocess.run(["git", *args], cwd=repo, capture_output=True, text=True, env=child_env)
+    result = subprocess.run(["git", *args], cwd=repo, capture_output=True, text=True, encoding="utf-8", env=child_env)
     if result.returncode != 0 and not allow_fail:
         die(f"git {' '.join(args)} failed: {result.stderr.strip()}")
     return result.stdout
@@ -110,7 +110,7 @@ def main() -> int:
     head_sha = resolve(repo, args.head, "--head")
     if base_sha == head_sha:
         die("base and head are identical. An empty range cannot be reviewed. Capture the task base commit BEFORE dispatch.")
-    ancestor = subprocess.run(["git", "merge-base", "--is-ancestor", base_sha, head_sha], cwd=repo, capture_output=True, text=True)
+    ancestor = subprocess.run(["git", "merge-base", "--is-ancestor", base_sha, head_sha], cwd=repo, capture_output=True, text=True, encoding="utf-8")
     if ancestor.returncode != 0:
         die(f"base {base_sha[:12]} is not an ancestor of head {head_sha[:12]}. The review range is ambiguous; re-resolve the task base commit.")
     dirty = worktree_is_dirty(repo)
@@ -128,13 +128,13 @@ def main() -> int:
     working_tree_patch = ""
     untracked_files: list[str] = []
     if dirty and args.include_working_tree:
-        untracked_files = [record[3:] for record in git(repo, "status", "--porcelain=v1", "-z").split("\0") if record.startswith("?? ")]
+        untracked_files = [record for record in git(repo, "ls-files", "--others", "--exclude-standard", "-z").split("\0") if record]
         with tempfile.TemporaryDirectory() as scratch:
             temp_index = Path(scratch) / "index"
             env = {"GIT_INDEX_FILE": str(temp_index)}
             git(repo, "read-tree", "HEAD", env=env)
             for entry in untracked_files:
-                result = subprocess.run(["git", "add", "--intent-to-add", "--", entry], cwd=repo, capture_output=True, text=True, env={**os.environ, **env})
+                result = subprocess.run(["git", "add", "--intent-to-add", "--", entry], cwd=repo, capture_output=True, text=True, encoding="utf-8", env={**os.environ, **env})
                 if result.returncode != 0:
                     die(f"could not stage untracked path {entry!r} for review: {result.stderr.strip()}. Refusing to emit a review package that silently omits uncommitted evidence.")
             working_tree_patch = git(repo, "diff", "HEAD", env=env)

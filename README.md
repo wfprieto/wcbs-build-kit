@@ -4,6 +4,8 @@ Portable operating system for AI-assisted software work.
 
 Operating law: **Audit wide. Fix narrow. Prove everything.**
 
+Repository slug: `wcbs-build-kit`. Product/system name: Super Build Kit.
+
 This kit merges the permanent APIVR execution loop, the 16 Elite Build Goals, the reusable specialist/audit structure from `wfprieto/wcbs-build-kit`, and the portable skill/workflow mechanics from `obra/Superpowers`.
 
 ## Start Here
@@ -86,13 +88,24 @@ Run from the kit root:
 ```bash
 npm run check
 npm run verify
+npm run system-test
+npm run check-install
 ```
 
-`npm run check` executes the doctor, generated capability-matrix check, complete Node suite, and Python review-package suite. The npm gate launches Python through `scripts/run-python-tests.mjs`, which selects `python3`, `python`, or `py -3` without invoking a shell, so the same gate can run on Linux, macOS, and Windows when Python 3 is installed.
+`npm run check` executes the doctor, generated capability-matrix check, complete Node suite, and Python review-package suite. `npm run system-test` checks startup, planning, forensic security, adapter, and software-ready routing fixtures. `npm run check-install` runs the doctor and system tests as an install-readiness gate. The npm gate launches Python through `scripts/run-python-tests.mjs`, which selects `python3`, `python`, or `py -3` without invoking a shell, so the same gate can run on Linux, macOS, and Windows when Python 3 is installed.
 
 `npm run verify` runs the doctor in strict mode. Missing document references that are warnings in ordinary doctor mode become failures in strict mode.
 
 For independent diagnosis, the component commands remain available as `npm run doctor`, `npm run check:matrix`, `npm run test:node`, and `npm run test:python`.
+
+## Install And Release
+
+- `INSTALL.md` - setup and activation checks.
+- `QUICKSTART.md` - shortest safe startup path.
+- `MANIFEST.md` - active files versus provenance and local-only material.
+- `RELEASE_PROCESS.md` - release gate workflow.
+- `VERSIONING.md` - semantic version rules.
+- `SECURITY.md` - security reporting and handling.
 
 ## Runtime Adapters
 

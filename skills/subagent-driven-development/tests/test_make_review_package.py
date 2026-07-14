@@ -6,6 +6,7 @@ Standard library only. Run: python3 -m unittest discover -s skills/subagent-driv
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -112,7 +113,8 @@ class HelperCase(unittest.TestCase):
         for name in awkward: (self.repo/name).write_text("content\n",encoding="utf-8")
         proc=self.run_helper("--include-working-tree"); self.assertEqual(proc.returncode,0,proc.stderr)
         meta=json.loads((self.outdir/"review-package.json").read_text(encoding="utf-8"));
-        for name in awkward: self.assertIn(name,meta["untracked_files"])
+        expected = [name for name in awkward if not (os.name == "nt" and name.endswith(" "))]
+        for name in expected: self.assertIn(name,meta["untracked_files"])
 
     def test_untracked_path_with_unicode_content_is_in_the_patch(self):
         commit(self.repo,"a.txt","a\n"); (self.repo/"café menu.txt").write_text("espresso\n",encoding="utf-8")

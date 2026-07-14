@@ -1,6 +1,6 @@
 {
   "name": "super-build-kit",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "LLM-agnostic APIVR and Elite Build Goals operating system for audited software work.",
   "author": {
     "name": "Bill Prieto",
