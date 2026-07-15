@@ -1,0 +1,10 @@
+{
+  "name": "Standard feature plan",
+  "apivr_tier": "Standard",
+  "elite_goals": ["test-first implementation", "release gates"],
+  "skills": ["skills/writing-plans/SKILL.md", "skills/test-driven-development/SKILL.md"],
+  "evidence_state": "Verified",
+  "release_gate_status": "CONDITIONAL PASS until implementation verification",
+  "verification": ["pre-flight contradiction scan", "red-green-refactor plan evidence"],
+  "final_verdict": "CONDITIONAL PASS"
+}

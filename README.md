@@ -11,6 +11,7 @@ This kit merges the permanent APIVR execution loop, the 16 Elite Build Goals, th
 ## Start Here
 
 For the shortest first-use path, read `GET_STARTED.md`.
+For a 10-minute setup path, read `docs/FIRST_10_MINUTES.md`.
 
 Every agent must begin with:
 
@@ -114,6 +115,7 @@ Uninstall removes only files tracked in `.wcbs/adapter-install-manifest.json`.
 ## Install And Release
 
 - `INSTALL.md` - setup and activation checks.
+- `CONTRIBUTING.md` - contribution and PR evidence expectations.
 - `GET_STARTED.md` - shortest software-system entry point.
 - `QUICKSTART.md` - shortest safe startup path.
 - `MANIFEST.md` - active files versus provenance and local-only material.

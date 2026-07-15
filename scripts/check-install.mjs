@@ -40,12 +40,13 @@ const system = spawnSync(process.execPath, ["scripts/wcbs-system-test.mjs"], {
 });
 if (system.status !== 0) process.exit(system.status ?? 1);
 
-for (const target of ["codex", "cursor"]) {
+for (const target of ["codex", "cursor", "claude", "github-copilot", "gemini", "replit", "manus", "generic-agent"]) {
   const destination = fs.mkdtempSync(path.join(os.tmpdir(), `wcbs-${target}-install-`));
   try {
     for (const args of [
       ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--install"],
       ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--doctor"],
+      ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--verify-owned-files"],
       ["scripts/adapter-smoke-test.mjs", "--target", target, "--dest", destination],
       ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--uninstall"]
     ]) {

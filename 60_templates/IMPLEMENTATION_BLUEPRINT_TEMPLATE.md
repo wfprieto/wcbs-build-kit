@@ -67,6 +67,20 @@ Required when the plan is larger than one independently verifiable unit.
 |---|---|---|---|---|
 |  |  |  |  |  |
 
+## Pre-Flight Contradiction Scan
+
+Required before implementation for Standard and above.
+
+- Scan report location:
+- Objective/non-goal conflicts:
+- Acceptance criteria conflicts:
+- Test/evidence conflicts:
+- File ownership or task-order conflicts:
+- Reviewer instruction conflicts:
+- Placeholder or vague-work findings:
+- Resolution:
+- Evidence state: Verified / Likely / Suspected / Unknown / Not Run / Blocked
+
 ## Test-First Implementation Plan
 
 Required for code changes unless marked non-applicable with APIVR reason and alternate evidence.
@@ -266,6 +280,7 @@ Required for Important, Critical, Comprehensive, and Forensic work.
 ## Zero-Placeholder Check
 
 - [ ] No TBD, later, as needed, or vague file references remain.
+- [ ] No vague work labels remain, including fix tests, update files, handle edge cases, clean up docs, wire things together, or improve quality.
 - [ ] Exact files or discovery steps are named.
 - [ ] Tests or evidence-first substitutes are embedded.
 - [ ] Product/requirements, domain glossary, ADR, issue slicing, architecture, QA, release, and DevEx sections are completed or intentionally non-applicable.

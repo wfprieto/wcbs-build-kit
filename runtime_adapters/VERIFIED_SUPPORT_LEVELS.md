@@ -18,14 +18,14 @@ This file separates documented adapter capability from proven runtime evidence.
 
 | Runtime | Designed support | Current verified level | Evidence | Next upgrade |
 |---|---|---|---|---|
-| `claude` | Full | Structurally Verified | Manifest, mapping, bootstrap file, and activation prompt are checked by doctor. | Add isolated fixture install and clean-session runtime evidence. |
+| `claude` | Full | Behaviorally Verified | Manifest, mapping, real isolated install, installer doctor, owned-file verification, and adapter smoke test are checked by `npm run check-install`. | Add clean-session Claude runtime evidence. |
 | `codex` | Full | Behaviorally Verified | Manifest, mapping, real isolated install/update/uninstall test, installer doctor, and adapter smoke test are checked by the Node suite. | Add clean-session Codex runtime evidence. |
 | `cursor` | Full | Behaviorally Verified | Manifest, mapping, real isolated install test, installer doctor, and adapter smoke test are checked by the Node suite. | Add clean-session Cursor runtime evidence. |
-| `gemini` | Partial | Structurally Verified | Manifest, mapping, `GEMINI.md`, and degraded fallback language are checked by doctor. | Add isolated fixture install and clean-session activation evidence. |
-| `generic-agent` | Manual | Structurally Verified | Manual activation files and evidence-state language are checked by doctor. | Add manual-load smoke fixture. |
-| `github-copilot` | Partial | Structurally Verified | Manifest, mapping, `.github/copilot-instructions.md`, and degraded review language are checked by doctor. | Add isolated fixture install and Copilot instruction evidence. |
-| `manus` | Manual | Structurally Verified | Manifest, mapping, `Manus.md`, and manual activation limitation are checked by doctor. | Add manual-load smoke fixture. |
-| `replit` | Partial | Structurally Verified | Manifest, mapping, `REPLIT.md`, and Replit adapter file are checked by doctor. | Add isolated fixture install and Replit activation evidence. |
+| `gemini` | Partial | Behaviorally Verified | Manifest, mapping, isolated install, installer doctor, owned-file verification, smoke test, and degraded fallback language are checked by `npm run check-install`. | Add clean-session Gemini runtime evidence. |
+| `generic-agent` | Manual | Behaviorally Verified | Manual activation files, isolated install, installer doctor, owned-file verification, smoke test, and evidence-state language are checked by `npm run check-install`. | Add manual-load transcript evidence. |
+| `github-copilot` | Partial | Behaviorally Verified | Manifest, mapping, isolated install, installer doctor, owned-file verification, smoke test, and degraded review language are checked by `npm run check-install`. | Add clean-session Copilot instruction evidence. |
+| `manus` | Manual | Behaviorally Verified | Manifest, mapping, isolated install, installer doctor, owned-file verification, smoke test, and manual activation limitation are checked by `npm run check-install`. | Add Manus session transcript evidence. |
+| `replit` | Partial | Behaviorally Verified | Manifest, mapping, isolated install, installer doctor, owned-file verification, smoke test, and Replit adapter file are checked by `npm run check-install`. | Add clean-session Replit activation evidence. |
 
 ## Claim Rule
 

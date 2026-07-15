@@ -23,7 +23,7 @@ This file owns the controller state machine. The prompts, schemas, templates, an
 | Role contracts | `skills/subagent-driven-development/prompts/implementer-prompt.md`, `skills/subagent-driven-development/prompts/task-reviewer-prompt.md`, `skills/subagent-driven-development/prompts/fix-agent-prompt.md`, `skills/subagent-driven-development/prompts/final-reviewer-prompt.md` |
 | Artifact rules | `skills/subagent-driven-development/ARTIFACT_CONTRACT.md` |
 | Artifact schemas | `skills/subagent-driven-development/schemas/` |
-| Exact review packages | `skills/subagent-driven-development/scripts/make-review-package.py` |
+| Exact task briefs and review packages | `scripts/task-brief.mjs`, `scripts/review-package.mjs`, `skills/subagent-driven-development/scripts/make-review-package.py` |
 | Runtime capability and fallbacks | `runtime_adapters/CAPABILITY_MATRIX.md` |
 
 ## Controller Loop
@@ -70,7 +70,11 @@ Present **one consolidated batch** to the human. Record the outcome in `prefligh
 
 ## 2. Task Brief
 
-Every task gets a durable brief before dispatch. Use `60_templates/TASK_BRIEF_TEMPLATE.md`.
+Every task gets a durable brief before dispatch. Use `60_templates/TASK_BRIEF_TEMPLATE.md` or generate a starter brief with:
+
+```bash
+node scripts/task-brief.mjs --plan <plan.md> --task <task-id>
+```
 
 Exact requirements live in the brief. Do not paste them repeatedly into prompts. The brief is immutable after dispatch; a correction creates a new revision with a reason and timestamp.
 
@@ -79,6 +83,12 @@ Exact requirements live in the brief. Do not paste them repeatedly into prompts.
 The controller records `task_base_sha` **before dispatch** and `task_head_sha` when the implementer returns.
 
 Generate the review package from that exact range:
+
+```bash
+node scripts/review-package.mjs --base <task_base_sha> --head <task_head_sha> --brief <brief> --report <report>
+```
+
+or, when the Python helper is preferred:
 
 ```bash
 python3 skills/subagent-driven-development/scripts/make-review-package.py \
@@ -188,6 +198,8 @@ The final review package must contain: original plan; global constraints; plan b
 Use `prompts/final-reviewer-prompt.md` and `60_templates/FINAL_BRANCH_REVIEW_TEMPLATE.md`.
 
 No APIVR completion or release claim may be made before this review passes, or an authorized non-critical risk is explicitly accepted.
+
+After the final review and APIVR verification pass, load `skills/finishing-a-development-branch/SKILL.md` to decide merge, PR, keep, or discard behavior and any worktree cleanup.
 
 ## 10. Progress Ledger
 

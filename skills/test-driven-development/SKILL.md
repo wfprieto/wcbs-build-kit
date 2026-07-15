@@ -8,10 +8,16 @@ description: Use for any code implementation, bug fix, refactor, feature, integr
 Use this skill during APIVR Phase 3 for code work.
 
 <EXTREMELY-IMPORTANT>
-Iron Law: no production code change without a failing test or an explicitly documented evidence-first substitute approved by APIVR tier logic.
+Iron Law:
+
+```text
+NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+```
+
+No production code change is allowed without a failing test or an explicitly documented evidence-first substitute approved by APIVR tier logic.
 </EXTREMELY-IMPORTANT>
 
-If production code was written before the failing test, stop, preserve notes if useful, revert or quarantine the premature production change, write the failing test, and restart from Red.
+If production code was written before the failing test, stop and apply the delete-and-restart rule: preserve notes if useful, revert or quarantine the premature production change, write the failing test, watch it fail for the intended reason, and restart implementation from Red. Do not keep premature code as a reference, adapt it while writing tests, or call tests-after equivalent to TDD.
 
 ## APIVR Integration
 
@@ -39,6 +45,8 @@ flowchart LR
 
 Evidence after each phase must use the kit evidence language: Verified, Likely, Suspected, Unknown, Not Run, or Blocked. If automation is genuinely non-applicable, record an applicability note plus the best available evidence state. Do not treat manual inspection as Verified automated behavior.
 
+The Red phase is not complete until the failing test was actually run and observed failing for the intended reason. A test that passes immediately is not Red evidence. A test that errors because of a typo, broken setup, missing import, or invalid fixture is not Red evidence.
+
 ## Public-Interface And Vertical Tracer Rule
 
 Prefer tests that prove behavior through the public interface of the module, API, CLI, UI, or workflow. Avoid testing private implementation details unless the private surface is the only practical risk boundary.
@@ -48,7 +56,7 @@ For new features, start with a vertical tracer bullet: one thin behavior that cr
 ## Required Checklist
 
 - Failing test exists before production change.
-- Failure was observed and matches the intended behavior.
+- Failure was observed and matches the intended behavior; the test did not merely error.
 - Production change is the smallest safe change.
 - For high-stakes source files, `skills/20-pass-protocol/SKILL.md` was applied before final release claims.
 - Targeted test passes after implementation.
@@ -66,6 +74,7 @@ For new features, start with a vertical tracer bullet: one thin behavior that cr
 | Tests will take longer than the fix. | Phase 2 plan gap. | Narrow the test; do not skip the gate. |
 | Existing tests probably cover it. | Unknown evidence. | Identify and run the exact covering test. |
 | I will add tests after. | Phase 3 order violation. | Stop and write failing test first. |
+| I already wrote the code, so I will use it as reference. | Delete-and-restart rule violated. | Revert or quarantine the premature code and implement fresh from the failing test. |
 | It is just refactoring. | Regression evidence missing. | Run characterization tests before changing structure. |
 | The UI proves it works. | Partial evidence only. | Add component/e2e/API test as appropriate. |
 | I tested the helper directly. | Public behavior may be unproved. | Add or identify a public-interface test unless helper behavior is the true contract. |

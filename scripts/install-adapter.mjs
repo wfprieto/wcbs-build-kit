@@ -21,7 +21,8 @@ const aliases = new Map([
 ]);
 const target = aliases.get(readArg("--target")) ?? readArg("--target");
 const dest = readArg("--dest");
-const mode = ["--install", "--update", "--uninstall", "--doctor", "--dry-run"].find(has) ?? "--dry-run";
+const jsonOutput = has("--json");
+const mode = ["--list-targets", "--install", "--update", "--uninstall", "--doctor", "--verify-owned-files", "--repair", "--dry-run"].find(has) ?? "--dry-run";
 const manifestRel = ".wcbs/adapter-install-manifest.json";
 
 const commonFiles = [
@@ -35,9 +36,16 @@ const commonFiles = [
   "skills",
   "runtime_adapters",
   "README.md",
+  "GET_STARTED.md",
+  "INSTALL.md",
   "QUICKSTART.md",
   "MANIFEST.md",
   "SUPPORT_MATRIX.md",
+  "RELEASE_PROCESS.md",
+  "VERSIONING.md",
+  "CHANGELOG.md",
+  "SECURITY.md",
+  "docs",
   "LICENSE",
   "tests/system/activation-scenarios.json"
 ];
@@ -54,10 +62,16 @@ const adapters = {
 };
 
 function usage(exitCode = 1) {
-  console.log("Usage: node scripts/install-adapter.mjs --target <codex|claude|cursor|copilot|gemini|replit|manus|generic> [--dest <path>] [--dry-run|--install|--update|--uninstall|--doctor]");
+  console.log("Usage: node scripts/install-adapter.mjs --target <codex|claude|cursor|copilot|gemini|replit|manus|generic> [--dest <path>] [--dry-run|--install|--update|--uninstall|--doctor|--verify-owned-files|--repair] [--json]");
+  console.log("       node scripts/install-adapter.mjs --list-targets [--json]");
   console.log("");
   console.log("Safety: install, update, uninstall, and doctor require --dest. Writes are project-local and tracked in .wcbs/adapter-install-manifest.json.");
   process.exit(exitCode);
+}
+
+function emit(payload, text) {
+  if (jsonOutput) console.log(JSON.stringify(payload, null, 2));
+  else console.log(text);
 }
 
 function assertTarget() {
@@ -174,17 +188,48 @@ function doctor(destination) {
   console.log(`Files checked: ${existing.files.length}`);
 }
 
+function verifyOwnedFiles(destination) {
+  const existing = loadInstallManifest(destination);
+  if (!existing) throw new Error("No install manifest found.");
+  const missing = existing.files.filter((rel) => !fs.existsSync(path.join(destination, ...rel.split("/"))));
+  const changed = existing.files.filter((rel) => {
+    const source = path.join(root, ...rel.split("/"));
+    const installed = path.join(destination, ...rel.split("/"));
+    return fs.existsSync(source) && fs.existsSync(installed) && !fs.readFileSync(source).equals(fs.readFileSync(installed));
+  });
+  const payload = { status: missing.length || changed.length ? "FAIL" : "PASS", target: existing.target, files_checked: existing.files.length, missing, changed };
+  if (payload.status !== "PASS") throw new Error(`Owned file verification failed: ${JSON.stringify(payload)}`);
+  emit(payload, `PASS: owned files verified for ${existing.target} (${existing.files.length} files)`);
+}
+
+function repair(destination) {
+  const existing = loadInstallManifest(destination);
+  if (!existing) throw new Error("Repair requires an existing install manifest.");
+  const owned = new Set(existing.files);
+  for (const rel of existing.files) copyFileRel(destination, rel, owned);
+  emit({ status: "PASS", target: existing.target, files_repaired: existing.files.length }, `PASS: repaired owned files for ${existing.target}`);
+}
+
 try {
+  if (mode === "--list-targets") {
+    const targets = Object.keys(adapters);
+    emit({ targets }, targets.join("\n"));
+    process.exit(0);
+  }
   assertTarget();
   if (mode === "--dry-run") {
     const files = plannedFiles();
-    console.log(`Adapter target: ${target}`);
-    console.log("Mode: dry-run");
-    console.log(`Files that would be installed: ${files.length}`);
-    for (const file of files.slice(0, 40)) console.log(`- ${file}`);
-    if (files.length > 40) console.log(`... ${files.length - 40} more`);
-    console.log("");
-    console.log("Run with --dest <path> --install to perform a project-local install.");
+    if (jsonOutput) {
+      emit({ target, mode: "dry-run", files }, "");
+    } else {
+      console.log(`Adapter target: ${target}`);
+      console.log("Mode: dry-run");
+      console.log(`Files that would be installed: ${files.length}`);
+      for (const file of files.slice(0, 40)) console.log(`- ${file}`);
+      if (files.length > 40) console.log(`... ${files.length - 40} more`);
+      console.log("");
+      console.log("Run with --dest <path> --install to perform a project-local install.");
+    }
     process.exit(0);
   }
   assertDest();
@@ -194,6 +239,8 @@ try {
   else if (mode === "--update") installOrUpdate(destination, true);
   else if (mode === "--uninstall") uninstall(destination);
   else if (mode === "--doctor") doctor(destination);
+  else if (mode === "--verify-owned-files") verifyOwnedFiles(destination);
+  else if (mode === "--repair") repair(destination);
   else usage(1);
 } catch (error) {
   console.error(`FAIL: ${error.message}`);

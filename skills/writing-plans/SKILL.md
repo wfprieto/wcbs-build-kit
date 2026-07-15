@@ -8,7 +8,7 @@ description: Use when creating implementation plans, audit-remediation plans, ag
 Use this skill during APIVR Phase 2. A plan is acceptable only when a competent agent can execute it without inventing missing decisions.
 
 <HARD-GATE>
-Do not produce a vague plan. Do not use placeholders such as TBD, later, as needed, fix tests, update files, or handle edge cases. If information is unknown, name the exact discovery step that will make it known.
+Do not produce a vague plan. Do not use placeholders such as TBD, later, as needed, fix tests, update files, handle edge cases, clean up docs, wire things together, improve quality, or similar unsized work. If information is unknown, name the exact discovery step that will make it known.
 </HARD-GATE>
 
 ## Required Inputs
@@ -30,14 +30,15 @@ Do not produce a vague plan. Do not use placeholders such as TBD, later, as need
 4. Define in scope, out of scope, preserved behavior, and smallest safe change.
 5. Define domain glossary or ADR outputs when language or durable decisions affect the work.
 6. Split large work into vertical, independently verifiable slices.
-7. Write concrete implementation steps with exact file paths.
-8. For code work, embed the failing test or test-case skeleton before production-code steps.
-9. Add engineering plan review, code review, QA, release readiness, and DevEx review steps when applicable.
-10. Add verification commands, manual checks, evidence states, and expected results.
-11. Add rollback triggers and restoration steps.
-12. Add compound-learning capture or knowledge-refresh decision for Standard and above work.
-13. Add challenge-review questions for Important, Critical, Comprehensive, or Forensic work.
-14. Apply `skills/20-pass-protocol/SKILL.md` before finalizing high-stakes, reusable, production-impacting, or agent-executed plans.
+7. Run a pre-flight contradiction scan before execution: compare objective, non-goals, acceptance criteria, global constraints, tests, release gates, and task slices for conflicts or review-blocking instructions.
+8. Write concrete implementation steps with exact file paths.
+9. For code work, embed the failing test or test-case skeleton before production-code steps.
+10. Add engineering plan review, code review, QA, release readiness, and DevEx review steps when applicable.
+11. Add verification commands, manual checks, evidence states, and expected results.
+12. Add rollback triggers and restoration steps.
+13. Add compound-learning capture or knowledge-refresh decision for Standard and above work.
+14. Add challenge-review questions for Important, Critical, Comprehensive, or Forensic work.
+15. Apply `skills/20-pass-protocol/SKILL.md` before finalizing high-stakes, reusable, production-impacting, or agent-executed plans.
 
 ## Decision Flow
 
@@ -60,6 +61,18 @@ flowchart TD
 ```
 
 ## Embedded Test Requirement
+
+## Pre-Flight Contradiction Scan
+
+Before implementation starts, scan the plan once for contradictions and review-blocking instructions:
+
+- task steps that conflict with non-goals, acceptance criteria, release gates, or security/rollback constraints;
+- tests that assert nothing, only snapshots, or cannot fail for the intended behavior;
+- task slices that require the same file in incompatible ways;
+- instructions that ask a reviewer to ignore or downgrade a real defect;
+- placeholders that hide decisions behind vague verbs.
+
+Record the scan using `60_templates/PLAN_PREFLIGHT_CONFLICT_REPORT_TEMPLATE.md`. If conflicts exist, resolve them before implementation or mark the plan `BLOCKED`.
 
 For implementation plans, include this section before production changes:
 

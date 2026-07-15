@@ -9,6 +9,8 @@ Use APIVR before every release.
 
 ```bash
 npm run verify
+npm run version:audit
+npm run behavior-test
 npm run system-test
 npm run check-install
 npm run build:release-artifacts

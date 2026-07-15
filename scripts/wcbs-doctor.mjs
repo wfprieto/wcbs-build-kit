@@ -71,8 +71,10 @@ function checkPackage() {
     "test:python": "node scripts/run-python-tests.mjs",
     "system-test": "node scripts/wcbs-system-test.mjs",
     "check-install": "node scripts/check-install.mjs",
+    "behavior-test": "node scripts/run-behavior-fixtures.mjs",
+    "version:audit": "node scripts/audit-version-drift.mjs",
     test: "npm run test:node && npm run test:python",
-    check: "npm run doctor && npm run check:matrix && npm run test",
+    check: "npm run doctor && npm run check:matrix && npm run version:audit && npm run behavior-test && npm run test",
     "release-check": "npm run check && npm run system-test && npm run check-install && npm run build:release-artifacts"
   };
   for (const [name, command] of Object.entries(expectedScripts)) if (p.scripts?.[name] !== command) fail(`package.json script ${name} must be exactly: ${command}`);

@@ -117,6 +117,8 @@ For local merge cleanup, use this order:
 
 For PR flow, do not clean up the worktree until PR iteration is complete.
 
+When implementation is complete, use `skills/finishing-a-development-branch/SKILL.md` before merge, PR, keep, discard, or cleanup decisions.
+
 ## Red Flags
 
 Never:

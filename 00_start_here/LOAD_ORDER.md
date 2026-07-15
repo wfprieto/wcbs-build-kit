@@ -40,6 +40,8 @@ Load:
 - `skills/using-git-worktrees/SKILL.md` when work should be isolated
 - `skills/dispatching-parallel-agents/SKILL.md` when the work may benefit from parallel investigation, audit, implementation, or verification
 - `skills/subagent-driven-development/SKILL.md` when subagents will implement, review, or verify task slices
+- `skills/executing-plans/SKILL.md` when executing an approved plan sequentially without subagents
+- `skills/finishing-a-development-branch/SKILL.md` when implementation is complete and merge, PR, keep, discard, or worktree cleanup decisions are needed
 - `runtime_adapters/PORTABILITY_CONTRACT.md` when designing, installing, updating, troubleshooting, or porting a runtime adapter, or when a support level or capability fallback is claimed
 - `runtime_adapters/PORTING_GUIDE.md` when adding support for a new runtime
 - `skills/repeatable-agent-loops/SKILL.md` when work is recurring, iterative, monitor-like, or should repeat until a measurable condition is met or safely stopped
@@ -173,6 +175,8 @@ Load:
 - `skills/test-driven-development/SKILL.md`
 - `skills/dispatching-parallel-agents/SKILL.md` when work can be split safely
 - `skills/subagent-driven-development/SKILL.md` when subagents are dispatched
+- `skills/executing-plans/SKILL.md` when subagents are unavailable or the plan should run sequentially
+- `skills/finishing-a-development-branch/SKILL.md` before merge, PR, keep, discard, or worktree cleanup decisions
 - `skills/repeatable-agent-loops/SKILL.md` when the plan executes repeated bounded steps
 - `skills/long-horizon-agent-runtime/SKILL.md` when the plan spans multiple stages, context windows, tool classes, artifacts, or handoffs
 - `skills/agent-observability-and-run-tracing/SKILL.md` when execution evidence must survive handoff or context compression
