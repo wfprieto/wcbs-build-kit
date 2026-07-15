@@ -10,6 +10,8 @@ This kit merges the permanent APIVR execution loop, the 16 Elite Build Goals, th
 
 ## Start Here
 
+For the shortest first-use path, read `GET_STARTED.md`.
+
 Every agent must begin with:
 
 1. `00_start_here/START_HERE.md`
@@ -98,9 +100,21 @@ npm run check-install
 
 For independent diagnosis, the component commands remain available as `npm run doctor`, `npm run check:matrix`, `npm run test:node`, and `npm run test:python`.
 
+Adapter installs can now be tested in an explicit destination:
+
+```bash
+node scripts/install-adapter.mjs --target codex --dest ../my-project --install
+node scripts/install-adapter.mjs --target codex --dest ../my-project --doctor
+node scripts/adapter-smoke-test.mjs --target codex --dest ../my-project
+node scripts/install-adapter.mjs --target codex --dest ../my-project --uninstall
+```
+
+Uninstall removes only files tracked in `.wcbs/adapter-install-manifest.json`.
+
 ## Install And Release
 
 - `INSTALL.md` - setup and activation checks.
+- `GET_STARTED.md` - shortest software-system entry point.
 - `QUICKSTART.md` - shortest safe startup path.
 - `MANIFEST.md` - active files versus provenance and local-only material.
 - `RELEASE_PROCESS.md` - release gate workflow.

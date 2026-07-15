@@ -61,3 +61,27 @@ npm run system-test
 node scripts/check-install.mjs
 node scripts/install-adapter.mjs --target codex --dry-run
 ```
+
+## Project-Local Adapter Install
+
+The installer is safe by default. `--dry-run` prints the planned file set. Real install, update, uninstall, and doctor modes require an explicit destination.
+
+```bash
+node scripts/install-adapter.mjs --target codex --dest ../my-project --install
+node scripts/install-adapter.mjs --target codex --dest ../my-project --doctor
+node scripts/adapter-smoke-test.mjs --target codex --dest ../my-project
+node scripts/install-adapter.mjs --target codex --dest ../my-project --uninstall
+```
+
+Supported target names:
+
+- `codex`
+- `claude`
+- `cursor`
+- `copilot`
+- `gemini`
+- `replit`
+- `manus`
+- `generic`
+
+The installer records owned files in `.wcbs/adapter-install-manifest.json`. Uninstall refuses to run without that manifest so it cannot remove unowned project files.

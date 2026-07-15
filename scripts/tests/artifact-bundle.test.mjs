@@ -13,7 +13,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { validateAgainstSchema } from "../lib/json-schema.mjs";
 import { validateActivationMarkerUniqueness, loadManifests } from "../lib/adapter-contract.mjs";
@@ -45,3 +47,20 @@ test("incomplete test evidence is rejected",()=>{const bad={...parseLedger(FIXTU
 test("a marker naming a different runtime is rejected",()=>{const claude=loadManifests(root).find((m)=>m.runtime_id==="claude");assert.ok(claude);for(const marker of ["WCBS_KIT_ACTIVE:notclaude","WCBS_KIT_ACTIVE:claude-extra","WCBS_KIT_ACTIVE:xclaude"])assert.throws(()=>validateActivationMarkerUniqueness([{...claude,activation_marker:marker}]),/activation_marker must be exactly/i);});
 test("the exact documented markers are accepted",()=>{assert.doesNotThrow(()=>validateActivationMarkerUniqueness(loadManifests(root)));});
 test("every shipped marker equals WCBS_KIT_ACTIVE:<runtime_id> exactly",()=>{for(const m of loadManifests(root))assert.equal(m.activation_marker,`WCBS_KIT_ACTIVE:${m.runtime_id}`);});
+test("release artifact builder creates zip, checksums, and manifest",()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),"wcbs-release-"));
+  try{
+    const script=path.join(root,"scripts","build-release-artifacts.mjs");
+    const result=spawnSync(process.execPath,[script,"--out",dir],{cwd:root,encoding:"utf8"});
+    assert.equal(result.status,0,`${result.stdout}${result.stderr}`);
+    const pkg=readJson("package.json");
+    assert.ok(fs.existsSync(path.join(dir,`super-build-kit-${pkg.version}.zip`)));
+    assert.ok(fs.existsSync(path.join(dir,"SHA256SUMS.txt")));
+    assert.ok(fs.existsSync(path.join(dir,"RELEASE_ARTIFACT_MANIFEST.json")));
+    const manifest=JSON.parse(fs.readFileSync(path.join(dir,"RELEASE_ARTIFACT_MANIFEST.json"),"utf8"));
+    assert.equal(manifest.version,pkg.version);
+    assert.ok(manifest.files_included>100);
+  }finally{
+    fs.rmSync(dir,{recursive:true,force:true});
+  }
+});

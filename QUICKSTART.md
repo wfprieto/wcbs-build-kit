@@ -6,12 +6,14 @@ Use this when you need the shortest safe path.
 
 ```bash
 npm run verify
+npm run check-install
 ```
 
 Windows PowerShell fallback:
 
 ```powershell
 npm.cmd run verify
+npm.cmd run check-install
 ```
 
 ## 2. Load The Startup Files

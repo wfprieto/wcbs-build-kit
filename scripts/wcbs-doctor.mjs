@@ -24,6 +24,7 @@ const ignoredDirectoryNames = new Set([".git",".agents","node_modules","90_archi
 const runtimes = ["codex","cursor","github-copilot","claude","gemini","replit","manus","generic-agent"];
 const requiredFiles = [
   "README.md","INSTALL.md","QUICKSTART.md","MANIFEST.md","DISTRIBUTION_POLICY.md","SUPPORT_MATRIX.md","CHANGELOG.md","RELEASE_PROCESS.md","VERSIONING.md","SECURITY.md",
+  "GET_STARTED.md",
   "AGENTS.md","CLAUDE.md","GEMINI.md","REPLIT.md","Manus.md",
   "00_start_here/START_HERE.md","00_start_here/SOURCE_OF_TRUTH.md","00_start_here/LOAD_ORDER.md",
   "10_governance/APIVR_EXECUTION_LIFECYCLE.md","10_governance/ELITE_BUILD_GOALS_SUMMARY.md","10_governance/RELEASE_GATES.md",
@@ -37,13 +38,13 @@ const requiredFiles = [
   ...["PRE_FLIGHT_CONFLICT_REPORT","TASK_BRIEF","IMPLEMENTER_REPORT","TASK_REVIEW_REPORT","FIX_REPORT","FINAL_BRANCH_REVIEW"].map(x=>`60_templates/${x}_TEMPLATE.md`),
   "60_templates/PROGRESS_LEDGER_TEMPLATE.jsonl",
   "runtime_adapters/README.md","runtime_adapters/PORTABILITY_CONTRACT.md","runtime_adapters/PORTING_GUIDE.md",
-  "runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md","runtime_adapters/CAPABILITY_MATRIX.md",
+  "runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md","runtime_adapters/CAPABILITY_MATRIX.md","runtime_adapters/VERIFIED_SUPPORT_LEVELS.md",
   "runtime_adapters/INSTALLATION_MATRIX.md","runtime_adapters/ACTIVATION_TESTS.md",
   "runtime_adapters/schemas/adapter-manifest.schema.json","runtime_adapters/schemas/tool-mapping.schema.json",
   "60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md","60_templates/STABLE_RELEASE_REPORT_TEMPLATE.md",
   "docs/USING_THE_SUPER_BUILD_KIT.md","docs/COMMON_WORKFLOWS.md",
-  "scripts/generate-capability-matrix.mjs","scripts/run-python-tests.mjs","scripts/wcbs-system-test.mjs","scripts/check-install.mjs","scripts/install-adapter.mjs","scripts/lib/adapter-contract.mjs","scripts/lib/json-schema.mjs",
-  "tests/system/routing-fixtures.json",
+  "scripts/generate-capability-matrix.mjs","scripts/run-python-tests.mjs","scripts/wcbs-system-test.mjs","scripts/check-install.mjs","scripts/install-adapter.mjs","scripts/adapter-smoke-test.mjs","scripts/lib/adapter-contract.mjs","scripts/lib/json-schema.mjs",
+  "tests/system/routing-fixtures.json","tests/system/activation-scenarios.json",
   ...["controller-contract","adapter-contract","schema-enforcement","wcbs-doctor","artifact-bundle"].map(x=>`scripts/tests/${x}.test.mjs`),
   "scripts/tests/fixtures/run-bundle/findings.json","scripts/tests/fixtures/run-bundle/progress-ledger.jsonl",
   "scripts/tests/fixtures/run-bundle/tasks/T-01/task-artifact.json","scripts/tests/fixtures/run-bundle/tasks/T-02/task-artifact.json",
@@ -72,7 +73,7 @@ function checkPackage() {
     "check-install": "node scripts/check-install.mjs",
     test: "npm run test:node && npm run test:python",
     check: "npm run doctor && npm run check:matrix && npm run test",
-    "release-check": "npm run check && npm run system-test"
+    "release-check": "npm run check && npm run system-test && npm run check-install && npm run build:release-artifacts"
   };
   for (const [name, command] of Object.entries(expectedScripts)) if (p.scripts?.[name] !== command) fail(`package.json script ${name} must be exactly: ${command}`);
   const plugin = json(".codex-plugin/plugin.json");
@@ -114,6 +115,17 @@ function checkAdapters(){
   const matrix="runtime_adapters/CAPABILITY_MATRIX.md";
   if(exists(matrix)){const c=read(matrix);if(!/GENERATED FILE/i.test(c))fail(`${matrix} is missing its generated-file warning; it must not be hand-authored.`);else if(c.trim()!==renderCapabilityMatrix(loadManifests(root)).trim())fail(`${matrix} is stale or hand-edited. Manifests are canonical. Regenerate with: npm run generate:matrix`);}
 }
+function checkVerifiedSupportLevels(){
+  const file = "runtime_adapters/VERIFIED_SUPPORT_LEVELS.md";
+  if(!exists(file)) return;
+  const body = read(file);
+  for(const level of ["Documented","Structurally Verified","Installed In Isolated Fixture","Behaviorally Verified","Runtime Verified"])
+    if(!body.includes(level)) fail(`${file} must define verified support level: ${level}`);
+  for(const id of runtimes)
+    if(!body.includes(`| \`${id}\` |`)) fail(`${file} must include runtime row for ${id}.`);
+  if(!body.includes("Do not report a runtime as `Runtime Verified`"))
+    fail(`${file} must include the runtime-verification claim rule.`);
+}
 function checkBundles(){
   const tschema=schema("skills/subagent-driven-development/schemas/task-artifact.schema.json"), fschema=schema("skills/subagent-driven-development/schemas/review-finding.schema.json"), lschema=schema("skills/subagent-driven-development/schemas/progress-ledger.schema.json"); if(!tschema||!fschema||!lschema)return;
   const bundles=["scripts/tests/fixtures/run-bundle"], live=resolve(".wcbs/runs"); if(fs.existsSync(live))for(const x of fs.readdirSync(live))if(fs.statSync(path.join(live,x)).isDirectory())bundles.push(`.wcbs/runs/${x}`);
@@ -150,7 +162,7 @@ function checkSecretPatterns(){
 }
 function checkMarkdown(){const walk=d=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){if(ignoredDirectoryNames.has(e.name))continue;const f=path.join(d,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith(".md")){const c=normalizeText(fs.readFileSync(f,"utf8")),re=/`((?:00_|10_|20_|30_|40_|50_|60_|90_|skills\/|runtime_adapters\/|\.codex-plugin\/|\.cursor\/|\.github\/|AGENTS\.md|CLAUDE\.md|GEMINI\.md|REPLIT\.md|README\.md|INSTALL\.md|QUICKSTART\.md|MANIFEST\.md|SECURITY\.md|VERSIONING\.md|RELEASE_PROCESS\.md|CHANGELOG\.md|DISTRIBUTION_POLICY\.md|SUPPORT_MATRIX\.md|docs\/)[^`]+)`/g;for(const m of c.matchAll(re)){const p=m[1];if(!p.includes("*")&&!p.endsWith("/")&&!p.includes("{")&&!p.includes("<runtime>")&&!exists(p))warn(`${display(path.relative(root,f))} references missing path: ${p}`);}}}};walk(root);}
 
-checkRequiredFiles(); json(".codex-plugin/plugin.json"); checkPackage(); checkWorkflowFiles(); checkSkills(); checkWiring(); checkEvidenceVocabulary(); checkAdapters(); checkBundles(); checkMarkdown(); checkSecretPatterns();
+checkRequiredFiles(); json(".codex-plugin/plugin.json"); checkPackage(); checkWorkflowFiles(); checkSkills(); checkWiring(); checkEvidenceVocabulary(); checkAdapters(); checkVerifiedSupportLevels(); checkBundles(); checkMarkdown(); checkSecretPatterns();
 if(strict) for(const warning of warnings) fail(`Strict mode rejects warning: ${warning}`);
 console.log("WCBS Super Build Kit Doctor");console.log(`Mode: ${strict?"verify":"doctor"}`);console.log(`Root: ${root}\n`);
 if(warnings.length){console.log("Warnings:");for(const x of warnings)console.log(`- ${x}`);console.log();}

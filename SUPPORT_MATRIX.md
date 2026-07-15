@@ -6,6 +6,7 @@
 | macOS/Linux local verification | Supported | Use `npm run verify`. |
 | GitHub Actions verification | Supported | `.github/workflows/verify.yml`. |
 | Runtime adapters | Supported | See `runtime_adapters/INSTALLATION_MATRIX.md`. |
+| Runtime adapter verified support | In progress | Documented compatibility is not the same as runtime-proven support. See `runtime_adapters/VERIFIED_SUPPORT_LEVELS.md`. |
 | NPM package publication | Not active | `package.json` remains private. |
 | Live security testing | Authorization-gated | See cybersecurity routing and security authorization template. |
 | External provider testing | Authorization-gated | See external integration launch gate. |

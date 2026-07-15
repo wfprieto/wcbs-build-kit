@@ -90,6 +90,13 @@ Every `degradable` or `unavailable` capability must name an **exact** fallback, 
 
 Downgrading a support level when evidence is incomplete is the correct action. Preserving a Full label by weakening the schema is prohibited.
 
+Designed support and verified support are separate facts:
+
+- `runtime_adapters/CAPABILITY_MATRIX.md` reports designed support from manifests.
+- `runtime_adapters/VERIFIED_SUPPORT_LEVELS.md` reports evidence that has actually been run.
+
+Do not claim `Runtime Verified` from manifest validity, file presence, dry-run instructions, or structural tests. Runtime verification requires a clean-session runtime test or an explicitly recorded equivalent evidence artifact.
+
 ## 7. Tool-Mapping Contract
 
 Every mapping defines all nine canonical actions: `read_skill`, `read_file`, `write_file`, `edit_file`, `execute_command`, `dispatch_agent`, `create_task`, `record_artifact`, `request_human_approval`.

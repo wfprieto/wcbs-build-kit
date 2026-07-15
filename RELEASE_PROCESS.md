@@ -10,6 +10,8 @@ Use APIVR before every release.
 ```bash
 npm run verify
 npm run system-test
+npm run check-install
+npm run build:release-artifacts
 ```
 
 3. Review:
@@ -31,11 +33,17 @@ git push origin vX.Y.Z
    - verification performed;
    - known limitations;
    - upgrade notes.
+8. Attach generated artifacts from `dist/release-artifacts/`:
+   - `super-build-kit-X.Y.Z.zip`
+   - `SHA256SUMS.txt`
+   - `RELEASE_ARTIFACT_MANIFEST.json`
 
 ## Release Blockers
 
 - Doctor failure.
 - System-test failure.
+- Install/smoke-test failure for reference adapters.
+- Missing release artifact checksum.
 - Unknown core security evidence.
 - Untracked generated artifacts intended for release.
 - Active docs pointing at missing active files.

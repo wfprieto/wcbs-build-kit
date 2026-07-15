@@ -27,3 +27,15 @@ jobs:
 
       - name: Run system tests
         run: npm run system-test
+
+      - name: Run install and adapter smoke checks
+        run: npm run check-install
+
+      - name: Build release artifacts
+        run: npm run build:release-artifacts
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: super-build-kit-release-artifacts
+          path: dist/release-artifacts/

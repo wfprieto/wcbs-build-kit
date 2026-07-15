@@ -17,9 +17,11 @@
     "system-test": "node scripts/wcbs-system-test.mjs",
     "check-install": "node scripts/check-install.mjs",
     "install-adapter": "node scripts/install-adapter.mjs",
+    "adapter-smoke-test": "node scripts/adapter-smoke-test.mjs",
+    "build:release-artifacts": "node scripts/build-release-artifacts.mjs",
     "test": "npm run test:node && npm run test:python",
     "check": "npm run doctor && npm run check:matrix && npm run test",
-    "release-check": "npm run check && npm run system-test",
+    "release-check": "npm run check && npm run system-test && npm run check-install && npm run build:release-artifacts",
     "wcbs:system-test": "node scripts/wcbs-system-test.mjs"
   },
   "keywords": [
