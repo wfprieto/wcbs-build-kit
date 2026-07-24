@@ -72,6 +72,8 @@ Use:
 
 Security coverage percentages are informational only. A failed, unknown, not-run, or blocked release-critical control cannot be averaged into a passing verdict.
 
+The Node verification suite includes `scripts/tests/web-security-wiring.test.mjs`, which fails when the canonical audit, skill, control matrix, evidence ledger, routing, release gates, README, or manifest become disconnected.
+
 ## Permanent Authority Order
 
 1. `20_skills/apivr.skill` and `20_skills/apivr/`
