@@ -24,7 +24,7 @@ test("web application security is connected to routing and public documentation"
   const expected = new Map([
     ["50_audits/AUDIT_TIER_ROUTER.md", ["WEB_APPLICATION_SECURITY_AUDIT.md", "web-application-security"]],
     ["skills/cybersecurity-risk-routing/SKILL.md", ["skills/web-application-security/SKILL.md", "WEB_APPLICATION_SECURITY_AUDIT.md"]],
-    ["10_governance/RELEASE_GATES.md", ["Web Application Security Audit", "percentage"]],
+    ["10_governance/RELEASE_GATES.md", ["50_audits/WEB_APPLICATION_SECURITY_AUDIT.md", "percentage"]],
     ["README.md", ["Web Application Security", "50_audits/WEB_APPLICATION_SECURITY_AUDIT.md"]],
     ["MANIFEST.md", ["WEB_APPLICATION_SECURITY_AUDIT.md", "WEB_APPLICATION_SECURITY_CONTROL_MATRIX.md", "WEB_APPLICATION_SECURITY_EVIDENCE_LEDGER_TEMPLATE.md"]]
   ]);
