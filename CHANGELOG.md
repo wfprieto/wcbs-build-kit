@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased - Web Application Security Expansion
+
+- Added a composite Web Application Security Audit for authentication, sessions, authorization, tenant isolation, input and output security, browser controls, APIs, uploads, object storage, database controls, secrets, logging, business logic, AI and tool routing, supply chain, monitoring, recovery, and release decisions.
+- Added the runtime-loadable `web-application-security` skill.
+- Added a canonical web application security control matrix mapped to the 16 Elite Build Goals.
+- Added a reproducible evidence ledger with required negative tests, evidence states, residual-risk ownership, and release blockers.
+- Connected the audit to cybersecurity routing, audit tier routing, release gates, README, and the active manifest.
+- Added automated tests that fail if the canonical audit, skill, evidence files, routing, release language, or public documentation become disconnected.
+- Prohibited percentage scoring from overriding failed or unknown release-critical security controls.
+
 ## 1.2.0 - Software-System Hardening
 
 - Added cross-platform verification controls.

@@ -14,6 +14,8 @@ Every task starts here.
    - Any yes: Comprehensive or Forensic.
 4. **Includes cybersecurity testing, AI security testing, live scanning, exploitation, phishing, credential testing, malware, MCP probing, prompt extraction, RAG poisoning, vector leakage, or third-party targets?**
    - Any yes: require authorization and scope; use Comprehensive or Forensic, or stop with safe planning only.
+5. **Is it a browser-delivered application, authenticated web system, multi-tenant SaaS, upload-enabled application, web API, or web application with payments, private data, AI, MCP/tools, OAuth, webhooks, or production security controls?**
+   - Any yes: load `50_audits/WEB_APPLICATION_SECURITY_AUDIT.md` and `skills/web-application-security/SKILL.md`, then route to the applicable specialists.
 
 ## Tiers
 
@@ -73,10 +75,28 @@ Required:
 
 - Rapid / Light: narrow code/config review on owned material; no live probing; reversible; no private data exposure.
 - Standard: normal appsec, API, MCP/tool, dependency, or configuration audit with safe local checks.
-- Comprehensive: auth, private data, payments, production, cloud/IAM, CI/CD, AI apps, RAG, vector stores, supply chain, or multi-system security risk.
+- Comprehensive: auth, private data, payments, production, cloud/IAM, CI/CD, AI apps, RAG, vector stores, supply chain, multi-tenant web applications, uploads/object storage, OAuth, or multi-system security risk.
 - Forensic: suspected compromise, active exploitation, data leakage, malware, ransomware, credential abuse, unauthorized access, regulated exposure, or live dual-use testing with material impact.
 
 If explicit authorization is missing for dual-use work, do not perform the test. Produce only an authorization/scope checklist and safe defensive guidance.
+
+## Web Application Security Routing
+
+Load `50_audits/WEB_APPLICATION_SECURITY_AUDIT.md` when any of these exist:
+
+- login, sessions, account recovery, roles, permissions, organizations, tenants, or private APIs;
+- browser-delivered sensitive workflows;
+- user-generated content, uploads, downloads, or object storage;
+- payments, entitlements, inventory, quotas, credits, refunds, or material transactions;
+- OAuth, webhooks, provider callbacks, external APIs, or machine callers;
+- AI, RAG, vector stores, MCP, plugins, or privileged tools inside a web application;
+- production security headers, cookies, CORS, CSRF, rate limits, logging, monitoring, backup, or recovery decisions.
+
+The web audit is composite. It coordinates the specialist audits and evidence ledger. It does not replace their authoritative controls.
+
+## Scoring Rule
+
+A numeric or percentage score is informational only. It cannot override a failed, unknown, not-run, or blocked release-critical control.
 
 ## Escalation Rules
 
