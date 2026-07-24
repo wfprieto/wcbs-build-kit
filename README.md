@@ -22,7 +22,7 @@ Every agent must begin with:
 
 Then load only the task-specific governance, agent, audit, and template files named by the load order.
 
-Core operational skills:
+## Core Operational Skills
 
 - `skills/super-build-kit/SKILL.md` - always-first orientation and skill invocation logic.
 - `skills/writing-plans/SKILL.md` - zero-placeholder APIVR implementation plans.
@@ -49,6 +49,7 @@ Core operational skills:
 - `skills/mcp-tool-governance/SKILL.md` - MCP, plugin, connector, tool auth, permission, overlap, and evidence governance.
 - `skills/agent-observability-and-run-tracing/SKILL.md` - durable run traces, tool records, evidence trails, redactions, and artifact records.
 - `skills/cybersecurity-risk-routing/SKILL.md` - cybersecurity routing, tier selection, and dual-use authorization gates.
+- `skills/web-application-security/SKILL.md` - composite browser, authentication, authorization, tenancy, upload, storage, API, session, browser-control, and business-logic security routing.
 - `skills/ai-application-security/SKILL.md` - LLM app, RAG, vector store, prompt, model, and AI tool security.
 - `skills/security-incident-response/SKILL.md` - incident triage, evidence preservation, containment, recovery, and forensic security routing.
 - `skills/supply-chain-and-build-provenance/SKILL.md` - dependencies, CI/CD, SBOMs, containers, IaC, signatures, and provenance.
@@ -56,6 +57,20 @@ Core operational skills:
 - `skills/anti-ai-writing-quality/SKILL.md` - human, direct, non-generic writing quality.
 - `skills/strategist-writing-dna/SKILL.md` - verdict-first strategic communication and anti-drift prompt writing.
 - Domain skills for deployment, scheduling, reporting, external APIs, media/assets, and cybersecurity.
+
+## Web Application Security
+
+Use `50_audits/WEB_APPLICATION_SECURITY_AUDIT.md` for browser-delivered applications, authenticated systems, multi-tenant SaaS, uploads and object storage, web APIs, payments, OAuth, webhooks, private data, AI, MCP/tools, or production browser-security controls.
+
+The audit is composite. It selects and aggregates the existing specialists for AI, MCP/tools, external APIs, provider launch paths, supply chain, browser QA, incidents, and release readiness. It does not duplicate or weaken their authoritative controls.
+
+Use:
+
+- `40_knowledge/WEB_APPLICATION_SECURITY_CONTROL_MATRIX.md` for control ownership and Elite Build Goal traceability;
+- `60_templates/WEB_APPLICATION_SECURITY_EVIDENCE_LEDGER_TEMPLATE.md` for reproducible control evidence;
+- `skills/web-application-security/SKILL.md` for APIVR routing and negative-test requirements.
+
+Security coverage percentages are informational only. A failed, unknown, not-run, or blocked release-critical control cannot be averaged into a passing verdict.
 
 ## Permanent Authority Order
 
@@ -74,7 +89,7 @@ No adapter, agent persona, prompt template, convenience workflow, or older repos
 - `skills/` - runtime-loadable operational skills
 - `30_agents/` - merged specialist agent roles
 - `40_knowledge/` - reusable knowledge and workflow source material
-- `50_audits/` - light through forensic audit protocols
+- `50_audits/` - light through forensic audit protocols, including the composite web application security audit
 - `60_templates/` - evidence ledgers, plans, completion reports, rollback records
 - `90_archive/` - provenance and superseded-source mapping
 
@@ -95,13 +110,13 @@ npm run system-test
 npm run check-install
 ```
 
-`npm run check` executes the doctor, generated capability-matrix check, complete Node suite, and Python review-package suite. `npm run system-test` checks startup, planning, forensic security, adapter, and software-ready routing fixtures. `npm run check-install` runs the doctor and system tests as an install-readiness gate. The npm gate launches Python through `scripts/run-python-tests.mjs`, which selects `python3`, `python`, or `py -3` without invoking a shell, so the same gate can run on Linux, macOS, and Windows when Python 3 is installed.
+`npm run check` executes the doctor, generated capability-matrix check, version audit, behavior fixtures, complete Node suite, and Python review-package suite. `npm run system-test` checks startup, planning, forensic security, adapter, and software-ready routing fixtures. `npm run check-install` runs the doctor and system tests as an install-readiness gate. The npm gate launches Python through `scripts/run-python-tests.mjs`, which selects `python3`, `python`, or `py -3` without invoking a shell, so the same gate can run on Linux, macOS, and Windows when Python 3 is installed.
 
 `npm run verify` runs the doctor in strict mode. Missing document references that are warnings in ordinary doctor mode become failures in strict mode.
 
 For independent diagnosis, the component commands remain available as `npm run doctor`, `npm run check:matrix`, `npm run test:node`, and `npm run test:python`.
 
-Adapter installs can now be tested in an explicit destination:
+Adapter installs can be tested in an explicit destination:
 
 ```bash
 node scripts/install-adapter.mjs --target codex --dest ../my-project --install
