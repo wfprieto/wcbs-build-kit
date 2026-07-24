@@ -41,7 +41,7 @@ test("web application security audit contains the critical control and verdict l
     "authentication",
     "authorization",
     "tenant isolation",
-    "file uploads",
+    "file upload",
     "negative tests",
     "pass",
     "blocked",
