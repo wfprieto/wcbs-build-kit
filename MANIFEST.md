@@ -18,6 +18,17 @@ This manifest separates active system files from provenance and local-only mater
 - install and release files: `INSTALL.md`, `QUICKSTART.md`, `README.md`, `CHANGELOG.md`, `RELEASE_PROCESS.md`, `VERSIONING.md`, `SECURITY.md`
 - short entry point: `GET_STARTED.md`
 
+## Web Application Security System
+
+The active composite web security system consists of:
+
+- `50_audits/WEB_APPLICATION_SECURITY_AUDIT.md`
+- `skills/web-application-security/SKILL.md`
+- `40_knowledge/WEB_APPLICATION_SECURITY_CONTROL_MATRIX.md`
+- `60_templates/WEB_APPLICATION_SECURITY_EVIDENCE_LEDGER_TEMPLATE.md`
+
+These files coordinate existing AI, MCP/tool, external API, provider launch, supply-chain, QA/browser, incident-response, and release-readiness specialists. They are active canonical files, not provenance material.
+
 ## Provenance Files
 
 - `90_archive/`
