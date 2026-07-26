@@ -5,9 +5,17 @@ import path from "node:path";
 import process from "node:process";
 
 const root = process.cwd();
-const activeDirs = ["00_start_here", "10_governance", "40_knowledge", "50_audits", "60_templates", "skills", "runtime_adapters", "docs"];
-const phraseCounts = new Map();
-const tracked = ["Audit wide. Fix narrow. Prove everything.", "NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST", "Do not claim `Runtime Verified`"];
+const baselinePath = path.join(root, "10_governance", "DUPLICATE_GUIDANCE_BASELINE.json");
+
+if (!fs.existsSync(baselinePath)) {
+  console.error("FAIL: duplicate-guidance baseline is missing.");
+  process.exit(1);
+}
+
+const baseline = JSON.parse(fs.readFileSync(baselinePath, "utf8"));
+const activeDirs = baseline.active_directories;
+const tracked = baseline.phrases;
+const phraseCounts = new Map(Object.keys(tracked).map((phrase) => [phrase, 0]));
 
 function walk(dir) {
   if (!fs.existsSync(dir)) return [];
@@ -22,8 +30,23 @@ function walk(dir) {
 
 for (const file of activeDirs.flatMap((dir) => walk(path.join(root, dir)))) {
   const body = fs.readFileSync(file, "utf8");
-  for (const phrase of tracked) if (body.includes(phrase)) phraseCounts.set(phrase, (phraseCounts.get(phrase) ?? 0) + 1);
+  for (const phrase of Object.keys(tracked)) {
+    if (body.includes(phrase)) phraseCounts.set(phrase, (phraseCounts.get(phrase) ?? 0) + 1);
+  }
 }
 
-for (const [phrase, count] of phraseCounts) console.log(`${count}\t${phrase}`);
-console.log("PASS: duplicate-guidance audit completed. Review counts for intentional canonical repetition.");
+const failures = [];
+for (const [phrase, expected] of Object.entries(tracked)) {
+  const actual = phraseCounts.get(phrase) ?? 0;
+  console.log(`${actual}\t${phrase}`);
+  if (actual !== expected) failures.push(`Expected ${expected} active occurrences of ${JSON.stringify(phrase)}, found ${actual}.`);
+}
+
+if (failures.length) {
+  console.error("FAIL: duplicate-guidance drift detected:");
+  for (const failure of failures) console.error(`- ${failure}`);
+  console.error("Update canonical guidance or intentionally revise 10_governance/DUPLICATE_GUIDANCE_BASELINE.json with review evidence.");
+  process.exit(1);
+}
+
+console.log("PASS: duplicate-guidance counts match the governed baseline.");
