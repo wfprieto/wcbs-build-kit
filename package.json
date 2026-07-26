@@ -24,8 +24,9 @@
     "version:bump": "node scripts/bump-version.mjs",
     "audit:duplicates": "node scripts/audit-duplicate-guidance.mjs",
     "audit:skill-size": "node scripts/audit-skill-size.mjs",
+    "audit:governance": "npm run audit:duplicates && npm run audit:skill-size",
     "test": "npm run test:node && npm run test:python",
-    "check": "npm run doctor && npm run check:matrix && npm run version:audit && npm run behavior-test && npm run test",
+    "check": "npm run doctor && npm run check:matrix && npm run version:audit && npm run audit:governance && npm run behavior-test && npm run test",
     "release-check": "npm run check && npm run system-test && npm run check-install && npm run build:release-artifacts",
     "wcbs:system-test": "node scripts/wcbs-system-test.mjs"
   },
