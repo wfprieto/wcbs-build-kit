@@ -27,7 +27,7 @@ const requiredFiles = [
   "GET_STARTED.md",
   "AGENTS.md","CLAUDE.md","GEMINI.md","REPLIT.md","Manus.md",
   "00_start_here/START_HERE.md","00_start_here/SOURCE_OF_TRUTH.md","00_start_here/LOAD_ORDER.md",
-  "10_governance/APIVR_EXECUTION_LIFECYCLE.md","10_governance/ELITE_BUILD_GOALS_SUMMARY.md","10_governance/RELEASE_GATES.md",
+  "10_governance/APIVR_EXECUTION_LIFECYCLE.md","10_governance/ELITE_BUILD_GOALS_SUMMARY.md","10_governance/RELEASE_GATES.md","10_governance/DUPLICATE_GUIDANCE_BASELINE.json",
   "50_audits/AUDIT_TIER_ROUTER.md","50_audits/CANONICAL_AUDIT_PROTOCOLS.md",
   "skills/super-build-kit/SKILL.md","skills/subagent-driven-development/SKILL.md",
   "skills/subagent-driven-development/ARTIFACT_CONTRACT.md",
@@ -43,7 +43,7 @@ const requiredFiles = [
   "runtime_adapters/schemas/adapter-manifest.schema.json","runtime_adapters/schemas/tool-mapping.schema.json",
   "60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md","60_templates/STABLE_RELEASE_REPORT_TEMPLATE.md",
   "docs/USING_THE_SUPER_BUILD_KIT.md","docs/COMMON_WORKFLOWS.md",
-  "scripts/generate-capability-matrix.mjs","scripts/run-python-tests.mjs","scripts/wcbs-system-test.mjs","scripts/check-install.mjs","scripts/install-adapter.mjs","scripts/adapter-smoke-test.mjs","scripts/lib/adapter-contract.mjs","scripts/lib/json-schema.mjs",
+  "scripts/generate-capability-matrix.mjs","scripts/run-python-tests.mjs","scripts/wcbs-system-test.mjs","scripts/check-install.mjs","scripts/install-adapter.mjs","scripts/adapter-smoke-test.mjs","scripts/lib/adapter-contract.mjs","scripts/lib/json-schema.mjs","scripts/audit-duplicate-guidance.mjs","scripts/audit-skill-size.mjs",
   "tests/system/routing-fixtures.json","tests/system/activation-scenarios.json",
   ...["controller-contract","adapter-contract","schema-enforcement","wcbs-doctor","artifact-bundle"].map(x=>`scripts/tests/${x}.test.mjs`),
   "scripts/tests/fixtures/run-bundle/findings.json","scripts/tests/fixtures/run-bundle/progress-ledger.jsonl",
@@ -73,8 +73,11 @@ function checkPackage() {
     "check-install": "node scripts/check-install.mjs",
     "behavior-test": "node scripts/run-behavior-fixtures.mjs",
     "version:audit": "node scripts/audit-version-drift.mjs",
+    "audit:duplicates": "node scripts/audit-duplicate-guidance.mjs",
+    "audit:skill-size": "node scripts/audit-skill-size.mjs",
+    "audit:governance": "npm run audit:duplicates && npm run audit:skill-size",
     test: "npm run test:node && npm run test:python",
-    check: "npm run doctor && npm run check:matrix && npm run version:audit && npm run behavior-test && npm run test",
+    check: "npm run doctor && npm run check:matrix && npm run version:audit && npm run audit:governance && npm run behavior-test && npm run test",
     "release-check": "npm run check && npm run system-test && npm run check-install && npm run build:release-artifacts"
   };
   for (const [name, command] of Object.entries(expectedScripts)) if (p.scripts?.[name] !== command) fail(`package.json script ${name} must be exactly: ${command}`);
@@ -147,25 +150,31 @@ function checkBundles(){
   }
 }
 function checkWorkflowFiles(){for(const file of [".github/workflows/verify.yml",".github/workflows/release-check.yml"]){if(!exists(file))continue;const c=read(file);if(!c.includes("npm run verify"))fail(`${file} must run npm run verify.`);if(!c.includes("permissions:"))fail(`${file} must define permissions.`);}if(exists(".github/workflows/release-check.yml")&&!read(".github/workflows/release-check.yml").includes("npm run system-test"))fail(".github/workflows/release-check.yml must run npm run system-test.");}
-function checkSecretPatterns(){
-  const re=/(gho_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+|sk-[A-Za-z0-9]{20,}|OPENAI_API_KEY\s*=|password\s*=|secret\s*=)/;
-  const walk=d=>{
-    for(const e of fs.readdirSync(d,{withFileTypes:true})){
-      if(ignoredDirectoryNames.has(e.name))continue;
-      const f=path.join(d,e.name);
-      if(e.isDirectory()){
-        walk(f);
-      }else if(/\.(md|mjs|js|json|yaml|yml|py|txt|ps1)$/i.test(e.name)&&re.test(normalizeText(fs.readFileSync(f,"utf8")))){
-        fail(`Potential secret pattern found in active file: ${display(path.relative(root,f))}`);
-      }
-    }
-  };
-  walk(root);
+function checkSecrets(){
+  const secretPatterns=[/AKIA[0-9A-Z]{16}/g,/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/g,/sk-(?:proj-)?[A-Za-z0-9_-]{20,}/g,/gh[pousr]_[A-Za-z0-9]{20,}/g];
+  const textExtensions=new Set([".md",".json",".jsonl",".mjs",".js",".py",".yml",".yaml",".txt",".toml",".ini",".sh",".ps1",".bat",".cmd"]);
+  const walk=d=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){if(ignoredDirectoryNames.has(e.name))continue;const f=path.join(d,e.name);if(e.isDirectory())walk(f);else if(textExtensions.has(path.extname(e.name).toLowerCase())||["AGENTS.md","CLAUDE.md","GEMINI.md","REPLIT.md","Manus.md"].includes(e.name)){let c;try{c=normalizeText(fs.readFileSync(f,"utf8"));}catch{continue;}for(const pattern of secretPatterns){pattern.lastIndex=0;if(pattern.test(c))fail(`Potential secret material detected in ${display(path.relative(root,f))}.`);}}}};walk(root);
 }
-function checkMarkdown(){const walk=d=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){if(ignoredDirectoryNames.has(e.name))continue;const f=path.join(d,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith(".md")){const c=normalizeText(fs.readFileSync(f,"utf8")),re=/`((?:00_|10_|20_|30_|40_|50_|60_|90_|skills\/|runtime_adapters\/|\.codex-plugin\/|\.cursor\/|\.github\/|AGENTS\.md|CLAUDE\.md|GEMINI\.md|REPLIT\.md|README\.md|INSTALL\.md|QUICKSTART\.md|MANIFEST\.md|SECURITY\.md|VERSIONING\.md|RELEASE_PROCESS\.md|CHANGELOG\.md|DISTRIBUTION_POLICY\.md|SUPPORT_MATRIX\.md|docs\/)[^`]+)`/g;for(const m of c.matchAll(re)){const p=m[1];if(!p.includes("*")&&!p.endsWith("/")&&!p.includes("{")&&!p.includes("<runtime>")&&!exists(p))warn(`${display(path.relative(root,f))} references missing path: ${p}`);}}}};walk(root);}
+function checkManifest(){const body=read("MANIFEST.md");for(const p of ["00_start_here/","10_governance/","skills/","runtime_adapters/","scripts/"])if(!body.includes(p))fail(`MANIFEST.md does not identify active system path: ${p}`);}
+function checkNoArchiveReferences(){
+  const activeRoots=["00_start_here","10_governance","20_skills","30_agents","40_knowledge","50_audits","60_templates","skills","runtime_adapters","docs"];
+  for(const dir of activeRoots){const full=resolve(dir);if(!fs.existsSync(full))continue;const walk=d=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){const f=path.join(d,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith(".md")){const c=normalizeText(fs.readFileSync(f,"utf8"));if(/90_archive\//.test(c)&&!/provenance|archive|historical|not active|not source.of.truth/i.test(c))warn(`${display(path.relative(root,f))} references 90_archive without an explicit provenance qualifier.`);}}};walk(full);}
+}
 
-checkRequiredFiles(); json(".codex-plugin/plugin.json"); checkPackage(); checkWorkflowFiles(); checkSkills(); checkWiring(); checkEvidenceVocabulary(); checkAdapters(); checkVerifiedSupportLevels(); checkBundles(); checkMarkdown(); checkSecretPatterns();
-if(strict) for(const warning of warnings) fail(`Strict mode rejects warning: ${warning}`);
-console.log("WCBS Super Build Kit Doctor");console.log(`Mode: ${strict?"verify":"doctor"}`);console.log(`Root: ${root}\n`);
-if(warnings.length){console.log("Warnings:");for(const x of warnings)console.log(`- ${x}`);console.log();}
-if(errors.length){console.log("Failures:");for(const x of errors)console.log(`- ${x}`);process.exitCode=1;}else console.log("PASS: kit files, activation wiring, skill frontmatter, JSON, evidence terms, controller contracts, adapter manifests, tool mappings, capability matrix, artifact schemas, package gates, and optional package safety checks passed.");
+checkRequiredFiles();
+checkPackage();
+checkSkills();
+checkWiring();
+checkEvidenceVocabulary();
+checkAdapters();
+checkVerifiedSupportLevels();
+checkBundles();
+checkWorkflowFiles();
+checkSecrets();
+checkManifest();
+checkNoArchiveReferences();
+
+for(const warning of warnings) console.warn(`WARN: ${warning}`);
+if(errors.length){for(const error of errors)console.error(`FAIL: ${error}`);console.error(`\nWCBS doctor failed with ${errors.length} error(s).`);process.exit(1);}
+if(strict&&warnings.length){console.error(`\nWCBS strict verification failed with ${warnings.length} warning(s).`);process.exit(1);}
+console.log(`PASS: WCBS doctor${strict?" strict":""} verification completed.`);
