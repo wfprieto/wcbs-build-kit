@@ -18,6 +18,16 @@ This manifest separates active system files from provenance and local-only mater
 - install and release files: `INSTALL.md`, `QUICKSTART.md`, `README.md`, `CHANGELOG.md`, `RELEASE_PROCESS.md`, `VERSIONING.md`, `SECURITY.md`
 - short entry point: `GET_STARTED.md`
 
+## Governed Drift Controls
+
+The active fail-closed governance controls include:
+
+- `10_governance/DUPLICATE_GUIDANCE_BASELINE.json`
+- `scripts/audit-duplicate-guidance.mjs`
+- `scripts/audit-skill-size.mjs`
+
+Changes to these controls require intentional review because they alter release-blocking governance behavior.
+
 ## Web Application Security System
 
 The active composite web security system consists of:
