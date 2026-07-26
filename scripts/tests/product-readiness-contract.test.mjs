@@ -56,7 +56,21 @@ test("product maturity docs exist", () => {
   }
 });
 
-test("release workflow and cross-platform workflow include product gates", () => {
-  assert.match(read(".github/workflows/release-check.yml"), /build:release-artifacts/);
-  assert.match(read(".github/workflows/cross-platform.yml"), /release-check/);
+test("release workflows expose every forensic product gate", () => {
+  const release = read(".github/workflows/release-check.yml");
+  const crossPlatform = read(".github/workflows/cross-platform.yml");
+  assert.match(release, /build:release-artifacts/);
+  for (const command of [
+    "npm run verify",
+    "npm run check:matrix",
+    "npm run version:audit",
+    "npm run audit:governance",
+    "npm run behavior-test",
+    "npm run test",
+    "npm run system-test",
+    "npm run check-install",
+    "npm run build:release-artifacts",
+  ]) {
+    assert.match(crossPlatform, new RegExp(command.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `missing cross-platform gate: ${command}`);
+  }
 });

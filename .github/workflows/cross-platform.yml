@@ -25,5 +25,29 @@ jobs:
         with:
           node-version: "24"
 
-      - name: Release check
-        run: npm run release-check
+      - name: Strict doctor verification
+        run: npm run verify
+
+      - name: Capability matrix freshness
+        run: npm run check:matrix
+
+      - name: Version consistency
+        run: npm run version:audit
+
+      - name: Governance drift gates
+        run: npm run audit:governance
+
+      - name: Behavioral fixtures
+        run: npm run behavior-test
+
+      - name: Node and Python tests
+        run: npm run test
+
+      - name: System tests
+        run: npm run system-test
+
+      - name: Install readiness
+        run: npm run check-install
+
+      - name: Release artifact generation
+        run: npm run build:release-artifacts

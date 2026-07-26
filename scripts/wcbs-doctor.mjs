@@ -27,7 +27,7 @@ const requiredFiles = [
   "GET_STARTED.md",
   "AGENTS.md","CLAUDE.md","GEMINI.md","REPLIT.md","Manus.md",
   "00_start_here/START_HERE.md","00_start_here/SOURCE_OF_TRUTH.md","00_start_here/LOAD_ORDER.md",
-  "10_governance/APIVR_EXECUTION_LIFECYCLE.md","10_governance/ELITE_BUILD_GOALS_SUMMARY.md","10_governance/RELEASE_GATES.md",
+  "10_governance/APIVR_EXECUTION_LIFECYCLE.md","10_governance/ELITE_BUILD_GOALS_SUMMARY.md","10_governance/RELEASE_GATES.md","10_governance/DUPLICATE_GUIDANCE_BASELINE.json",
   "50_audits/AUDIT_TIER_ROUTER.md","50_audits/CANONICAL_AUDIT_PROTOCOLS.md",
   "skills/super-build-kit/SKILL.md","skills/subagent-driven-development/SKILL.md",
   "skills/subagent-driven-development/ARTIFACT_CONTRACT.md",
@@ -43,7 +43,7 @@ const requiredFiles = [
   "runtime_adapters/schemas/adapter-manifest.schema.json","runtime_adapters/schemas/tool-mapping.schema.json",
   "60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md","60_templates/STABLE_RELEASE_REPORT_TEMPLATE.md",
   "docs/USING_THE_SUPER_BUILD_KIT.md","docs/COMMON_WORKFLOWS.md",
-  "scripts/generate-capability-matrix.mjs","scripts/run-python-tests.mjs","scripts/wcbs-system-test.mjs","scripts/check-install.mjs","scripts/install-adapter.mjs","scripts/adapter-smoke-test.mjs","scripts/lib/adapter-contract.mjs","scripts/lib/json-schema.mjs",
+  "scripts/generate-capability-matrix.mjs","scripts/run-python-tests.mjs","scripts/wcbs-system-test.mjs","scripts/check-install.mjs","scripts/install-adapter.mjs","scripts/adapter-smoke-test.mjs","scripts/lib/adapter-contract.mjs","scripts/lib/json-schema.mjs","scripts/audit-duplicate-guidance.mjs","scripts/audit-skill-size.mjs",
   "tests/system/routing-fixtures.json","tests/system/activation-scenarios.json",
   ...["controller-contract","adapter-contract","schema-enforcement","wcbs-doctor","artifact-bundle"].map(x=>`scripts/tests/${x}.test.mjs`),
   "scripts/tests/fixtures/run-bundle/findings.json","scripts/tests/fixtures/run-bundle/progress-ledger.jsonl",
@@ -73,8 +73,11 @@ function checkPackage() {
     "check-install": "node scripts/check-install.mjs",
     "behavior-test": "node scripts/run-behavior-fixtures.mjs",
     "version:audit": "node scripts/audit-version-drift.mjs",
+    "audit:duplicates": "node scripts/audit-duplicate-guidance.mjs",
+    "audit:skill-size": "node scripts/audit-skill-size.mjs",
+    "audit:governance": "npm run audit:duplicates && npm run audit:skill-size",
     test: "npm run test:node && npm run test:python",
-    check: "npm run doctor && npm run check:matrix && npm run version:audit && npm run behavior-test && npm run test",
+    check: "npm run doctor && npm run check:matrix && npm run version:audit && npm run audit:governance && npm run behavior-test && npm run test",
     "release-check": "npm run check && npm run system-test && npm run check-install && npm run build:release-artifacts"
   };
   for (const [name, command] of Object.entries(expectedScripts)) if (p.scripts?.[name] !== command) fail(`package.json script ${name} must be exactly: ${command}`);
