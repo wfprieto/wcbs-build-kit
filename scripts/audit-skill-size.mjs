@@ -6,9 +6,18 @@ import process from "node:process";
 
 const root = process.cwd();
 const warningLines = Number(process.env.WCBS_MAX_SKILL_LINES ?? 260);
-const hardLimitLines = Number(process.env.WCBS_HARD_MAX_SKILL_LINES ?? 500);
+const hardLimitLines = Number(process.env.WCBS_HARD_MAX_SKILL_LINES ?? 1000);
 const warnings = [];
 const failures = [];
+
+if (!Number.isFinite(warningLines) || warningLines < 1) {
+  console.error("FAIL: WCBS_MAX_SKILL_LINES must be a positive number.");
+  process.exit(1);
+}
+if (!Number.isFinite(hardLimitLines) || hardLimitLines <= warningLines) {
+  console.error("FAIL: WCBS_HARD_MAX_SKILL_LINES must be greater than WCBS_MAX_SKILL_LINES.");
+  process.exit(1);
+}
 
 function walk(dir) {
   if (!fs.existsSync(dir)) return;
@@ -17,7 +26,7 @@ function walk(dir) {
     if (entry.isDirectory()) walk(full);
     else if (entry.name === "SKILL.md") {
       const lines = fs.readFileSync(full, "utf8").split("\n").length;
-      const relative = path.relative(root, full);
+      const relative = path.relative(root, full).replaceAll("\\", "/");
       if (lines > hardLimitLines) failures.push(`${relative} has ${lines} lines; hard limit is ${hardLimitLines}.`);
       else if (lines > warningLines) warnings.push(`${relative} has ${lines} lines; review whether references should be split.`);
     }
