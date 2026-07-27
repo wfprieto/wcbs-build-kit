@@ -1,3 +1,9 @@
+// STRUCTURAL DRIFT CONTROL ONLY
+// This test verifies that the public-entry documentation remains internally
+// consistent. It is NOT evidence that an LLM successfully discovers,
+// installs, activates, or follows the bootstrap. Behavioral activation is
+// measured only by the Gate 0C evaluation suite.
+
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -30,6 +36,13 @@ test("GET_STARTED defines autonomous install and verification without overstatin
   assert.match(getStarted, /node scripts\/adapter-smoke-test\.mjs --target <runtime> --dest <project>/);
   assert.match(getStarted, /URL-paste discovery is `REQUESTED`, not `ENFORCED`/);
   assert.match(getStarted, /Do not claim activation/);
+});
+
+test("runtime selection fails closed instead of guessing", () => {
+  assert.match(getStarted, /Use an explicit runtime-provided identity signal/);
+  assert.match(getStarted, /runtime_adapters\/manifests\/<runtime>\.json/);
+  assert.match(getStarted, /ask exactly one bounded question/);
+  assert.match(getStarted, /Do not infer a runtime from model style, repository contents, or familiarity/);
 });
 
 test("public instructions route through the canonical Kernel and Controller", () => {
