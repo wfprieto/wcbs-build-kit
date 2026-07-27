@@ -26,9 +26,6 @@ jobs:
         with:
           node-version: "24"
 
-      - name: Verify structural baseline
-        run: npm run verify
-
       - name: Prove EOS migrator safety in isolation
         run: node --test scripts/tests/eos-migrator.test.mjs
 
@@ -66,7 +63,7 @@ jobs:
         shell: bash
         run: |
           set +e
-          npm run check 2>&1 | tee "$RUNNER_TEMP/eos-migration-artifact/verification.log"
+          (npm run verify && npm run check) 2>&1 | tee "$RUNNER_TEMP/eos-migration-artifact/verification.log"
           status=${PIPESTATUS[0]}
           echo "$status" > "$RUNNER_TEMP/eos-migration-artifact/verification-exit-code.txt"
           exit "$status"
