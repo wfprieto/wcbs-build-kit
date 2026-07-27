@@ -1,0 +1,71 @@
+name: EOS Migration Verification
+
+on:
+  push:
+    branches:
+      - eos/remediation-v5
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    if: ${{ !contains(github.event.head_commit.message, '[eos-migration-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+        with:
+          ref: eos/remediation-v5
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Prove dry-run and two-run identity in isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          sandbox="$RUNNER_TEMP/eos-migration-sandbox"
+          cp -a "$GITHUB_WORKSPACE" "$sandbox"
+          rm -rf "$sandbox/.git"
+          before=$(find "$sandbox" -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum)
+          node scripts/apply-eos-remediation.mjs --dest "$sandbox"
+          after_dry=$(find "$sandbox" -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum)
+          test "$before" = "$after_dry"
+          node scripts/apply-eos-remediation.mjs --apply --dest "$sandbox"
+          test -f "$sandbox/GET_STARTED.md"
+          test -f "$sandbox/.wcbs/migrations/eos-v5.done"
+          test "$(grep -c '^# 3.0 Meta Goal 0' "$sandbox/10_governance/source_of_truth/Elite_Build_Goals_v3.md")" = "1"
+          first=$(find "$sandbox" -type f ! -path '*/.wcbs/migrations/eos-v5.done' -print0 | sort -z | xargs -0 sha256sum | sha256sum)
+          node scripts/apply-eos-remediation.mjs --apply --dest "$sandbox"
+          second=$(find "$sandbox" -type f ! -path '*/.wcbs/migrations/eos-v5.done' -print0 | sort -z | xargs -0 sha256sum | sha256sum)
+          test "$first" = "$second"
+
+      - name: Apply migration to branch checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/apply-eos-remediation.mjs --apply --dest "$GITHUB_WORKSPACE"
+          npm run generate:load-order
+          npm run generate:controller
+          npm run generate:matrix
+
+      - name: Verify migrated checkout
+        run: npm run check
+
+      - name: Commit migrated artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "wcbs-eos-bot"
+          git config user.email "wfprieto@gmail.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No migration changes to commit."
+            exit 0
+          fi
+          git commit -m "Apply EOS remediation migration [eos-migration-applied]"
+          git push origin HEAD:eos/remediation-v5
