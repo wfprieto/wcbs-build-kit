@@ -10,17 +10,17 @@ This kit merges the permanent APIVR execution loop, the 16 Elite Build Goals, th
 
 ## Start Here
 
-For the shortest first-use path, read `GET_STARTED.md`.
-For a 10-minute setup path, read `GET_STARTED.md`.
+**Coding agent given only this GitHub URL:** open `GET_STARTED.md` and follow the section **Coding agent arriving from the GitHub URL**. It provides the single supported path from repository discovery through runtime selection, project-local installation, activation verification, and continued WCBS-governed work.
 
-Every agent must begin with:
+**Human reviewing or maintaining this repository:** use `GET_STARTED.md` for the shortest verification and setup path.
 
-1. `00_start_here/START_HERE.md`
-2. `00_start_here/SOURCE_OF_TRUTH.md`
-3. `00_start_here/LOAD_ORDER.md`
-4. `50_audits/AUDIT_TIER_ROUTER.md`
+Every activated agent must then follow the repository-controlled startup sequence:
 
-Then load only the task-specific governance, agent, audit, and template files named by the load order.
+1. `BOOTSTRAP.md`
+2. `00_start_here/bootstrap-controller.json`
+3. the Controller-declared load order and runtime adapter
+
+Do not substitute this README for the Kernel or Controller, and do not claim activation until the installed adapter passes its doctor and smoke test.
 
 ## Core Operational Skills
 
@@ -133,8 +133,7 @@ Uninstall removes only files tracked in `.wcbs/adapter-install-manifest.json`.
 
 - `INSTALL.md` - setup and activation checks.
 - `CONTRIBUTING.md` - contribution and PR evidence expectations.
-- `GET_STARTED.md` - shortest software-system entry point.
-- `GET_STARTED.md` - shortest safe startup path.
+- `GET_STARTED.md` - shortest safe startup path for humans and coding agents.
 - `MANIFEST.md` - active files versus provenance and local-only material.
 - `RELEASE_PROCESS.md` - release gate workflow.
 - `VERSIONING.md` - semantic version rules.
