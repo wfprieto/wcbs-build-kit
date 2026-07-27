@@ -7,6 +7,7 @@ import {
   validateManifestMappingConsistency, validateActivationMarkerUniqueness
 } from "./lib/adapter-contract.mjs";
 import { validateAgainstSchema } from "./lib/json-schema.mjs";
+import { validateBootstrapArtifactSet } from "./lib/bootstrap-artifacts.mjs";
 
 const root = process.cwd();
 const strict = process.argv.includes("--strict");
@@ -36,13 +37,14 @@ const requiredFiles = [
   ...["PRE_FLIGHT_CONFLICT_REPORT", "TASK_BRIEF", "IMPLEMENTER_REPORT", "TASK_REVIEW_REPORT", "FIX_REPORT", "FINAL_BRANCH_REVIEW"].map(x => `60_templates/${x}_TEMPLATE.md`),
   "60_templates/PROGRESS_LEDGER_TEMPLATE.jsonl",
   "runtime_adapters/README.md", "runtime_adapters/PORTABILITY_CONTRACT.md", "runtime_adapters/PORTING_GUIDE.md", "runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md", "runtime_adapters/CAPABILITY_MATRIX.md", "runtime_adapters/VERIFIED_SUPPORT_LEVELS.md", "runtime_adapters/INSTALLATION_MATRIX.md", "runtime_adapters/ACTIVATION_TESTS.md",
-  ...["adapter-manifest", "tool-mapping", "bootstrap-controller", "handoff-envelope", "capability-routing", "bootstrap-certificate", "project-profile", "engineering-team"].map(x => `runtime_adapters/schemas/${x}.schema.json`),
+  ...["adapter-manifest", "tool-mapping", "bootstrap-controller", "handoff-envelope", "capability-routing", "bootstrap-certificate", "capability-resolution", "elite-goals-ledger", "evidence-ledger", "project-profile", "engineering-team", "risk-register", "release-state"].map(x => `runtime_adapters/schemas/${x}.schema.json`),
   "60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md", "60_templates/STABLE_RELEASE_REPORT_TEMPLATE.md",
   "docs/USING_THE_SUPER_BUILD_KIT.md", "docs/COMMON_WORKFLOWS.md",
-  "scripts/generate-capability-matrix.mjs", "scripts/generate-bootstrap-controller.mjs", "scripts/generate-load-order.mjs", "scripts/run-python-tests.mjs", "scripts/wcbs-system-test.mjs", "scripts/check-install.mjs", "scripts/install-adapter.mjs", "scripts/adapter-smoke-test.mjs", "scripts/lib/adapter-contract.mjs", "scripts/lib/json-schema.mjs", "scripts/lib/certificate-canonicalization.mjs", "scripts/audit-duplicate-guidance.mjs", "scripts/audit-skill-size.mjs", "scripts/audit-skill-contract.mjs", "scripts/audit-layer-budgets.mjs",
+  "scripts/generate-capability-matrix.mjs", "scripts/generate-bootstrap-controller.mjs", "scripts/generate-load-order.mjs", "scripts/run-python-tests.mjs", "scripts/wcbs-system-test.mjs", "scripts/check-install.mjs", "scripts/install-adapter.mjs", "scripts/adapter-smoke-test.mjs", "scripts/lib/adapter-contract.mjs", "scripts/lib/json-schema.mjs", "scripts/lib/bootstrap-artifacts.mjs", "scripts/lib/certificate-canonicalization.mjs", "scripts/audit-duplicate-guidance.mjs", "scripts/audit-skill-size.mjs", "scripts/audit-skill-contract.mjs", "scripts/audit-layer-budgets.mjs",
   "tests/system/routing-fixtures.json", "tests/system/activation-scenarios.json",
-  ...["controller-contract", "adapter-contract", "schema-enforcement", "wcbs-doctor", "artifact-bundle", "kernel-contract", "bootstrap-controller"].map(x => `scripts/tests/${x}.test.mjs`),
+  ...["controller-contract", "adapter-contract", "schema-enforcement", "schema-keyword-support", "bootstrap-fixtures", "long-horizon-memory-contract", "wcbs-doctor", "artifact-bundle", "kernel-contract", "bootstrap-controller"].map(x => `scripts/tests/${x}.test.mjs`),
   "scripts/tests/fixtures/run-bundle/findings.json", "scripts/tests/fixtures/run-bundle/progress-ledger.jsonl", "scripts/tests/fixtures/run-bundle/tasks/T-01/task-artifact.json", "scripts/tests/fixtures/run-bundle/tasks/T-02/task-artifact.json",
+  ...["bootstrap-certificate.json", "capability-resolution.json", "elite-goals-ledger.json", "evidence-ledger.jsonl", "engineering-team.json", "project-profile.json", "risk-register.json", "release-state.json"].map(x => `scripts/tests/fixtures/bootstrap/${x}`),
   ".gitattributes", ".gitignore", ".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json", ".cursor/rules/super-build-kit.mdc", ".github/copilot-instructions.md", "hooks/session-start", "hooks/run-hook.cmd", "hooks/hooks.json", "hooks/hooks-cursor.json",
   ".github/workflows/verify.yml", ".github/workflows/release-check.yml", ".github/RELEASE_CANDIDATE_CHECKLIST.md"
 ];
@@ -161,6 +163,16 @@ function checkBundles() {
     for (const taskId of ledgerTaskIds) if (!artifactTaskIds.has(taskId)) fail(`${bundle} progress ledger references task ${taskId} without a matching task-artifact.json.`);
   }
 }
+function checkBootstrapArtifacts() {
+  const sets = [
+    { dir: resolve("scripts/tests/fixtures/bootstrap"), requireComplete: true },
+    { dir: resolve(".wcbs"), requireComplete: false }
+  ];
+  for (const set of sets) {
+    const result = validateBootstrapArtifactSet(root, set.dir, { requireComplete: set.requireComplete });
+    for (const error of result.errors) fail(display(error));
+  }
+}
 function checkWorkflowFiles() {
   const dir = resolve(".github/workflows"); if (!fs.existsSync(dir)) return;
   for (const entry of fs.readdirSync(dir)) if (/\.ya?ml$/i.test(entry)) { const file = `.github/workflows/${entry}`, content = read(file); if (!content.includes("permissions:")) fail(`${file} must define permissions.`); }
@@ -190,6 +202,7 @@ checkAdapters();
 checkController();
 checkVerifiedSupportLevels();
 checkBundles();
+checkBootstrapArtifacts();
 checkMarkdown();
 checkSecretPatterns();
 if (strict) for (const warning of warnings) fail(`Strict mode rejects warning: ${warning}`);
