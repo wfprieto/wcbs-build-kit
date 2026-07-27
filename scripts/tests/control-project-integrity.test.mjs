@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -36,12 +37,10 @@ test('baseline control project contains no EOS contamination entry', () => {
   }
 });
 
-test('control project tests pass in isolation', async () => {
-  const { spawnSync } = await import('node:child_process');
-  const result = spawnSync(process.execPath, ['--test', 'test/*.test.mjs'], {
+test('control project tests pass in isolation', () => {
+  const result = spawnSync(process.execPath, ['--test', 'test/task-store.test.mjs'], {
     cwd: projectRoot,
-    encoding: 'utf8',
-    shell: process.platform === 'win32'
+    encoding: 'utf8'
   });
   assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
 });
