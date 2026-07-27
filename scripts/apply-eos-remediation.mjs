@@ -94,7 +94,10 @@ function backfillSkillContracts() {
     if(!fields.has("evidence_requirements"))fields.set("evidence_requirements","Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.");
     const order=["name","description","activation","required_inputs","required_outputs","authority_dependencies","evidence_requirements"];
     const header=order.map(k=>`${k}: ${fields.get(k)}`).join("\n");
-    const rest=body.slice(end+5).replace(/^\n+/,"");
+    let rest=body.slice(end+5).replace(/^\n+/,"");
+    if(!/<HARD-GATE>|Excuse.*Reality|Decision Flow|## Workflow|## Process/is.test(rest)) {
+      rest = `${rest.trimEnd()}\n\n## Process\n\n1. Load only the authority and task context required by this skill.\n2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.\n3. Verify the result and report a canonical verdict with remaining risk and next action.\n`;
+    }
     write(relative,`---\n${header}\n---\n\n${rest}`);
   }
 }
