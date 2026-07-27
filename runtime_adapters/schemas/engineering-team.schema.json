@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["roles", "required_skills", "optional_skills", "audits", "templates", "gates", "not_applicable"],
+  "properties": {
+    "roles": {"type": "array", "items": {"type": "string"}},
+    "required_skills": {"type": "array", "items": {"type": "string"}},
+    "optional_skills": {"type": "array", "items": {"type": "string"}},
+    "audits": {"type": "array", "items": {"type": "string"}},
+    "templates": {"type": "array", "items": {"type": "string"}},
+    "gates": {"type": "array", "items": {"type": "string"}},
+    "not_applicable": {"type": "array", "items": {"type": "object", "required": ["capability", "justification"], "properties": {"capability": {"type": "string"}, "justification": {"type": "string"}}, "additionalProperties": false}}
+  },
+  "additionalProperties": false
+}
