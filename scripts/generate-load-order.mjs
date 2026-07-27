@@ -39,19 +39,18 @@ function merge(body) {
 
 const expected = merge(current);
 if (process.argv.includes("--check")) {
-  const routed = new Set();
-  for (const capability of model.capabilities) for (const field of ["required_skills", "optional_skills"]) for (const skill of capability[field] ?? []) routed.add(skill);
-  for (const entry of model.unrouted ?? []) routed.add(entry.skill);
-  const missing = [...routed].filter(skill => !current.includes(`skills/${skill}/SKILL.md`));
+  const capabilitySkills = new Set();
+  for (const capability of model.capabilities) for (const field of ["required_skills", "optional_skills"]) for (const skill of capability[field] ?? []) capabilitySkills.add(skill);
+  const missing = [...capabilitySkills].filter(skill => !current.includes(`skills/${skill}/SKILL.md`));
   if (missing.length) {
-    console.error(`FAIL: LOAD_ORDER.md does not reference routed skills: ${missing.join(", ")}. Run npm run generate:load-order after routing is complete.`);
+    console.error(`FAIL: LOAD_ORDER.md does not reference capability-routed skills: ${missing.join(", ")}. Run npm run generate:load-order after routing is complete.`);
     process.exit(1);
   }
   if (current.includes(begin) && current !== expected) {
     console.error("FAIL: generated capability-routing region is stale. Run npm run generate:load-order.");
     process.exit(1);
   }
-  console.log(current.includes(begin) ? "PASS: generated capability-routing region is current." : "PASS: legacy load order preserves every routed skill; generation will append a bounded region without deleting existing guidance.");
+  console.log(current.includes(begin) ? "PASS: generated capability-routing region is current." : "PASS: legacy load order preserves every capability-routed skill; generation will append a bounded region without deleting existing guidance.");
 } else {
   fs.writeFileSync(outputPath, expected);
   console.log("Updated the bounded capability-routing region in 00_start_here/LOAD_ORDER.md without replacing existing guidance.");
