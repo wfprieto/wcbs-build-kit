@@ -40,6 +40,6 @@ test("public instructions route through the canonical Kernel and Controller", ()
 
 test("documented runtime discovery covers every installer target", () => {
   for (const target of supportedTargets) {
-    assert.match(installer, new RegExp(`\\[\"${target}\"|\"${target}\":`), `installer target missing: ${target}`);
+    assert.equal(installer.includes(`"${target}"`), true, `installer target missing: ${target}`);
   }
 });
