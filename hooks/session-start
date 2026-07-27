@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+unset BASH_ENV ENV CDPATH GLOBIGNORE
+IFS=$' \t\n'
+export LC_ALL=C
+set -uo pipefail
+
+fallback='{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"{\"kernel_status\":\"unable_to_transfer\",\"reason\":\"kernel_artifact_unreadable\"}"}}'
+trap 'printf "%s\n" "$fallback"; exit 0' ERR EXIT
+
+PLUGIN_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+P="$PLUGIN_ROOT/BOOTSTRAP.md"
+[ -f "$P" ] && [ ! -L "$P" ]
+resolved="$(cd "$(dirname "$P")" && pwd -P)/$(basename "$P")"
+case "$resolved" in "$PLUGIN_ROOT"/*) ;; *) exit 0 ;; esac
+content=$(<"$P") || content=""
+[ -n "$content" ]
+content=${content//\\/\\\\}
+content=${content//\"/\\\"}
+content=${content//$'\n'/\\n}
+content=${content//$'\r'/\\r}
+trap - ERR EXIT
+printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "$content"
+exit 0
