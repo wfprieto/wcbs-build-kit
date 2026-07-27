@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["kernel_version", "controller_version", "eos_version", "commit", "delivery_environment", "activation_tier", "activation_state", "initialization_verdict", "authorities_loaded", "capability_resolution", "skills_loaded", "audits_selected", "templates_selected", "gates_required", "elite_goal_status", "degradations", "unresolved_blockers", "rehydration_set", "canonicalization_version", "inputs", "content_hash", "issued_at"],
+  "properties": {
+    "kernel_version": {"type": "string"},
+    "controller_version": {"type": "string"},
+    "eos_version": {"type": "string"},
+    "commit": {"type": "string"},
+    "delivery_environment": {"type": "string"},
+    "activation_tier": {"enum": ["T1", "T2", "T3", "T4"]},
+    "activation_state": {"enum": ["ENFORCED", "INSTRUCTED", "REQUESTED", "MANUAL", "ABSENT"]},
+    "initialization_verdict": {"enum": ["PASS", "CONDITIONAL PASS", "PARTIAL", "FAIL", "BLOCKED"]},
+    "authorities_loaded": {"type": "array", "items": {"type": "object"}},
+    "capability_resolution": {"type": "array", "items": {"type": "object"}},
+    "skills_loaded": {"type": "array", "items": {"type": "string"}},
+    "audits_selected": {"type": "array", "items": {"type": "string"}},
+    "templates_selected": {"type": "array", "items": {"type": "string"}},
+    "gates_required": {"type": "array", "items": {"type": "string"}},
+    "elite_goal_status": {"type": "array", "items": {"type": "object"}},
+    "degradations": {"type": "array", "items": {"type": "object"}},
+    "unresolved_blockers": {"type": "array", "items": {"type": "string"}},
+    "rehydration_set": {"type": "array", "items": {"type": "string"}},
+    "canonicalization_version": {"const": "1"},
+    "inputs": {"type": "array", "items": {"type": "object"}},
+    "content_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "issued_at": {"type": "string"}
+  },
+  "additionalProperties": false
+}
