@@ -7,6 +7,10 @@ import path from "node:path";
 import process from "node:process";
 
 const root = process.cwd();
+const logPath = path.join(root, ".wcbs", "install-readiness.log");
+const logLines = [];
+const emit = (line = "") => { const text = String(line); logLines.push(text); console.log(text); };
+const persistLog = () => { fs.mkdirSync(path.dirname(logPath), { recursive: true }); fs.writeFileSync(logPath, `${logLines.join("\n")}\n`); };
 const required = [
   "INSTALL.md",
   "GET_STARTED.md",
@@ -23,39 +27,42 @@ const required = [
 
 const missing = required.filter((file) => !fs.existsSync(path.join(root, ...file.split("/"))));
 if (missing.length) {
-  console.log("Install check failed. Missing files:");
-  for (const file of missing) console.log(`- ${file}`);
+  emit("Install check failed. Missing files:");
+  for (const file of missing) emit(`- ${file}`);
+  persistLog();
   process.exit(1);
 }
 
-const doctor = spawnSync(process.execPath, ["scripts/wcbs-doctor.mjs", "--strict"], {
-  cwd: root,
-  stdio: "inherit"
-});
-if (doctor.status !== 0) process.exit(doctor.status ?? 1);
+const run = (label, args) => {
+  emit(`RUN: ${label}: ${process.execPath} ${args.join(" ")}`);
+  const result = spawnSync(process.execPath, args, { cwd: root, encoding: "utf8" });
+  if (result.stdout) for (const line of result.stdout.replace(/\r\n?/g, "\n").trimEnd().split("\n")) emit(line);
+  if (result.stderr) for (const line of result.stderr.replace(/\r\n?/g, "\n").trimEnd().split("\n")) emit(line);
+  if (result.error) emit(`ERROR: ${result.error.message}`);
+  if (result.status !== 0) {
+    emit(`FAIL: ${label} exited with status ${result.status ?? "unknown"}.`);
+    persistLog();
+    process.exit(result.status ?? 1);
+  }
+};
 
-const system = spawnSync(process.execPath, ["scripts/wcbs-system-test.mjs"], {
-  cwd: root,
-  stdio: "inherit"
-});
-if (system.status !== 0) process.exit(system.status ?? 1);
+run("strict doctor", ["scripts/wcbs-doctor.mjs", "--strict"]);
+run("system test", ["scripts/wcbs-system-test.mjs"]);
 
 for (const target of ["codex", "cursor", "claude", "github-copilot", "gemini", "replit", "manus", "generic-agent"]) {
   const destination = fs.mkdtempSync(path.join(os.tmpdir(), `wcbs-${target}-install-`));
   try {
-    for (const args of [
-      ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--install"],
-      ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--doctor"],
-      ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--verify-owned-files"],
-      ["scripts/adapter-smoke-test.mjs", "--target", target, "--dest", destination],
-      ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--uninstall"]
-    ]) {
-      const result = spawnSync(process.execPath, args, { cwd: root, stdio: "inherit" });
-      if (result.status !== 0) process.exit(result.status ?? 1);
-    }
+    for (const [action, args] of [
+      ["install", ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--install"]],
+      ["doctor", ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--doctor"]],
+      ["verify-owned-files", ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--verify-owned-files"]],
+      ["smoke-test", ["scripts/adapter-smoke-test.mjs", "--target", target, "--dest", destination]],
+      ["uninstall", ["scripts/install-adapter.mjs", "--target", target, "--dest", destination, "--uninstall"]]
+    ]) run(`${target} ${action}`, args);
   } finally {
     fs.rmSync(destination, { recursive: true, force: true });
   }
 }
 
-console.log("PASS: install check completed.");
+emit("PASS: install check completed.");
+persistLog();
