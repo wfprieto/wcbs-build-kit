@@ -1,6 +1,11 @@
 ---
 name: diagnosing-bugs-and-feedback-loops
-description: Use for bug diagnosis, incidents, regressions, flaky behavior, unknown failures, root-cause analysis, reproduction, hypothesis testing, debug loops, and APIVR debug paths where a tight red-capable feedback loop must exist before fixing.
+description: Use when use for bug diagnosis, incidents, regressions, flaky behavior, unknown failures, root-cause analysis, reproduction, hypothesis testing, debug loops, and APIVR debug paths where a tight red-capable feedback loop must exist before fixing.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # Diagnosing Bugs And Feedback Loops
@@ -45,3 +50,8 @@ Scenario: Exports sometimes contain duplicate rows.
 - Fix: make the second window start exclusive of last exported id.
 - Evidence: targeted export test and adjacent backfill test pass.
 
+## Process
+
+1. Load only the authority and task context required by this skill.
+2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
+3. Verify the result and report a canonical verdict with remaining risk and next action.

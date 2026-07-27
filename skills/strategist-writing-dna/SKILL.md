@@ -1,6 +1,11 @@
 ---
 name: strategist-writing-dna
 description: Use when writing or reviewing strategic, executive, client-facing, internal leadership, technical, prompt, or high-stakes communication that must sound decisive, grounded, tactical, and hard to misread. Enforces verdict-first structure, scope control, proof requirements, anti-drift writing, and The Strategist voice.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # Strategist Writing DNA

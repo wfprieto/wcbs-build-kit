@@ -1,6 +1,11 @@
 ---
 name: code-review-and-review-army
-description: Use for code review, PR review, implementation audit, specialist review passes, review-army dispatch, security/performance/testing/API/data/migration/maintainability review, scope-drift detection, and APIVR Phase 4 Audit Implementation before verification or release.
+description: Use when use for code review, PR review, implementation audit, specialist review passes, review-army dispatch, security/performance/testing/API/data/migration/maintainability review, scope-drift detection, and APIVR Phase 4 Audit Implementation before verification or release.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # Code Review And Review Army
@@ -69,3 +74,9 @@ Scenario: A webhook implementation passes tests.
 - External Integration Gatekeeper blocks release if the provider dashboard has not delivered an event into the deployed URL or if the route redirects to login.
 - Learning Reviewer routes the final verified replay lesson to canonical external API guidance instead of creating a duplicate note.
 - APIVR verdict: `CONDITIONAL PASS` only after those tests pass or the release owner explicitly accepts non-critical risk. For payment webhooks, this is normally Blocking.
+
+## Process
+
+1. Load only the authority and task context required by this skill.
+2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
+3. Verify the result and report a canonical verdict with remaining risk and next action.

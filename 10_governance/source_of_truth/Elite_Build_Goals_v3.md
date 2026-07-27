@@ -1,7 +1,7 @@
 # Elite Software Build Goals
 ## LLM-Neutral Execution Standard for Production-Ready Software
 
-**Version:** 3.0 Tightened  
+**Version:** 3.1 Meta-Initialized  
 **Operating law:** **Audit wide. Fix narrow. Prove everything.**
 
 ---
@@ -54,6 +54,25 @@ Ship software that is:
 - proven by evidence.
 
 The standard is satisfied only when the applicable outcome is achieved or honestly classified as pending, partial, blocked, or failed.
+
+---
+
+# 3.0 Meta Goal 0 — Deterministic Autonomous Initialization
+
+When a user provides the WCBS Engineering Operating System to a supported LLM before beginning a project, the LLM must discover, load, validate, and activate the system before producing architecture, implementation, deployment, or launch work.
+
+The system must:
+
+1. not depend on the user knowing which internal file to name;
+2. not depend on the model voluntarily exploring the repository correctly when a native delivery mechanism exists;
+3. not silently continue when a required file cannot be loaded;
+4. report delivery environment, substantiated activation tier, Kernel and Controller version, capability resolution, degraded modes, and initialized controls;
+5. confirm that the 16 Elite Build Goals are active and name any goal with no execution or verification path;
+6. block production implementation until required pre-build gates pass;
+7. state its activation tier honestly and never report a best-effort tier as enforced; and
+8. distinguish activation from initialization and never report one as the other.
+
+The 16 goals define product quality. Meta Goal 0 ensures the system reaches the model and governs its behavior. A build satisfying all 16 goals while Meta Goal 0 was never satisfied is unverified, because the controls were never demonstrably active.
 
 ---
 

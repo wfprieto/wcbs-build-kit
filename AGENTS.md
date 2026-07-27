@@ -1,3 +1,5 @@
+WCBS EOS Kernel route: read and execute `BOOTSTRAP.md` before any project work. Do not restate Kernel or governance logic here. If the Kernel or Controller cannot be loaded, stop and report the transport failure.
+
 # Super Build Kit Agent Instructions
 
 These instructions apply to any agent working in this repository.

@@ -1,6 +1,11 @@
 ---
 name: web-application-security
 description: Use when auditing, planning, building, testing, or releasing browser-delivered applications, authenticated web systems, multi-tenant SaaS, upload-enabled applications, web APIs, or web applications involving payments, private data, AI, MCP/tools, OAuth, webhooks, or production security controls.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # Web Application Security

@@ -38,7 +38,7 @@ const commonFiles = [
   "README.md",
   "GET_STARTED.md",
   "INSTALL.md",
-  "QUICKSTART.md",
+  "GET_STARTED.md",
   "MANIFEST.md",
   "SUPPORT_MATRIX.md",
   "RELEASE_PROCESS.md",

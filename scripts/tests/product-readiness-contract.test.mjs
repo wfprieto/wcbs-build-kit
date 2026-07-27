@@ -41,7 +41,7 @@ test("behavior fixtures and version drift checks pass", () => {
 test("product maturity docs exist", () => {
   for (const rel of [
     "CONTRIBUTING.md",
-    "docs/FIRST_10_MINUTES.md",
+    "GET_STARTED.md",
     "docs/WHICH_SKILL_DO_I_USE.md",
     "docs/COMMON_TASKS.md",
     "docs/ADOPTION_EVIDENCE.md",

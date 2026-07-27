@@ -1,6 +1,11 @@
 ---
 name: devex-and-documentation-review
 description: Use when changes affect developer experience, setup, commands, documentation, README files, examples, onboarding, API docs, release notes, handoffs, or maintainability of instructions. Reviews docs for accuracy, discoverability, task fit, redaction, and APIVR evidence alignment.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # DevEx And Documentation Review
@@ -33,3 +38,8 @@ Scenario: A new webhook integration changes env vars and retry behavior.
 - Claims about provider behavior are `Likely` until sandbox replay is run.
 - Completion report links docs changed and evidence state.
 
+## Process
+
+1. Load only the authority and task context required by this skill.
+2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
+3. Verify the result and report a canonical verdict with remaining risk and next action.

@@ -1,6 +1,11 @@
 ---
 name: subagent-driven-development
 description: Use when implementing, reviewing, verifying, or auditing work with subagents or delegated agents. Owns the deterministic controller protocol - pre-flight conflict scan, durable task briefs, exact base..head review packages, independent task review, mandatory fix and re-review of material findings, bounded repair budgets, a durable progress ledger, and a final independent whole-branch review - and routes each role to its contract, schema, and template.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # Subagent Driven Development

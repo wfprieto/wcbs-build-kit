@@ -1,6 +1,11 @@
 ---
 name: cybersecurity-risk-routing
 description: Use when work includes cybersecurity review, app security, web application security, AI security, MCP/tool security, vulnerability triage, incident response, supply chain security, cloud/IAM/container security, phishing/red-team/scanning requests, or any security-sensitive audit, implementation, verification, or release decision. Routes light security reviews through forensic security audits and enforces authorization gates for dual-use work.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # Cybersecurity Risk Routing

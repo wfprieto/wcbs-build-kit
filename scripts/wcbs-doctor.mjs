@@ -23,7 +23,7 @@ const ignoredDirectoryNames = new Set([".git", ".agents", ".wcbs", "node_modules
 const runtimes = ["codex", "cursor", "github-copilot", "claude", "gemini", "replit", "manus", "generic-agent"];
 
 const requiredFiles = [
-  "README.md", "INSTALL.md", "QUICKSTART.md", "MANIFEST.md", "DISTRIBUTION_POLICY.md", "SUPPORT_MATRIX.md", "CHANGELOG.md", "RELEASE_PROCESS.md", "VERSIONING.md", "SECURITY.md", "GET_STARTED.md",
+  "README.md", "INSTALL.md", "GET_STARTED.md", "MANIFEST.md", "DISTRIBUTION_POLICY.md", "SUPPORT_MATRIX.md", "CHANGELOG.md", "RELEASE_PROCESS.md", "VERSIONING.md", "SECURITY.md", "GET_STARTED.md",
   "BOOTSTRAP.md", "AGENTS.md", "CLAUDE.md", "GEMINI.md", "REPLIT.md", "Manus.md",
   "00_start_here/START_HERE.md", "00_start_here/SOURCE_OF_TRUTH.md", "00_start_here/LOAD_ORDER.md", "00_start_here/KERNEL_CONTRACT.md", "00_start_here/bootstrap-controller.json", "00_start_here/BOOTSTRAP_CONTROLLER.md", "00_start_here/capability-routing.json", "00_start_here/CERTIFICATE_CANONICALIZATION.md",
   "10_governance/APIVR_EXECUTION_LIFECYCLE.md", "10_governance/ELITE_BUILD_GOALS_SUMMARY.md", "10_governance/RELEASE_GATES.md", "10_governance/DUPLICATE_GUIDANCE_BASELINE.json",

@@ -66,7 +66,7 @@ for (const [target, files] of Object.entries(adapterTargets)) {
   }
 }
 
-for (const file of ["INSTALL.md", "QUICKSTART.md", "RELEASE_PROCESS.md", "VERSIONING.md", "SECURITY.md"]) {
+for (const file of ["INSTALL.md", "GET_STARTED.md", "RELEASE_PROCESS.md", "VERSIONING.md", "SECURITY.md"]) {
   if (!exists(file)) fail(`software-ready doc missing ${file}`);
 }
 

@@ -9,7 +9,7 @@ import process from "node:process";
 const root = process.cwd();
 const required = [
   "INSTALL.md",
-  "QUICKSTART.md",
+  "GET_STARTED.md",
   "MANIFEST.md",
   "runtime_adapters/INSTALLATION_MATRIX.md",
   "runtime_adapters/CAPABILITY_MATRIX.md",

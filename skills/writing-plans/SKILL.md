@@ -1,6 +1,11 @@
 ---
 name: writing-plans
 description: Use when creating implementation plans, audit-remediation plans, agent handoff plans, issue plans, feature plans, refactor plans, or any APIVR Phase 2 plan that must be executable by another agent without placeholders. Requires exact file paths, test steps, evidence states, rollback criteria, and APIVR/Elite Build Goals alignment.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # Writing Plans

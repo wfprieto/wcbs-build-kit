@@ -1,6 +1,11 @@
 ---
 name: codebase-design-and-deep-modules
-description: Use for architecture, module design, refactors, interface boundaries, adapters, dependency direction, deep module design, deletion tests, locality, leverage, encapsulation, and codebase structure decisions before or during APIVR planning and review.
+description: Use when use for architecture, module design, refactors, interface boundaries, adapters, dependency direction, deep module design, deletion tests, locality, leverage, encapsulation, and codebase structure decisions before or during APIVR planning and review.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # Codebase Design And Deep Modules
