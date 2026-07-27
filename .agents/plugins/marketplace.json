@@ -1,0 +1,11 @@
+{
+  "name": "wcbs-build-kit",
+  "version": "1.2.0",
+  "plugins": [
+    {
+      "name": "super-build-kit",
+      "source": "../../../",
+      "description": "WCBS Engineering Operating System delivery package."
+    }
+  ]
+}
