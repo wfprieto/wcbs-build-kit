@@ -7,27 +7,12 @@ const root = process.cwd();
 const sourcePath = path.join(root, "00_start_here/capability-routing.json");
 const outputPath = path.join(root, "00_start_here/LOAD_ORDER.md");
 const model = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
+const begin = "<!-- BEGIN GENERATED CAPABILITY ROUTING -->";
+const end = "<!-- END GENERATED CAPABILITY ROUTING -->";
 
-const lines = [
-  "# Load Order",
-  "",
-  "> GENERATED FILE. Do not edit by hand. Source: `00_start_here/capability-routing.json`.",
-  "",
-  "Load the EOS Kernel first, then the Controller, then select only the capabilities required by the project.",
-  "",
-  "## Universal Control Flow",
-  "",
-  "1. `BOOTSTRAP.md`",
-  "2. `00_start_here/bootstrap-controller.json`",
-  "3. `00_start_here/SOURCE_OF_TRUTH.md`",
-  "4. `10_governance/APIVR_EXECUTION_LIFECYCLE.md`",
-  "5. `10_governance/source_of_truth/Elite_Build_Goals_v3.md`",
-  "6. Capability-specific skills, audits, templates, and gates below",
-  "",
-];
-
+const lines = [begin, "", "## EOS Capability Routing", "", "> GENERATED REGION. Source: `00_start_here/capability-routing.json`. Do not edit between the markers.", ""];
 for (const capability of model.capabilities) {
-  lines.push(`## ${capability.id}`, "");
+  lines.push(`### ${capability.id}`, "");
   if (capability.subcapabilities.length) lines.push(`Subcapabilities: ${capability.subcapabilities.map(x => `\`${x}\``).join(", ")}.`, "");
   if (capability.required_skills.length) lines.push(`Required skills: ${capability.required_skills.map(x => `\`skills/${x}/SKILL.md\``).join(", ")}.`);
   if (capability.optional_skills.length) lines.push(`Optional skills: ${capability.optional_skills.map(x => `\`skills/${x}/SKILL.md\``).join(", ")}.`);
@@ -36,17 +21,38 @@ for (const capability of model.capabilities) {
   if (capability.required_release_gates.length) lines.push(`Gates: ${capability.required_release_gates.map(x => `\`${x}\``).join(", ")}.`);
   lines.push("");
 }
+if (model.unrouted?.length) {
+  lines.push("### Universal Or Meta Skills", "");
+  for (const entry of model.unrouted) lines.push(`- \`skills/${entry.skill}/SKILL.md\` — ${entry.justification}`);
+  lines.push("");
+}
+lines.push(end);
+const generated = lines.join("\n");
+const current = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, "utf8").replace(/\r\n?/g, "\n") : "# Load Order\n";
 
-lines.push("## Portability", "", "Runtime delivery must follow `runtime_adapters/PORTABILITY_CONTRACT.md` and `runtime_adapters/PORTING_GUIDE.md`.", "", "Complex work may use `skills/subagent-driven-development/SKILL.md` after preflight gates pass.", "");
-const rendered = `${lines.join("\n").trimEnd()}\n`;
+function merge(body) {
+  const start = body.indexOf(begin);
+  const finish = body.indexOf(end);
+  if (start >= 0 && finish >= start) return `${body.slice(0, start).trimEnd()}\n\n${generated}\n${body.slice(finish + end.length).replace(/^\n+/, "")}`;
+  return `${body.trimEnd()}\n\n${generated}\n`;
+}
+
+const expected = merge(current);
 if (process.argv.includes("--check")) {
-  const current = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, "utf8").replace(/\r\n?/g, "\n") : "";
-  if (current !== rendered) {
-    console.error("FAIL: 00_start_here/LOAD_ORDER.md is stale. Run npm run generate:load-order.");
+  const routed = new Set();
+  for (const capability of model.capabilities) for (const field of ["required_skills", "optional_skills"]) for (const skill of capability[field] ?? []) routed.add(skill);
+  for (const entry of model.unrouted ?? []) routed.add(entry.skill);
+  const missing = [...routed].filter(skill => !current.includes(`skills/${skill}/SKILL.md`));
+  if (missing.length) {
+    console.error(`FAIL: LOAD_ORDER.md does not reference routed skills: ${missing.join(", ")}. Run npm run generate:load-order after routing is complete.`);
     process.exit(1);
   }
-  console.log("PASS: generated load order is current.");
+  if (current.includes(begin) && current !== expected) {
+    console.error("FAIL: generated capability-routing region is stale. Run npm run generate:load-order.");
+    process.exit(1);
+  }
+  console.log(current.includes(begin) ? "PASS: generated capability-routing region is current." : "PASS: legacy load order preserves every routed skill; generation will append a bounded region without deleting existing guidance.");
 } else {
-  fs.writeFileSync(outputPath, rendered);
-  console.log("Generated 00_start_here/LOAD_ORDER.md");
+  fs.writeFileSync(outputPath, expected);
+  console.log("Updated the bounded capability-routing region in 00_start_here/LOAD_ORDER.md without replacing existing guidance.");
 }
