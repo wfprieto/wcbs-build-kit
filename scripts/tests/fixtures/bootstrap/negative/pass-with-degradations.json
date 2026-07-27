@@ -1,0 +1,4 @@
+{
+  "__comment":"Invariant: degradations cap the certificate verdict at CONDITIONAL PASS.",
+  "mutation":{"path":"degradations","value":[{"id":"runtime-ceiling","summary":"One capability is manual-only"}]}
+}
