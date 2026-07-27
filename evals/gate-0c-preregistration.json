@@ -8,6 +8,8 @@
   },
   "iteration_budget": 8,
   "control_project_manifest": "evals/control-project-manifest.json",
+  "case_registry": "evals/gate-0c-cases.json",
+  "runs_per_case_per_arm": 10,
   "arm_definition": {
     "baseline": "Pinned control project alone in an isolated temporary HOME with no WCBS/EOS artifacts or globally installed plugin state.",
     "treatment": "The identical pinned control project with the EOS installed; no other project files differ."
@@ -16,17 +18,28 @@
     "predicted_activation_rate_range": [0.10, 0.45],
     "rationale": "Unaided agents may independently use some professional practices, but should not reliably reproduce the full bootstrap discipline across acceptance and pressure cases."
   },
+  "execution_identity": {
+    "agent": "Claude Code CLI",
+    "agent_version": null,
+    "model_id": null,
+    "requirements": [
+      "Record the exact output of claude --version before the first paid run.",
+      "Use a full immutable model ID through --model; aliases such as sonnet or opus are forbidden.",
+      "Keep agent version and model ID unchanged across baseline and treatment arms."
+    ],
+    "state": "Blocked until exact installed agent version and full model ID are recorded in this file by a commit made before the first paid run."
+  },
   "locked_before_measurement": [
     "thresholds",
     "arm definition",
     "control project manifest",
-    "iteration budget"
-  ],
-  "pending_before_first_paid_run": [
+    "iteration budget",
     "n per case",
     "exact prompt set",
-    "case-level activation criteria",
-    "agent version",
-    "model id"
+    "case-level activation criteria"
+  ],
+  "pending_before_first_paid_run": [
+    "exact installed agent version",
+    "full immutable model id"
   ]
 }
