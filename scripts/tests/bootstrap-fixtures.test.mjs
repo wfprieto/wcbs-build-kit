@@ -61,6 +61,15 @@ for (const [name, document] of Object.entries(golden)) {
   });
 }
 
+test("positive fixture corruption is detected by schema validation", () => {
+  const corrupted = clone(golden.capability);
+  corrupted.capabilities[0].justification = "";
+  assert.match(
+    validateAgainstSchema(schemas.capability, corrupted).join(" | "),
+    /justification.*minLength|string is shorter/i
+  );
+});
+
 test("golden bootstrap fixtures describe one coherent project", () => {
   const ids = [golden.profile.project_id, golden.capability.project_id, golden.goals.project_id, golden.risks.project_id];
   assert.deepEqual(new Set(ids), new Set(["atlas-bootstrap"]));
