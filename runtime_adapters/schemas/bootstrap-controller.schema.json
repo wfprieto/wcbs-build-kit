@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "controller_version", "rehydration_set", "states"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "controller_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "rehydration_set": {"type": "array", "items": {"type": "string"}},
+    "states": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "entry_conditions", "required_inputs", "produced_artifacts", "failure_conditions", "recovery_behavior", "evidence_produced", "allowed_transitions", "blocking"],
+        "properties": {
+          "id": {"type": "string"},
+          "entry_conditions": {"type": "array", "items": {"type": "string"}},
+          "required_inputs": {"type": "array", "items": {"type": "string"}},
+          "produced_artifacts": {"type": "array", "items": {"type": "string"}},
+          "failure_conditions": {"type": "array", "items": {"type": "string"}},
+          "recovery_behavior": {"type": "array", "items": {"type": "string"}},
+          "evidence_produced": {"type": "array", "items": {"enum": ["Verified", "Likely", "Suspected", "Unknown", "Not Run", "Blocked"]}},
+          "allowed_transitions": {"type": "array", "items": {"type": "string"}},
+          "blocking": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
