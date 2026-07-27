@@ -26,6 +26,7 @@ const mode = ["--list-targets", "--install", "--update", "--uninstall", "--docto
 const manifestRel = ".wcbs/adapter-install-manifest.json";
 
 const commonFiles = [
+  "BOOTSTRAP.md",
   "00_start_here",
   "10_governance",
   "20_skills",
