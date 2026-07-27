@@ -26,21 +26,19 @@ test('control project exactly matches its preregistered manifest', () => {
   const declared = manifest.files.map((entry) => entry.path).sort();
   const actual = walk().sort();
   assert.deepEqual(actual, declared, 'control project file set drifted');
-  for (const entry of manifest.files) {
-    assert.equal(sha256(path.join(projectRoot, entry.path)), entry.sha256, `${entry.path} content drifted`);
-  }
+  for (const entry of manifest.files) assert.equal(sha256(path.join(projectRoot, entry.path)), entry.sha256, `${entry.path} content drifted`);
+});
+
+test('generated control-project manifest is current', () => {
+  const result = spawnSync(process.execPath, ['scripts/generate-control-manifest.mjs', '--check'], { cwd: root, encoding: 'utf8' });
+  assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
 });
 
 test('baseline control project contains no EOS contamination entry', () => {
-  for (const entry of manifest.forbidden_baseline_entries) {
-    assert.equal(fs.existsSync(path.join(projectRoot, entry)), false, `baseline contamination found: ${entry}`);
-  }
+  for (const entry of manifest.forbidden_baseline_entries) assert.equal(fs.existsSync(path.join(projectRoot, entry)), false, `baseline contamination found: ${entry}`);
 });
 
 test('control project tests pass in isolation', () => {
-  const result = spawnSync(process.execPath, ['--test', 'test/task-store.test.mjs'], {
-    cwd: projectRoot,
-    encoding: 'utf8'
-  });
+  const result = spawnSync(process.execPath, ['--test', 'test/task-store.test.mjs'], { cwd: projectRoot, encoding: 'utf8' });
   assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
 });
