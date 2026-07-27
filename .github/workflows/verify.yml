@@ -16,8 +16,10 @@ jobs:
     name: Doctor Verification
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout branch head
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup Node
         uses: actions/setup-node@v7
@@ -27,5 +29,33 @@ jobs:
       - name: Prove EOS migrator safety in isolation
         run: node --test scripts/tests/eos-migrator.test.mjs
 
-      - name: Verify kit
-        run: npm run verify
+      - name: Apply EOS migration in isolated checkout
+        run: |
+          node scripts/apply-eos-remediation.mjs --apply --dest "$GITHUB_WORKSPACE"
+          npm run generate:load-order
+          npm run generate:controller
+          npm run generate:matrix
+
+      - name: Package migrated file set
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/eos-migration-artifact"
+          git diff --name-only --diff-filter=ACMRT -z > "$RUNNER_TEMP/eos-migration-files.zlist"
+          if [ -s "$RUNNER_TEMP/eos-migration-files.zlist" ]; then
+            tar --null -czf "$RUNNER_TEMP/eos-migration-artifact/eos-migration-files.tar.gz" --files-from "$RUNNER_TEMP/eos-migration-files.zlist"
+          else
+            tar -czf "$RUNNER_TEMP/eos-migration-artifact/eos-migration-files.tar.gz" --files-from /dev/null
+          fi
+          git diff --name-only --diff-filter=D > "$RUNNER_TEMP/eos-migration-artifact/deleted-files.txt"
+          git diff --stat > "$RUNNER_TEMP/eos-migration-artifact/diff-stat.txt"
+
+      - name: Upload migrated file set
+        uses: actions/upload-artifact@v4
+        with:
+          name: eos-migration-files
+          path: ${{ runner.temp }}/eos-migration-artifact/
+          retention-days: 7
+
+      - name: Verify migrated checkout
+        run: npm run check
