@@ -12,13 +12,21 @@
 - Any responsibility or interface addition requires an ADR and a major EOS version bump.
 - The budget may ratchet downward. It may not increase.
 
+## Instruction And Enforcement Boundary
+
+The Kernel is an instruction contract for an external agent. A compliant agent must follow its transfer sequence. Repository tests validate the Kernel's size, structure, closed reason vocabulary, and inspectable artifacts; executable delivery adapters may reject invalid paths and files. This prose does not make an external agent's compliance technically unavoidable.
+
 ## Five Responsibilities
+
+The following responsibilities are instructed behavior for a compliant delivery agent:
 
 1. Identify the delivery environment sufficiently to locate the Controller.
 2. Locate `00_start_here/bootstrap-controller.json` inside the supplied project root.
-3. Verify that Controller artifact is a regular non-symlinked file contained by the project root and verify its SHA-256.
+3. Confirm that the Controller artifact is a regular non-symlinked file contained by the project root, then compute and record its SHA-256 as an observation identifier.
 4. Transfer control with the handoff envelope, carrying the activation assertion supplied by Delivery.
-5. Fail closed with the transport failure envelope when any prior responsibility cannot complete.
+5. When any prior responsibility cannot complete, stop and emit the transport failure envelope.
+
+The recorded SHA-256 identifies the Controller bytes observed during the handoff. Because the repository supplies no authoritative expected hash or stronger trust anchor, the computation does not prove file integrity.
 
 The Kernel must not load authority, governance, project state, certificates, capabilities, skills, audits, templates, gates, or lifecycle instructions.
 
@@ -48,6 +56,8 @@ Allowed reason codes:
 - `delivery_environment_unresolved`
 - `project_root_unresolved`
 - `kernel_artifact_unreadable`
+
+`controller_integrity_failed` is reserved for a failure detected by an executable structural or artifact-validation mechanism. A bare hash computation neither verifies integrity nor satisfies this reason.
 
 These are transport statuses, not lifecycle verdicts.
 

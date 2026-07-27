@@ -210,6 +210,15 @@ function repair(destination) {
   emit({ status: "PASS", target: existing.target, files_repaired: existing.files.length }, `PASS: repaired owned files for ${existing.target}`);
 }
 
+function sameFilesystemPath(left, right) {
+  const canonical = (value) => {
+    const resolved = path.resolve(value);
+    const existing = fs.existsSync(resolved) ? fs.realpathSync.native(resolved) : resolved;
+    return process.platform === "win32" ? existing.toLowerCase() : existing;
+  };
+  return canonical(left) === canonical(right);
+}
+
 try {
   if (mode === "--list-targets") {
     const targets = Object.keys(adapters);
@@ -234,6 +243,9 @@ try {
   }
   assertDest();
   const destination = path.resolve(dest);
+  if (sameFilesystemPath(destination, root)) {
+    throw new Error("Build Kit source cannot be its own adapter destination. Supply the separate target project root.");
+  }
   fs.mkdirSync(destination, { recursive: true });
   if (mode === "--install") installOrUpdate(destination, false);
   else if (mode === "--update") installOrUpdate(destination, true);

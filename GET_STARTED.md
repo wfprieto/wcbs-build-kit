@@ -28,7 +28,42 @@ Then ask exactly one bounded question:
 
 This is the only permitted runtime-selection question. Do not guess. If the runtime is still unknown, report it as `Blocked` and do not install an adapter.
 
-4. Install the selected adapter into the user's project with:
+4. Resolve the destination project before producing an installation command.
+
+### Destination identification rule
+
+A destination is deterministic only when exactly one project root is explicitly identifiable from the current execution context. Qualifying evidence is:
+
+- a project path explicitly supplied by the user;
+- one authoritative project root supplied by an invocation contract;
+- one authoritative project root exposed by a supported workspace or integration; or
+- one unambiguous target repository already established by the user's request and distinct from this Build Kit clone.
+
+The current directory alone is not destination evidence. The Build Kit clone is not a destination candidate. If the user asks to work on the Build Kit itself, no adapter installation into that same repository is needed; the installer rejects the Build Kit source as its own destination.
+
+Enumerate candidate paths from explicit user paths, authoritative workspace or integration roots, and discovered project repository roots. Pass each plausible path as `--candidate <path>`:
+
+```bash
+node scripts/resolve-install-context.mjs --target <runtime> --candidate <path> [--candidate <path> ...]
+```
+
+If no single destination is established, ask exactly one bounded question:
+
+> Which project should receive the WCBS adapter?
+
+List the actual candidate paths discovered in the current context. If no candidate project exists, include:
+
+> No destination project exists yet.
+
+Do not ask the user to choose WCBS files, adapter internals, manifests, skills, or load order. If the answer remains unresolved, report `Blocked`, name `destination project` as the missing input, and stop. Do not install, write adapter files, or claim initialization or activation.
+
+5. Once both runtime and destination are resolved, produce the install context:
+
+```bash
+node scripts/resolve-install-context.mjs --target <runtime> --dest <project>
+```
+
+The ready result supplies the exact install, doctor, owned-file verification, and smoke-test commands. Run the installation command only after that result is ready:
 
 ```bash
 node scripts/install-adapter.mjs --target <runtime> --dest <project> --install
@@ -40,14 +75,15 @@ Supported targets are returned by:
 node scripts/install-adapter.mjs --list-targets
 ```
 
-5. Verify the installed files and activation marker:
+6. Verify the installed files and activation marker:
 
 ```bash
 node scripts/install-adapter.mjs --target <runtime> --dest <project> --doctor
+node scripts/install-adapter.mjs --target <runtime> --dest <project> --verify-owned-files
 node scripts/adapter-smoke-test.mjs --target <runtime> --dest <project>
 ```
 
-6. Continue the user's requested work under the installed WCBS instructions. Do not make the user choose internal files, adapters, skills, or load order when the runtime and project destination can be determined safely.
+7. Continue the user's requested work under the installed WCBS instructions. Do not make the user choose internal files, adapters, skills, or load order when the runtime and project destination can be determined safely.
 
 If the repository cannot be obtained, the runtime cannot be identified, the destination is ambiguous, or a required verification fails, stop with the specific blocker. Do not claim activation.
 

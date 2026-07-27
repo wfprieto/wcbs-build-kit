@@ -1,6 +1,8 @@
 {
   "schema_version": 1,
   "controller_version": "2.0.0",
+  "behavior_classification": "Instructed",
+  "technical_enforcement": "Repository checks validate the Controller schema, graph, generated documentation, and inspectable state artifacts. This contract does not make an external agent's compliance technically unavoidable.",
   "rehydration_set": [
     ".wcbs/project-profile.json",
     ".wcbs/capability-resolution.json",
@@ -27,8 +29,8 @@
       "entry_conditions": ["DISCOVER completed"],
       "required_inputs": ["Kernel handoff envelope", "Controller schema"],
       "produced_artifacts": ["validated handoff record"],
-      "failure_conditions": ["envelope or Controller integrity invalid"],
-      "recovery_behavior": ["return BLOCKED and name the integrity failure"],
+      "failure_conditions": ["handoff envelope or Controller schema invalid"],
+      "recovery_behavior": ["return BLOCKED and name the envelope or schema failure"],
       "evidence_produced": ["Verified", "Blocked"],
       "allowed_transitions": ["VALIDATE_RUNTIME"],
       "blocking": true

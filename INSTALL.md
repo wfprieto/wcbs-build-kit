@@ -65,7 +65,15 @@ node scripts/install-adapter.mjs --list-targets
 
 ## Project-Local Adapter Install
 
-The installer is safe by default. `--dry-run` prints the planned file set. Real install, update, uninstall, and doctor modes require an explicit destination.
+Resolve runtime and destination before using an installation command:
+
+```bash
+node scripts/resolve-install-context.mjs --target codex --dest ../my-project
+```
+
+If the destination is not resolved, omit `--dest` and pass any plausible project roots with repeated `--candidate <path>` arguments. The resolver asks one bounded destination question and returns `Blocked` without writing files.
+
+The installer is safe by default. `--dry-run` prints the planned file set. Real install, update, uninstall, and doctor modes require an explicit destination. The installer rejects the Build Kit source as its own destination.
 
 ```bash
 node scripts/install-adapter.mjs --target codex --dest ../my-project --install

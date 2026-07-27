@@ -6,7 +6,9 @@ import path from "node:path";
 const root = process.cwd();
 const read = p => fs.readFileSync(path.join(root, p), "utf8").replace(/\r\n?/g, "\n");
 
-// Structural drift control, not behavioral evidence.
+// STRUCTURAL DRIFT CONTROL ONLY
+// This test verifies repository documentation structure or wording.
+// It is NOT behavioral evidence that an external agent follows the path.
 test("Kernel remains transport-only and within the frozen budget", () => {
   const kernel = read("BOOTSTRAP.md");
   const contract = read("00_start_here/KERNEL_CONTRACT.md");
@@ -16,7 +18,9 @@ test("Kernel remains transport-only and within the frozen budget", () => {
   assert.match(contract, /Maximum Kernel size:\s*\*\*45 lines and 2,700 characters\*\*/);
   assert.match(kernel, /bootstrap-controller\.json/);
   assert.match(kernel, /handoff envelope/i);
-  assert.match(kernel, /fail closed/i);
+  assert.match(kernel, /agent is instructed to stop/i);
+  assert.match(contract, /instruction contract for an external agent/i);
+  assert.match(contract, /does not make an external agent's compliance technically unavoidable/i);
   const forbidden = [
     "frontend", "backend", "database", "security", "testing", "deployment", "accessibility", "performance",
     "APIVR", "Elite Build Goal", "PASS", "CONDITIONAL PASS", "PARTIAL", "FAIL", "BLOCKED",

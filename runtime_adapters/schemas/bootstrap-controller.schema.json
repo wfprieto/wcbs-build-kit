@@ -1,10 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "required": ["schema_version", "controller_version", "rehydration_set", "states"],
+  "required": ["schema_version", "controller_version", "behavior_classification", "technical_enforcement", "rehydration_set", "states"],
   "properties": {
     "schema_version": {"const": 1},
     "controller_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "behavior_classification": {"const": "Instructed"},
+    "technical_enforcement": {"type": "string", "minLength": 1},
     "rehydration_set": {"type": "array", "items": {"type": "string"}},
     "states": {
       "type": "array",

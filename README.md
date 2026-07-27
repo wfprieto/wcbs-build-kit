@@ -6,11 +6,17 @@ Operating law: **Audit wide. Fix narrow. Prove everything.**
 
 Repository slug: `wcbs-build-kit`. Product/system name: Super Build Kit.
 
+> **AI CODING AGENT GIVEN ONLY THIS REPOSITORY URL**
+>
+> Open `GET_STARTED.md` first.
+>
+> Do not choose between `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `QUICKSTART.md`, `INSTALL.md`, `BOOTSTRAP.md`, or `runtime_adapters/` before following `GET_STARTED.md`.
+
 This kit merges the permanent APIVR execution loop, the 16 Elite Build Goals, the reusable specialist/audit structure from `wfprieto/wcbs-build-kit`, and the portable skill/workflow mechanics from `obra/Superpowers`.
 
 ## Start Here
 
-**Coding agent given only this GitHub URL:** open `GET_STARTED.md` and follow the section **Coding agent arriving from the GitHub URL**. It provides the single supported path from repository discovery through runtime selection, project-local installation, activation verification, and continued WCBS-governed work.
+**Coding agent given only this GitHub URL:** the banner above names the one first file. `GET_STARTED.md` provides the supported path from repository discovery through runtime and destination resolution, project-local installation, activation verification, and continued WCBS-governed work.
 
 **Human reviewing or maintaining this repository:** use `GET_STARTED.md` for the shortest verification and setup path.
 

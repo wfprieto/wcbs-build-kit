@@ -14,6 +14,10 @@ const lines = [
   "",
   `Controller version: \`${model.controller_version}\``,
   "",
+  `Behavior classification: \`${model.behavior_classification}\``,
+  "",
+  `Enforcement boundary: ${model.technical_enforcement}`,
+  "",
   "## State Sequence",
   "",
 ];

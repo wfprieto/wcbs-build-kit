@@ -94,3 +94,27 @@ test("uninstall refuses to run without an ownership manifest", () => {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test("installer rejects the Build Kit source as its own destination", () => {
+  const dir = tmp();
+  try {
+    const kitClone = path.join(dir, "wcbs-build-kit");
+    fs.cpSync(root, kitClone, {
+      recursive: true,
+      filter: (source) => !source.includes(`${path.sep}.git${path.sep}`) && !source.endsWith(`${path.sep}.git`)
+    });
+    const fixtureInstaller = path.join(kitClone, "scripts", "install-adapter.mjs");
+    const result = spawnSync(process.execPath, [
+      fixtureInstaller,
+      "--target", "codex",
+      "--dest", kitClone,
+      "--install"
+    ], { cwd: kitClone, encoding: "utf8" });
+    const output = `${result.stdout}${result.stderr}`;
+    assert.notEqual(result.status, 0, output);
+    assert.match(output, /Build Kit source cannot be its own adapter destination/);
+    assert.equal(exists(kitClone, ".wcbs/adapter-install-manifest.json"), false);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});

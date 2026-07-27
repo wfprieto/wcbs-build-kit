@@ -4,6 +4,10 @@
 
 Controller version: `2.0.0`
 
+Behavior classification: `Instructed`
+
+Enforcement boundary: Repository checks validate the Controller schema, graph, generated documentation, and inspectable state artifacts. This contract does not make an external agent's compliance technically unavoidable.
+
 ## State Sequence
 
 ### 1. DISCOVER
@@ -23,8 +27,8 @@ Controller version: `2.0.0`
 - Entry: DISCOVER completed
 - Inputs: Kernel handoff envelope; Controller schema
 - Outputs: validated handoff record
-- Failures: envelope or Controller integrity invalid
-- Recovery: return BLOCKED and name the integrity failure
+- Failures: handoff envelope or Controller schema invalid
+- Recovery: return BLOCKED and name the envelope or schema failure
 - Evidence: Verified, Blocked
 - Next: VALIDATE_RUNTIME
 
