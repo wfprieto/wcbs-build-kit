@@ -38,7 +38,6 @@ const commonFiles = [
   "README.md",
   "GET_STARTED.md",
   "INSTALL.md",
-  "GET_STARTED.md",
   "MANIFEST.md",
   "SUPPORT_MATRIX.md",
   "RELEASE_PROCESS.md",
@@ -52,7 +51,7 @@ const commonFiles = [
 
 const adapters = {
   "codex": [".codex-plugin/plugin.json", "AGENTS.md"],
-  "claude": ["CLAUDE.md"],
+  "claude": ["CLAUDE.md", ".claude-plugin/plugin.json", "hooks"],
   "cursor": [".cursor/rules/super-build-kit.mdc"],
   "github-copilot": [".github/copilot-instructions.md"],
   "gemini": ["GEMINI.md"],
