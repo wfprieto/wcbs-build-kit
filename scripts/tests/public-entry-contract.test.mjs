@@ -136,7 +136,10 @@ test("explicit destination resolution emits exact commands without another quest
       "--dest", destination
     ], { cwd: root, encoding: "utf8" });
     const output = `${result.stdout}${result.stderr}`;
-    const quoted = JSON.stringify(path.resolve(destination));
+    const resolved = path.resolve(destination);
+    const quoted = process.platform === "win32"
+      ? `'${resolved.replaceAll("'", "''")}'`
+      : `'${resolved.replaceAll("'", "'\"'\"'")}'`;
     assert.equal(result.status, 0, output);
     assert.doesNotMatch(output, /Which project should receive/);
     assert.match(output, /State: Ready/);

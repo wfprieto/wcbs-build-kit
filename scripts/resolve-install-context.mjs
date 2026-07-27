@@ -34,6 +34,11 @@ function canonical(value) {
   return process.platform === "win32" ? existing.toLowerCase() : existing;
 }
 
+function shellQuote(value) {
+  if (process.platform === "win32") return `'${value.replaceAll("'", "''")}'`;
+  return `'${value.replaceAll("'", "'\"'\"'")}'`;
+}
+
 const targets = values("--target");
 const destinations = values("--dest");
 if (targets.length !== 1) usage("exactly one --target value is required");
@@ -70,7 +75,7 @@ if (canonical(destination) === canonical(root)) {
   usage("Build Kit source cannot be its own adapter destination");
 }
 
-const quotedDestination = JSON.stringify(destination);
+const quotedDestination = shellQuote(destination);
 console.log("State: Ready");
 console.log(`Runtime: ${target}`);
 console.log(`Destination: ${destination}`);
