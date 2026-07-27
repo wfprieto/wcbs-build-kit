@@ -11,7 +11,17 @@ const stub = path.join(root, "scripts", "tests", "fixtures", "eval-runner", "cre
 
 function scratch() { return fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-eval-test-")); }
 
-test("credential-echoing stub leaves zero credential occurrences in transcript", async () => {
+function emittedRepresentations(credential) {
+  return [
+    credential,
+    Buffer.from(credential, "utf8").toString("base64"),
+    encodeURIComponent(credential),
+    JSON.stringify(credential).slice(1, -1),
+    Buffer.from(`agent:${credential}`, "utf8").toString("base64")
+  ];
+}
+
+test("credential-echoing stub leaves zero credential representations in transcript", async () => {
   const dir = scratch();
   const credential = "wcbs-test-secret-DO-NOT-LEAK-7419";
   const transcriptPath = path.join(dir, "transcript.json");
@@ -19,14 +29,35 @@ test("credential-echoing stub leaves zero credential occurrences in transcript",
     process.env.WCBS_EVAL_SHOULD_NOT_PASS = "inherited-secret-probe";
     const transcript = await runEval({ command: process.execPath, args: [stub], transcriptPath, credential });
     const raw = fs.readFileSync(transcriptPath, "utf8");
-    assert.equal(raw.includes(credential), false, "credential leaked into persisted transcript");
-    assert.equal((raw.match(/\[REDACTED\]/g) ?? []).length, 2, "both stdout and stderr echoes must be redacted");
+    for (const representation of emittedRepresentations(credential)) {
+      assert.equal(raw.includes(representation), false, `credential representation leaked: ${representation}`);
+    }
+    assert.ok((raw.match(/\[REDACTED\]/g) ?? []).length >= 5, "every emitted credential representation must be redacted");
     assert.equal(transcript.exit_code, 0);
     assert.equal(raw.includes("inherited-secret-probe"), false, "non-allowlisted environment variable reached the stub");
   } finally {
     delete process.env.WCBS_EVAL_SHOULD_NOT_PASS;
     fs.rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test("runner blocks protected credential values shorter than twelve characters before execution", async () => {
+  const dir = scratch();
+  const marker = path.join(dir, "spawned.txt");
+  const transcriptPath = path.join(dir, "transcript.json");
+  try {
+    await assert.rejects(
+      runEval({
+        command: process.execPath,
+        args: ["-e", `require('node:fs').writeFileSync(${JSON.stringify(marker)}, 'spawned')`],
+        transcriptPath,
+        credential: "test"
+      }),
+      /Blocked: protected credential values must be at least 12 characters/
+    );
+    assert.equal(fs.existsSync(marker), false, "short credential reached child-process execution");
+    assert.equal(fs.existsSync(transcriptPath), false, "blocked run wrote a transcript");
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
 test("runner uses and removes an isolated temporary HOME", async () => {
