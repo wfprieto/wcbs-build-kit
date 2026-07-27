@@ -47,14 +47,16 @@ jobs:
           set -euo pipefail
           artifact="$RUNNER_TEMP/eos-migration-artifact"
           mkdir -p "$artifact"
-          git diff --name-only --diff-filter=ACMRT -- . ':(exclude)90_archive/provenance/**' -z > "$RUNNER_TEMP/eos-migration-files.zlist"
-          if [ -s "$RUNNER_TEMP/eos-migration-files.zlist" ]; then
-            tar --null -czf "$artifact/eos-migration-files.tar.gz" --files-from "$RUNNER_TEMP/eos-migration-files.zlist"
+          git diff --name-only --diff-filter=ACMRT | grep -v '^90_archive/provenance/' > "$RUNNER_TEMP/eos-migration-files.list" || true
+          if [ -s "$RUNNER_TEMP/eos-migration-files.list" ]; then
+            tar --verbatim-files-from -czf "$artifact/eos-migration-files.tar.gz" -T "$RUNNER_TEMP/eos-migration-files.list"
           else
             tar -czf "$artifact/eos-migration-files.tar.gz" --files-from /dev/null
           fi
-          git diff --name-only --diff-filter=D -- . ':(exclude)90_archive/provenance/**' > "$artifact/deleted-files.txt"
-          git diff --stat -- . ':(exclude)90_archive/provenance/**' > "$artifact/diff-stat.txt"
+          git diff --name-only --diff-filter=D | grep -v '^90_archive/provenance/' > "$artifact/deleted-files.txt" || true
+          git diff --stat -- . > "$artifact/diff-stat-unfiltered.txt"
+          grep -v '90_archive/provenance/' "$artifact/diff-stat-unfiltered.txt" > "$artifact/diff-stat.txt" || true
+          rm "$artifact/diff-stat-unfiltered.txt"
 
       - name: Verify migrated checkout
         id: migrated-check
