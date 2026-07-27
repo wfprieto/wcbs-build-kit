@@ -4,11 +4,36 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 
 const DEFAULT_ENV_ALLOWLIST = ["PATH", "PATHEXT", "SYSTEMROOT", "WINDIR", "COMSPEC", "TMP", "TEMP", "TMPDIR", "LANG", "LC_ALL", "TERM"];
+const MIN_PROTECTED_VALUE_LENGTH = 12;
+const BASE64_TOKEN = /(?<![A-Za-z0-9+/=])[A-Za-z0-9+/]{8,}={0,2}(?![A-Za-z0-9+/=])/g;
 
-export function redactValues(text, secrets) {
+function protectedVariants(value) {
+  const variants = new Set([
+    value,
+    Buffer.from(value, "utf8").toString("base64"),
+    encodeURIComponent(value),
+    JSON.stringify(value).slice(1, -1)
+  ]);
+  return [...variants].filter(Boolean);
+}
+
+function redactContainingBase64(text, protectedValues) {
+  return text.replace(BASE64_TOKEN, (token) => {
+    try {
+      const decoded = Buffer.from(token, "base64").toString("utf8");
+      return protectedValues.some((value) => decoded.includes(value)) ? "[REDACTED]" : token;
+    } catch {
+      return token;
+    }
+  });
+}
+
+export function redactValues(text, protectedValues) {
   let output = String(text);
-  const values = [...new Set(secrets.filter((value) => typeof value === "string" && value.length > 0))].sort((a, b) => b.length - a.length);
-  for (const value of values) output = output.split(value).join("[REDACTED]");
+  const values = [...new Set(protectedValues.filter((value) => typeof value === "string" && value.length > 0))];
+  output = redactContainingBase64(output, values);
+  const variants = [...new Set(values.flatMap(protectedVariants))].sort((a, b) => b.length - a.length);
+  for (const variant of variants) output = output.split(variant).join("[REDACTED]");
   return output;
 }
 
@@ -30,9 +55,11 @@ function atomicWrite(file, content) {
 export async function runEval({ command, args = [], cwd = process.cwd(), transcriptPath, credential, credentialName = "WCBS_EVAL_CREDENTIAL", env = {}, timeoutMs = 120000 }) {
   if (!command) throw new Error("command is required");
   if (!transcriptPath) throw new Error("transcriptPath is required");
+  const protectedValue = String(credential ?? "");
+  if (protectedValue.length < MIN_PROTECTED_VALUE_LENGTH) throw new Error(`Blocked: protected credential values must be at least ${MIN_PROTECTED_VALUE_LENGTH} characters`);
   const temporaryHome = fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-eval-home-"));
-  const childEnv = buildEvalEnvironment({ credential, credentialName, extra: { ...env, HOME: temporaryHome, USERPROFILE: temporaryHome } });
-  const secrets = [String(credential ?? "")];
+  const childEnv = buildEvalEnvironment({ credential: protectedValue, credentialName, extra: { ...env, HOME: temporaryHome, USERPROFILE: temporaryHome } });
+  const secrets = [protectedValue];
   let stdout = "", stderr = "", settled = false;
   let child;
   const cleanup = () => fs.rmSync(temporaryHome, { recursive: true, force: true });
