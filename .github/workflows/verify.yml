@@ -26,6 +26,9 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Verify structural baseline
+        run: npm run verify
+
       - name: Prove EOS migrator safety in isolation
         run: node --test scripts/tests/eos-migrator.test.mjs
 
