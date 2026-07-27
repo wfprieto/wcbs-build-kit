@@ -9,6 +9,25 @@ When a user gives you this repository URL and asks you to use the WCBS Build Kit
 1. Obtain or open the repository without modifying the user's project.
 2. Read `BOOTSTRAP.md` and follow its transfer to `00_start_here/bootstrap-controller.json`.
 3. Identify the active runtime only far enough to select one supported adapter target.
+
+### Runtime identification rule
+
+Use an explicit runtime-provided identity signal when one is available, such as a system-declared runtime identity, native plugin context, or runtime-specific CLI environment. Confirm that identity against the matching `runtime_id` in `runtime_adapters/manifests/<runtime>.json` before selecting the adapter.
+
+Do not infer a runtime from model style, repository contents, or familiarity with a provider.
+
+If no explicit runtime identity signal exists, run:
+
+```bash
+node scripts/install-adapter.mjs --list-targets
+```
+
+Then ask exactly one bounded question:
+
+> Which supported coding runtime is running this project? Choose one target from the list above.
+
+This is the only permitted runtime-selection question. Do not guess. If the runtime is still unknown, report it as `Blocked` and do not install an adapter.
+
 4. Install the selected adapter into the user's project with:
 
 ```bash
