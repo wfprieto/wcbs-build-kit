@@ -4,7 +4,7 @@ description: Use when planning, running, auditing, or handing off long-running a
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
-authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 00_start_here/bootstrap-controller.json; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
 evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
@@ -24,6 +24,47 @@ Load when long-horizon execution is in scope:
 - `40_knowledge/AGENT_WORKSPACE_AND_ARTIFACT_BOUNDARIES.md`
 - `60_templates/LONG_HORIZON_RUN_CONTROL_TEMPLATE.md`
 - `60_templates/AGENT_RUN_TRACE_TEMPLATE.md`
+
+## Memory Contract
+
+**The Bootstrap Controller owns initialization integrity and rehydration eligibility; this skill owns only the runtime discipline required to make successful rehydration possible and mandatory on resume.**
+
+<HARD-GATE>
+On resuming any long-horizon run, verify the authoritative bootstrap certificate and rehydrate from the Controller-declared `rehydration_set` before continuing work. Never continue from partial project state.
+</HARD-GATE>
+
+The authoritative declaration is `rehydration_set` in `00_start_here/bootstrap-controller.json`. This skill must reference that declaration and must never copy or restate its file list.
+
+### State Lifetimes
+
+- **Session-scoped state:** temporary, discardable, and reconstructible. It may include scratch reasoning, transient tool output, and local execution context.
+- **Project-scoped state:** durable state under `.wcbs/` that supports project recovery and rehydration. Its membership is defined only by the Bootstrap Controller.
+- **Cross-project learning:** not a memory tier. Route reusable learning through `skills/compound-learning-capture/SKILL.md` and obey that skill's HARD-GATE.
+
+### Resume Decision Rules
+
+1. Verify the authoritative bootstrap certificate before using any existing project state.
+2. Read the Controller's declared `rehydration_set` and rehydrate all declared project-scoped state.
+3. If the certificate hash does not match current declared state, treat the project as changed under the agent and force complete re-initialization.
+4. If project-scoped state exists but the authoritative certificate is missing, treat the prior run as interrupted before `CERTIFY` and force complete re-initialization.
+5. Continue only after certificate validation and rehydration succeed. Otherwise return `BLOCKED` with the exact failure.
+
+### Runtime Write Discipline
+
+- Append a record to `evidence-ledger.jsonl` after every material checkpoint, verification result, state transition, blocker, recovery action, or handoff decision.
+- Record the timestamp, canonical evidence state, claim, source, and phase required by the evidence-ledger schema.
+- Append only. Do not overwrite, reorder, backfill invented evidence, or reconstruct a history that was not recorded when the event occurred.
+- Preserve enough evidence for another agent to determine what changed, what was verified, what remains unresolved, and what exact action comes next.
+- Write project-scoped state before issuing a checkpoint or handoff summary; a summary is not a substitute for durable state.
+
+### Excuse / Reality
+
+| Excuse | Reality |
+|---|---|
+| "I remember the context." | Memory is session-scoped and non-authoritative. Resume from the certificate and Controller-declared state. |
+| "The summary is enough." | A summary can omit hashes, blockers, and evidence. Rehydrate the durable project state. |
+| "Re-reading wastes tokens." | Continuing from stale state wastes the run and can corrupt evidence. The resume gate is mandatory. |
+| "The state looks fine." | Appearance is not integrity. Verify the certificate and declared rehydration state. |
 
 ## APIVR Routing
 
