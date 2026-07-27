@@ -49,5 +49,13 @@ jobs:
       - name: Install readiness
         run: npm run check-install
 
+      - name: Upload install readiness diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: install-readiness-${{ matrix.os }}
+          path: .wcbs/install-readiness.log
+          if-no-files-found: warn
+
       - name: Release artifact generation
         run: npm run build:release-artifacts
