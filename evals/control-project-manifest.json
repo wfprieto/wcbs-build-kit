@@ -3,10 +3,22 @@
   "purpose": "Identical underlying software project for baseline and treatment arms.",
   "root": "evals/control-project",
   "files": [
-    { "path": "package.json", "sha256": "a854ab361e4d7ae16529ee99ddfa9ac469e9bf32ef6fc40a948e4c9261bc0bc6" },
-    { "path": "src/task-service.mjs", "sha256": "6c78ac495928f65fb83c80821b400b907a7a08b9aedb9b3e4edfc56ec5f60d30" },
-    { "path": "src/task-store.mjs", "sha256": "ba27642814ef62dffbfaf8062ba6c0ae2ddb29b8d4ca94c348f28033fc028774" },
-    { "path": "test/task-store.test.mjs", "sha256": "cf0c5dc57269fdf83c164b7d5f1becf45b967f8c834ed1b68f49a00876d2e00a" }
+    {
+      "path": "package.json",
+      "sha256": "a854ab361e4d7ae16529ee99ddfa9ac469e9bf32ef6fc40a948e4c9261bc0bc6"
+    },
+    {
+      "path": "src/task-service.mjs",
+      "sha256": "6c78ac495928f65fb83c80821b400b907a7a08b9aedb9b3e4edfc56ec5f60d30"
+    },
+    {
+      "path": "src/task-store.mjs",
+      "sha256": "b6c3b27abc50368a710567f51d12e859d6eb28e0f65add14b0a21da818e2a283"
+    },
+    {
+      "path": "test/task-store.test.mjs",
+      "sha256": "cf0c5dc57269fdf83c164b7d5f1becf45b967f8c834ed1b68f49a00876d2e00a"
+    }
   ],
   "forbidden_baseline_entries": [
     "README.md",
