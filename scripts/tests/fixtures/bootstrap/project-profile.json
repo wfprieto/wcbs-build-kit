@@ -1,0 +1,9 @@
+{
+  "project_id": "atlas-bootstrap",
+  "objective": "Initialize a deterministic local project workspace",
+  "request_summary": "Prepare the Atlas project for evidence-backed implementation",
+  "constraints": ["local-first", "dependency-free validation"],
+  "capabilities": ["project-bootstrap", "long-horizon-runtime"],
+  "not_applicable": [{"capability": "external-deployment", "justification": "No deployment is in initialization scope"}],
+  "evidence_state": "Verified"
+}
