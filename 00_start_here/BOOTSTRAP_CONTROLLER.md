@@ -66,9 +66,9 @@ Controller version: `2.0.0`
 - Blocking: `true`
 - Entry: LOAD_GOVERNANCE completed
 - Inputs: .wcbs state if present; rehydration_set
-- Outputs: .wcbs/bootstrap-report.json; .wcbs/evidence-ledger.jsonl
-- Failures: state exists without a valid certificate; rehydration hash mismatch
-- Recovery: force complete re-initialization before continuation
+- Outputs: .wcbs/evidence-ledger.jsonl rehydration evidence
+- Failures: state exists without the authoritative .wcbs/bootstrap-certificate.json; rehydration hash mismatch
+- Recovery: treat all partial state as non-authoritative and force complete re-initialization before continuation
 - Evidence: Verified, Unknown, Blocked
 - Next: CLASSIFY_PROJECT
 
@@ -121,7 +121,7 @@ Controller version: `2.0.0`
 - Blocking: `true`
 - Entry: RUN_PREFLIGHT completed
 - Inputs: all initialization artifacts; certificate canonicalization v1
-- Outputs: .wcbs/bootstrap-certificate.json
+- Outputs: .wcbs/bootstrap-certificate.json as the sole authoritative initialization-completeness artifact
 - Failures: mandatory input Unknown or Not Run; unresolved blocker for PASS
 - Recovery: issue PARTIAL, FAIL, or BLOCKED; never issue PASS
 - Evidence: Verified, Unknown, Not Run, Blocked
@@ -130,7 +130,7 @@ Controller version: `2.0.0`
 ### 12. HAND_OFF_TO_LIFECYCLE
 
 - Blocking: `true`
-- Entry: certificate issued without FAIL or BLOCKED
+- Entry: authoritative bootstrap certificate issued without FAIL or BLOCKED
 - Inputs: bootstrap certificate; APIVR lifecycle
 - Outputs: lifecycle handoff evidence
 - Failures: certificate invalid or capability ceiling exceeded
