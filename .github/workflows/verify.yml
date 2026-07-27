@@ -24,5 +24,8 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Prove EOS migrator safety in isolation
+        run: node --test scripts/tests/eos-migrator.test.mjs
+
       - name: Verify kit
         run: npm run verify
