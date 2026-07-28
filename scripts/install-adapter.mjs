@@ -38,7 +38,6 @@ const commonFiles = [
   "60_templates",
   "skills",
   "runtime_adapters",
-  "README.md",
   "GET_STARTED.md",
   "INSTALL.md",
   "MANIFEST.md",

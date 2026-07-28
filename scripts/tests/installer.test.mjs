@@ -110,17 +110,29 @@ test("installer accepts a destination path that resolves through a filesystem al
   }
 });
 
-test("preflight collision writes no WCBS payload or activation surface", () => {
+test("installer preserves an ordinary project README through install and uninstall", () => {
   const dir = tmp();
   try {
-    fs.writeFileSync(path.join(dir, "README.md"), "user owned readme\n", "utf8");
-    const before = filesBelow(dir);
+    fs.writeFileSync(path.join(dir, "README.md"), "# User project\n\nDo not change this file.\n", "utf8");
+    fs.writeFileSync(path.join(dir, "package.json"), "{\"name\":\"user-project\"}\n", "utf8");
+    fs.mkdirSync(path.join(dir, "src"));
+    fs.writeFileSync(path.join(dir, "src", "index.js"), "export default 'user code';\n", "utf8");
     const result = run(["--target", "codex", "--dest", dir, "--install"]);
-    assert.notEqual(result.code, 0);
-    assert.match(result.output, /Preflight collision\(s\); no files written/);
-    assert.match(result.output, /README\.md \(unowned existing file\)/);
-    assert.deepEqual(filesBelow(dir), before);
-    assert.equal(fs.readFileSync(path.join(dir, "README.md"), "utf8"), "user owned readme\n");
+    assert.equal(result.code, 0, result.output);
+    assert.equal(fs.readFileSync(path.join(dir, "README.md"), "utf8"), "# User project\n\nDo not change this file.\n");
+    assert.equal(fs.readFileSync(path.join(dir, "package.json"), "utf8"), "{\"name\":\"user-project\"}\n");
+    assert.equal(fs.readFileSync(path.join(dir, "src", "index.js"), "utf8"), "export default 'user code';\n");
+    assert.ok(exists(dir, "AGENTS.md"));
+    assert.ok(exists(dir, ".codex-plugin/plugin.json"));
+    assert.ok(exists(dir, ".wcbs/adapter-install-manifest.json"));
+    const manifest = JSON.parse(fs.readFileSync(path.join(dir, ".wcbs", "adapter-install-manifest.json"), "utf8"));
+    assert.equal(manifest.files.includes("README.md"), false);
+
+    const uninstall = run(["--target", "codex", "--dest", dir, "--uninstall"]);
+    assert.equal(uninstall.code, 0, uninstall.output);
+    assert.equal(fs.readFileSync(path.join(dir, "README.md"), "utf8"), "# User project\n\nDo not change this file.\n");
+    assert.equal(fs.readFileSync(path.join(dir, "package.json"), "utf8"), "{\"name\":\"user-project\"}\n");
+    assert.equal(fs.readFileSync(path.join(dir, "src", "index.js"), "utf8"), "export default 'user code';\n");
     assert.equal(exists(dir, "AGENTS.md"), false);
     assert.equal(exists(dir, ".codex-plugin/plugin.json"), false);
     assert.equal(exists(dir, ".wcbs/adapter-install-manifest.json"), false);
@@ -132,12 +144,12 @@ test("preflight collision writes no WCBS payload or activation surface", () => {
 test("preflight reports multiple collisions deterministically before mutation", () => {
   const dir = tmp();
   try {
-    fs.writeFileSync(path.join(dir, "README.md"), "readme sentinel\n", "utf8");
     fs.writeFileSync(path.join(dir, "AGENTS.md"), "agent sentinel\n", "utf8");
+    fs.writeFileSync(path.join(dir, "GET_STARTED.md"), "getting started sentinel\n", "utf8");
     const before = filesBelow(dir);
     const result = run(["--target", "codex", "--dest", dir, "--install"]);
     assert.notEqual(result.code, 0);
-    assert.match(result.output, /AGENTS\.md \(unowned existing file\).*README\.md \(unowned existing file\)/s);
+    assert.match(result.output, /AGENTS\.md \(unowned existing file\).*GET_STARTED\.md \(unowned existing file\)/s);
     assert.deepEqual(filesBelow(dir), before);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
