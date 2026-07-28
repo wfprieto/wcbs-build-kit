@@ -5,6 +5,6 @@
   "author": {"name": "Bill Prieto", "email": "wfprieto@gmail.com"},
   "repository": "https://github.com/wfprieto/wcbs-build-kit",
   "license": "MIT",
-  "hooks": "../hooks/hooks.json",
-  "skills": "../skills/"
+  "hooks": "./hooks/hooks.json",
+  "skills": "./skills/"
 }

@@ -43,10 +43,10 @@ const requiredFiles = [
   "docs/USING_THE_SUPER_BUILD_KIT.md", "docs/COMMON_WORKFLOWS.md", "docs/V2_RUNTIME_EVIDENCE.md", "docs/V2_MIGRATION.md", "evals/README.md", "evals/v2-core-skill-preregistration.json", "evals/v2-core-skill-cases.json",
   "scripts/generate-capability-matrix.mjs", "scripts/generate-v2-metadata.mjs", "scripts/render-session-bootstrap.mjs", "scripts/generate-bootstrap-controller.mjs", "scripts/generate-load-order.mjs", "scripts/run-python-tests.mjs", "scripts/wcbs-system-test.mjs", "scripts/check-install.mjs", "scripts/install-adapter.mjs", "scripts/wcbs.mjs", "scripts/adapter-smoke-test.mjs", "scripts/verify-v2-eval-design.mjs", "scripts/lib/adapter-contract.mjs", "scripts/lib/json-schema.mjs", "scripts/lib/bootstrap-artifacts.mjs", "scripts/lib/certificate-canonicalization.mjs", "scripts/audit-duplicate-guidance.mjs", "scripts/audit-skill-size.mjs", "scripts/audit-skill-contract.mjs", "scripts/audit-layer-budgets.mjs", "scripts/run-evals.mjs", "scripts/publish-activation-evidence.mjs",
   "tests/system/routing-fixtures.json", "tests/system/activation-scenarios.json",
-  ...["controller-contract", "adapter-contract", "schema-enforcement", "schema-keyword-support", "bootstrap-fixtures", "long-horizon-memory-contract", "wcbs-doctor", "artifact-bundle", "kernel-contract", "bootstrap-controller", "activation-marker-reachability", "skill-contract", "npm-script-entry-points", "v2-registry", "v2-bootstrap-renderer", "wcbs-cli", "native-adapter-packages", "v2-eval-design"].map(x => `scripts/tests/${x}.test.mjs`),
+  ...["controller-contract", "adapter-contract", "schema-enforcement", "schema-keyword-support", "bootstrap-fixtures", "long-horizon-memory-contract", "wcbs-doctor", "artifact-bundle", "kernel-contract", "bootstrap-controller", "activation-marker-reachability", "skill-contract", "npm-script-entry-points", "v2-registry", "v2-bootstrap-renderer", "wcbs-cli", "native-adapter-packages", "hook-transport", "v2-eval-design"].map(x => `scripts/tests/${x}.test.mjs`),
   "scripts/tests/fixtures/run-bundle/findings.json", "scripts/tests/fixtures/run-bundle/progress-ledger.jsonl", "scripts/tests/fixtures/run-bundle/tasks/T-01/task-artifact.json", "scripts/tests/fixtures/run-bundle/tasks/T-02/task-artifact.json",
   ...["bootstrap-certificate.json", "capability-resolution.json", "elite-goals-ledger.json", "evidence-ledger.jsonl", "engineering-team.json", "project-profile.json", "risk-register.json", "release-state.json"].map(x => `scripts/tests/fixtures/bootstrap/${x}`),
-  ".gitattributes", ".gitignore", ".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json", ".cursor-plugin/plugin.json", ".kimi-plugin/plugin.json", ".opencode/plugins/wcbs.js", ".pi/extensions/wcbs.ts", ".cursor/rules/super-build-kit.mdc", ".github/copilot-instructions.md", "hooks/session-start", "hooks/run-hook.cmd", "hooks/hooks.json", "hooks/hooks-cursor.json",
+  ".gitattributes", ".gitignore", ".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json", ".kimi-plugin/plugin.json", ".opencode/plugins/wcbs.js", ".pi/extensions/wcbs.ts", ".cursor/rules/super-build-kit.mdc", ".cursor/hooks.json", ".github/copilot-instructions.md", ".github/hooks/wcbs-session-start.json", "hooks/session-start", "hooks/run-hook.cmd", "hooks/hooks.json",
   ".github/workflows/verify.yml", ".github/workflows/release-check.yml", ".github/RELEASE_CANDIDATE_CHECKLIST.md"
 ];
 
@@ -90,7 +90,7 @@ function checkPackage() {
     "release-check": "npm run check && npm run system-test && npm run check-install && npm run build:release-artifacts"
   };
   for (const [name, command] of Object.entries(expectedScripts)) if (p.scripts?.[name] !== command) fail(`package.json script ${name} must be exactly: ${command}`);
-  for (const manifestPath of [".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json", ".cursor-plugin/plugin.json", ".kimi-plugin/plugin.json"]) {
+  for (const manifestPath of [".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json", ".kimi-plugin/plugin.json"]) {
     const manifest = json(manifestPath);
     const versions = manifestPath.endsWith("marketplace.json") && Array.isArray(manifest?.plugins) ? manifest.plugins.map(x => x.version).filter(Boolean) : [manifest?.version].filter(Boolean);
     for (const version of versions) if (version !== p.version) fail(`${manifestPath} version (${version}) must match package.json version (${p.version}).`);
@@ -184,6 +184,24 @@ function checkActivationMarkerReachability() {
     if (!/emit this exact string/i.test(content)) fail(`${display(file)} does not instruct the agent to emit its activation marker.`);
     if (!/first response/i.test(content)) fail(`${display(file)} does not state when the activation marker must be emitted.`);
   }
+}
+function checkHookTransport() {
+  for (const relative of ["hooks/session-start", "hooks/run-hook.cmd"]) {
+    if (!exists(relative)) { fail(`Missing hook transport file: ${relative}`); continue; }
+    if (process.platform !== "win32" && (fs.statSync(resolve(relative)).mode & 0o111) === 0) fail(`${relative} is not executable; a bare-path hook invocation receives exit 126.`);
+  }
+  const wrapper = exists("hooks/run-hook.cmd") ? read("hooks/run-hook.cmd") : "";
+  if (!wrapper.startsWith(": << 'CMDBLOCK'")) fail("hooks/run-hook.cmd must use the cmd/bash polyglot guard.");
+  if (wrapper.includes("\r\n")) fail("hooks/run-hook.cmd must remain LF-only because bash parses its polyglot guard.");
+  const claude = json("hooks/hooks.json");
+  const claudeCommand = claude?.hooks?.SessionStart?.[0]?.hooks?.[0]?.command ?? "";
+  if (!/"\$\{CLAUDE_PLUGIN_ROOT\}\/hooks\/run-hook\.cmd"/.test(claudeCommand) || !/--runtime claude/.test(claudeCommand)) fail("hooks/hooks.json must invoke the quoted Claude transport with --runtime claude.");
+  const cursor = json(".cursor/hooks.json");
+  if (cursor?.version !== 1 || !Array.isArray(cursor?.hooks?.sessionStart) || cursor.hooks.sessionStart[0]?.command !== "./hooks/run-hook.cmd session-start --runtime cursor") fail(".cursor/hooks.json must declare Cursor's project sessionStart transport.");
+  const copilot = json(".github/hooks/wcbs-session-start.json");
+  if (!Array.isArray(copilot?.hooks?.sessionStart) || copilot.hooks.sessionStart[0]?.type !== "command" || copilot.hooks.sessionStart[0]?.bash !== "./hooks/run-hook.cmd session-start --runtime github-copilot") fail(".github/hooks/wcbs-session-start.json must declare Copilot's project sessionStart transport.");
+  const plugin = json(".claude-plugin/plugin.json");
+  if (plugin?.hooks !== "./hooks/hooks.json" || plugin?.skills !== "./skills/") fail(".claude-plugin/plugin.json component paths must resolve from the plugin root without parent traversal.");
 }
 function schema(p) { return json(p); }
 function checkAdapters() {
@@ -279,6 +297,7 @@ checkSkills();
 checkWiring();
 checkEvidenceVocabulary();
 checkActivationMarkerReachability();
+checkHookTransport();
 checkAdapters();
 checkController();
 checkVerifiedSupportLevels();

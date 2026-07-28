@@ -7,11 +7,13 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const read = (relative) => fs.readFileSync(path.join(root, ...relative.split("/")), "utf8");
 
-test("Cursor package declares the tested session-start bridge shape", () => {
-  const plugin = JSON.parse(read(".cursor-plugin/plugin.json"));
-  const hooks = JSON.parse(read("hooks/hooks-cursor.json"));
-  assert.equal(plugin.hooks, "./hooks/hooks-cursor.json");
-  assert.deepEqual(hooks.hooks.sessionStart, [{ command: "./hooks/run-hook.cmd session-start" }]);
+test("Cursor and Copilot declare their native project session-start bridges", () => {
+  const cursor = JSON.parse(read(".cursor/hooks.json"));
+  assert.equal(cursor.version, 1);
+  assert.deepEqual(cursor.hooks.sessionStart, [{ command: "./hooks/run-hook.cmd session-start --runtime cursor", timeout: 30, failClosed: false }]);
+  const copilot = JSON.parse(read(".github/hooks/wcbs-session-start.json"));
+  assert.deepEqual(copilot.hooks.sessionStart, [{ type: "command", bash: "./hooks/run-hook.cmd session-start --runtime github-copilot" }]);
+  assert.equal(fs.existsSync(path.join(root, "hooks", "hooks-cursor.json")), false);
 });
 
 test("Codex package is a self-contained local marketplace with a resolvable plugin source", () => {

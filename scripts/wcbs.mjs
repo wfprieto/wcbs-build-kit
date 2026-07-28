@@ -95,7 +95,7 @@ function packageRoots(adapter) {
   // the documented install path replayable without touching a user's global
   // marketplace directory.
   if (adapter.runtime_id === "codex") common.push(".agents/plugins/marketplace.json");
-  if (["claude", "cursor"].includes(adapter.runtime_id)) common.push("hooks");
+  if (adapter.runtime_id === "claude") common.push("hooks");
   return [...common, runtimeArtifact];
 }
 function readInstallManifest(pluginDir) {

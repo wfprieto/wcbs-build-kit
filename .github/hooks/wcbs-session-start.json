@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "./hooks/run-hook.cmd session-start --runtime github-copilot"
+      }
+    ]
+  }
+}

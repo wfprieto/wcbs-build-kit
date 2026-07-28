@@ -52,6 +52,12 @@ plugin directory. `doctor` validates hashes and generated metadata. It reports
 runtime activation as `Not Run` until the clean-session procedure in
 `docs/V2_RUNTIME_EVIDENCE.md` has been executed and independently replayed.
 
+Cursor and GitHub Copilot session hooks are discovered from the project root,
+not an isolated V2 bundle. Use the project-local compatibility installer for
+those two runtimes until V2 has an explicit, separately verified project
+integration command. A successful V2 bundle integrity check is not evidence
+that either runtime registered or fired a project hook.
+
 To remove V2, use the same explicit directory:
 
 ```bash
@@ -143,3 +149,9 @@ Supported target names:
 - `generic-agent`
 
 The installer records owned files in `.wcbs/adapter-install-manifest.json`. Uninstall refuses to run without that manifest so it cannot remove unowned project files.
+
+For Cursor and GitHub Copilot, this path also installs the documented project
+hook registrations: `.cursor/hooks.json` and
+`.github/hooks/wcbs-session-start.json`, respectively, with the WCBS-owned
+`hooks/` transport directory. Their actual runtime activation remains `Not Run`
+until a clean authenticated session is recorded and independently replayed.

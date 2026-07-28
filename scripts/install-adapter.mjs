@@ -54,8 +54,8 @@ const commonFiles = [
 const adapters = {
   "codex": [".codex-plugin/plugin.json", "AGENTS.md"],
   "claude": ["CLAUDE.md", ".claude-plugin/plugin.json", "hooks"],
-  "cursor": [".cursor/rules/super-build-kit.mdc"],
-  "github-copilot": [".github/copilot-instructions.md"],
+  "cursor": [".cursor/rules/super-build-kit.mdc", ".cursor/hooks.json", "hooks"],
+  "github-copilot": [".github/copilot-instructions.md", ".github/hooks/wcbs-session-start.json", "hooks"],
   "gemini": ["GEMINI.md"],
   "replit": ["REPLIT.md", "runtime_adapters/REPLIT_AGENT.md"],
   "manus": ["Manus.md"],

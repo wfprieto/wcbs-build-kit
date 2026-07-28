@@ -13,7 +13,7 @@ This file is generated from the canonical adapter registry through validated man
 | Cursor (`cursor`) | **Full** | **T1** | hybrid | automatic | project | no |
 | Gemini CLI (`gemini`) | **Partial** | **T2** | always_on_instruction_file | automatic | project | no |
 | Generic LLM Agent (`generic-agent`) | **Manual** | **T4** | always_on_instruction_file | manual | project | no |
-| GitHub Copilot (`github-copilot`) | **Partial** | **T2** | always_on_instruction_file | automatic | project | no |
+| GitHub Copilot (`github-copilot`) | **Partial** | **T1** | hybrid | automatic | project | no |
 | Kimi Code (`kimi`) | **Partial** | **T2** | in_process_plugin | automatic | project | no |
 | Manus Agent (`manus`) | **Manual** | **T4** | always_on_instruction_file | manual | project | no |
 | OpenCode (`opencode`) | **Partial** | **T2** | in_process_plugin | automatic | project | no |
@@ -62,10 +62,10 @@ Every `degradable` or `unavailable` cell states its exact fallback. Agents may n
 
 - **Claude and Claude Code**: Surfaces without plugin hooks degrade to CLAUDE.md T2 or manual activation and must record that lower tier.
 - **OpenAI Codex**: Plugin skill discovery requires the Codex plugin runtime to be enabled for the workspace. The root hook is deliberately disabled for Codex.
-- **Cursor**: If native hook registration is unavailable, activation degrades to the always-on rule and is recorded as T2.
+- **Cursor**: The project hook path is structurally tested, but a clean Cursor runtime session is Not Run. If the hook is unavailable, activation degrades to the always-on rule and is recorded as T2.
 - **Gemini CLI**: No independent subagents and no native browser verification; activation is instructed rather than enforced.
 - **Generic LLM Agent**: No native activation mechanism exists, so this is Manual by definition. If command execution is unavailable, the runtime is Unsupported.
-- **GitHub Copilot**: No independent subagents and no native browser verification; activation is instructed rather than enforced.
+- **GitHub Copilot**: No independent subagents and no native browser verification. The project hook path is structurally tested, but a clean Copilot runtime session is Not Run.
 - **Kimi Code**: Package contract is tested locally. Runtime loading, tool mapping, and clean-session activation are not yet verified.
 - **Manus Agent**: Automatic session-start ingestion is not established. Activation is Manual and must never be reported as enforced.
 - **OpenCode**: Package contract is tested locally. Runtime loading, tool mapping, and clean-session activation are not yet verified.
