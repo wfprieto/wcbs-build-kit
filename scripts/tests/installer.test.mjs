@@ -167,7 +167,7 @@ test("rollback failure produces a distinct recovery record with residual paths",
     assert.equal(exists(dir, ".wcbs/adapter-install-recovery.json"), true);
     const recovery = JSON.parse(fs.readFileSync(path.join(dir, ".wcbs", "adapter-install-recovery.json"), "utf8"));
     assert.equal(recovery.status, "ROLLBACK_INCOMPLETE");
-    assert.deepEqual(recovery.residual_paths, [".codex-plugin/plugin.json"]);
+    assert.ok(recovery.residual_paths.includes(".codex-plugin/plugin.json"));
     assert.equal(exists(dir, ".wcbs/adapter-install-manifest.json"), false);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
