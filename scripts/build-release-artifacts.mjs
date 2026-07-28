@@ -82,6 +82,7 @@ function makeZip(entries, zipPath) {
     const name = `${packageName}/${entry.rel}`;
     const nameBuf = Buffer.from(name, "utf8");
     const data = fs.readFileSync(entry.abs);
+    const mode = fs.statSync(entry.abs).mode & 0o777;
     const crc = crc32(data);
     const localHeader = Buffer.concat([
       writeUInt32(0x04034b50),
@@ -101,7 +102,8 @@ function makeZip(entries, zipPath) {
 
     const central = Buffer.concat([
       writeUInt32(0x02014b50),
-      writeUInt16(20),
+      // Mark the entry as Unix-origin so extractors honor the external mode.
+      writeUInt16((3 << 8) | 20),
       writeUInt16(20),
       writeUInt16(0),
       writeUInt16(0),
@@ -115,7 +117,8 @@ function makeZip(entries, zipPath) {
       writeUInt16(0),
       writeUInt16(0),
       writeUInt16(0),
-      writeUInt32(0),
+      // Upper 16 bits carry the Unix file type and permissions.
+      writeUInt32(((0o100000 | mode) & 0xffff) * 0x10000),
       writeUInt32(offset),
       nameBuf
     ]);
