@@ -153,8 +153,14 @@ function sameFilesystemPath(left, right) {
 }
 
 function assertContained(destination, absolute, rel) {
+  const unresolvedBase = path.resolve(destination);
+  const unresolvedCandidate = path.resolve(absolute);
+  const relative = path.relative(unresolvedBase, unresolvedCandidate);
+  if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    throw new Error(`Planned path escapes destination root: ${rel}`);
+  }
   const base = canonicalPath(destination);
-  const candidate = path.resolve(absolute);
+  const candidate = path.resolve(base, relative);
   const comparable = process.platform === "win32" ? candidate.toLowerCase() : candidate;
   if (comparable !== base && !comparable.startsWith(`${base}${path.sep}`)) {
     throw new Error(`Planned path escapes destination root: ${rel}`);
