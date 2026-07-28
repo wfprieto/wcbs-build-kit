@@ -10,7 +10,7 @@ Repository slug: `wcbs-build-kit`. Product/system name: Super Build Kit.
 >
 > Open `GET_STARTED.md` first.
 >
-> Do not choose between `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `QUICKSTART.md`, `INSTALL.md`, `BOOTSTRAP.md`, or `runtime_adapters/` before following `GET_STARTED.md`.
+> Do not choose between `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `INSTALL.md`, `BOOTSTRAP.md`, or `runtime_adapters/` before following `GET_STARTED.md`.
 
 This kit merges the permanent APIVR execution loop, the 16 Elite Build Goals, the reusable specialist/audit structure from `wfprieto/wcbs-build-kit`, and the portable skill/workflow mechanics from `obra/Superpowers`.
 
