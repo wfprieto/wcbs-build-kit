@@ -98,9 +98,8 @@ function parseSinglePayload(result) {
 function invokeExtractedTransport(packageRoot, runtime) {
   const env = { ...process.env, HOME: os.tmpdir(), CURSOR_PLUGIN_ROOT: packageRoot };
   if (isWindows) {
-    const bridge = path.join(packageRoot, "hooks", "run-hook.cmd");
-    return spawnSync(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", `call "${bridge}" session-start --runtime ${runtime}`], {
-      cwd: packageRoot,
+    return spawnSync(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", `call run-hook.cmd session-start --runtime ${runtime}`], {
+      cwd: path.join(packageRoot, "hooks"),
       encoding: "utf8",
       env
     });
