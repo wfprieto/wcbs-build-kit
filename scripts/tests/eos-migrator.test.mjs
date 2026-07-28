@@ -72,3 +72,18 @@ test("two apply runs are idempotent and preserve the canonical entry point", () 
     assert.equal(digestTree(dir), afterFirst, "second run changed the migrated tree");
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
+
+test("migration-applied checkout passes the public entry contract", () => {
+  const dir = fixture();
+  try {
+    const publicContractSource = fs.readFileSync(path.join(root, "scripts", "tests", "public-entry-contract.test.mjs"), "utf8");
+    assert.equal(publicContractSource.includes("QUICKSTART"), false, "public entry contract retained the superseded QUICKSTART reference");
+    const migration = run(["--apply", "--dest", dir], dir);
+    assert.equal(migration.status, 0, `${migration.stdout}\n${migration.stderr}`);
+    const publicContract = spawnSync(process.execPath, ["--test", "scripts/tests/public-entry-contract.test.mjs"], {
+      cwd: dir,
+      encoding: "utf8"
+    });
+    assert.equal(publicContract.status, 0, `${publicContract.stdout}\n${publicContract.stderr}`);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
