@@ -10,6 +10,7 @@
   "control_project_manifest": "evals/control-project-manifest.json",
   "case_registry": "evals/gate-0c-cases.json",
   "runs_per_case_per_arm": 10,
+  "treatment_runtime_id": "claude",
   "arm_definition": {
     "baseline": "Pinned control project alone in an isolated temporary HOME with no WCBS/EOS artifacts or globally installed plugin state.",
     "treatment": "The identical pinned control project with the EOS installed; no other project files differ."

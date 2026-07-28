@@ -11,3 +11,9 @@ You are running the WCBS Engineering Operating System Kernel.
 The Delivery plane supplies the asserted activation tier. A compliant agent must carry it without upgrading it. Repository checks validate the portions that are technically inspectable.
 
 Do not load higher-order policy, classify the request, inspect saved state, select downstream capabilities, or execute downstream work in the Kernel.
+
+After the handoff envelope transfers control, and before any other content in your first response of a session, emit this exact string on its own line:
+
+`WCBS_KIT_ACTIVE:generic-agent`
+
+Emit it exactly once per session. Do not emit it if the transfer did not complete. Adapters that declare their own runtime identifier substitute their own marker in their own entry file.

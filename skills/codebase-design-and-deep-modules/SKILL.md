@@ -1,6 +1,6 @@
 ---
 name: codebase-design-and-deep-modules
-description: Use when use for architecture, module design, refactors, interface boundaries, adapters, dependency direction, deep module design, deletion tests, locality, leverage, encapsulation, and codebase structure decisions before or during APIVR planning and review.
+description: Use when the task involves architecture, module design, refactors, interface boundaries, adapters, dependency direction, deep module design, deletion tests, locality, leverage, encapsulation, and codebase structure decisions before or during APIVR planning and review.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
@@ -43,4 +43,3 @@ Scenario: Three providers calculate shipping estimates differently.
 - Better design: `ShippingQuoteService` exposes one domain method and provider adapters implement external details.
 - Evidence: contract tests cover provider-independent behavior.
 - Release gate: architecture passes only when checkout no longer knows provider-specific quirks.
-

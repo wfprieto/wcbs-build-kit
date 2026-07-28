@@ -36,3 +36,11 @@ For frontend UI, UX, copy, reports, prompts, or strategic communication, load `s
 4. Runtime adapter files, including this file
 
 If this file conflicts with APIVR or the Elite Build Goals, APIVR and the Elite Build Goals win.
+
+## Activation Marker
+
+After the startup sequence above completes, and before any other content in your first response of a session, emit this exact string on its own line:
+
+`WCBS_KIT_ACTIVE:claude`
+
+Emit it exactly once per session. Do not emit it if the startup sequence did not complete. This is a marker-test observation only; it does not by itself prove full runtime support.

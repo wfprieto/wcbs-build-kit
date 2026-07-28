@@ -1,6 +1,6 @@
 ---
 name: product-requirements-and-issue-slicing
-description: Use when use to convert ideas, audits, requests, strategy notes, PRDs, specs, or implementation plans into product requirements and vertical issue slices with independent acceptance criteria, exact evidence, non-goals, dependencies, and APIVR-ready execution order.
+description: Use when converting ideas, audits, requests, strategy notes, PRDs, specs, or implementation plans into product requirements and vertical issue slices with independent acceptance criteria, exact evidence, non-goals, dependencies, and APIVR-ready execution order.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.

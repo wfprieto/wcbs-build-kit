@@ -1,6 +1,6 @@
 ---
 name: compound-learning-capture
-description: Use when use after a verified fix, feature, audit, incident, release, or repeated workflow produces reusable learning that should improve future APIVR plans, reviews, reports, or release decisions without becoming a parallel source of truth.
+description: Use when a verified fix, feature, audit, incident, release, or repeated workflow produces reusable learning that should improve future APIVR plans, reviews, reports, or release decisions without becoming a parallel source of truth.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.

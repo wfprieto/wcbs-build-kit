@@ -39,10 +39,10 @@ const requiredFiles = [
   "runtime_adapters/README.md", "runtime_adapters/PORTABILITY_CONTRACT.md", "runtime_adapters/PORTING_GUIDE.md", "runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md", "runtime_adapters/CAPABILITY_MATRIX.md", "runtime_adapters/VERIFIED_SUPPORT_LEVELS.md", "runtime_adapters/INSTALLATION_MATRIX.md", "runtime_adapters/ACTIVATION_TESTS.md",
   ...["adapter-manifest", "tool-mapping", "bootstrap-controller", "handoff-envelope", "capability-routing", "bootstrap-certificate", "capability-resolution", "elite-goals-ledger", "evidence-ledger", "project-profile", "engineering-team", "risk-register", "release-state"].map(x => `runtime_adapters/schemas/${x}.schema.json`),
   "60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md", "60_templates/STABLE_RELEASE_REPORT_TEMPLATE.md",
-  "docs/USING_THE_SUPER_BUILD_KIT.md", "docs/COMMON_WORKFLOWS.md",
-  "scripts/generate-capability-matrix.mjs", "scripts/generate-bootstrap-controller.mjs", "scripts/generate-load-order.mjs", "scripts/run-python-tests.mjs", "scripts/wcbs-system-test.mjs", "scripts/check-install.mjs", "scripts/install-adapter.mjs", "scripts/adapter-smoke-test.mjs", "scripts/lib/adapter-contract.mjs", "scripts/lib/json-schema.mjs", "scripts/lib/bootstrap-artifacts.mjs", "scripts/lib/certificate-canonicalization.mjs", "scripts/audit-duplicate-guidance.mjs", "scripts/audit-skill-size.mjs", "scripts/audit-skill-contract.mjs", "scripts/audit-layer-budgets.mjs",
+  "docs/USING_THE_SUPER_BUILD_KIT.md", "docs/COMMON_WORKFLOWS.md", "evals/README.md",
+  "scripts/generate-capability-matrix.mjs", "scripts/generate-bootstrap-controller.mjs", "scripts/generate-load-order.mjs", "scripts/run-python-tests.mjs", "scripts/wcbs-system-test.mjs", "scripts/check-install.mjs", "scripts/install-adapter.mjs", "scripts/adapter-smoke-test.mjs", "scripts/lib/adapter-contract.mjs", "scripts/lib/json-schema.mjs", "scripts/lib/bootstrap-artifacts.mjs", "scripts/lib/certificate-canonicalization.mjs", "scripts/audit-duplicate-guidance.mjs", "scripts/audit-skill-size.mjs", "scripts/audit-skill-contract.mjs", "scripts/audit-layer-budgets.mjs", "scripts/run-evals.mjs", "scripts/publish-activation-evidence.mjs",
   "tests/system/routing-fixtures.json", "tests/system/activation-scenarios.json",
-  ...["controller-contract", "adapter-contract", "schema-enforcement", "schema-keyword-support", "bootstrap-fixtures", "long-horizon-memory-contract", "wcbs-doctor", "artifact-bundle", "kernel-contract", "bootstrap-controller"].map(x => `scripts/tests/${x}.test.mjs`),
+  ...["controller-contract", "adapter-contract", "schema-enforcement", "schema-keyword-support", "bootstrap-fixtures", "long-horizon-memory-contract", "wcbs-doctor", "artifact-bundle", "kernel-contract", "bootstrap-controller", "activation-marker-reachability", "skill-contract", "npm-script-entry-points"].map(x => `scripts/tests/${x}.test.mjs`),
   "scripts/tests/fixtures/run-bundle/findings.json", "scripts/tests/fixtures/run-bundle/progress-ledger.jsonl", "scripts/tests/fixtures/run-bundle/tasks/T-01/task-artifact.json", "scripts/tests/fixtures/run-bundle/tasks/T-02/task-artifact.json",
   ...["bootstrap-certificate.json", "capability-resolution.json", "elite-goals-ledger.json", "evidence-ledger.jsonl", "engineering-team.json", "project-profile.json", "risk-register.json", "release-state.json"].map(x => `scripts/tests/fixtures/bootstrap/${x}`),
   ".gitattributes", ".gitignore", ".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json", ".cursor/rules/super-build-kit.mdc", ".github/copilot-instructions.md", "hooks/session-start", "hooks/run-hook.cmd", "hooks/hooks.json", "hooks/hooks-cursor.json",
@@ -71,13 +71,16 @@ function checkPackage() {
     "system-test": "node scripts/wcbs-system-test.mjs",
     "check-install": "node scripts/check-install.mjs",
     "behavior-test": "node scripts/run-behavior-fixtures.mjs",
+    eval: "node scripts/run-evals.mjs",
+    "eval:strict": "node scripts/run-evals.mjs --strict",
+    "eval:publish-evidence": "node scripts/publish-activation-evidence.mjs",
     "version:audit": "node scripts/audit-version-drift.mjs",
     "audit:duplicates": "node scripts/audit-duplicate-guidance.mjs",
     "audit:skill-contract": "node scripts/audit-skill-contract.mjs",
     "audit:layers": "node scripts/audit-layer-budgets.mjs",
     "audit:governance": "npm run audit:duplicates && npm run audit:skill-contract && npm run audit:layers",
     test: "npm run test:node && npm run test:python",
-    check: "npm run doctor && npm run check:matrix && npm run check:controller && npm run check:load-order && npm run version:audit && npm run audit:skill-contract && npm run audit:layers && npm run audit:governance && npm run behavior-test && npm run test",
+    check: "npm run doctor && npm run check:matrix && npm run check:controller && npm run check:load-order && npm run version:audit && npm run audit:skill-contract && npm run audit:layers && npm run audit:governance && npm run eval && npm run behavior-test && npm run test",
     "release-check": "npm run check && npm run system-test && npm run check-install && npm run build:release-artifacts"
   };
   for (const [name, command] of Object.entries(expectedScripts)) if (p.scripts?.[name] !== command) fail(`package.json script ${name} must be exactly: ${command}`);
@@ -85,6 +88,15 @@ function checkPackage() {
     const manifest = json(manifestPath);
     const versions = manifestPath.endsWith("marketplace.json") && Array.isArray(manifest?.plugins) ? manifest.plugins.map(x => x.version).filter(Boolean) : [manifest?.version].filter(Boolean);
     for (const version of versions) if (version !== p.version) fail(`${manifestPath} version (${version}) must match package.json version (${p.version}).`);
+    if (manifestPath.endsWith("marketplace.json") && Array.isArray(manifest?.plugins)) {
+      for (const plugin of manifest.plugins) {
+        const source = typeof plugin?.source === "string" ? plugin.source : plugin?.source?.url;
+        if (typeof source !== "string") { fail(`${manifestPath} plugin ${plugin?.name ?? "(unnamed)"} must declare a string source.`); continue; }
+        if (/^[a-z][a-z0-9+.-]*:\/\//i.test(source)) continue;
+        const resolved = path.resolve(path.dirname(resolve(manifestPath)), source);
+        if (resolved !== root && !resolved.startsWith(root + path.sep)) fail(`${manifestPath} plugin ${plugin?.name ?? "(unnamed)"} source (${source}) resolves outside the repository root.`);
+      }
+    }
   }
   if (json(".codex-plugin/plugin.json")?.hooks && JSON.stringify(json(".codex-plugin/plugin.json").hooks) !== "{}") fail(".codex-plugin/plugin.json hooks must be exactly {} to prevent hook auto-discovery.");
 }
@@ -114,6 +126,31 @@ function checkEvidenceVocabulary() {
   for (const file of ["00_start_here/START_HERE.md", "00_start_here/LOAD_ORDER.md", "skills/super-build-kit/SKILL.md", "skills/subagent-driven-development/SKILL.md"]) if (exists(file)) for (const term of ["Inconclusive", "Not Applicable"]) if (read(file).includes(term)) fail(`${display(file)} uses non-canonical evidence term: ${term}`);
   const kernel = read("BOOTSTRAP.md");
   for (const term of ["PASS", "CONDITIONAL PASS", "PARTIAL", "FAIL", "BLOCKED", "Verified", "Likely", "Suspected", "Unknown", "Not Run", "Blocked"]) if (kernel.includes(term)) fail(`BOOTSTRAP.md contains forbidden lifecycle vocabulary: ${term}`);
+}
+const ACTIVATION_INSTRUCTION_FILES = new Map([
+  ["claude", "CLAUDE.md"],
+  ["codex", "AGENTS.md"],
+  ["cursor", ".cursor/rules/super-build-kit.mdc"],
+  ["gemini", "GEMINI.md"],
+  ["generic-agent", "BOOTSTRAP.md"],
+  ["github-copilot", ".github/copilot-instructions.md"],
+  ["manus", "Manus.md"],
+  ["replit", "REPLIT.md"]
+]);
+function checkActivationMarkerReachability() {
+  const dir = resolve("runtime_adapters/manifests"); if (!fs.existsSync(dir)) return;
+  for (const entry of fs.readdirSync(dir)) {
+    if (!entry.endsWith(".json")) continue;
+    const manifest = json(`runtime_adapters/manifests/${entry}`); if (!manifest) continue;
+    const id = manifest.runtime_id, marker = manifest.activation_marker;
+    const file = ACTIVATION_INSTRUCTION_FILES.get(id);
+    if (!file) { fail(`runtime ${id} has no activation instruction file mapping; its marker cannot be observed.`); continue; }
+    if (!exists(file)) { fail(`runtime ${id} activation instruction file is missing: ${file}`); continue; }
+    const content = read(file);
+    if (!content.includes(marker)) fail(`${display(file)} does not contain the activation marker ${marker}; the marker is unreachable for runtime ${id}.`);
+    if (!/emit this exact string/i.test(content)) fail(`${display(file)} does not instruct the agent to emit its activation marker.`);
+    if (!/first response/i.test(content)) fail(`${display(file)} does not state when the activation marker must be emitted.`);
+  }
 }
 function schema(p) { return json(p); }
 function checkAdapters() {
@@ -198,6 +235,7 @@ checkWorkflowFiles();
 checkSkills();
 checkWiring();
 checkEvidenceVocabulary();
+checkActivationMarkerReachability();
 checkAdapters();
 checkController();
 checkVerifiedSupportLevels();

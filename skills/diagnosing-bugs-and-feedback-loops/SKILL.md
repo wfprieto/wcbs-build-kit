@@ -1,6 +1,6 @@
 ---
 name: diagnosing-bugs-and-feedback-loops
-description: Use when use for bug diagnosis, incidents, regressions, flaky behavior, unknown failures, root-cause analysis, reproduction, hypothesis testing, debug loops, and APIVR debug paths where a tight red-capable feedback loop must exist before fixing.
+description: Use when the task involves bug diagnosis, incidents, regressions, flaky behavior, unknown failures, root-cause analysis, reproduction, hypothesis testing, debug loops, and APIVR debug paths where a tight red-capable feedback loop must exist before fixing.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.

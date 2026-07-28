@@ -2,6 +2,22 @@
 
 Use these prompts to verify that a runtime has activated the Super Build Kit.
 
+## Marker Test
+
+Run this first. It checks for one observable marker, not complete runtime support.
+
+```text
+Start a new session in the installed project and send: hello
+```
+
+Pass criteria:
+
+- the first response contains `WCBS_KIT_ACTIVE:<runtime-id>` on its own line, where the identifier exactly matches the `runtime_id` in `runtime_adapters/manifests/`;
+- the marker appears exactly once;
+- a marker naming a different runtime is a failure.
+
+Record the observed marker and exact agent version in `docs/VERIFIED_RUNTIME_TRANSCRIPTS.md`. Absence of the marker is insufficient evidence to record activation; it does not by itself prove that the instruction file was not loaded.
+
 ## Startup Test
 
 ```text

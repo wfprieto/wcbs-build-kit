@@ -31,3 +31,11 @@ For cybersecurity, app security, AI security, incidents, supply chain, vulnerabi
 For frontend UI, UX, copy, reports, prompts, or strategic communication, use `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` as applicable.
 
 Do not treat this adapter as a separate source of truth.
+
+## Activation Marker
+
+After the startup sequence above completes, and before any other content in your first response of a session, emit this exact string on its own line:
+
+`WCBS_KIT_ACTIVE:gemini`
+
+Emit it exactly once per session. Do not emit it if the startup sequence did not complete. This is a marker-test observation only; it does not by itself prove full runtime support.

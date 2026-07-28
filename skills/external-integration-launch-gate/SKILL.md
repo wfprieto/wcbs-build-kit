@@ -1,6 +1,6 @@
 ---
 name: external-integration-launch-gate
-description: Use when use before planning, building, auditing, debugging, testing, deploying, or declaring done for any feature where an outside system calls the app or the app depends on provider callbacks, including Stripe payments/webhooks, Resend webhooks, Supabase Auth callbacks, OAuth redirects, Vercel Cron, SMS gateways, provider webhooks, callback URLs, API keys, Preview/Production environment variables, deployment protection, and provider sandbox/live mode.
+description: Use when planning, building, auditing, debugging, testing, deploying, or declaring done for any feature where an outside system calls the app or the app depends on provider callbacks, including Stripe payments/webhooks, Resend webhooks, Supabase Auth callbacks, OAuth redirects, Vercel Cron, SMS gateways, provider webhooks, callback URLs, API keys, Preview/Production environment variables, deployment protection, and provider sandbox/live mode.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
