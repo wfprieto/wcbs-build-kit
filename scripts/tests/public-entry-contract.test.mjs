@@ -29,7 +29,7 @@ const supportedTargets = ["codex", "claude", "cursor", "github-copilot", "gemini
 test("README gives a single public URL entry path", () => {
   assert.match(readme, /AI CODING AGENT GIVEN ONLY THIS REPOSITORY URL/);
   assert.match(readme, /Open `GET_STARTED\.md` first\./);
-  assert.match(readme, /Do not choose between `AGENTS\.md`, `CLAUDE\.md`, `GEMINI\.md`, `QUICKSTART\.md`, `INSTALL\.md`, `BOOTSTRAP\.md`, or `runtime_adapters\/` before following `GET_STARTED\.md`\./);
+  assert.match(readme, /Do not choose between `AGENTS\.md`, `CLAUDE\.md`, `GEMINI\.md`, `INSTALL\.md`, `BOOTSTRAP\.md`, or `runtime_adapters\/` before following `GET_STARTED\.md`\./);
   assert.match(readme, /`BOOTSTRAP\.md`/);
   assert.match(readme, /`00_start_here\/bootstrap-controller\.json`/);
   assert.match(readme, /do not claim activation until the installed adapter passes its doctor and smoke test/i);
