@@ -1,6 +1,11 @@
 ---
 name: product-strategy-office-hours
 description: Use when a request needs product strategy, founder/CEO-style decision clarity, premise challenge, target-user sharpening, alternatives generation, opportunity sizing, or pre-build alignment before APIVR planning. Especially useful before building features, products, landing pages, workflows, or strategic recommendations where the problem, buyer, user, urgency, or success metric is not yet crisp.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # Product Strategy Office Hours

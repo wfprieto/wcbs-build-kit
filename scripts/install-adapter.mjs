@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -24,8 +25,10 @@ const dest = readArg("--dest");
 const jsonOutput = has("--json");
 const mode = ["--list-targets", "--install", "--update", "--uninstall", "--doctor", "--verify-owned-files", "--repair", "--dry-run"].find(has) ?? "--dry-run";
 const manifestRel = ".wcbs/adapter-install-manifest.json";
+const recoveryRel = ".wcbs/adapter-install-recovery.json";
 
 const commonFiles = [
+  "BOOTSTRAP.md",
   "00_start_here",
   "10_governance",
   "20_skills",
@@ -38,7 +41,6 @@ const commonFiles = [
   "README.md",
   "GET_STARTED.md",
   "INSTALL.md",
-  "QUICKSTART.md",
   "MANIFEST.md",
   "SUPPORT_MATRIX.md",
   "RELEASE_PROCESS.md",
@@ -52,7 +54,7 @@ const commonFiles = [
 
 const adapters = {
   "codex": [".codex-plugin/plugin.json", "AGENTS.md"],
-  "claude": ["CLAUDE.md"],
+  "claude": ["CLAUDE.md", ".claude-plugin/plugin.json", "hooks"],
   "cursor": [".cursor/rules/super-build-kit.mdc"],
   "github-copilot": [".github/copilot-instructions.md"],
   "gemini": ["GEMINI.md"],
@@ -92,7 +94,8 @@ function display(rel) {
 function walkSource(rel) {
   const source = path.join(root, ...rel.split("/"));
   if (!fs.existsSync(source)) throw new Error(`Source path does not exist: ${rel}`);
-  const stat = fs.statSync(source);
+  const stat = fs.lstatSync(source);
+  if (stat.isSymbolicLink()) throw new Error(`Source path must not be a symbolic link: ${rel}`);
   if (stat.isFile()) return [rel];
   const files = [];
   const walk = (absolute, prefix) => {
@@ -100,8 +103,10 @@ function walkSource(rel) {
       if (entry.name === "__pycache__") continue;
       const childAbs = path.join(absolute, entry.name);
       const childRel = `${prefix}/${entry.name}`;
-      if (entry.isDirectory()) walk(childAbs, childRel);
-      else if (entry.isFile()) files.push(childRel);
+      const childStat = fs.lstatSync(childAbs);
+      if (childStat.isSymbolicLink()) throw new Error(`Source path must not be a symbolic link: ${childRel}`);
+      if (childStat.isDirectory()) walk(childAbs, childRel);
+      else if (childStat.isFile()) files.push(childRel);
     }
   };
   walk(source, rel);
@@ -117,48 +122,208 @@ function manifestPath(destination) {
   return path.join(destination, ...manifestRel.split("/"));
 }
 
+function recoveryPath(destination) {
+  return path.join(destination, ...recoveryRel.split("/"));
+}
+
 function loadInstallManifest(destination) {
   const file = manifestPath(destination);
   if (!fs.existsSync(file)) return null;
   return JSON.parse(fs.readFileSync(file, "utf8"));
 }
 
-function writeInstallManifest(destination, files) {
-  const record = {
+function installRecord(files) {
+  return {
     installed_by: "wcbs-build-kit",
     target,
     source_root: root,
     installed_utc: new Date().toISOString(),
     files
   };
-  const file = manifestPath(destination);
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, `${JSON.stringify(record, null, 2)}\n`, "utf8");
-  return record;
 }
 
-function copyFileRel(destination, rel, ownedFiles) {
-  const source = path.join(root, ...rel.split("/"));
-  const targetFile = path.join(destination, ...rel.split("/"));
-  if (fs.existsSync(targetFile)) {
-    const same = fs.readFileSync(source).equals(fs.readFileSync(targetFile));
-    if (!same && !ownedFiles.has(rel)) {
-      throw new Error(`Refusing to overwrite unowned file: ${rel}`);
+function canonicalPath(value) {
+  const resolved = path.resolve(value);
+  const existing = fs.existsSync(resolved) ? fs.realpathSync.native(resolved) : resolved;
+  return process.platform === "win32" ? existing.toLowerCase() : existing;
+}
+
+function sameFilesystemPath(left, right) {
+  return canonicalPath(left) === canonicalPath(right);
+}
+
+function assertContained(destination, absolute, rel) {
+  const unresolvedBase = path.resolve(destination);
+  const unresolvedCandidate = path.resolve(absolute);
+  const relative = path.relative(unresolvedBase, unresolvedCandidate);
+  if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    throw new Error(`Planned path escapes destination root: ${rel}`);
+  }
+  const base = canonicalPath(destination);
+  const candidate = path.resolve(base, relative);
+  const comparable = process.platform === "win32" ? candidate.toLowerCase() : candidate;
+  if (comparable !== base && !comparable.startsWith(`${base}${path.sep}`)) {
+    throw new Error(`Planned path escapes destination root: ${rel}`);
+  }
+}
+
+function assertNoSymlinkSegments(destination, absolute, rel) {
+  let cursor = path.resolve(destination);
+  const relative = path.relative(cursor, absolute);
+  for (const segment of relative.split(path.sep).filter(Boolean)) {
+    cursor = path.join(cursor, segment);
+    if (!fs.existsSync(cursor)) continue;
+    const stat = fs.lstatSync(cursor);
+    if (stat.isSymbolicLink()) throw new Error(`Refusing symbolic-link destination path: ${rel}`);
+  }
+}
+
+function buildPlan(destination, update) {
+  const existing = loadInstallManifest(destination);
+  if (update && !existing) throw new Error("Update requires an existing .wcbs/adapter-install-manifest.json. Run --install first.");
+  if (!update && existing) throw new Error("Install manifest already exists. Use --update or --uninstall before reinstalling.");
+  const files = plannedFiles();
+  const owned = new Set(existing?.files ?? []);
+  const seen = new Set();
+  const collisions = [];
+  const operations = [];
+
+  for (const rel of files) {
+    const destinationFile = path.join(destination, ...rel.split("/"));
+    assertContained(destination, destinationFile, rel);
+    assertNoSymlinkSegments(destination, destinationFile, rel);
+    const key = process.platform === "win32" ? destinationFile.toLowerCase() : destinationFile;
+    if (seen.has(key)) collisions.push(`${rel} (duplicate canonical path)`);
+    seen.add(key);
+    if (fs.existsSync(destinationFile)) {
+      const stat = fs.lstatSync(destinationFile);
+      if (!stat.isFile()) collisions.push(`${rel} (expected file, found non-file)`);
+      else if (!owned.has(rel)) collisions.push(`${rel} (unowned existing file)`);
+    }
+    operations.push({ rel, source: path.join(root, ...rel.split("/")), destination: destinationFile });
+  }
+
+  const finalManifest = manifestPath(destination);
+  assertContained(destination, finalManifest, manifestRel);
+  assertNoSymlinkSegments(destination, finalManifest, manifestRel);
+  if (!update && fs.existsSync(finalManifest)) collisions.push(`${manifestRel} (existing manifest)`);
+  if (collisions.length) {
+    throw new Error(`Preflight collision(s); no files written: ${[...new Set(collisions)].sort().join(", ")}`);
+  }
+  return { existing, files, operations, record: installRecord(files) };
+}
+
+function stagePlan(plan) {
+  const stageRoot = fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-adapter-stage-"));
+  for (const operation of plan.operations) {
+    const staged = path.join(stageRoot, "payload", ...operation.rel.split("/"));
+    fs.mkdirSync(path.dirname(staged), { recursive: true });
+    fs.copyFileSync(operation.source, staged);
+    if (!fs.readFileSync(operation.source).equals(fs.readFileSync(staged))) {
+      throw new Error(`Staged payload verification failed: ${operation.rel}`);
+    }
+    operation.staged = staged;
+  }
+  const stagedManifest = path.join(stageRoot, "manifest.json");
+  fs.writeFileSync(stagedManifest, `${JSON.stringify(plan.record, null, 2)}\n`, "utf8");
+  return { stageRoot, stagedManifest };
+}
+
+function ensureParentDirectories(file, destination, journal) {
+  const missing = [];
+  let cursor = path.dirname(file);
+  while (cursor !== destination && cursor.startsWith(destination) && !fs.existsSync(cursor)) {
+    missing.push(cursor);
+    cursor = path.dirname(cursor);
+  }
+  for (const dir of missing.reverse()) {
+    fs.mkdirSync(dir);
+    journal.createdDirectories.push(dir);
+  }
+}
+
+function backupExisting(file, backupRoot, rel) {
+  if (!fs.existsSync(file)) return null;
+  const backup = path.join(backupRoot, ...rel.split("/"));
+  fs.mkdirSync(path.dirname(backup), { recursive: true });
+  fs.copyFileSync(file, backup);
+  return backup;
+}
+
+function writeRecoveryRecord(destination, error, residualPaths) {
+  const file = recoveryPath(destination);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, `${JSON.stringify({
+    status: "ROLLBACK_INCOMPLETE",
+    target,
+    failed_utc: new Date().toISOString(),
+    error: error.message,
+    residual_paths: residualPaths.map((item) => display(path.relative(destination, item)))
+  }, null, 2)}\n`, "utf8");
+  return file;
+}
+
+function rollbackTransaction(destination, journal, originalError) {
+  const residual = [];
+  const injectedRel = process.env.WCBS_TEST_FAIL_ROLLBACK_REL ?? null;
+  for (const entry of [...journal.files].reverse()) {
+    try {
+      if (injectedRel === entry.rel) throw new Error("Injected rollback failure");
+      if (entry.backup) fs.copyFileSync(entry.backup, entry.destination);
+      else fs.rmSync(entry.destination, { force: true });
+    } catch {
+      residual.push(entry.destination);
     }
   }
-  fs.mkdirSync(path.dirname(targetFile), { recursive: true });
-  fs.copyFileSync(source, targetFile);
+  for (const dir of [...journal.createdDirectories].reverse()) {
+    try {
+      if (fs.existsSync(dir) && fs.readdirSync(dir).length === 0) fs.rmdirSync(dir);
+    } catch {
+      residual.push(dir);
+    }
+  }
+  if (residual.length) {
+    const recovery = writeRecoveryRecord(destination, originalError, [...new Set(residual)]);
+    throw new Error(`CRITICAL: installation failed and rollback was incomplete. Recovery record: ${recovery}`);
+  }
+}
+
+function commitPlan(destination, plan, staged) {
+  const backupRoot = path.join(staged.stageRoot, "backup");
+  const journal = { files: [], createdDirectories: [] };
+  const failAfter = Number.parseInt(process.env.WCBS_TEST_FAIL_AFTER_WRITES ?? "0", 10);
+  let writes = 0;
+  try {
+    for (const operation of plan.operations) {
+      ensureParentDirectories(operation.destination, destination, journal);
+      const backup = backupExisting(operation.destination, backupRoot, operation.rel);
+      fs.copyFileSync(operation.staged, operation.destination);
+      journal.files.push({ ...operation, backup });
+      writes += 1;
+      if (failAfter > 0 && writes >= failAfter) throw new Error(`Injected commit failure after ${writes} write(s)`);
+    }
+    const finalManifest = manifestPath(destination);
+    ensureParentDirectories(finalManifest, destination, journal);
+    const manifestBackup = backupExisting(finalManifest, backupRoot, manifestRel);
+    fs.copyFileSync(staged.stagedManifest, finalManifest);
+    journal.files.push({ rel: manifestRel, destination: finalManifest, backup: manifestBackup });
+  } catch (error) {
+    rollbackTransaction(destination, journal, error);
+    throw error;
+  }
 }
 
 function installOrUpdate(destination, update) {
-  const existing = loadInstallManifest(destination);
-  if (update && !existing) throw new Error("Update requires an existing .wcbs/adapter-install-manifest.json. Run --install first.");
-  const files = plannedFiles();
-  const owned = new Set(existing?.files ?? []);
-  for (const rel of files) copyFileRel(destination, rel, owned);
-  writeInstallManifest(destination, files);
+  const plan = buildPlan(destination, update);
+  let staged = null;
+  try {
+    staged = stagePlan(plan);
+    commitPlan(destination, plan, staged);
+  } finally {
+    if (staged?.stageRoot) fs.rmSync(staged.stageRoot, { recursive: true, force: true });
+  }
   console.log(`PASS: ${update ? "updated" : "installed"} ${target} adapter into ${destination}`);
-  console.log(`Files tracked: ${files.length}`);
+  console.log(`Files tracked: ${plan.files.length}`);
 }
 
 function uninstall(destination) {
@@ -205,8 +370,7 @@ function verifyOwnedFiles(destination) {
 function repair(destination) {
   const existing = loadInstallManifest(destination);
   if (!existing) throw new Error("Repair requires an existing install manifest.");
-  const owned = new Set(existing.files);
-  for (const rel of existing.files) copyFileRel(destination, rel, owned);
+  installOrUpdate(destination, true);
   emit({ status: "PASS", target: existing.target, files_repaired: existing.files.length }, `PASS: repaired owned files for ${existing.target}`);
 }
 
@@ -219,9 +383,8 @@ try {
   assertTarget();
   if (mode === "--dry-run") {
     const files = plannedFiles();
-    if (jsonOutput) {
-      emit({ target, mode: "dry-run", files }, "");
-    } else {
+    if (jsonOutput) emit({ target, mode: "dry-run", files }, "");
+    else {
       console.log(`Adapter target: ${target}`);
       console.log("Mode: dry-run");
       console.log(`Files that would be installed: ${files.length}`);
@@ -234,6 +397,9 @@ try {
   }
   assertDest();
   const destination = path.resolve(dest);
+  if (sameFilesystemPath(destination, root)) {
+    throw new Error("Build Kit source cannot be its own adapter destination. Supply the separate target project root.");
+  }
   fs.mkdirSync(destination, { recursive: true });
   if (mode === "--install") installOrUpdate(destination, false);
   else if (mode === "--update") installOrUpdate(destination, true);

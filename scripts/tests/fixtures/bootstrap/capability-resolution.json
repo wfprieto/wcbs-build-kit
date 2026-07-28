@@ -1,0 +1,29 @@
+{
+  "project_id": "atlas-bootstrap",
+  "capabilities": [
+    {
+      "id": "project-bootstrap",
+      "applicable": true,
+      "justification": "The project requires deterministic initialization and preflight evidence",
+      "subcapabilities": ["profile", "team", "gates"],
+      "resolved_skills": ["project-bootstrap-and-setup"],
+      "resolved_audits": ["schema-enforcement"],
+      "resolved_templates": ["DESIGN_SPEC_TEMPLATE"],
+      "resolved_gates": ["A", "B"],
+      "ceiling": "Full"
+    },
+    {
+      "id": "external-deployment",
+      "applicable": false,
+      "justification": "Deployment is outside initialization scope",
+      "subcapabilities": [],
+      "resolved_skills": [],
+      "resolved_audits": [],
+      "resolved_templates": [],
+      "resolved_gates": [],
+      "ceiling": "Unsupported"
+    }
+  ],
+  "evidence_state": "Verified",
+  "resolved_at": "2026-07-27T15:00:00Z"
+}

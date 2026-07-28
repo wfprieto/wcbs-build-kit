@@ -1,6 +1,11 @@
 ---
 name: repeatable-agent-loops
 description: Use when designing, running, auditing, or reviewing repeatable agent loops for recurring audits, iterative fixes, maintenance sweeps, monitors, documentation checks, quality passes, test reliability sweeps, post-deploy checks, or any bounded workflow where an agent observes state, takes one action, records evidence, decides whether to continue, and stops safely under APIVR.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # Repeatable Agent Loops

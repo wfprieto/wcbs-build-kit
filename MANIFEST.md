@@ -15,7 +15,7 @@ This manifest separates active system files from provenance and local-only mater
 - `runtime_adapters/`
 - `scripts/`
 - root adapter files: `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `REPLIT.md`, `Manus.md`
-- install and release files: `INSTALL.md`, `QUICKSTART.md`, `README.md`, `CHANGELOG.md`, `RELEASE_PROCESS.md`, `VERSIONING.md`, `SECURITY.md`
+- install and release files: `INSTALL.md`, `GET_STARTED.md`, `README.md`, `CHANGELOG.md`, `RELEASE_PROCESS.md`, `VERSIONING.md`, `SECURITY.md`
 - short entry point: `GET_STARTED.md`
 
 ## Governed Drift Controls

@@ -1,6 +1,11 @@
 ---
 name: qa-and-browser-verification
-description: Use for QA planning, manual workflow verification, browser testing, UI regression review, issue taxonomy, QA health scoring, screenshot/video evidence, adverse-state testing, fix loops, and APIVR Phase 5 verification for frontend, workflow, or user-visible changes.
+description: Use when use for QA planning, manual workflow verification, browser testing, UI regression review, issue taxonomy, QA health scoring, screenshot/video evidence, adverse-state testing, fix loops, and APIVR Phase 5 verification for frontend, workflow, or user-visible changes.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # QA And Browser Verification

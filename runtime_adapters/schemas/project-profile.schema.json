@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["project_id", "objective", "request_summary", "constraints", "capabilities", "not_applicable", "evidence_state"],
+  "properties": {
+    "project_id": {"type": "string"},
+    "objective": {"type": "string"},
+    "request_summary": {"type": "string"},
+    "constraints": {"type": "array", "items": {"type": "string"}},
+    "capabilities": {"type": "array", "items": {"type": "string"}},
+    "not_applicable": {"type": "array", "items": {"type": "object", "required": ["capability", "justification"], "properties": {"capability": {"type": "string"}, "justification": {"type": "string"}}, "additionalProperties": false}},
+    "evidence_state": {"enum": ["Verified", "Likely", "Suspected", "Unknown", "Not Run", "Blocked"]}
+  },
+  "additionalProperties": false
+}

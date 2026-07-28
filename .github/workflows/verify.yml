@@ -16,13 +16,62 @@ jobs:
     name: Doctor Verification
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
+      - name: Checkout branch head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup Node
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: "24"
 
-      - name: Verify kit
-        run: npm run verify
+      - name: Prove EOS migrator safety in isolation
+        run: node --test scripts/tests/eos-migrator.test.mjs
+
+      - name: Apply EOS migration in isolated checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          provenance_before=$(find 90_archive/provenance -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum)
+          node scripts/apply-eos-remediation.mjs --apply --dest "$GITHUB_WORKSPACE"
+          npm run generate:load-order
+          npm run generate:controller
+          npm run generate:matrix
+          provenance_after=$(find 90_archive/provenance -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum)
+          test "$provenance_before" = "$provenance_after"
+
+      - name: Package migrated file set
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifact="$RUNNER_TEMP/eos-migration-artifact"
+          mkdir -p "$artifact"
+          git diff --name-only --diff-filter=ACMRT | grep -v '^90_archive/provenance/' > "$RUNNER_TEMP/eos-migration-files.list" || true
+          if [ -s "$RUNNER_TEMP/eos-migration-files.list" ]; then
+            tar --verbatim-files-from -czf "$artifact/eos-migration-files.tar.gz" -T "$RUNNER_TEMP/eos-migration-files.list"
+          else
+            tar -czf "$artifact/eos-migration-files.tar.gz" --files-from /dev/null
+          fi
+          git diff --name-only --diff-filter=D | grep -v '^90_archive/provenance/' > "$artifact/deleted-files.txt" || true
+          git diff --stat -- . > "$artifact/diff-stat-unfiltered.txt"
+          grep -v '90_archive/provenance/' "$artifact/diff-stat-unfiltered.txt" > "$artifact/diff-stat.txt" || true
+          rm "$artifact/diff-stat-unfiltered.txt"
+
+      - name: Verify migrated checkout
+        id: migrated-check
+        shell: bash
+        run: |
+          set +e
+          (npm run verify && npm run check) 2>&1 | tee "$RUNNER_TEMP/eos-migration-artifact/verification.log"
+          status=${PIPESTATUS[0]}
+          echo "$status" > "$RUNNER_TEMP/eos-migration-artifact/verification-exit-code.txt"
+          exit "$status"
+
+      - name: Upload migrated file set and verification log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: eos-migration-files
+          path: ${{ runner.temp }}/eos-migration-artifact/
+          retention-days: 7

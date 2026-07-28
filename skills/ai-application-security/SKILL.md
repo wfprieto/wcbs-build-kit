@@ -1,6 +1,11 @@
 ---
 name: ai-application-security
 description: Use when auditing, building, testing, or releasing AI applications, LLM apps, RAG systems, vector databases, embedding pipelines, prompt templates, system prompts, tool-using agents, model routing, AI data leakage, prompt injection, jailbreak resistance, retrieval poisoning, system prompt leakage, or AI security guardrails.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # AI Application Security

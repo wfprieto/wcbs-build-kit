@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["kernel_version", "delivery_environment", "asserted_activation_tier", "tier_asserted_by", "controller_path", "controller_sha256", "project_root", "transfer_status"],
+  "properties": {
+    "kernel_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "delivery_environment": {"type": "string"},
+    "asserted_activation_tier": {"enum": ["T1", "T2", "T3", "T4"]},
+    "tier_asserted_by": {"type": "string"},
+    "controller_path": {"const": "00_start_here/bootstrap-controller.json"},
+    "controller_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "project_root": {"type": "string"},
+    "transfer_status": {"const": "ready"}
+  },
+  "additionalProperties": false
+}

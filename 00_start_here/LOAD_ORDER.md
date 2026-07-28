@@ -371,3 +371,182 @@ Load:
 - `skills/knowledge-refresh-and-drift-control/SKILL.md` when architecture, QA, release, docs, or handoff guidance becomes stale or duplicated
 
 Define feedback loop, specialist review passes, QA matrix, release gate statuses, rollback, changelog, post-release horizon, and final APIVR verdict.
+
+<!-- BEGIN GENERATED CAPABILITY ROUTING -->
+
+## EOS Capability Routing
+
+> GENERATED REGION. Source: `00_start_here/capability-routing.json`. Do not edit between the markers.
+
+### needs-ui
+
+Subcapabilities: `interaction-design`, `visual-quality`, `responsive-experience`, `browser-verification`.
+
+Required skills: `skills/ui-ux-design-quality/SKILL.md`, `skills/qa-and-browser-verification/SKILL.md`.
+Optional skills: `skills/media-and-asset-pipeline/SKILL.md`, `skills/throwaway-prototyping/SKILL.md`.
+Audits: `50_audits/CANONICAL_AUDIT_PROTOCOLS.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-api
+
+Subcapabilities: `api-contract`, `external-api`, `webhook-integration`.
+
+Required skills: `skills/external-api-integration/SKILL.md`, `skills/external-integration-launch-gate/SKILL.md`.
+Optional skills: `skills/codebase-design-and-deep-modules/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-storage
+
+Subcapabilities: `data-model`, `data-integrity`, `migration-safety`.
+
+Required skills: `skills/domain-modeling-and-shared-language/SKILL.md`, `skills/codebase-design-and-deep-modules/SKILL.md`.
+Optional skills: `skills/data-output-and-reporting/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-auth
+
+Subcapabilities: `identity-security`, `authorization-security`, `session-security`.
+
+Required skills: `skills/web-application-security/SKILL.md`, `skills/cybersecurity-risk-routing/SKILL.md`.
+Optional skills: `skills/security-incident-response/SKILL.md`.
+Audits: `50_audits/CANONICAL_AUDIT_PROTOCOLS.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-security
+
+Subcapabilities: `application-security`, `supply-chain-security`, `secrets-management`, `abuse-resistance`, `data-security`, `incident-security`, `ai-security`, `risk-routing`.
+
+Required skills: `skills/web-application-security/SKILL.md`, `skills/supply-chain-and-build-provenance/SKILL.md`, `skills/cybersecurity-risk-routing/SKILL.md`.
+Optional skills: `skills/ai-application-security/SKILL.md`, `skills/security-incident-response/SKILL.md`.
+Audits: `50_audits/AUDIT_TIER_ROUTER.md`, `50_audits/CANONICAL_AUDIT_PROTOCOLS.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-privacy
+
+Subcapabilities: `data-minimization`, `retention`, `consent`, `sensitive-evidence`.
+
+Required skills: `skills/cybersecurity-risk-routing/SKILL.md`.
+Optional skills: `skills/security-incident-response/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-compliance
+
+Subcapabilities: `control-evidence`, `governance-readiness`, `auditability`.
+
+Required skills: `skills/mcp-tool-governance/SKILL.md`, `skills/release-readiness-and-ship-gates/SKILL.md`.
+Optional skills: `skills/data-output-and-reporting/SKILL.md`.
+Audits: `50_audits/AUDIT_TIER_ROUTER.md`.
+Templates: `60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-performance
+
+Subcapabilities: `runtime-performance`, `cost-control`, `feedback-loop`.
+
+Required skills: `skills/diagnosing-bugs-and-feedback-loops/SKILL.md`.
+Optional skills: `skills/agent-observability-and-run-tracing/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-ai
+
+Subcapabilities: `agent-control`, `tool-governance`, `prompt-security`, `long-horizon-runtime`.
+
+Required skills: `skills/ai-application-security/SKILL.md`, `skills/mcp-tool-governance/SKILL.md`, `skills/long-horizon-agent-runtime/SKILL.md`.
+Optional skills: `skills/repeatable-agent-loops/SKILL.md`, `skills/agent-observability-and-run-tracing/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-infrastructure
+
+Subcapabilities: `hosting`, `deployment`, `build-provenance`, `environment-setup`.
+
+Required skills: `skills/deployment-and-hosting-guidance/SKILL.md`, `skills/project-bootstrap-and-setup/SKILL.md`, `skills/supply-chain-and-build-provenance/SKILL.md`.
+Optional skills: `skills/using-git-worktrees/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-migration
+
+Subcapabilities: `branch-lifecycle`, `schema-migration`, `compatibility`.
+
+Required skills: `skills/finishing-a-development-branch/SKILL.md`, `skills/using-git-worktrees/SKILL.md`.
+Optional skills: `skills/knowledge-refresh-and-drift-control/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-analytics
+
+Subcapabilities: `reporting`, `measurement`, `business-outcomes`.
+
+Required skills: `skills/data-output-and-reporting/SKILL.md`, `skills/product-strategy-office-hours/SKILL.md`.
+Optional skills: `skills/strategist-writing-dna/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-observability
+
+Subcapabilities: `run-tracing`, `logs`, `health-signals`, `debug-evidence`.
+
+Required skills: `skills/agent-observability-and-run-tracing/SKILL.md`, `skills/diagnosing-bugs-and-feedback-loops/SKILL.md`.
+Optional skills: `skills/repeatable-agent-loops/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-documentation
+
+Subcapabilities: `developer-documentation`, `user-guidance`, `writing-quality`, `decision-records`.
+
+Required skills: `skills/devex-and-documentation-review/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`.
+Optional skills: `skills/strategist-writing-dna/SKILL.md`, `skills/compound-learning-capture/SKILL.md`.
+
+### needs-accessibility
+
+Subcapabilities: `primary-task-accessibility`, `keyboard-flow`, `semantic-interface`.
+
+Required skills: `skills/ui-ux-design-quality/SKILL.md`, `skills/qa-and-browser-verification/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-integration
+
+Subcapabilities: `third-party-service`, `tool-mapping`, `launch-gate`.
+
+Required skills: `skills/external-api-integration/SKILL.md`, `skills/external-integration-launch-gate/SKILL.md`, `skills/mcp-tool-governance/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-media
+
+Subcapabilities: `asset-pipeline`, `media-generation`, `content-quality`.
+
+Required skills: `skills/media-and-asset-pipeline/SKILL.md`.
+Optional skills: `skills/anti-ai-writing-quality/SKILL.md`, `skills/strategist-writing-dna/SKILL.md`.
+
+### needs-scheduling
+
+Subcapabilities: `scheduled-work`, `automation-routing`, `bounded-retries`.
+
+Required skills: `skills/scheduling-and-automation-routing/SKILL.md`, `skills/repeatable-agent-loops/SKILL.md`.
+Optional skills: `skills/long-horizon-agent-runtime/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-release
+
+Subcapabilities: `planning`, `implementation-control`, `independent-review`, `release-readiness`.
+
+Required skills: `skills/writing-plans/SKILL.md`, `skills/executing-plans/SKILL.md`, `skills/engineering-plan-review/SKILL.md`, `skills/code-review-and-review-army/SKILL.md`, `skills/release-readiness-and-ship-gates/SKILL.md`.
+Optional skills: `skills/dispatching-parallel-agents/SKILL.md`, `skills/subagent-driven-development/SKILL.md`, `skills/20-pass-protocol/SKILL.md`.
+Audits: `50_audits/AUDIT_TIER_ROUTER.md`.
+Templates: `60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md`, `60_templates/STABLE_RELEASE_REPORT_TEMPLATE.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### needs-incident-readiness
+
+Subcapabilities: `incident-response`, `rollback`, `recovery`, `post-incident-learning`.
+
+Required skills: `skills/security-incident-response/SKILL.md`, `skills/release-readiness-and-ship-gates/SKILL.md`.
+Optional skills: `skills/compound-learning-capture/SKILL.md`, `skills/knowledge-refresh-and-drift-control/SKILL.md`.
+Gates: `10_governance/RELEASE_GATES.md`.
+
+### Universal Or Meta Skills
+
+- `skills/super-build-kit/SKILL.md` — Always-on system router, not project capability work.
+- `skills/requirements-grilling-and-alignment/SKILL.md` — Universal preflight gate selected by the Controller.
+- `skills/product-requirements-and-issue-slicing/SKILL.md` — Universal planning support selected during APIVR Phase 1.
+- `skills/test-driven-development/SKILL.md` — Universal implementation control selected by RUN_PREFLIGHT.
+- `skills/writing-skills/SKILL.md` — Meta-skill governing portable skill authoring and testing; selected during skill-system work rather than by a project capability.
+
+<!-- END GENERATED CAPABILITY ROUTING -->

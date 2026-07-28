@@ -1,6 +1,11 @@
 ---
 name: using-git-worktrees
-description: Use before feature implementation, plan execution, or risky edits that should be isolated. Detects existing isolation, prefers native worktree tools, and falls back to manual git worktrees only when no native tool exists.
+description: Use when use before feature implementation, plan execution, or risky edits that should be isolated. Detects existing isolation, prefers native worktree tools, and falls back to manual git worktrees only when no native tool exists.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
 ---
 
 # Using Git Worktrees
@@ -130,3 +135,8 @@ Never:
 - clean up a harness-owned worktree manually;
 - proceed from failing baseline tests without recording evidence and user approval.
 
+## Process
+
+1. Load only the authority and task context required by this skill.
+2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
+3. Verify the result and report a canonical verdict with remaining risk and next action.

@@ -4,20 +4,20 @@
 
 This file is generated from the runtime manifests. Editing it by hand creates a second source of truth and will fail `npm run verify`.
 
-## Support Levels
+## Support And Activation
 
-| Runtime | Support | Integration shape | Bootstrap | Install scope | Modifies user files |
-|---|---|---|---|---|---|
-| Claude and Claude Code (`claude`) | **Full** | always_on_instruction_file | automatic | project | no |
-| OpenAI Codex (`codex`) | **Full** | in_process_plugin | automatic | project | no |
-| Cursor (`cursor`) | **Full** | always_on_instruction_file | automatic | project | no |
-| Gemini CLI (`gemini`) | **Partial** | always_on_instruction_file | automatic | project | no |
-| Generic LLM Agent (`generic-agent`) | **Manual** | always_on_instruction_file | manual | project | no |
-| GitHub Copilot (`github-copilot`) | **Partial** | always_on_instruction_file | automatic | project | no |
-| Manus Agent (`manus`) | **Manual** | always_on_instruction_file | manual | project | no |
-| Replit Agent (`replit`) | **Partial** | always_on_instruction_file | automatic | project | no |
+| Runtime | Support | Activation tier | Integration shape | Bootstrap | Install scope | Modifies user files |
+|---|---|---|---|---|---|---|
+| Claude and Claude Code (`claude`) | **Full** | **T1** | hybrid | automatic | project | no |
+| OpenAI Codex (`codex`) | **Full** | **T2** | in_process_plugin | automatic | project | no |
+| Cursor (`cursor`) | **Full** | **T1** | hybrid | automatic | project | no |
+| Gemini CLI (`gemini`) | **Partial** | **T2** | always_on_instruction_file | automatic | project | no |
+| Generic LLM Agent (`generic-agent`) | **Manual** | **T4** | always_on_instruction_file | manual | project | no |
+| GitHub Copilot (`github-copilot`) | **Partial** | **T2** | always_on_instruction_file | automatic | project | no |
+| Manus Agent (`manus`) | **Manual** | **T4** | always_on_instruction_file | manual | project | no |
+| Replit Agent (`replit`) | **Partial** | **T2** | always_on_instruction_file | automatic | project | no |
 
-A file's existence does not imply Full or Partial support. See `runtime_adapters/PORTABILITY_CONTRACT.md`.
+A file's existence does not imply Full support or verified activation. See `runtime_adapters/PORTABILITY_CONTRACT.md` and `runtime_adapters/VERIFIED_SUPPORT_LEVELS.md`.
 
 ## Essential Capabilities
 
@@ -43,19 +43,19 @@ Every `degradable` or `unavailable` cell states its exact fallback. Agents may n
 | `claude` | native | native | native | native | native | native |
 | `codex` | native | native | native | native | native | native |
 | `cursor` | native | native | native | native | native | native |
-| `gemini` | unavailable — Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer. | degradable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list. | native | unavailable — Substitute command-line verification (curl, HTTP status, scripted DOM snapshot) and record rendered-UI evidence as Not Run. | native | native |
-| `generic-agent` | unavailable — Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer. | unavailable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list. | degradable — Require the human to supply source material; record the evidence state as Unknown rather than guessing. | unavailable — Substitute command-line verification (curl, HTTP status, scripted DOM snapshot) and record rendered-UI evidence as Not Run. | degradable — Write durable artifacts to the project-local .wcbs/runs/<run-id>/ tree on the filesystem. | degradable — Halt, print the exact pending action, and require an explicit human reply before proceeding. |
-| `github-copilot` | unavailable — Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer. | degradable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list. | native | unavailable — Substitute command-line verification (curl, HTTP status, scripted DOM snapshot) and record rendered-UI evidence as Not Run. | native | native |
-| `manus` | unavailable — Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer. | degradable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list. | native | degradable — Capture a screenshot or page text through the agent's browsing capability and attach it as evidence; automated assertions are unavailable. | native | degradable — Halt, print the exact pending action, and require an explicit human reply before proceeding. |
-| `replit` | unavailable — Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer. | native | native | degradable — Use the Replit webview/preview and record a screenshot or HTTP status as evidence; automated browser assertions are unavailable. | native | native |
+| `gemini` | unavailable — Sequential fresh-context review using the exact base..head package; report degraded independence. | degradable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl. | native | unavailable — Use command-line verification and record rendered-UI evidence as Not Run. | native | native |
+| `generic-agent` | unavailable — Sequential fresh-context review using the exact base..head package; report degraded independence. | unavailable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl. | degradable — Require supplied source material and record Unknown rather than guessing. | unavailable — Use command-line evidence and record rendered-UI verification as Not Run. | degradable — Write project-local .wcbs artifacts. | degradable — Halt and require an explicit human reply. |
+| `github-copilot` | unavailable — Sequential self-review in a fresh context window using the exact base..head review package; report degraded independence. | degradable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl. | native | unavailable — Use command-line verification and record rendered-UI evidence as Not Run. | native | native |
+| `manus` | unavailable — Sequential fresh-context review using the exact base..head package; report degraded independence. | degradable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl. | native | degradable — Capture screenshot or page text evidence and record automated assertions as Not Run. | native | degradable — Halt, print the exact pending action, and require an explicit human reply. |
+| `replit` | unavailable — Sequential fresh-context review using the exact base..head package; report degraded independence. | native | native | degradable — Use Replit preview evidence and record automated browser assertions as Not Run. | native | native |
 
 ## Known Limitations
 
-- **Claude and Claude Code**: Automatic load is established in Claude Code. Surfaces that do not read project memory fall back to Manual activation for that session.
-- **OpenAI Codex**: Plugin skill discovery requires the Codex plugin runtime to be enabled for the workspace.
-- **Cursor**: Rule content competes for context with other always-on rules in very large workspaces.
-- **Gemini CLI**: No independent subagents; reviews degrade to fresh-context sequential passes. No native browser verification.
-- **Generic LLM Agent**: No native mechanism places the kit in context automatically, so this is Manual by definition. If command execution is unavailable, the runtime is Unsupported.
-- **GitHub Copilot**: No independent subagents: task and final review run as fresh-context sequential passes and MUST be reported as degraded independence. No native browser verification.
-- **Manus Agent**: Automatic session-start ingestion of Manus.md is NOT established. The operator must attach or reference the file each session, so this adapter is Manual by definition, not Full. Upgrade only after a clean-session activation scenario passes.
-- **Replit Agent**: Linux-only container. No independent subagents. Automatic load depends on the Agent reading repository instructions; verify the activation marker in a clean session before relying on it.
+- **Claude and Claude Code**: Surfaces without plugin hooks degrade to CLAUDE.md T2 or manual activation and must record that lower tier.
+- **OpenAI Codex**: Plugin skill discovery requires the Codex plugin runtime to be enabled for the workspace. The root hook is deliberately disabled for Codex.
+- **Cursor**: If native hook registration is unavailable, activation degrades to the always-on rule and is recorded as T2.
+- **Gemini CLI**: No independent subagents and no native browser verification; activation is instructed rather than enforced.
+- **Generic LLM Agent**: No native activation mechanism exists, so this is Manual by definition. If command execution is unavailable, the runtime is Unsupported.
+- **GitHub Copilot**: No independent subagents and no native browser verification; activation is instructed rather than enforced.
+- **Manus Agent**: Automatic session-start ingestion is not established. Activation is Manual and must never be reported as enforced.
+- **Replit Agent**: Linux-only container. No independent subagents. Activation is instructed and must be measured in a clean session.
