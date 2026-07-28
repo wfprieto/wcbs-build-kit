@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -60,6 +61,24 @@ function collectFiles(dir = root) {
   return files.sort((a, b) => a.localeCompare(b));
 }
 
+function loadGitFileModes() {
+  try {
+    const output = execFileSync("git", ["ls-files", "--stage", "-z"], { cwd: root, encoding: "utf8" });
+    const modes = new Map();
+    for (const record of output.split("\0")) {
+      if (!record) continue;
+      const separator = record.indexOf("\t");
+      if (separator === -1) continue;
+      const mode = record.slice(0, separator).split(" ")[0];
+      const relative = record.slice(separator + 1);
+      if (/^100[67][0-7]{2}$/.test(mode)) modes.set(relative, Number.parseInt(mode, 8) & 0o777);
+    }
+    return modes;
+  } catch {
+    return new Map();
+  }
+}
+
 function writeUInt32(value) {
   const b = Buffer.alloc(4);
   b.writeUInt32LE(value >>> 0);
@@ -72,7 +91,7 @@ function writeUInt16(value) {
   return b;
 }
 
-function makeZip(entries, zipPath) {
+function makeZip(entries, zipPath, gitFileModes) {
   const localParts = [];
   const centralParts = [];
   let offset = 0;
@@ -82,7 +101,7 @@ function makeZip(entries, zipPath) {
     const name = `${packageName}/${entry.rel}`;
     const nameBuf = Buffer.from(name, "utf8");
     const data = fs.readFileSync(entry.abs);
-    const mode = fs.statSync(entry.abs).mode & 0o777;
+    const mode = gitFileModes.get(entry.rel) ?? (fs.statSync(entry.abs).mode & 0o777);
     const crc = crc32(data);
     const localHeader = Buffer.concat([
       writeUInt32(0x04034b50),
@@ -148,7 +167,7 @@ function sha256(file) {
 fs.mkdirSync(outDir, { recursive: true });
 const entries = collectFiles().map((abs) => ({ abs, rel: path.relative(root, abs).split(path.sep).join("/") }));
 const zipPath = path.join(outDir, `${packageName}.zip`);
-makeZip(entries, zipPath);
+makeZip(entries, zipPath, loadGitFileModes());
 
 const manifestPath = path.join(outDir, "RELEASE_ARTIFACT_MANIFEST.json");
 const manifest = {

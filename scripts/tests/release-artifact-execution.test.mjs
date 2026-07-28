@@ -28,6 +28,14 @@ function buildReleaseArtifacts(outDir) {
   assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
 }
 
+function gitIndexMode(relative) {
+  const result = spawnSync("git", ["ls-files", "--stage", "--", relative], { cwd: root, encoding: "utf8" });
+  assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
+  const match = result.stdout.match(/^(\d{6})\s+[0-9a-f]{40}\s+\d+\t/m);
+  assert.ok(match, `${relative} must have a Git index mode`);
+  return Number.parseInt(match[1], 8) & 0o777;
+}
+
 function resolveExistingArtifactDirectory(directory) {
   const resolved = path.resolve(root, directory);
   const relative = path.relative(root, resolved);
@@ -124,7 +132,7 @@ test("release ZIP preserves executable metadata and runs the extracted native tr
       assert.equal(entry.versionMadeBy >>> 8, 3, `${relative} must be written as a Unix ZIP entry`);
       const mode = entry.externalAttributes >>> 16;
       assert.equal(mode & 0o170000, 0o100000, `${relative} must remain a regular file`);
-      assert.equal(fs.statSync(path.join(root, relative)).mode & 0o777, expectedMode, `${relative} source mode must stay intentional`);
+      assert.equal(gitIndexMode(relative), expectedMode, `${relative} Git index mode must stay intentional`);
       assert.equal(mode & 0o777, expectedMode, `${relative} ZIP mode must match its source mode`);
     }
 
