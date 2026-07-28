@@ -95,6 +95,21 @@ test("cursor adapter installs project rule in an isolated fixture", () => {
   }
 });
 
+test("installer accepts a destination path that resolves through a filesystem alias", () => {
+  const actual = tmp();
+  const alias = `${actual}-alias`;
+  try {
+    fs.symlinkSync(actual, alias, "dir");
+    const install = run(["--target", "codex", "--dest", alias, "--install"]);
+    assert.equal(install.code, 0, install.output);
+    assert.ok(exists(actual, "AGENTS.md"));
+    assert.ok(exists(actual, ".wcbs/adapter-install-manifest.json"));
+  } finally {
+    fs.rmSync(alias, { force: true });
+    fs.rmSync(actual, { recursive: true, force: true });
+  }
+});
+
 test("preflight collision writes no WCBS payload or activation surface", () => {
   const dir = tmp();
   try {
