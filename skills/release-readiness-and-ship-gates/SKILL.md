@@ -1,6 +1,6 @@
 ---
 name: release-readiness-and-ship-gates
-description: Use when use before merging, shipping, deploying, publishing, handing off, or declaring done. Applies release readiness dashboards, changelog discipline, deploy/canary/post-release checks, rollback readiness, evidence classification, and APIVR release-gate enforcement.
+description: Use when preparing to merge, ship, deploy, publish, hand off, or declare done. Applies release readiness dashboards, changelog discipline, deploy/canary/post-release checks, rollback readiness, evidence classification, and APIVR release-gate enforcement.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.

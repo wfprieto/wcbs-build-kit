@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: Use when use for any code implementation, bug fix, refactor, feature, integration, automation, API, UI behavior, or data-change task where tests or executable verification can be written. Enforces APIVR Phase 3 test-first implementation with Red-Green-Refactor evidence gates and maps TDD shortcuts to APIVR evidence violations.
+description: Use when the task involves any code implementation, bug fix, refactor, feature, integration, automation, API, UI behavior, or data-change task where tests or executable verification can be written. Enforces APIVR Phase 3 test-first implementation with Red-Green-Refactor evidence gates and maps TDD shortcuts to APIVR evidence violations.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.

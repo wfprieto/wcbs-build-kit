@@ -34,6 +34,7 @@ for (const entry of fs.readdirSync(skillsRoot, { withFileTypes: true })) {
   const description = fm.get("description") ?? "";
   if (description.length < 40 || description.length > 500) failures.push(`${relative}: description must be 40-500 characters.`);
   if (!/use when|activate when|trigger/i.test(description)) failures.push(`${relative}: description must contain a trigger phrase.`);
+  if (/\buse when\s+(use|uses|used|using|to use)\b/i.test(description)) failures.push(`${relative}: description trigger phrase is malformed ("Use when use ..."); write one readable trigger clause.`);
   if (lines > 260) failures.push(`${relative}: ${lines} lines exceeds the 260-line hard limit.`);
   if (!/<HARD-GATE>|Excuse.*Reality|Decision Flow|## Workflow|## Process/is.test(body)) failures.push(`${relative}: body must contain a gate, decision flow, workflow, process, or rationalization table.`);
 }

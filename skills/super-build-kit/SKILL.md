@@ -1,6 +1,6 @@
 ---
 name: super-build-kit
-description: Use when use for any build, fix, audit, debug, optimization, release, verification, prompt, skill, or agent-design task. Activates the APIVR lifecycle and Elite Build Goals guardrails from this repository before task-specific work.
+description: Use when the task involves any build, fix, audit, debug, optimization, release, verification, prompt, skill, or agent-design task. Activates the APIVR lifecycle and Elite Build Goals guardrails from this repository before task-specific work.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.

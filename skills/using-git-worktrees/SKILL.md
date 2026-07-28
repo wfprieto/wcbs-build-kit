@@ -1,6 +1,6 @@
 ---
 name: using-git-worktrees
-description: Use when use before feature implementation, plan execution, or risky edits that should be isolated. Detects existing isolation, prefers native worktree tools, and falls back to manual git worktrees only when no native tool exists.
+description: Use when starting feature implementation, plan execution, or risky edits that should be isolated. Detects existing isolation, prefers native worktree tools, and falls back to manual git worktrees only when no native tool exists.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.

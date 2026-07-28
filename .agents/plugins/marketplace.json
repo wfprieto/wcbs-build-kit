@@ -4,7 +4,7 @@
   "plugins": [
     {
       "name": "super-build-kit",
-      "source": "../../../",
+      "source": "./",
       "description": "WCBS Engineering Operating System delivery package."
     }
   ]

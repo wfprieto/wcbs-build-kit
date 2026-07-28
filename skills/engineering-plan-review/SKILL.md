@@ -1,6 +1,6 @@
 ---
 name: engineering-plan-review
-description: Use when use to review implementation plans, architecture plans, refactor plans, migration plans, technical proposals, and APIVR Phase 2 blueprints for engineering soundness, risk, module boundaries, dependency direction, testability, operational readiness, and source-of-truth alignment before code changes begin.
+description: Use when reviewing implementation plans, architecture plans, refactor plans, migration plans, technical proposals, and APIVR Phase 2 blueprints for engineering soundness, risk, module boundaries, dependency direction, testability, operational readiness, and source-of-truth alignment before code changes begin.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.

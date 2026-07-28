@@ -1,6 +1,6 @@
 ---
 name: code-review-and-review-army
-description: Use when use for code review, PR review, implementation audit, specialist review passes, review-army dispatch, security/performance/testing/API/data/migration/maintainability review, scope-drift detection, and APIVR Phase 4 Audit Implementation before verification or release.
+description: Use when the task involves code review, PR review, implementation audit, specialist review passes, review-army dispatch, security/performance/testing/API/data/migration/maintainability review, scope-drift detection, and APIVR Phase 4 Audit Implementation before verification or release.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.

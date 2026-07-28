@@ -35,7 +35,7 @@
     "audit:layers": "node scripts/audit-layer-budgets.mjs",
     "audit:governance": "npm run audit:duplicates && npm run audit:skill-contract && npm run audit:layers",
     "test": "npm run test:node && npm run test:python",
-    "check": "npm run doctor && npm run check:matrix && npm run check:controller && npm run check:load-order && npm run version:audit && npm run audit:skill-contract && npm run audit:layers && npm run audit:governance && npm run behavior-test && npm run test",
+    "check": "npm run doctor && npm run check:matrix && npm run check:controller && npm run check:load-order && npm run version:audit && npm run audit:skill-contract && npm run audit:layers && npm run audit:governance && npm run eval && npm run behavior-test && npm run test",
     "release-check": "npm run check && npm run system-test && npm run check-install && npm run build:release-artifacts",
     "wcbs:system-test": "node scripts/wcbs-system-test.mjs"
   },

@@ -1,6 +1,6 @@
 ---
 name: requirements-grilling-and-alignment
-description: Use when use before planning when requirements are ambiguous, underspecified, internally inconsistent, too broad, or based on assumptions. Runs one-question-at-a-time alignment, decision-tree clarification, doc-backed grilling, scope narrowing, and APIVR evidence classification before implementation.
+description: Use when requirements are ambiguous, underspecified, internally inconsistent, too broad, or based on assumptions. Runs one-question-at-a-time alignment, decision-tree clarification, doc-backed grilling, scope narrowing, and APIVR evidence classification before implementation.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
@@ -47,4 +47,3 @@ Scenario: "Add notifications."
 - One question: "Which single event should trigger the first notification, and who must receive it?"
 - Result: password reset failure alerts go to admins.
 - APIVR plan now has exact event, recipient, channel, evidence, and non-goals.
-

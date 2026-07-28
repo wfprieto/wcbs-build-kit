@@ -32,3 +32,11 @@ Read:
 - Use `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` for frontend UI, copy, reports, prompts, and strategic communication.
 - Do not invent tests, results, files, APIs, screenshots, or behavior.
 - Report evidence state and final APIVR verdict.
+
+## Activation Marker
+
+After the startup sequence above completes, and before any other content in your first response of a session, emit this exact string on its own line:
+
+`WCBS_KIT_ACTIVE:github-copilot`
+
+Emit it exactly once per session. Do not emit it if the startup sequence did not complete. This is a marker-test observation only; it does not by itself prove full runtime support.

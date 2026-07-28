@@ -1,6 +1,6 @@
 ---
 name: qa-and-browser-verification
-description: Use when use for QA planning, manual workflow verification, browser testing, UI regression review, issue taxonomy, QA health scoring, screenshot/video evidence, adverse-state testing, fix loops, and APIVR Phase 5 verification for frontend, workflow, or user-visible changes.
+description: Use when the task involves QA planning, manual workflow verification, browser testing, UI regression review, issue taxonomy, QA health scoring, screenshot/video evidence, adverse-state testing, fix loops, and APIVR Phase 5 verification for frontend, workflow, or user-visible changes.
 activation: Activate when the description trigger applies to the current task.
 required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
 required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
@@ -63,4 +63,3 @@ Scenario: A premium upgrade flow returns from Stripe.
 - Browser QA verifies the user-visible checkout return and premium card state.
 - External integration launch gate verifies Stripe webhook delivery into the deployed URL, no login redirect, correct signature handling, database update, provider event ID, and app log.
 - Final verdict: `PASS` only when both the browser result and provider callback path are Verified.
-
