@@ -12,11 +12,24 @@
   "activation_marker": "WCBS_KIT_ACTIVE:cursor",
   "tool_mapping_path": "runtime_adapters/tool_mappings/cursor.json",
   "capabilities": {
-    "file_read": "native", "file_write": "native", "file_edit": "native", "execute_command": "native", "subagents": "native", "task_tracking": "native", "web_access": "native", "browser_verification": "native", "durable_artifact_storage": "native", "human_approval_gates": "native"
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "native",
+    "task_tracking": "native",
+    "web_access": "native",
+    "browser_verification": "native",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "native"
   },
   "fallbacks": {},
   "supported_runtime_versions": "Cursor with Project Rules and hook support",
-  "supported_operating_systems": ["macos", "linux", "windows"],
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
   "modifies_user_files": false,
   "install": "Commit .cursor/rules/super-build-kit.mdc and register hooks/hooks-cursor.json through Cursor's plugin mechanism.",
   "update": "Update the rule, Kernel, and hook files in the repository; Cursor re-reads them next session.",

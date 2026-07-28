@@ -1,57 +1,31 @@
 ---
 name: diagnosing-bugs-and-feedback-loops
-description: Use when the task involves bug diagnosis, incidents, regressions, flaky behavior, unknown failures, root-cause analysis, reproduction, hypothesis testing, debug loops, and APIVR debug paths where a tight red-capable feedback loop must exist before fixing.
-activation: Activate when the description trigger applies to the current task.
-required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
-required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
-authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
-evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
+description: Use when an older WCBS link names this skill for a bug, regression, flaky test, or unknown failure. This compatibility alias routes immediately to the executable systematic-debugging procedure.
+activation: Compatibility route for legacy bug-diagnosis references only.
+required_inputs: Bug report, observed failure, and the affected project context.
+required_outputs: A route to systematic-debugging and no unsupported diagnosis claim.
+authority_dependencies: skills/systematic-debugging/SKILL.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md.
+evidence_requirements: Record the actual reproduction result or an honest Blocked state before changing code.
 ---
 
-# Diagnosing Bugs And Feedback Loops
+# Diagnosing Bugs And Feedback Loops (Deprecated Alias)
 
-Use this skill before changing code for a bug.
+This name remains so existing links do not silently fail. Do not maintain a
+second debugging protocol here.
 
-<EXTREMELY-IMPORTANT>
-No fix before a red-capable feedback loop. Reproduce, observe, or create a failing characterization path before theorizing too far.
-</EXTREMELY-IMPORTANT>
+<HARD-GATE>
+Do not use this compatibility name to bypass `systematic-debugging`.
+</HARD-GATE>
 
-## Protocol
+## Required Route
 
-1. State the symptom, expected behavior, and observed behavior.
-2. Create the tightest feedback loop that can go red and green.
-3. Lock scope: do not fix adjacent issues unless APIVR escalates scope.
-4. Form one hypothesis at a time.
-5. Test the hypothesis with logs, tests, traces, or controlled reproduction.
-6. Implement the smallest fix after the cause is supported.
-7. Verify targeted behavior and scan nearby regression risk.
+1. Load `skills/systematic-debugging/SKILL.md` before proposing a fix.
+2. Preserve its reproduce → compare → hypothesis → root-cause → regression-test
+   sequence and its `Blocked` rule.
+3. Update callers to use `systematic-debugging` when the change is in scope.
 
-## Debug Flow
+## Safe Failure
 
-```mermaid
-flowchart TD
-  A["Bug reported"] --> B["Reproduce or observe"]
-  B --> C{"Red-capable loop exists?"}
-  C -- "No" --> D["Build characterization test or trace"]
-  D --> C
-  C -- "Yes" --> E["Test one hypothesis"]
-  E --> F{"Cause supported?"}
-  F -- "No" --> E
-  F -- "Yes" --> G["Smallest fix"]
-  G --> H["Verify green and re-audit"]
-```
-
-## Worked Example
-
-Scenario: Exports sometimes contain duplicate rows.
-
-- Feedback loop: fixture with two overlapping sync windows reproduces duplicate export rows.
-- Hypothesis: sync cursor is inclusive on both windows.
-- Fix: make the second window start exclusive of last exported id.
-- Evidence: targeted export test and adjacent backfill test pass.
-
-## Process
-
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+If the new procedure cannot be read, stop as `Blocked`. Do not replace it with
+a symptom patch or claim that a red-capable feedback loop exists without having
+run it.

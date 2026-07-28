@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -22,7 +23,12 @@ const required = [
   "scripts/wcbs-doctor.mjs",
   "scripts/wcbs-system-test.mjs",
   "scripts/install-adapter.mjs",
-  "scripts/adapter-smoke-test.mjs"
+  "scripts/wcbs.mjs",
+  "scripts/adapter-smoke-test.mjs",
+  "runtime_adapters/adapter-registry.yaml",
+  "runtime_adapters/generated/using-wcbs-bootstrap.md",
+  "docs/V2_RUNTIME_EVIDENCE.md",
+  "docs/V2_MIGRATION.md"
 ];
 
 const missing = required.filter((file) => !fs.existsSync(path.join(root, ...file.split("/"))));
@@ -61,6 +67,39 @@ for (const target of ["codex", "cursor", "claude", "github-copilot", "gemini", "
     ]) run(`${target} ${action}`, args);
   } finally {
     fs.rmSync(destination, { recursive: true, force: true });
+  }
+}
+
+const v2Registry = JSON.parse(fs.readFileSync(path.join(root, "runtime_adapters", "adapter-registry.yaml"), "utf8"));
+for (const adapter of v2Registry.adapters) {
+  const project = fs.mkdtempSync(path.join(os.tmpdir(), `wcbs-v2-${adapter.runtime_id}-project-`));
+  const plugin = path.join(project, "runtime-plugins", `wcbs-${adapter.runtime_id}`);
+  const userFiles = {
+    "README.md": "# ordinary project\n",
+    "package.json": "{\"name\":\"ordinary-project\"}\n",
+    "src/index.js": "export const ordinary = true;\n"
+  };
+  const hashes = new Map();
+  try {
+    for (const [relative, content] of Object.entries(userFiles)) {
+      const file = path.join(project, ...relative.split("/"));
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, content, "utf8");
+      hashes.set(relative, crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex"));
+    }
+    for (const [action, args] of [
+      ["v2 install", ["scripts/wcbs.mjs", "install", "--target", adapter.runtime_id, "--plugin-dir", plugin, "--json"]],
+      ["v2 doctor", ["scripts/wcbs.mjs", "doctor", "--plugin-dir", plugin, "--json"]],
+      ["v2 status", ["scripts/wcbs.mjs", "status", "--plugin-dir", plugin, "--json"]],
+      ["v2 uninstall", ["scripts/wcbs.mjs", "uninstall", "--plugin-dir", plugin, "--json"]]
+    ]) run(`${adapter.runtime_id} ${action}`, args);
+    if (fs.existsSync(plugin)) throw new Error(`V2 uninstall left plugin directory: ${plugin}`);
+    for (const [relative, expected] of hashes) {
+      const actual = crypto.createHash("sha256").update(fs.readFileSync(path.join(project, ...relative.split("/")))).digest("hex");
+      if (actual !== expected) throw new Error(`V2 install altered user-owned project file: ${relative}`);
+    }
+  } finally {
+    fs.rmSync(project, { recursive: true, force: true });
   }
 }
 

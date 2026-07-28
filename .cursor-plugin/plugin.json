@@ -1,0 +1,12 @@
+{
+  "name": "wcbs-build-kit",
+  "displayName": "WCBS Build Kit",
+  "description": "Evidence-backed APIVR, executable development skills, and native runtime adapters.",
+  "version": "2.0.0",
+  "author": {"name": "Bill Prieto", "email": "wfprieto@gmail.com"},
+  "homepage": "https://github.com/wfprieto/wcbs-build-kit",
+  "repository": "https://github.com/wfprieto/wcbs-build-kit",
+  "license": "MIT",
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks-cursor.json"
+}

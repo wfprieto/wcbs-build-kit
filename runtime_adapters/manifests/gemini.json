@@ -12,7 +12,16 @@
   "activation_marker": "WCBS_KIT_ACTIVE:gemini",
   "tool_mapping_path": "runtime_adapters/tool_mappings/gemini.json",
   "capabilities": {
-    "file_read": "native", "file_write": "native", "file_edit": "native", "execute_command": "native", "subagents": "unavailable", "task_tracking": "degradable", "web_access": "native", "browser_verification": "unavailable", "durable_artifact_storage": "native", "human_approval_gates": "native"
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "unavailable",
+    "task_tracking": "degradable",
+    "web_access": "native",
+    "browser_verification": "unavailable",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "native"
   },
   "fallbacks": {
     "subagents": "Sequential fresh-context review using the exact base..head package; report degraded independence.",
@@ -20,7 +29,11 @@
     "browser_verification": "Use command-line verification and record rendered-UI evidence as Not Run."
   },
   "supported_runtime_versions": "Gemini CLI with GEMINI.md hierarchical context support",
-  "supported_operating_systems": ["macos", "linux", "windows"],
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
   "modifies_user_files": false,
   "install": "Commit GEMINI.md at the repository root. Gemini CLI loads it as hierarchical context.",
   "update": "Edit GEMINI.md in the repository.",

@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const routing = JSON.parse(fs.readFileSync(path.join(root, "00_start_here", "capability-routing.json"), "utf8"));
+const v2Registry = JSON.parse(fs.readFileSync(path.join(root, "runtime_adapters", "adapter-registry.yaml"), "utf8"));
 const skillDirs = fs.readdirSync(path.join(root, "skills"), { withFileTypes: true })
   .filter(entry => entry.isDirectory() && fs.existsSync(path.join(root, "skills", entry.name, "SKILL.md")))
   .map(entry => entry.name)
@@ -19,6 +20,11 @@ function referencedSkills() {
     }
   }
   for (const entry of routing.unrouted ?? []) routed.add(entry.skill);
+  // V2 core routing is intentionally generated from the canonical registry so
+  // the compact session bootstrap, behavior cases, and catalog cannot drift
+  // from the skill inventory. Specialist capabilities remain in the legacy
+  // capability router above.
+  for (const entry of v2Registry.core_skills ?? []) routed.add(entry.name);
   return routed;
 }
 
@@ -29,7 +35,7 @@ test("capability vocabulary stays within governed budgets", () => {
   }
 });
 
-test("every skill is routed or explicitly justified", () => {
+test("every skill is routed by the capability router or V2 core catalog", () => {
   const routed = referencedSkills();
   const missing = skillDirs.filter(skill => !routed.has(skill));
   assert.deepEqual(missing, [], `unrouted skills: ${missing.join(", ")}`);

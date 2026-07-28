@@ -38,8 +38,7 @@ Scenario: A new webhook integration changes env vars and retry behavior.
 - Claims about provider behavior are `Likely` until sandbox replay is run.
 - Completion report links docs changed and evidence state.
 
-## Process
+## Workflow
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+Follow the documented first-use path in a clean fixture, correct the smallest
+friction point, and verify that setup, examples, and handoff stay aligned.

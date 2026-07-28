@@ -12,11 +12,24 @@
   "activation_marker": "WCBS_KIT_ACTIVE:claude",
   "tool_mapping_path": "runtime_adapters/tool_mappings/claude.json",
   "capabilities": {
-    "file_read": "native", "file_write": "native", "file_edit": "native", "execute_command": "native", "subagents": "native", "task_tracking": "native", "web_access": "native", "browser_verification": "native", "durable_artifact_storage": "native", "human_approval_gates": "native"
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "native",
+    "task_tracking": "native",
+    "web_access": "native",
+    "browser_verification": "native",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "native"
   },
   "fallbacks": {},
   "supported_runtime_versions": "Claude Code plugin runtime and Claude surfaces that read CLAUDE.md project memory",
-  "supported_operating_systems": ["macos", "linux", "windows"],
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
   "modifies_user_files": false,
   "install": "Install .claude-plugin/plugin.json; the SessionStart hook injects BOOTSTRAP.md. CLAUDE.md remains the T2 fallback.",
   "update": "Update the plugin, Kernel, and hook files in the repository.",

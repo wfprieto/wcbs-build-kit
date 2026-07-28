@@ -2,7 +2,8 @@
 /**
  * Generate runtime_adapters/CAPABILITY_MATRIX.md from the runtime manifests.
  *
- * Manifests are the source of truth. The matrix is a derived view.
+ * The adapter registry is the source of truth; generated manifests are the
+ * validated intermediate representation used for this derived view.
  * Run with --check to fail when the committed matrix is stale or hand-edited.
  */
 
@@ -37,7 +38,7 @@ if (check) {
   if (current.trim() !== rendered.trim()) {
     console.error(
       "CAPABILITY_MATRIX.md is stale or hand-edited.\n" +
-        "Manifests are canonical. Regenerate with: npm run generate:matrix"
+        "The adapter registry is canonical. Regenerate with: npm run generate:v2-metadata"
     );
     process.exit(1);
   }
@@ -46,4 +47,4 @@ if (check) {
 }
 
 fs.writeFileSync(target, rendered, "utf8");
-console.log(`Generated runtime_adapters/CAPABILITY_MATRIX.md from ${manifests.length} manifests.`);
+console.log(`Generated runtime_adapters/CAPABILITY_MATRIX.md from ${manifests.length} generated manifests.`);

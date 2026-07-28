@@ -1,16 +1,17 @@
 # Installation Matrix
 
-This matrix defines how the Super Build Kit is activated in each runtime.
+<!-- GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml. -->
 
-| Runtime | Active File | Install Mode | Verification |
+| Runtime | Native install route | Project fallback | Verified state |
 |---|---|---|---|
-| Codex / OpenAI agents | `AGENTS.md` | Repository instructions | Agent names startup files and APIVR tier |
-| Claude / Claude Code | `CLAUDE.md` | Project instruction file | Agent follows startup sequence |
-| Cursor | `.cursor/rules/super-build-kit.mdc` | Always-apply rule | Cursor context includes startup files |
-| GitHub Copilot | `.github/copilot-instructions.md` | Repository instruction file | Copilot follows APIVR final report format |
-| Gemini | `GEMINI.md` | Context file | Gemini names load order and evidence states |
-| Replit Agent | `REPLIT.md` and `runtime_adapters/REPLIT_AGENT.md` | Runtime adapter | Replit reports APIVR tier before edits |
-| Manus | `Manus.md` | Runtime adapter | Manus reports source-of-truth order |
-| Generic LLM | `00_start_here/START_HERE.md` | Manual load | Agent follows minimum output standard |
-
-No runtime adapter may weaken APIVR, Elite Build Goals, evidence states, release gates, or stop conditions.
+| Claude and Claude Code | Install .claude-plugin/plugin.json; the SessionStart hook injects BOOTSTRAP.md. CLAUDE.md remains the T2 fallback. | native instruction file | Not Run |
+| OpenAI Codex | Install the plugin from .codex-plugin/plugin.json; the skills/ directory is registered automatically. | native instruction file | Not Run |
+| Cursor | Commit .cursor/rules/super-build-kit.mdc and register hooks/hooks-cursor.json through Cursor's plugin mechanism. | native instruction file | Not Run |
+| Gemini CLI | Commit GEMINI.md at the repository root. Gemini CLI loads it as hierarchical context. | native instruction file | Not Run |
+| Generic LLM Agent | Provide BOOTSTRAP.md at the start of every session. | operator-supplied bootstrap | Not Run |
+| GitHub Copilot | Commit .github/copilot-instructions.md. Copilot Chat loads it automatically for the repository. | native instruction file | Not Run |
+| Kimi Code | Install the package artifact at .kimi-plugin/plugin.json through the runtime's native plugin route. | none | Not Run |
+| Manus Agent | Commit Manus.md and manually provide BOOTSTRAP.md or reference it at session start. | operator-supplied bootstrap | Not Run |
+| OpenCode | Install the package artifact at .opencode/plugins/wcbs.js through the runtime's native plugin route. | none | Not Run |
+| Pi | Install the package artifact at .pi/extensions/wcbs.ts through the runtime's native plugin route. | none | Not Run |
+| Replit Agent | Commit REPLIT.md at the repository root of the Repl. | native instruction file | Not Run |

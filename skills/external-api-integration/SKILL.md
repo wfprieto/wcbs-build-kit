@@ -97,8 +97,7 @@ Scenario: Add a Stripe webhook.
 
 Report integration contract, secret handling, rate-limit strategy, failure behavior, verification evidence, and APIVR verdict.
 
-## Process
+## Workflow
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+Prove the provider contract, failure behavior, idempotency, and secret handling
+before release; record unavailable provider checks as `Blocked` rather than assumed.

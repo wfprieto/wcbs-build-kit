@@ -1,23 +1,22 @@
 #!/usr/bin/env bash
+# Native WCBS SessionStart transport. The renderer owns JSON escaping and shape
+# selection so a Cursor payload can never accidentally use Claude's contract.
 unset BASH_ENV ENV CDPATH GLOBIGNORE
 IFS=$' \t\n'
 export LC_ALL=C
-set -uo pipefail
-
-fallback='{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"{\"kernel_status\":\"unable_to_transfer\",\"reason\":\"kernel_artifact_unreadable\"}"}}'
-trap 'printf "%s\n" "$fallback"; exit 0' ERR EXIT
+set -euo pipefail
 
 PLUGIN_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-P="$PLUGIN_ROOT/BOOTSTRAP.md"
-[ -f "$P" ] && [ ! -L "$P" ]
-resolved="$(cd "$(dirname "$P")" && pwd -P)/$(basename "$P")"
-case "$resolved" in "$PLUGIN_ROOT"/*) ;; *) exit 0 ;; esac
-content=$(<"$P") || content=""
-[ -n "$content" ]
-content=${content//\\/\\\\}
-content=${content//\"/\\\"}
-content=${content//$'\n'/\\n}
-content=${content//$'\r'/\\r}
-trap - ERR EXIT
-printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "$content"
-exit 0
+NODE_BIN="${NODE:-node}"
+
+runtime="github-copilot"
+shape="sdk"
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+  runtime="cursor"
+  shape="cursor"
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
+  runtime="claude"
+  shape="claude"
+fi
+
+exec "$NODE_BIN" "$PLUGIN_ROOT/scripts/render-session-bootstrap.mjs" --runtime "$runtime" --shape "$shape"

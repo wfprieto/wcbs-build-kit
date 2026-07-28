@@ -2,6 +2,23 @@
 
 Use this file for the shortest safe path into the Super Build Kit.
 
+## V2 default: native plugin, not project vendoring
+
+For a new installation, obtain the runtime identity and its dedicated native
+plugin directory. Do not write WCBS into the project merely because the
+project is the current directory.
+
+```bash
+npm run wcbs -- status --json
+npm run wcbs -- install --target <runtime> --plugin-dir <runtime-plugin-directory> --json
+npm run wcbs -- doctor --plugin-dir <runtime-plugin-directory> --json
+```
+
+If the runtime or plugin directory is unknown, ask for that one missing value
+and return `Blocked` without writing files. Use `docs/V2_RUNTIME_EVIDENCE.md`
+for the separate clean-session proof. The older project-local path below is
+V1 compatibility and migration guidance, not the default installation route.
+
 ## Coding agent arriving from the GitHub URL
 
 When a user gives you this repository URL and asks you to use the WCBS Build Kit for a project:

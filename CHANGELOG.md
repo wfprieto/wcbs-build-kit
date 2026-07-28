@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.0.0 - Native Plugin and Executable Skills
+
+- Added a registry-generated V2 adapter catalog, compact `using-wcbs` bootstrap, and direct/indirect/pressure scenarios for all 14 core skills.
+- Added native package contracts for Cursor, Kimi, OpenCode, and Pi plus a multi-shape session bootstrap renderer and Windows bridge.
+- Added V2 native-plugin install, integrity doctor, status, safe uninstall, and transactional V1 migration commands that preserve ordinary project files.
+- Rewrote the execution core around brainstorming, systematic debugging, review request/response, completion verification, plan execution, branch finishing, worktrees, and skill authoring.
+- Added generated specialist catalog coverage, a 42-case blinded behavioral-evaluation preregistration, and explicit runtime-evidence instructions.
+- Kept all support labels below Runtime Verified until real clean-session proof is independently recorded.
+
 ## Unreleased - Web Application Security Expansion
 
 - Added a composite Web Application Security Audit for authentication, sessions, authorization, tenant isolation, input and output security, browser controls, APIs, uploads, object storage, database controls, secrets, logging, business logic, AI and tool routing, supply chain, monitoring, recovery, and release decisions.

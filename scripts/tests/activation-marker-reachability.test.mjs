@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const read = (relative) => fs.readFileSync(path.join(root, ...relative.split("/")), "utf8").replace(/\r\n?/g, "\n");
+const registry = JSON.parse(read("runtime_adapters/adapter-registry.yaml"));
 const instructionFiles = new Map([
   ["claude", "CLAUDE.md"],
   ["codex", "AGENTS.md"],
@@ -16,27 +17,38 @@ const instructionFiles = new Map([
   ["manus", "Manus.md"],
   ["replit", "REPLIT.md"]
 ]);
-const manifests = fs.readdirSync(path.join(root, "runtime_adapters", "manifests"))
-  .filter((file) => file.endsWith(".json"))
-  .map((file) => JSON.parse(read(`runtime_adapters/manifests/${file}`)));
+const nativeArtifacts = new Map([
+  ["kimi", ".kimi-plugin/plugin.json"],
+  ["opencode", ".opencode/plugins/wcbs.js"],
+  ["pi", ".pi/extensions/wcbs.ts"]
+]);
 
-test("every runtime entry instruction makes its exact activation marker observable", () => {
-  for (const manifest of manifests) {
+test("every registry adapter has one observable activation route", () => {
+  for (const adapter of registry.adapters) {
+    const manifest = adapter.manifest;
     const instruction = instructionFiles.get(manifest.runtime_id);
-    assert.ok(instruction, `no entry instruction is mapped for ${manifest.runtime_id}`);
-    const content = read(instruction);
-    assert.ok(content.includes(manifest.activation_marker), `${instruction} does not contain ${manifest.activation_marker}`);
-    assert.match(content, /emit this exact string/i, `${instruction} does not direct emission of the marker`);
-    assert.match(content, /first response/i, `${instruction} does not define marker timing`);
+    const native = nativeArtifacts.get(manifest.runtime_id);
+    assert.ok(instruction || native, `no activation artifact is mapped for ${manifest.runtime_id}`);
+    const artifact = instruction ?? native;
+    const content = read(artifact);
+    assert.ok(content.includes(manifest.activation_marker), `${artifact} does not contain ${manifest.activation_marker}`);
+    assert.match(content, /using-wcbs|using-wcbs-bootstrap|BOOTSTRAP\.md|WCBS EOS Kernel/i, `${artifact} does not route through WCBS bootstrap`);
+    if (instruction || manifest.runtime_id === "kimi") {
+      assert.match(content, /emit this exact string/i, `${artifact} does not direct emission of the marker`);
+      assert.match(content, /first response/i, `${artifact} does not define marker timing`);
+    }
   }
 });
 
-test("each runtime instruction advertises only its own activation marker", () => {
-  const markers = manifests.map((manifest) => manifest.activation_marker);
-  for (const manifest of manifests) {
-    const content = read(instructionFiles.get(manifest.runtime_id));
+test("activation artifacts do not leak a different runtime marker", () => {
+  const markers = registry.adapters.map((adapter) => adapter.manifest.activation_marker);
+  for (const adapter of registry.adapters) {
+    const artifact = instructionFiles.get(adapter.runtime_id) ?? nativeArtifacts.get(adapter.runtime_id);
+    const content = read(artifact);
     for (const marker of markers) {
-      if (marker !== manifest.activation_marker) assert.equal(content.includes(marker), false, `${manifest.runtime_id} instruction leaks ${marker}`);
+      if (marker !== adapter.manifest.activation_marker) {
+        assert.equal(content.includes(marker), false, `${artifact} leaks ${marker}`);
+      }
     }
   }
 });
