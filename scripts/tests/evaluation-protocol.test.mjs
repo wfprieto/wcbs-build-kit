@@ -18,8 +18,10 @@ import {
 } from "../lib/evaluation-protocol.mjs";
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..", "..");
-const candidateCommit = "f7570b43dbd3acaddd089551b03d594ed8253073";
-const candidateTree = "07191d4d91b20424240aa557483f1f705ad23a69";
+const fixtureCandidate = {
+  commit: execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim(),
+  tree: execFileSync("git", ["rev-parse", "HEAD^{tree}"], { cwd: root, encoding: "utf8" }).trim()
+};
 const sha256 = (value) => crypto.createHash("sha256").update(value).digest("hex");
 
 function makeTemporaryDirectory() {
@@ -64,7 +66,7 @@ function fixtureProtocol(stubs, arms = ["neutral", "wcbs"], repetitions = 1, sup
     control_project_root: "evals/control-project",
     control_project_manifest: "evals/control-project-manifest.json",
     control_project_manifest_sha256: sha256(fs.readFileSync(path.join(root, "evals", "control-project-manifest.json"))),
-    wcbs_candidate: { commit: candidateCommit, tree: candidateTree },
+    wcbs_candidate: { ...fixtureCandidate },
     superpowers_source_identity: arms.includes("superpowers") ? superpowersIdentity : null,
     execution_identity: {
       agent_version: "fixture-agent-1.0.0",
@@ -159,8 +161,8 @@ test("Gate 0C treatment staging uses a Git-archived candidate and V2 wcbs plugin
     const wcbs = result.manifest.records.find((record) => record.arm === "wcbs");
     assert.ok(wcbs.installation.command.some((part) => part.endsWith(path.join("scripts", "wcbs.mjs"))));
     assert.equal(wcbs.installation.command.join(" ").includes("install-adapter.mjs"), false);
-    assert.equal(wcbs.candidate.commit, candidateCommit);
-    assert.equal(wcbs.candidate.tree, candidateTree);
+    assert.equal(wcbs.candidate.commit, fixtureCandidate.commit);
+    assert.equal(wcbs.candidate.tree, fixtureCandidate.tree);
     assert.ok(wcbs.artifacts.transcript_sha256);
     assert.ok(fs.existsSync(path.join(directory, "run", wcbs.artifacts.workspace_manifest)));
     assert.ok(fs.existsSync(path.join(directory, "run", wcbs.artifacts.workspace_diff)));
@@ -168,6 +170,11 @@ test("Gate 0C treatment staging uses a Git-archived candidate and V2 wcbs plugin
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }
+});
+
+test("evaluation fixtures derive their WCBS candidate identity from the checkout tip", () => {
+  assert.equal(fixtureCandidate.commit, execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim());
+  assert.equal(fixtureCandidate.tree, execFileSync("git", ["rev-parse", "HEAD^{tree}"], { cwd: root, encoding: "utf8" }).trim());
 });
 
 test("three-arm protocol rejects a missing fixed Superpowers source identity and emits 240 scheduled records only when all identities are complete", () => {
