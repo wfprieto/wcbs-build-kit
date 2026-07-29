@@ -26,6 +26,15 @@ function runHook({ args = ["session-start"], env = {}, cwd = root } = {}) {
   return { status: result.status, stdout: result.stdout ?? "", stderr: result.stderr ?? "", error: result.error };
 }
 
+function runPowerShell(command, { env = {}, cwd = root } = {}) {
+  const result = spawnSync("pwsh", ["-NoProfile", "-NonInteractive", "-Command", command], {
+    cwd,
+    encoding: "utf8",
+    env: { PATH: process.env.PATH, HOME: os.tmpdir(), ...env }
+  });
+  return { status: result.status, stdout: result.stdout ?? "", stderr: result.stderr ?? "", error: result.error };
+}
+
 test("POSIX bridge is a direct-executable wrapper while the Windows bridge remains available", { skip: isWindows }, () => {
   const posixBridge = path.join(root, "hooks", "run-hook");
   assert.equal(fs.existsSync(posixBridge), true, "macOS and POSIX hooks need a shebang-bearing entrypoint");
@@ -70,7 +79,27 @@ test("each native hook registration points to an executable project-safe transpo
   assert.deepEqual(cursor.hooks.sessionStart, [{ command: "./hooks/run-hook session-start --runtime cursor", timeout: 30, failClosed: false }]);
 
   const copilot = readJson(".github/hooks/wcbs-session-start.json");
-  assert.deepEqual(copilot.hooks.sessionStart, [{ type: "command", bash: "./hooks/run-hook session-start --runtime github-copilot" }]);
+  assert.deepEqual(copilot.hooks.sessionStart, [{
+    type: "command",
+    bash: "./hooks/run-hook session-start --runtime github-copilot",
+    powershell: "& .\\hooks\\run-hook.cmd session-start --runtime github-copilot"
+  }]);
+});
+
+test("Copilot's configured PowerShell SessionStart path emits one fail-open-safe envelope on Windows", () => {
+  const copilot = readJson(".github/hooks/wcbs-session-start.json");
+  const [sessionStart] = copilot.hooks.sessionStart;
+  assert.equal(sessionStart.powershell, "& .\\hooks\\run-hook.cmd session-start --runtime github-copilot", "Windows requires the documented PowerShell SessionStart route");
+  if (!isWindows) return;
+
+  const success = parseSinglePayload(runPowerShell(sessionStart.powershell));
+  assert.deepEqual(Object.keys(success), ["additionalContext"]);
+  assert.match(success.additionalContext, /WCBS_KIT_ACTIVE:github-copilot/);
+
+  const failOpen = parseSinglePayload(runPowerShell(sessionStart.powershell, { env: { NODE: "C:\\definitely\\missing\\node.exe" } }));
+  assert.deepEqual(Object.keys(failOpen), ["additionalContext"]);
+  assert.match(failOpen.additionalContext, /"kernel_status":"unable_to_transfer"/);
+  assert.match(failOpen.additionalContext, /"reason":"kernel_artifact_unreadable"/);
 });
 
 test("hook transport emits one harness-specific envelope on the executable path", { skip: isWindows }, () => {

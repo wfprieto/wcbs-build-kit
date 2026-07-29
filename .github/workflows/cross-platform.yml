@@ -72,3 +72,8 @@ jobs:
         run: node --test scripts/tests/release-artifact-execution.test.mjs
         env:
           WCBS_RELEASE_ARTIFACT_DIRECTORY: dist/release-artifacts
+
+      - name: Verify Copilot PowerShell SessionStart (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: node --test scripts/tests/hook-transport.test.mjs

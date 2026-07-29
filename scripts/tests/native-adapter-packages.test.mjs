@@ -12,7 +12,11 @@ test("Cursor and Copilot declare their native project session-start bridges", ()
   assert.equal(cursor.version, 1);
   assert.deepEqual(cursor.hooks.sessionStart, [{ command: "./hooks/run-hook session-start --runtime cursor", timeout: 30, failClosed: false }]);
   const copilot = JSON.parse(read(".github/hooks/wcbs-session-start.json"));
-  assert.deepEqual(copilot.hooks.sessionStart, [{ type: "command", bash: "./hooks/run-hook session-start --runtime github-copilot" }]);
+  assert.deepEqual(copilot.hooks.sessionStart, [{
+    type: "command",
+    bash: "./hooks/run-hook session-start --runtime github-copilot",
+    powershell: "& .\\hooks\\run-hook.cmd session-start --runtime github-copilot"
+  }]);
   assert.equal(fs.existsSync(path.join(root, "hooks", "hooks-cursor.json")), false);
 });
 
