@@ -16,8 +16,8 @@
   "repetitions": 10,
   "expected_total_runs": 160,
   "wcbs_candidate": {
-    "commit": "f7570b43dbd3acaddd089551b03d594ed8253073",
-    "tree": "07191d4d91b20424240aa557483f1f705ad23a69"
+    "commit": "5af3135a4dde9b4451f86012832a5f91d342368e",
+    "tree": "a085ea972ff17c329c8b17b11c06b242178b5130"
   },
   "execution_identity": {
     "agent": "Claude Code CLI",
