@@ -181,7 +181,7 @@ test("evaluation fixtures derive their WCBS candidate identity from the checkout
 
 test("evaluator Git resolution prefers an explicit configured command", () => {
   const configured = "C:\\WCBS Tools\\git.exe";
-  const installedGit = "C:\\Program Files\\Git\\cmd\\git.exe";
+  const installedGit = "C:\\Program Files\\Git\\bin\\git.exe";
   const probes = [];
   const executable = resolveGitExecutable({
     env: { WCBS_GIT_EXECUTABLE: configured, ProgramFiles: "C:\\Program Files" },
@@ -193,18 +193,51 @@ test("evaluator Git resolution prefers an explicit configured command", () => {
   assert.deepEqual(probes, [configured]);
 });
 
-test("evaluator Git resolution prefers a verified Git-for-Windows ProgramFiles path before a false-positive PATH probe", () => {
+test("evaluator Git resolution prefers Git-for-Windows bin before cmd and a false-positive PATH probe", () => {
   const programFiles = "C:\\Program Files";
-  const expected = path.win32.join(programFiles, "Git", "cmd", "git.exe");
+  const bin = path.win32.join(programFiles, "Git", "bin", "git.exe");
+  const cmd = path.win32.join(programFiles, "Git", "cmd", "git.exe");
   const probes = [];
   const executable = resolveGitExecutable({
     env: { ProgramFiles: programFiles, PATH: "C:\\Windows\\System32" },
     platform: "win32",
-    exists: (candidate) => candidate === expected,
-    probe: (candidate) => { probes.push(candidate); return candidate === expected || candidate === "git.exe"; }
+    exists: (candidate) => candidate === bin || candidate === cmd,
+    probe: (candidate) => { probes.push(candidate); return candidate === bin || candidate === cmd || candidate === "git.exe"; }
   });
-  assert.equal(executable, expected);
-  assert.deepEqual(probes, [expected]);
+  assert.equal(executable, bin);
+  assert.deepEqual(probes, [bin]);
+});
+
+test("evaluator Git resolution falls back to Git-for-Windows cmd when bin is unavailable", () => {
+  const programFiles = "C:\\Program Files";
+  const bin = path.win32.join(programFiles, "Git", "bin", "git.exe");
+  const cmd = path.win32.join(programFiles, "Git", "cmd", "git.exe");
+  const probes = [];
+  const executable = resolveGitExecutable({
+    env: { ProgramFiles: programFiles },
+    platform: "win32",
+    exists: (candidate) => candidate === cmd,
+    probe: (candidate) => { probes.push(candidate); return candidate === cmd; }
+  });
+  assert.equal(executable, cmd);
+  assert.equal(probes.includes(bin), false);
+  assert.deepEqual(probes, [cmd]);
+});
+
+test("evaluator Git resolution considers every Git-for-Windows bin path before any cmd path", () => {
+  const programW6432 = "C:\\Program Files";
+  const programFiles = "D:\\Program Files";
+  const laterBin = path.win32.join(programFiles, "Git", "bin", "git.exe");
+  const earlierCmd = path.win32.join(programW6432, "Git", "cmd", "git.exe");
+  const probes = [];
+  const executable = resolveGitExecutable({
+    env: { ProgramW6432: programW6432, ProgramFiles: programFiles },
+    platform: "win32",
+    exists: (candidate) => candidate === earlierCmd || candidate === laterBin,
+    probe: (candidate) => { probes.push(candidate); return candidate === earlierCmd || candidate === laterBin; }
+  });
+  assert.equal(executable, laterBin);
+  assert.deepEqual(probes, [laterBin]);
 });
 
 test("three-arm protocol rejects a missing fixed Superpowers source identity and emits 240 scheduled records only when all identities are complete", () => {

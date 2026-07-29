@@ -33,7 +33,10 @@ function defaultGitProbe(command, env) {
 function gitForWindowsCandidates(env) {
   const roots = [env.ProgramW6432, env.ProgramFiles, env.PROGRAMFILES, env["ProgramFiles(x86)"], env.PROGRAMFILES_X86]
     .filter((root) => typeof root === "string" && path.win32.isAbsolute(root));
-  return [...new Set(roots.map((root) => path.win32.join(root, "Git", "cmd", "git.exe")))];
+  return [...new Set([
+    ...roots.map((root) => path.win32.join(root, "Git", "bin", "git.exe")),
+    ...roots.map((root) => path.win32.join(root, "Git", "cmd", "git.exe"))
+  ])];
 }
 
 export function resolveGitExecutable({ env = process.env, platform = process.platform, exists = fs.existsSync, probe = defaultGitProbe } = {}) {
