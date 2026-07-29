@@ -84,10 +84,12 @@ function trustedWindowsCommandEnvironment(env, gitExecutable) {
   };
 }
 
-function windowsGitArguments(args, cwd) {
-  if (cwd === undefined) return args;
-  if (typeof cwd !== "string" || !path.win32.isAbsolute(cwd)) throw new Error("Blocked: Windows Git source directory must be an absolute path.");
-  return ["-C", cwd, ...args];
+function windowsGitWorkingDirectory(cwd) {
+  if (cwd === undefined) return cwd;
+  if (typeof cwd !== "string" || !path.win32.isAbsolute(cwd) || !WINDOWS_SAFE_GIT_TOKEN.test(cwd)) {
+    throw new Error("Blocked: Windows Git source directory contains characters unsafe for the Windows Git launcher.");
+  }
+  return cwd;
 }
 
 function gitForWindowsCandidates(env) {
@@ -126,19 +128,18 @@ export function createGitInvocation(args, { git, env = process.env, platform = p
     quoteWindowsGitToken(executable, "Git executable"),
     ...args.map((arg) => quoteWindowsGitToken(arg, "Git argument", true))
   ].join(" ");
-  windowsCmdExecutable(env);
   return {
-    command: "cmd.exe",
+    command: windowsCmdExecutable(env),
     args: ["/d", "/v:off", "/s", "/c", `"${command}"`]
   };
 }
 
-export function runGitCommand(args, { cwd, env = process.env, platform = process.platform, git, encoding = "utf8", input, maxBuffer, timeout, spawn = spawnSync, currentDirectory = process.cwd, changeDirectory = process.chdir } = {}) {
+export function runGitCommand(args, { cwd, env = process.env, platform = process.platform, git, encoding = "utf8", input, maxBuffer, timeout, spawn = spawnSync } = {}) {
   const windows = platform === "win32";
   const executable = git ?? resolveGitExecutable({ env, platform });
-  const invocation = createGitInvocation(windows ? windowsGitArguments(args, cwd) : args, { git: executable, env, platform });
+  const invocation = createGitInvocation(args, { git: executable, env, platform });
   const options = {
-    cwd: windows ? windowsSystemDirectory(env) : cwd,
+    cwd: windows ? windowsGitWorkingDirectory(cwd) : cwd,
     encoding,
     input,
     maxBuffer,
@@ -147,11 +148,7 @@ export function runGitCommand(args, { cwd, env = process.env, platform = process
   };
   if (windows) options.env = trustedWindowsCommandEnvironment(env, executable);
   else options.env = env;
-  if (!windows) return spawn(invocation.command, invocation.args, options);
-  const originalDirectory = currentDirectory();
-  changeDirectory(options.cwd);
-  try { return spawn(invocation.command, invocation.args, options); }
-  finally { changeDirectory(originalDirectory); }
+  return spawn(invocation.command, invocation.args, options);
 }
 
 function templateValues(context) {
