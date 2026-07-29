@@ -25,6 +25,27 @@ function readJson(file) { return JSON.parse(fs.readFileSync(file, "utf8")); }
 
 function hashFile(file) { return sha256(fs.readFileSync(file)); }
 
+function defaultGitProbe(command, env) {
+  const result = spawnSync(command, ["--version"], { env, encoding: "utf8", windowsHide: true });
+  return result.status === 0 && !result.error;
+}
+
+function gitForWindowsCandidates(env) {
+  const roots = [env.ProgramW6432, env.ProgramFiles, env.PROGRAMFILES, env["ProgramFiles(x86)"], env.PROGRAMFILES_X86]
+    .filter((root) => typeof root === "string" && path.win32.isAbsolute(root));
+  return [...new Set(roots.map((root) => path.win32.join(root, "Git", "cmd", "git.exe")))];
+}
+
+export function resolveGitExecutable({ env = process.env, platform = process.platform, exists = fs.existsSync, probe = defaultGitProbe } = {}) {
+  const configured = [env.WCBS_GIT_EXECUTABLE, env.GIT_EXECUTABLE].filter((command) => typeof command === "string" && command.trim());
+  const pathCommands = platform === "win32" ? ["git.exe", "git"] : ["git"];
+  for (const command of [...configured, ...pathCommands]) if (probe(command, env)) return command;
+  if (platform === "win32") {
+    for (const command of gitForWindowsCandidates(env)) if (exists(command) && probe(command, env)) return command;
+  }
+  throw new Error("Blocked: Git executable is unavailable. Configure WCBS_GIT_EXECUTABLE or make Git available on PATH.");
+}
+
 function templateValues(context) {
   return {
     "{{workspace}}": context.workspace,
@@ -50,7 +71,8 @@ function templateCommand(template, context, label) {
 }
 
 function runGit(root, args) {
-  try { return execFileSync("git", args, { cwd: root, encoding: "utf8" }).trim(); }
+  const git = resolveGitExecutable();
+  try { return execFileSync(git, args, { cwd: root, encoding: "utf8" }).trim(); }
   catch (error) { throw new Error(`Blocked: git ${args.join(" ")} failed: ${error.stderr?.toString().trim() || error.message}`); }
 }
 
@@ -66,7 +88,8 @@ function verifyGitIdentity(source, identity, label, revision = "HEAD") {
 function archiveGitRevision(source, revision, destination, label) {
   contained(path.dirname(destination), destination, `${label} destination`);
   fs.mkdirSync(destination, { recursive: true });
-  const archive = spawnSync("git", ["archive", "--format=tar", revision], { cwd: source, encoding: null, maxBuffer: 128 * 1024 * 1024 });
+  const git = resolveGitExecutable();
+  const archive = spawnSync(git, ["archive", "--format=tar", revision], { cwd: source, encoding: null, maxBuffer: 128 * 1024 * 1024, windowsHide: true });
   if (archive.status !== 0 || !archive.stdout?.length) throw new Error(`Blocked: could not archive ${label} revision ${revision}: ${archive.stderr?.toString() || "no archive output"}`);
   const extract = spawnSync("tar", ["-xf", "-", "-C", destination], { input: archive.stdout, encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
   if (extract.status !== 0) throw new Error(`Blocked: could not extract ${label} archive: ${extract.stderr || "tar failed"}`);

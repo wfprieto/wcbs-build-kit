@@ -14,13 +14,15 @@ import {
   deterministicUnitInterval,
   executeProtocol,
   preflightProtocol,
+  resolveGitExecutable,
   validateScoreLedgers
 } from "../lib/evaluation-protocol.mjs";
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..", "..");
+const gitExecutable = resolveGitExecutable();
 const fixtureCandidate = {
-  commit: execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim(),
-  tree: execFileSync("git", ["rev-parse", "HEAD^{tree}"], { cwd: root, encoding: "utf8" }).trim()
+  commit: execFileSync(gitExecutable, ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim(),
+  tree: execFileSync(gitExecutable, ["rev-parse", "HEAD^{tree}"], { cwd: root, encoding: "utf8" }).trim()
 };
 const sha256 = (value) => crypto.createHash("sha256").update(value).digest("hex");
 
@@ -96,20 +98,20 @@ function fixtureProtocol(stubs, arms = ["neutral", "wcbs"], repetitions = 1, sup
 function createSuperpowersFixture(directory) {
   const fixture = path.join(directory, "superpowers-source");
   fs.mkdirSync(fixture, { recursive: true });
-  execFileSync("git", ["init"], { cwd: fixture, stdio: "pipe" });
-  execFileSync("git", ["config", "user.email", "fixture@example.invalid"], { cwd: fixture, stdio: "pipe" });
-  execFileSync("git", ["config", "user.name", "Fixture"], { cwd: fixture, stdio: "pipe" });
+  execFileSync(gitExecutable, ["init"], { cwd: fixture, stdio: "pipe" });
+  execFileSync(gitExecutable, ["config", "user.email", "fixture@example.invalid"], { cwd: fixture, stdio: "pipe" });
+  execFileSync(gitExecutable, ["config", "user.name", "Fixture"], { cwd: fixture, stdio: "pipe" });
   fs.writeFileSync(path.join(fixture, "README.md"), "pinned superpowers fixture\n");
-  execFileSync("git", ["add", "README.md"], { cwd: fixture, stdio: "pipe" });
-  execFileSync("git", ["commit", "-m", "pinned fixture"], { cwd: fixture, stdio: "pipe" });
+  execFileSync(gitExecutable, ["add", "README.md"], { cwd: fixture, stdio: "pipe" });
+  execFileSync(gitExecutable, ["commit", "-m", "pinned fixture"], { cwd: fixture, stdio: "pipe" });
   const identity = {
-    commit: execFileSync("git", ["rev-parse", "HEAD"], { cwd: fixture, encoding: "utf8" }).trim(),
-    tree: execFileSync("git", ["rev-parse", "HEAD^{tree}"], { cwd: fixture, encoding: "utf8" }).trim()
+    commit: execFileSync(gitExecutable, ["rev-parse", "HEAD"], { cwd: fixture, encoding: "utf8" }).trim(),
+    tree: execFileSync(gitExecutable, ["rev-parse", "HEAD^{tree}"], { cwd: fixture, encoding: "utf8" }).trim()
   };
   const mutateHead = () => {
     fs.writeFileSync(path.join(fixture, "MUTATED.txt"), "must not be archived\n");
-    execFileSync("git", ["add", "MUTATED.txt"], { cwd: fixture, stdio: "pipe" });
-    execFileSync("git", ["commit", "-m", "mutated head"], { cwd: fixture, stdio: "pipe" });
+    execFileSync(gitExecutable, ["add", "MUTATED.txt"], { cwd: fixture, stdio: "pipe" });
+    execFileSync(gitExecutable, ["commit", "-m", "mutated head"], { cwd: fixture, stdio: "pipe" });
   };
   return { root: fixture, identity, mutateHead };
 }
@@ -173,8 +175,34 @@ test("Gate 0C treatment staging uses a Git-archived candidate and V2 wcbs plugin
 });
 
 test("evaluation fixtures derive their WCBS candidate identity from the checkout tip", () => {
-  assert.equal(fixtureCandidate.commit, execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim());
-  assert.equal(fixtureCandidate.tree, execFileSync("git", ["rev-parse", "HEAD^{tree}"], { cwd: root, encoding: "utf8" }).trim());
+  assert.equal(fixtureCandidate.commit, execFileSync(gitExecutable, ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim());
+  assert.equal(fixtureCandidate.tree, execFileSync(gitExecutable, ["rev-parse", "HEAD^{tree}"], { cwd: root, encoding: "utf8" }).trim());
+});
+
+test("evaluator Git resolution prefers an explicit configured command", () => {
+  const configured = "/opt/wcbs-test/git";
+  const probes = [];
+  const executable = resolveGitExecutable({
+    env: { WCBS_GIT_EXECUTABLE: configured },
+    platform: "linux",
+    probe: (candidate) => { probes.push(candidate); return candidate === configured; }
+  });
+  assert.equal(executable, configured);
+  assert.deepEqual(probes, [configured]);
+});
+
+test("evaluator Git resolution uses the safe Git-for-Windows ProgramFiles fallback when PATH lacks Git", () => {
+  const programFiles = "C:\\Program Files";
+  const expected = path.win32.join(programFiles, "Git", "cmd", "git.exe");
+  const probes = [];
+  const executable = resolveGitExecutable({
+    env: { ProgramFiles: programFiles, PATH: "C:\\Windows\\System32" },
+    platform: "win32",
+    exists: (candidate) => candidate === expected,
+    probe: (candidate) => { probes.push(candidate); return candidate === expected; }
+  });
+  assert.equal(executable, expected);
+  assert.deepEqual(probes, ["git.exe", "git", expected]);
 });
 
 test("three-arm protocol rejects a missing fixed Superpowers source identity and emits 240 scheduled records only when all identities are complete", () => {
