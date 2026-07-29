@@ -213,7 +213,7 @@ test("evaluator Git resolution prefers Git-for-Windows bin before cmd and a fals
     probe: (candidate) => { probes.push(candidate); return candidate === bin || candidate === cmd || candidate === "git.exe"; }
   });
   assert.equal(executable, bin);
-  assert.deepEqual(probes, [bin]);
+  assert.deepEqual(probes, []);
 });
 
 test("evaluator Git resolution falls back to Git-for-Windows cmd when bin is unavailable", () => {
@@ -229,7 +229,7 @@ test("evaluator Git resolution falls back to Git-for-Windows cmd when bin is una
   });
   assert.equal(executable, cmd);
   assert.equal(probes.includes(bin), false);
-  assert.deepEqual(probes, [cmd]);
+  assert.deepEqual(probes, []);
 });
 
 test("evaluator Git resolution considers every Git-for-Windows bin path before any cmd path", () => {
@@ -245,7 +245,19 @@ test("evaluator Git resolution considers every Git-for-Windows bin path before a
     probe: (candidate) => { probes.push(candidate); return candidate === earlierCmd || candidate === laterBin; }
   });
   assert.equal(executable, laterBin);
-  assert.deepEqual(probes, [laterBin]);
+  assert.deepEqual(probes, []);
+});
+
+test("evaluator Git resolution accepts an existing Git-for-Windows executable without a fragile launcher probe", () => {
+  const programFiles = "C:\\Program Files";
+  const bin = path.win32.join(programFiles, "Git", "bin", "git.exe");
+  const executable = resolveGitExecutable({
+    env: { ProgramFiles: programFiles },
+    platform: "win32",
+    exists: (candidate) => candidate === bin,
+    probe: () => false
+  });
+  assert.equal(executable, bin);
 });
 
 test("evaluator Git commands use a validated COMSPEC launcher on Windows and preserve binary archive output", () => {
@@ -255,7 +267,7 @@ test("evaluator Git commands use a validated COMSPEC launcher on Windows and pre
   const archive = Buffer.from([0, 255, 17, 0]);
   const result = runGitCommand(["archive", "--format=tar", "a".repeat(40)], {
     git,
-    env: { ComSpec: comspec },
+    env: { comspec },
     platform: "win32",
     cwd: "C:\\workspace",
     encoding: null,
@@ -270,8 +282,9 @@ test("evaluator Git commands use a validated COMSPEC launcher on Windows and pre
   assert.deepEqual(calls[0].args.slice(0, 4), ["/d", "/v:off", "/s", "/c"]);
   assert.equal(calls[0].args[4], `"\"${git}\" \"archive\" \"--format=tar\" \"${"a".repeat(40)}\""`);
   assert.equal(calls[0].options.encoding, null);
+  assert.equal(calls[0].options.windowsVerbatimArguments, true);
 
-  const revisionInvocation = createGitInvocation(["rev-parse", "HEAD^{tree}"], { git, env: { ComSpec: comspec }, platform: "win32" });
+  const revisionInvocation = createGitInvocation(["rev-parse", "HEAD^{tree}"], { git, env: { comspec }, platform: "win32" });
   assert.equal(revisionInvocation.args[4], `"\"${git}\" \"rev-parse\" \"HEAD^^{tree}\""`);
   assert.throws(
     () => createGitInvocation(["rev-parse", "HEAD & whoami"], { git, env: { ComSpec: comspec }, platform: "win32" }),

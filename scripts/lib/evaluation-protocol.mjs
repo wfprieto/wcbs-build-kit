@@ -32,8 +32,14 @@ function defaultGitProbe(command, env, platform = process.platform) {
   return result.status === 0 && !result.error;
 }
 
+function windowsEnvironmentValue(env, name) {
+  if (env[name] !== undefined) return env[name];
+  const key = Object.keys(env).find((candidate) => candidate.toLowerCase() === name.toLowerCase());
+  return key === undefined ? undefined : env[key];
+}
+
 function gitForWindowsCandidates(env) {
-  const roots = [env.ProgramW6432, env.ProgramFiles, env.PROGRAMFILES, env["ProgramFiles(x86)"], env.PROGRAMFILES_X86]
+  const roots = ["ProgramW6432", "ProgramFiles", "ProgramFiles(x86)"].map((name) => windowsEnvironmentValue(env, name))
     .filter((root) => typeof root === "string" && path.win32.isAbsolute(root));
   return [...new Set([
     ...roots.map((root) => path.win32.join(root, "Git", "bin", "git.exe")),
@@ -45,7 +51,7 @@ export function resolveGitExecutable({ env = process.env, platform = process.pla
   const configured = [env.WCBS_GIT_EXECUTABLE, env.GIT_EXECUTABLE].filter((command) => typeof command === "string" && command.trim());
   for (const command of configured) if (probe(command, env)) return command;
   if (platform === "win32") {
-    for (const command of gitForWindowsCandidates(env)) if (exists(command) && probe(command, env)) return command;
+    for (const command of gitForWindowsCandidates(env)) if (exists(command)) return command;
   }
   const pathCommands = platform === "win32" ? ["git.exe", "git"] : ["git"];
   for (const command of pathCommands) if (probe(command, env)) return command;
@@ -69,14 +75,14 @@ export function createGitInvocation(args, { git, env = process.env, platform = p
     ...args.map((arg) => quoteWindowsGitToken(arg, "Git argument", true))
   ].join(" ");
   return {
-    command: env.ComSpec ?? env.COMSPEC ?? "cmd.exe",
+    command: windowsEnvironmentValue(env, "ComSpec") ?? "cmd.exe",
     args: ["/d", "/v:off", "/s", "/c", `"${command}"`]
   };
 }
 
 export function runGitCommand(args, { cwd, env = process.env, platform = process.platform, git, encoding = "utf8", input, maxBuffer, timeout, spawn = spawnSync } = {}) {
   const invocation = createGitInvocation(args, { git, env, platform });
-  return spawn(invocation.command, invocation.args, {
+  const options = {
     cwd,
     env,
     encoding,
@@ -84,7 +90,9 @@ export function runGitCommand(args, { cwd, env = process.env, platform = process
     maxBuffer,
     timeout,
     windowsHide: true
-  });
+  };
+  if (platform === "win32") options.windowsVerbatimArguments = true;
+  return spawn(invocation.command, invocation.args, options);
 }
 
 function templateValues(context) {
