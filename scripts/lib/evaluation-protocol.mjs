@@ -57,6 +57,25 @@ function windowsCmdExecutable(env) {
   return path.win32.join(systemRoot, "System32", "cmd.exe");
 }
 
+function windowsSystemDirectory(env) { return path.win32.dirname(windowsCmdExecutable(env)); }
+
+function trustedWindowsCommandEnvironment(env) {
+  const systemDirectory = windowsSystemDirectory(env);
+  const systemRoot = path.win32.dirname(systemDirectory);
+  return {
+    SystemRoot: systemRoot,
+    WINDIR: systemRoot,
+    Path: systemDirectory,
+    PATHEXT: ".COM;.EXE;.BAT;.CMD"
+  };
+}
+
+function windowsGitArguments(args, cwd) {
+  if (cwd === undefined) return args;
+  if (typeof cwd !== "string" || !path.win32.isAbsolute(cwd)) throw new Error("Blocked: Windows Git source directory must be an absolute path.");
+  return ["-C", cwd, ...args];
+}
+
 function gitForWindowsCandidates(env) {
   const roots = ["ProgramW6432", "ProgramFiles", "ProgramFiles(x86)"].map((name) => windowsEnvironmentValue(env, name))
     .filter((root) => typeof root === "string" && path.win32.isAbsolute(root));
@@ -93,26 +112,31 @@ export function createGitInvocation(args, { git, env = process.env, platform = p
     quoteWindowsGitToken(executable, "Git executable"),
     ...args.map((arg) => quoteWindowsGitToken(arg, "Git argument", true))
   ].join(" ");
+  windowsCmdExecutable(env);
   return {
-    command: windowsCmdExecutable(env),
+    command: "cmd.exe",
     args: ["/d", "/v:off", "/s", "/c", `"${command}"`]
   };
 }
 
-export function runGitCommand(args, { cwd, env = process.env, platform = process.platform, git, encoding = "utf8", input, maxBuffer, timeout, spawn = spawnSync } = {}) {
-  const invocation = createGitInvocation(args, { git, env, platform });
+export function runGitCommand(args, { cwd, env = process.env, platform = process.platform, git, encoding = "utf8", input, maxBuffer, timeout, spawn = spawnSync, currentDirectory = process.cwd, changeDirectory = process.chdir } = {}) {
+  const windows = platform === "win32";
+  const invocation = createGitInvocation(windows ? windowsGitArguments(args, cwd) : args, { git, env, platform });
   const options = {
-    cwd,
+    cwd: windows ? windowsSystemDirectory(env) : cwd,
     encoding,
     input,
     maxBuffer,
     timeout,
     windowsHide: true
   };
-  if (platform === "win32") {
-    if (env !== process.env) options.env = normalizeWindowsEnvironment(env);
-  } else options.env = env;
-  return spawn(invocation.command, invocation.args, options);
+  if (windows) options.env = trustedWindowsCommandEnvironment(env);
+  else options.env = env;
+  if (!windows) return spawn(invocation.command, invocation.args, options);
+  const originalDirectory = currentDirectory();
+  changeDirectory(options.cwd);
+  try { return spawn(invocation.command, invocation.args, options); }
+  finally { changeDirectory(originalDirectory); }
 }
 
 function templateValues(context) {

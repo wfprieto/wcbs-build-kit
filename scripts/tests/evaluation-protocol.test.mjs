@@ -260,12 +260,12 @@ test("evaluator Git resolution accepts an existing Git-for-Windows executable wi
   assert.equal(executable, bin);
 });
 
-test("evaluator Git commands use the trusted SystemRoot CMD launcher and a canonical Windows environment", () => {
+test("evaluator Git commands isolate bare CMD from an untrusted source directory", () => {
   const git = "C:\\Program Files\\Git\\bin\\git.exe";
   const systemRoot = "C:\\Windows";
   const source = "C:\\untrusted-source";
   const untrustedCmd = path.win32.join(source, "cmd.exe");
-  const expectedCmd = path.win32.join(systemRoot, "System32", "cmd.exe");
+  const systemDirectory = path.win32.join(systemRoot, "System32");
   const env = {
     SystemRoot: systemRoot,
     SYSTEMROOT: "C:\\spoofed-windows",
@@ -274,6 +274,7 @@ test("evaluator Git commands use the trusted SystemRoot CMD launcher and a canon
     ComSpec: untrustedCmd
   };
   const calls = [];
+  const chdirCalls = [];
   const archive = Buffer.from([0, 255, 17, 0]);
   const result = runGitCommand(["archive", "--format=tar", "a".repeat(40)], {
     git,
@@ -281,6 +282,8 @@ test("evaluator Git commands use the trusted SystemRoot CMD launcher and a canon
     platform: "win32",
     cwd: source,
     encoding: null,
+    currentDirectory: () => source,
+    changeDirectory: (directory) => chdirCalls.push(directory),
     spawn: (command, args, options) => {
       calls.push({ command, args, options });
       return { status: 0, stdout: archive, stderr: Buffer.alloc(0) };
@@ -288,15 +291,19 @@ test("evaluator Git commands use the trusted SystemRoot CMD launcher and a canon
   });
   assert.equal(result.stdout, archive);
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].command, expectedCmd);
+  assert.equal(calls[0].command, "cmd.exe");
   assert.notEqual(calls[0].command, untrustedCmd);
-  assert.deepEqual(calls[0].args, ["/d", "/v:off", "/s", "/c", `"\"${git}\" \"archive\" \"--format=tar\" \"${"a".repeat(40)}\""`]);
+  assert.equal(calls[0].options.cwd, systemDirectory);
+  assert.deepEqual(calls[0].args, ["/d", "/v:off", "/s", "/c", `"\"${git}\" \"-C\" \"${source}\" \"archive\" \"--format=tar\" \"${"a".repeat(40)}\""`]);
   assert.equal(calls[0].options.encoding, null);
   assert.equal(calls[0].options.windowsVerbatimArguments, undefined);
   assert.equal(calls[0].options.env.SystemRoot, systemRoot);
-  assert.equal(calls[0].options.env.Path, "C:\\trusted-bin");
+  assert.equal(calls[0].options.env.Path, systemDirectory);
+  assert.equal(calls[0].options.env.WINDIR, systemRoot);
+  assert.equal(calls[0].options.env.ComSpec, undefined);
   assert.equal(calls[0].options.env.SYSTEMROOT, undefined);
   assert.equal(calls[0].options.env.PATH, undefined);
+  assert.deepEqual(chdirCalls, [systemDirectory, source]);
 
   const revisionInvocation = createGitInvocation(["rev-parse", "HEAD^{tree}"], { git, env, platform: "win32" });
   assert.equal(revisionInvocation.args[4], `"\"${git}\" \"rev-parse\" \"HEAD^^{tree}\""`);
@@ -308,10 +315,15 @@ test("evaluator Git commands use the trusted SystemRoot CMD launcher and a canon
     () => createGitInvocation(["rev-parse", "HEAD & whoami"], { git, env, platform: "win32" }),
     /unsafe for the Windows Git launcher/
   );
+  assert.throws(
+    () => runGitCommand(["rev-parse", "HEAD"], { git, env, platform: "win32", cwd: "C:\\source & whoami", spawn: () => { throw new Error("must not spawn"); } }),
+    /unsafe for the Windows Git launcher/
+  );
 });
 
-test("evaluator Git commands inherit the native Windows environment instead of reserializing process.env", () => {
+test("evaluator Git commands use the SystemRoot command directory for bare CMD discovery", () => {
   const calls = [];
+  const chdirCalls = [];
   const originalSystemRoot = process.env.SYSTEMROOT;
   process.env.SYSTEMROOT = "C:\\Windows";
   try {
@@ -319,6 +331,8 @@ test("evaluator Git commands inherit the native Windows environment instead of r
       git: "C:\\Program Files\\Git\\bin\\git.exe",
       env: process.env,
       platform: "win32",
+      currentDirectory: () => "C:\\original-source",
+      changeDirectory: (directory) => chdirCalls.push(directory),
       spawn: (command, args, options) => {
         calls.push({ command, args, options });
         return { status: 0, stdout: "git version fixture", stderr: "" };
@@ -329,7 +343,27 @@ test("evaluator Git commands inherit the native Windows environment instead of r
     else process.env.SYSTEMROOT = originalSystemRoot;
   }
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].options.env, undefined);
+  assert.equal(calls[0].command, "cmd.exe");
+  assert.equal(calls[0].options.cwd, "C:\\Windows\\System32");
+  assert.equal(calls[0].options.env.Path, "C:\\Windows\\System32");
+  assert.equal(calls[0].options.env.SystemRoot, "C:\\Windows");
+  assert.deepEqual(chdirCalls, ["C:\\Windows\\System32", "C:\\original-source"]);
+});
+
+test("Windows Git launcher cannot execute a source-shadowed cmd.exe", { skip: process.platform !== "win32" }, () => {
+  const original = process.cwd();
+  const source = fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-windows-cmd-shadow-"));
+  fs.writeFileSync(path.join(source, "cmd.exe"), "this must never execute\n");
+  process.chdir(source);
+  try {
+    const result = runGitCommand(["--version"], { cwd: source, encoding: "utf8" });
+    assert.equal(result.status, 0, result.stderr?.toString());
+    assert.match(result.stdout, /^git version /);
+    assert.equal(process.cwd(), source, "the helper must restore the original source cwd after spawn");
+  } finally {
+    process.chdir(original);
+    fs.rmSync(source, { recursive: true, force: true });
+  }
 });
 
 test("three-arm protocol rejects a missing fixed Superpowers source identity and emits 240 scheduled records only when all identities are complete", () => {
