@@ -360,9 +360,30 @@ test("evaluator Git commands use the direct absolute Git executable from an untr
     createGitInvocation(["rev-parse", "HEAD & whoami"], { git, env, platform: "win32" }),
     { command: git, args: ["rev-parse", "HEAD & whoami"] }
   );
+});
+
+test("direct Windows Git accepts absolute source paths containing shell characters", () => {
+  const git = "C:\\Program Files\\Git\\bin\\git.exe";
+  const source = "C:\\Users\\wcbs~fixture\\source & spaces";
+  const calls = [];
+  const result = runGitCommand(["rev-parse", "HEAD"], {
+    git,
+    env: { SystemRoot: "C:\\Windows" },
+    platform: "win32",
+    cwd: source,
+    spawn: (command, args, options) => {
+      calls.push({ command, args, options });
+      return { status: 0, stdout: "a".repeat(40), stderr: "" };
+    }
+  });
+  assert.equal(result.status, 0);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].command, git);
+  assert.deepEqual(calls[0].args, ["rev-parse", "HEAD"]);
+  assert.equal(calls[0].options.cwd, source);
   assert.throws(
-    () => runGitCommand(["rev-parse", "HEAD"], { git, env, platform: "win32", cwd: "C:\\source & whoami", spawn: () => { throw new Error("must not spawn"); } }),
-    /unsafe for Windows Git execution/
+    () => runGitCommand(["rev-parse", "HEAD"], { git, env: { SystemRoot: "C:\\Windows" }, platform: "win32", cwd: "relative-source", spawn: () => { throw new Error("must not spawn"); } }),
+    /absolute Windows path/
   );
 });
 

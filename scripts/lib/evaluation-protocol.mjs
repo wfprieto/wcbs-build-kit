@@ -11,7 +11,6 @@ const ALLOWED_ENV = ["PATH", "PATHEXT", "SYSTEMROOT", "WINDIR", "COMSPEC", "TMP"
 const sha256 = (value) => crypto.createHash("sha256").update(value).digest("hex");
 const json = (value) => JSON.stringify(value);
 const posix = (value) => value.split(path.sep).join("/");
-const WINDOWS_SAFE_GIT_TOKEN = /^[A-Za-z0-9._:@/\\{}=+\- ()]+$/;
 
 function now() { return new Date().toISOString(); }
 
@@ -90,8 +89,8 @@ function trustedWindowsGitEnvironment(env, gitExecutable) {
 
 function windowsGitWorkingDirectory(cwd) {
   if (cwd === undefined) return cwd;
-  if (typeof cwd !== "string" || !path.win32.isAbsolute(cwd) || !WINDOWS_SAFE_GIT_TOKEN.test(cwd)) {
-    throw new Error("Blocked: Windows Git source directory contains characters unsafe for Windows Git execution.");
+  if (typeof cwd !== "string" || !path.win32.isAbsolute(cwd)) {
+    throw new Error("Blocked: Windows Git source directory must be an absolute Windows path.");
   }
   return cwd;
 }
