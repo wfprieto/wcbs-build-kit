@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { execFileSync, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -11,6 +11,8 @@ const ALLOWED_ENV = ["PATH", "PATHEXT", "SYSTEMROOT", "WINDIR", "COMSPEC", "TMP"
 const sha256 = (value) => crypto.createHash("sha256").update(value).digest("hex");
 const json = (value) => JSON.stringify(value);
 const posix = (value) => value.split(path.sep).join("/");
+const WINDOWS_SAFE_GIT_TOKEN = /^[A-Za-z0-9._:@/\\{}=+\- ()]+$/;
+const WINDOWS_TREE_REVISION = /^(?:HEAD|[a-f0-9]{40})\^\{tree\}$/i;
 
 function now() { return new Date().toISOString(); }
 
@@ -25,8 +27,8 @@ function readJson(file) { return JSON.parse(fs.readFileSync(file, "utf8")); }
 
 function hashFile(file) { return sha256(fs.readFileSync(file)); }
 
-function defaultGitProbe(command, env) {
-  const result = spawnSync(command, ["--version"], { env, encoding: "utf8", windowsHide: true });
+function defaultGitProbe(command, env, platform = process.platform) {
+  const result = runGitCommand(["--version"], { git: command, env, platform, encoding: "utf8" });
   return result.status === 0 && !result.error;
 }
 
@@ -39,7 +41,7 @@ function gitForWindowsCandidates(env) {
   ])];
 }
 
-export function resolveGitExecutable({ env = process.env, platform = process.platform, exists = fs.existsSync, probe = defaultGitProbe } = {}) {
+export function resolveGitExecutable({ env = process.env, platform = process.platform, exists = fs.existsSync, probe = (command, probeEnv) => defaultGitProbe(command, probeEnv, platform) } = {}) {
   const configured = [env.WCBS_GIT_EXECUTABLE, env.GIT_EXECUTABLE].filter((command) => typeof command === "string" && command.trim());
   for (const command of configured) if (probe(command, env)) return command;
   if (platform === "win32") {
@@ -48,6 +50,41 @@ export function resolveGitExecutable({ env = process.env, platform = process.pla
   const pathCommands = platform === "win32" ? ["git.exe", "git"] : ["git"];
   for (const command of pathCommands) if (probe(command, env)) return command;
   throw new Error("Blocked: Git executable is unavailable. Configure WCBS_GIT_EXECUTABLE or make Git available on PATH.");
+}
+
+function quoteWindowsGitToken(value, label, allowTreeRevision = false) {
+  if (typeof value !== "string" || !value) throw new Error(`Blocked: ${label} must be a non-empty string.`);
+  if (!WINDOWS_SAFE_GIT_TOKEN.test(value) && !(allowTreeRevision && WINDOWS_TREE_REVISION.test(value))) {
+    throw new Error(`Blocked: ${label} contains characters unsafe for the Windows Git launcher.`);
+  }
+  return `"${value.replace(/\^/g, "^^")}"`;
+}
+
+export function createGitInvocation(args, { git, env = process.env, platform = process.platform } = {}) {
+  if (!Array.isArray(args) || args.some((arg) => typeof arg !== "string")) throw new Error("Blocked: Git arguments must be a string array.");
+  const executable = git ?? resolveGitExecutable({ env, platform });
+  if (platform !== "win32") return { command: executable, args: [...args] };
+  const command = [
+    quoteWindowsGitToken(executable, "Git executable"),
+    ...args.map((arg) => quoteWindowsGitToken(arg, "Git argument", true))
+  ].join(" ");
+  return {
+    command: env.ComSpec ?? env.COMSPEC ?? "cmd.exe",
+    args: ["/d", "/v:off", "/s", "/c", `"${command}"`]
+  };
+}
+
+export function runGitCommand(args, { cwd, env = process.env, platform = process.platform, git, encoding = "utf8", input, maxBuffer, timeout, spawn = spawnSync } = {}) {
+  const invocation = createGitInvocation(args, { git, env, platform });
+  return spawn(invocation.command, invocation.args, {
+    cwd,
+    env,
+    encoding,
+    input,
+    maxBuffer,
+    timeout,
+    windowsHide: true
+  });
 }
 
 function templateValues(context) {
@@ -75,8 +112,16 @@ function templateCommand(template, context, label) {
 }
 
 function runGit(root, args) {
-  const git = resolveGitExecutable();
-  try { return execFileSync(git, args, { cwd: root, encoding: "utf8" }).trim(); }
+  try {
+    const result = runGitCommand(args, { cwd: root, encoding: "utf8" });
+    if (result.error) throw result.error;
+    if (result.status !== 0) {
+      const error = new Error(result.stderr?.toString().trim() || `git exited ${result.status}`);
+      error.stderr = result.stderr;
+      throw error;
+    }
+    return result.stdout.trim();
+  }
   catch (error) { throw new Error(`Blocked: git ${args.join(" ")} failed: ${error.stderr?.toString().trim() || error.message}`); }
 }
 
@@ -92,8 +137,7 @@ function verifyGitIdentity(source, identity, label, revision = "HEAD") {
 function archiveGitRevision(source, revision, destination, label) {
   contained(path.dirname(destination), destination, `${label} destination`);
   fs.mkdirSync(destination, { recursive: true });
-  const git = resolveGitExecutable();
-  const archive = spawnSync(git, ["archive", "--format=tar", revision], { cwd: source, encoding: null, maxBuffer: 128 * 1024 * 1024, windowsHide: true });
+  const archive = runGitCommand(["archive", "--format=tar", revision], { cwd: source, encoding: null, maxBuffer: 128 * 1024 * 1024 });
   if (archive.status !== 0 || !archive.stdout?.length) throw new Error(`Blocked: could not archive ${label} revision ${revision}: ${archive.stderr?.toString() || "no archive output"}`);
   const extract = spawnSync("tar", ["-xf", "-", "-C", destination], { input: archive.stdout, encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
   if (extract.status !== 0) throw new Error(`Blocked: could not extract ${label} archive: ${extract.stderr || "tar failed"}`);

@@ -4,25 +4,33 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import process from "node:process";
-import { execFileSync, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import test from "node:test";
 
 import {
   analyzeAdjudicatedScores,
   createBlindedJudgePackets,
+  createGitInvocation,
   createRandomSchedule,
   deterministicUnitInterval,
   executeProtocol,
   preflightProtocol,
   resolveGitExecutable,
+  runGitCommand,
   validateScoreLedgers
 } from "../lib/evaluation-protocol.mjs";
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..", "..");
-const gitExecutable = resolveGitExecutable();
+function testGit(args, cwd = root) {
+  const result = runGitCommand(args, { cwd, encoding: "utf8" });
+  if (result.error) throw result.error;
+  if (result.status !== 0) throw new Error(result.stderr?.toString().trim() || `git exited ${result.status}`);
+  return result.stdout;
+}
+
 const fixtureCandidate = {
-  commit: execFileSync(gitExecutable, ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim(),
-  tree: execFileSync(gitExecutable, ["rev-parse", "HEAD^{tree}"], { cwd: root, encoding: "utf8" }).trim()
+  commit: testGit(["rev-parse", "HEAD"]).trim(),
+  tree: testGit(["rev-parse", "HEAD^{tree}"]).trim()
 };
 const sha256 = (value) => crypto.createHash("sha256").update(value).digest("hex");
 
@@ -98,20 +106,20 @@ function fixtureProtocol(stubs, arms = ["neutral", "wcbs"], repetitions = 1, sup
 function createSuperpowersFixture(directory) {
   const fixture = path.join(directory, "superpowers-source");
   fs.mkdirSync(fixture, { recursive: true });
-  execFileSync(gitExecutable, ["init"], { cwd: fixture, stdio: "pipe" });
-  execFileSync(gitExecutable, ["config", "user.email", "fixture@example.invalid"], { cwd: fixture, stdio: "pipe" });
-  execFileSync(gitExecutable, ["config", "user.name", "Fixture"], { cwd: fixture, stdio: "pipe" });
+  testGit(["init"], fixture);
+  testGit(["config", "user.email", "fixture@example.invalid"], fixture);
+  testGit(["config", "user.name", "Fixture"], fixture);
   fs.writeFileSync(path.join(fixture, "README.md"), "pinned superpowers fixture\n");
-  execFileSync(gitExecutable, ["add", "README.md"], { cwd: fixture, stdio: "pipe" });
-  execFileSync(gitExecutable, ["commit", "-m", "pinned fixture"], { cwd: fixture, stdio: "pipe" });
+  testGit(["add", "README.md"], fixture);
+  testGit(["commit", "-m", "pinned fixture"], fixture);
   const identity = {
-    commit: execFileSync(gitExecutable, ["rev-parse", "HEAD"], { cwd: fixture, encoding: "utf8" }).trim(),
-    tree: execFileSync(gitExecutable, ["rev-parse", "HEAD^{tree}"], { cwd: fixture, encoding: "utf8" }).trim()
+    commit: testGit(["rev-parse", "HEAD"], fixture).trim(),
+    tree: testGit(["rev-parse", "HEAD^{tree}"], fixture).trim()
   };
   const mutateHead = () => {
     fs.writeFileSync(path.join(fixture, "MUTATED.txt"), "must not be archived\n");
-    execFileSync(gitExecutable, ["add", "MUTATED.txt"], { cwd: fixture, stdio: "pipe" });
-    execFileSync(gitExecutable, ["commit", "-m", "mutated head"], { cwd: fixture, stdio: "pipe" });
+    testGit(["add", "MUTATED.txt"], fixture);
+    testGit(["commit", "-m", "mutated head"], fixture);
   };
   return { root: fixture, identity, mutateHead };
 }
@@ -175,8 +183,8 @@ test("Gate 0C treatment staging uses a Git-archived candidate and V2 wcbs plugin
 });
 
 test("evaluation fixtures derive their WCBS candidate identity from the checkout tip", () => {
-  assert.equal(fixtureCandidate.commit, execFileSync(gitExecutable, ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim());
-  assert.equal(fixtureCandidate.tree, execFileSync(gitExecutable, ["rev-parse", "HEAD^{tree}"], { cwd: root, encoding: "utf8" }).trim());
+  assert.equal(fixtureCandidate.commit, testGit(["rev-parse", "HEAD"]).trim());
+  assert.equal(fixtureCandidate.tree, testGit(["rev-parse", "HEAD^{tree}"]).trim());
 });
 
 test("evaluator Git resolution prefers an explicit configured command", () => {
@@ -238,6 +246,37 @@ test("evaluator Git resolution considers every Git-for-Windows bin path before a
   });
   assert.equal(executable, laterBin);
   assert.deepEqual(probes, [laterBin]);
+});
+
+test("evaluator Git commands use a validated COMSPEC launcher on Windows and preserve binary archive output", () => {
+  const git = "C:\\Program Files\\Git\\bin\\git.exe";
+  const comspec = "C:\\Windows\\System32\\cmd.exe";
+  const calls = [];
+  const archive = Buffer.from([0, 255, 17, 0]);
+  const result = runGitCommand(["archive", "--format=tar", "a".repeat(40)], {
+    git,
+    env: { ComSpec: comspec },
+    platform: "win32",
+    cwd: "C:\\workspace",
+    encoding: null,
+    spawn: (command, args, options) => {
+      calls.push({ command, args, options });
+      return { status: 0, stdout: archive, stderr: Buffer.alloc(0) };
+    }
+  });
+  assert.equal(result.stdout, archive);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].command, comspec);
+  assert.deepEqual(calls[0].args.slice(0, 4), ["/d", "/v:off", "/s", "/c"]);
+  assert.equal(calls[0].args[4], `"\"${git}\" \"archive\" \"--format=tar\" \"${"a".repeat(40)}\""`);
+  assert.equal(calls[0].options.encoding, null);
+
+  const revisionInvocation = createGitInvocation(["rev-parse", "HEAD^{tree}"], { git, env: { ComSpec: comspec }, platform: "win32" });
+  assert.equal(revisionInvocation.args[4], `"\"${git}\" \"rev-parse\" \"HEAD^^{tree}\""`);
+  assert.throws(
+    () => createGitInvocation(["rev-parse", "HEAD & whoami"], { git, env: { ComSpec: comspec }, platform: "win32" }),
+    /unsafe for the Windows Git launcher/
+  );
 });
 
 test("three-arm protocol rejects a missing fixed Superpowers source identity and emits 240 scheduled records only when all identities are complete", () => {
