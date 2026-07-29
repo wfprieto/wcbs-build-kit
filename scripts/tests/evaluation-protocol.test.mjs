@@ -260,13 +260,19 @@ test("evaluator Git resolution accepts an existing Git-for-Windows executable wi
   assert.equal(executable, bin);
 });
 
-test("evaluator Git commands use the trusted SystemRoot CMD launcher on Windows and preserve binary archive output", () => {
+test("evaluator Git commands use the trusted SystemRoot CMD launcher and a canonical Windows environment", () => {
   const git = "C:\\Program Files\\Git\\bin\\git.exe";
   const systemRoot = "C:\\Windows";
   const source = "C:\\untrusted-source";
   const untrustedCmd = path.win32.join(source, "cmd.exe");
   const expectedCmd = path.win32.join(systemRoot, "System32", "cmd.exe");
-  const env = { SystemRoot: systemRoot, ComSpec: untrustedCmd, PATH: source };
+  const env = {
+    SystemRoot: systemRoot,
+    SYSTEMROOT: "C:\\spoofed-windows",
+    Path: "C:\\trusted-bin",
+    PATH: source,
+    ComSpec: untrustedCmd
+  };
   const calls = [];
   const archive = Buffer.from([0, 255, 17, 0]);
   const result = runGitCommand(["archive", "--format=tar", "a".repeat(40)], {
@@ -287,6 +293,10 @@ test("evaluator Git commands use the trusted SystemRoot CMD launcher on Windows 
   assert.deepEqual(calls[0].args, ["/d", "/v:off", "/s", "/c", `"\"${git}\" \"archive\" \"--format=tar\" \"${"a".repeat(40)}\""`]);
   assert.equal(calls[0].options.encoding, null);
   assert.equal(calls[0].options.windowsVerbatimArguments, undefined);
+  assert.equal(calls[0].options.env.SystemRoot, systemRoot);
+  assert.equal(calls[0].options.env.Path, "C:\\trusted-bin");
+  assert.equal(calls[0].options.env.SYSTEMROOT, undefined);
+  assert.equal(calls[0].options.env.PATH, undefined);
 
   const revisionInvocation = createGitInvocation(["rev-parse", "HEAD^{tree}"], { git, env, platform: "win32" });
   assert.equal(revisionInvocation.args[4], `"\"${git}\" \"rev-parse\" \"HEAD^^{tree}\""`);
@@ -298,6 +308,28 @@ test("evaluator Git commands use the trusted SystemRoot CMD launcher on Windows 
     () => createGitInvocation(["rev-parse", "HEAD & whoami"], { git, env, platform: "win32" }),
     /unsafe for the Windows Git launcher/
   );
+});
+
+test("evaluator Git commands inherit the native Windows environment instead of reserializing process.env", () => {
+  const calls = [];
+  const originalSystemRoot = process.env.SYSTEMROOT;
+  process.env.SYSTEMROOT = "C:\\Windows";
+  try {
+    runGitCommand(["--version"], {
+      git: "C:\\Program Files\\Git\\bin\\git.exe",
+      env: process.env,
+      platform: "win32",
+      spawn: (command, args, options) => {
+        calls.push({ command, args, options });
+        return { status: 0, stdout: "git version fixture", stderr: "" };
+      }
+    });
+  } finally {
+    if (originalSystemRoot === undefined) delete process.env.SYSTEMROOT;
+    else process.env.SYSTEMROOT = originalSystemRoot;
+  }
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].options.env, undefined);
 });
 
 test("three-arm protocol rejects a missing fixed Superpowers source identity and emits 240 scheduled records only when all identities are complete", () => {

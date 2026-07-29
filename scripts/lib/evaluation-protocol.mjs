@@ -38,6 +38,19 @@ function windowsEnvironmentValue(env, name) {
   return key === undefined ? undefined : env[key];
 }
 
+function normalizeWindowsEnvironment(env) {
+  const values = new Map();
+  for (const [key, value] of Object.entries(env)) {
+    const normalized = key.toLowerCase();
+    if (!values.has(normalized)) values.set(normalized, [key, value]);
+  }
+  for (const key of ["Path", "PATHEXT", "SystemRoot", "WINDIR", "ComSpec", "TMP", "TEMP", "HOME", "USERPROFILE"]) {
+    const value = windowsEnvironmentValue(env, key);
+    if (value !== undefined) values.set(key.toLowerCase(), [key, value]);
+  }
+  return Object.fromEntries(values.values());
+}
+
 function windowsCmdExecutable(env) {
   const systemRoot = windowsEnvironmentValue(env, "SystemRoot");
   if (typeof systemRoot !== "string" || !path.win32.isAbsolute(systemRoot)) throw new Error("Blocked: Windows Git launcher requires an absolute SystemRoot.");
@@ -90,13 +103,15 @@ export function runGitCommand(args, { cwd, env = process.env, platform = process
   const invocation = createGitInvocation(args, { git, env, platform });
   const options = {
     cwd,
-    env,
     encoding,
     input,
     maxBuffer,
     timeout,
     windowsHide: true
   };
+  if (platform === "win32") {
+    if (env !== process.env) options.env = normalizeWindowsEnvironment(env);
+  } else options.env = env;
   return spawn(invocation.command, invocation.args, options);
 }
 
@@ -225,7 +240,7 @@ function sanitizeEnvironment(profileDirectory, credential, credentialName) {
   env.HOME = profileDirectory;
   env.USERPROFILE = profileDirectory;
   if (credential) env[credentialName] = credential;
-  return env;
+  return process.platform === "win32" ? normalizeWindowsEnvironment(env) : env;
 }
 
 function executeSetup(command, cwd, timeoutMs, protectedValue, profileDirectory, credentialName) {
