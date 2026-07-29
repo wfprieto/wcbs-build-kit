@@ -180,18 +180,20 @@ test("evaluation fixtures derive their WCBS candidate identity from the checkout
 });
 
 test("evaluator Git resolution prefers an explicit configured command", () => {
-  const configured = "/opt/wcbs-test/git";
+  const configured = "C:\\WCBS Tools\\git.exe";
+  const installedGit = "C:\\Program Files\\Git\\cmd\\git.exe";
   const probes = [];
   const executable = resolveGitExecutable({
-    env: { WCBS_GIT_EXECUTABLE: configured },
-    platform: "linux",
-    probe: (candidate) => { probes.push(candidate); return candidate === configured; }
+    env: { WCBS_GIT_EXECUTABLE: configured, ProgramFiles: "C:\\Program Files" },
+    platform: "win32",
+    exists: (candidate) => candidate === installedGit,
+    probe: (candidate) => { probes.push(candidate); return candidate === configured || candidate === installedGit; }
   });
   assert.equal(executable, configured);
   assert.deepEqual(probes, [configured]);
 });
 
-test("evaluator Git resolution uses the safe Git-for-Windows ProgramFiles fallback when PATH lacks Git", () => {
+test("evaluator Git resolution prefers a verified Git-for-Windows ProgramFiles path before a false-positive PATH probe", () => {
   const programFiles = "C:\\Program Files";
   const expected = path.win32.join(programFiles, "Git", "cmd", "git.exe");
   const probes = [];
@@ -199,10 +201,10 @@ test("evaluator Git resolution uses the safe Git-for-Windows ProgramFiles fallba
     env: { ProgramFiles: programFiles, PATH: "C:\\Windows\\System32" },
     platform: "win32",
     exists: (candidate) => candidate === expected,
-    probe: (candidate) => { probes.push(candidate); return candidate === expected; }
+    probe: (candidate) => { probes.push(candidate); return candidate === expected || candidate === "git.exe"; }
   });
   assert.equal(executable, expected);
-  assert.deepEqual(probes, ["git.exe", "git", expected]);
+  assert.deepEqual(probes, [expected]);
 });
 
 test("three-arm protocol rejects a missing fixed Superpowers source identity and emits 240 scheduled records only when all identities are complete", () => {

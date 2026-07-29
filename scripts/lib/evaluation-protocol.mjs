@@ -38,11 +38,12 @@ function gitForWindowsCandidates(env) {
 
 export function resolveGitExecutable({ env = process.env, platform = process.platform, exists = fs.existsSync, probe = defaultGitProbe } = {}) {
   const configured = [env.WCBS_GIT_EXECUTABLE, env.GIT_EXECUTABLE].filter((command) => typeof command === "string" && command.trim());
-  const pathCommands = platform === "win32" ? ["git.exe", "git"] : ["git"];
-  for (const command of [...configured, ...pathCommands]) if (probe(command, env)) return command;
+  for (const command of configured) if (probe(command, env)) return command;
   if (platform === "win32") {
     for (const command of gitForWindowsCandidates(env)) if (exists(command) && probe(command, env)) return command;
   }
+  const pathCommands = platform === "win32" ? ["git.exe", "git"] : ["git"];
+  for (const command of pathCommands) if (probe(command, env)) return command;
   throw new Error("Blocked: Git executable is unavailable. Configure WCBS_GIT_EXECUTABLE or make Git available on PATH.");
 }
 
