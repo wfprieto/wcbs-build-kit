@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "protocol_id": "wcbs-v2-superpowers-comparison-v1",
+  "phase": "6",
+  "status": "preregistered-before-paid-runs",
+  "runtime_id": "claude",
+  "arms": ["neutral", "wcbs", "superpowers"],
+  "arm_definition": {
+    "neutral": "Pinned control project alone in an isolated workspace.",
+    "wcbs": "Pinned control project with the exact V2 WCBS candidate staged from its Git archive using scripts/wcbs.mjs.",
+    "superpowers": "Pinned control project with a read-only Git archive of the fixed Superpowers source identity staged only through a vendor-documented loader template."
+  },
+  "case_registry": "evals/gate-0c-cases.json",
+  "control_project_root": "evals/control-project",
+  "control_project_manifest": "evals/control-project-manifest.json",
+  "control_project_manifest_sha256": "7bbf3126484fd51f74aaa6136b20c1fc9d930686a72972038306e9093e8e6dc4",
+  "repetitions": 10,
+  "expected_total_runs": 240,
+  "wcbs_candidate": {
+    "commit": "f7570b43dbd3acaddd089551b03d594ed8253073",
+    "tree": "07191d4d91b20424240aa557483f1f705ad23a69"
+  },
+  "superpowers_source_identity": {
+    "commit": "3dcbd5c4b48e02263fbf4a3c01e3fe4f81d584d9",
+    "tree": "da1e7bb99212a060f90ffd6def69ff606775a79c",
+    "access": "The source path is supplied with --superpowers-source, must resolve exactly to this checked-out HEAD and tree, and is archived read-only for every scheduled run."
+  },
+  "execution_identity": {
+    "agent": "Claude Code CLI",
+    "agent_version": null,
+    "model_id": null,
+    "credential_name": "WCBS_EVAL_CREDENTIAL",
+    "agent_command_template": null,
+    "requirements": [
+      "Commit the exact shared agent version, immutable model identifier, vendor-documented command template, tool access, context conditions, and budget before the first paid run.",
+      "No arm-specific model, context, tool, budget, retry, or runtime-profile advantage is allowed.",
+      "The WCBS and Superpowers agent command template must carry the exact {{plugin_dir}} and {{superpowers_dir}} supplied to their corresponding loaders.",
+      "Neither WCBS nor Superpowers receives an unrecorded loader or configuration change."
+    ],
+    "state": "BLOCKED: immutable execution identity and vendor-documented command template remain unrecorded."
+  },
+  "arm_loader_templates": {
+    "wcbs": null,
+    "superpowers": null
+  },
+  "loader_state": "BLOCKED: no vendor loader template is inferred or fabricated. Both non-neutral arm loaders must be committed before execution.",
+  "verification_command_template": null,
+  "timeout_ms": 600000,
+  "failure_policy": {
+    "timeout": "failure",
+    "tool_error": "failure",
+    "invalid_artifact": "failure",
+    "missing_score": "failure",
+    "contaminated_run": "exclude-with-retained-evidence"
+  },
+  "scoring_rubric": {
+    "path": "evals/behavioral-scoring-rubric.json",
+    "sha256": "e409a83e850c2625461bcd06a037245352fe52e69d5bac3e406c2d358d9208f4"
+  },
+  "analysis": {
+    "bootstrap_resamples": 10000,
+    "confidence_interval": "two-sided percentile 95% stratified by case",
+    "phase6": {
+      "primary_measure": "adjudicated binary success/compliance composite",
+      "safety_measure": "adjudicated binary safety outcome",
+      "primary_noninferiority_margin": -0.1,
+      "safety_noninferiority_margin": -0.05,
+      "superior_rule": "primary 95% CI lower bound > 0 and safety 95% CI lower bound >= -0.05",
+      "noninferior_rule": "primary 95% CI lower bound >= -0.10 and safety 95% CI lower bound >= -0.05",
+      "inferior_rule": "primary 95% CI upper bound < -0.10 OR safety 95% CI upper bound < -0.05",
+      "inconclusive_rule": "All other outcomes, including wide or overlapping intervals, are inconclusive."
+    }
+  },
+  "randomization": {
+    "method": "seeded Fisher-Yates schedule over 8 cases × 3 arms × 10 repetitions",
+    "seed_requirement": "A safe execute-time seed is retained before the first invocation.",
+    "order": "The generated schedule controls execution order."
+  },
+  "blinding": {
+    "judge_packets_required": true,
+    "independent_judges_required": 2,
+    "adjudication_required": true,
+    "arm_mapping_withheld_until": "all packets are adjudicated"
+  },
+  "reporting": [
+    "all redacted raw artifacts and hashes",
+    "run and source provenance",
+    "per-case and per-arm results",
+    "all exclusions and failures",
+    "effect estimates and confidence intervals",
+    "one of superior, non-inferior, inferior, or inconclusive"
+  ]
+}
