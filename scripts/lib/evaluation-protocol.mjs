@@ -38,6 +38,12 @@ function windowsEnvironmentValue(env, name) {
   return key === undefined ? undefined : env[key];
 }
 
+function windowsCmdExecutable(env) {
+  const systemRoot = windowsEnvironmentValue(env, "SystemRoot");
+  if (typeof systemRoot !== "string" || !path.win32.isAbsolute(systemRoot)) throw new Error("Blocked: Windows Git launcher requires an absolute SystemRoot.");
+  return path.win32.join(systemRoot, "System32", "cmd.exe");
+}
+
 function gitForWindowsCandidates(env) {
   const roots = ["ProgramW6432", "ProgramFiles", "ProgramFiles(x86)"].map((name) => windowsEnvironmentValue(env, name))
     .filter((root) => typeof root === "string" && path.win32.isAbsolute(root));
@@ -75,7 +81,7 @@ export function createGitInvocation(args, { git, env = process.env, platform = p
     ...args.map((arg) => quoteWindowsGitToken(arg, "Git argument", true))
   ].join(" ");
   return {
-    command: windowsEnvironmentValue(env, "ComSpec") ?? "cmd.exe",
+    command: windowsCmdExecutable(env),
     args: ["/d", "/v:off", "/s", "/c", `"${command}"`]
   };
 }
@@ -91,7 +97,6 @@ export function runGitCommand(args, { cwd, env = process.env, platform = process
     timeout,
     windowsHide: true
   };
-  if (platform === "win32") options.windowsVerbatimArguments = true;
   return spawn(invocation.command, invocation.args, options);
 }
 

@@ -260,16 +260,20 @@ test("evaluator Git resolution accepts an existing Git-for-Windows executable wi
   assert.equal(executable, bin);
 });
 
-test("evaluator Git commands use a validated COMSPEC launcher on Windows and preserve binary archive output", () => {
+test("evaluator Git commands use the trusted SystemRoot CMD launcher on Windows and preserve binary archive output", () => {
   const git = "C:\\Program Files\\Git\\bin\\git.exe";
-  const comspec = "C:\\Windows\\System32\\cmd.exe";
+  const systemRoot = "C:\\Windows";
+  const source = "C:\\untrusted-source";
+  const untrustedCmd = path.win32.join(source, "cmd.exe");
+  const expectedCmd = path.win32.join(systemRoot, "System32", "cmd.exe");
+  const env = { SystemRoot: systemRoot, ComSpec: untrustedCmd, PATH: source };
   const calls = [];
   const archive = Buffer.from([0, 255, 17, 0]);
   const result = runGitCommand(["archive", "--format=tar", "a".repeat(40)], {
     git,
-    env: { comspec },
+    env,
     platform: "win32",
-    cwd: "C:\\workspace",
+    cwd: source,
     encoding: null,
     spawn: (command, args, options) => {
       calls.push({ command, args, options });
@@ -278,16 +282,20 @@ test("evaluator Git commands use a validated COMSPEC launcher on Windows and pre
   });
   assert.equal(result.stdout, archive);
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].command, comspec);
-  assert.deepEqual(calls[0].args.slice(0, 4), ["/d", "/v:off", "/s", "/c"]);
-  assert.equal(calls[0].args[4], `"\"${git}\" \"archive\" \"--format=tar\" \"${"a".repeat(40)}\""`);
+  assert.equal(calls[0].command, expectedCmd);
+  assert.notEqual(calls[0].command, untrustedCmd);
+  assert.deepEqual(calls[0].args, ["/d", "/v:off", "/s", "/c", `"\"${git}\" \"archive\" \"--format=tar\" \"${"a".repeat(40)}\""`]);
   assert.equal(calls[0].options.encoding, null);
-  assert.equal(calls[0].options.windowsVerbatimArguments, true);
+  assert.equal(calls[0].options.windowsVerbatimArguments, undefined);
 
-  const revisionInvocation = createGitInvocation(["rev-parse", "HEAD^{tree}"], { git, env: { comspec }, platform: "win32" });
+  const revisionInvocation = createGitInvocation(["rev-parse", "HEAD^{tree}"], { git, env, platform: "win32" });
   assert.equal(revisionInvocation.args[4], `"\"${git}\" \"rev-parse\" \"HEAD^^{tree}\""`);
   assert.throws(
-    () => createGitInvocation(["rev-parse", "HEAD & whoami"], { git, env: { ComSpec: comspec }, platform: "win32" }),
+    () => createGitInvocation(["rev-parse", "HEAD"], { git, env: {}, platform: "win32" }),
+    /SystemRoot/
+  );
+  assert.throws(
+    () => createGitInvocation(["rev-parse", "HEAD & whoami"], { git, env, platform: "win32" }),
     /unsafe for the Windows Git launcher/
   );
 });
