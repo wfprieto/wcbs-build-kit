@@ -17,8 +17,8 @@
   "repetitions": 10,
   "expected_total_runs": 240,
   "wcbs_candidate": {
-    "commit": "5af3135a4dde9b4451f86012832a5f91d342368e",
-    "tree": "a085ea972ff17c329c8b17b11c06b242178b5130"
+    "commit": "126696610eb3c5d9b4744359508f1d41f71589f8",
+    "tree": "6599537400d5ae91ffe396cf3f59406a2e85615d"
   },
   "superpowers_source_identity": {
     "commit": "3dcbd5c4b48e02263fbf4a3c01e3fe4f81d584d9",

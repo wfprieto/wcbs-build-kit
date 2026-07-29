@@ -33,6 +33,10 @@ const fixtureCandidate = {
   commit: testGit(["rev-parse", "HEAD"]).trim(),
   tree: testGit(["rev-parse", "HEAD^{tree}"]).trim()
 };
+const publishedReleaseCandidate = {
+  commit: "126696610eb3c5d9b4744359508f1d41f71589f8",
+  tree: "6599537400d5ae91ffe396cf3f59406a2e85615d"
+};
 const sha256 = (value) => crypto.createHash("sha256").update(value).digest("hex");
 
 test("evaluation protocol resolves its root from a native file URL path", () => {
@@ -167,13 +171,16 @@ function completeScoreFixture({ wcbs = 1, superpowers = 1, neutral = 0, safety =
   return { packet_ids: records.map((record) => record.packet_id), cases, records, judge_ledgers: [judgeA, judgeB], adjudications };
 }
 
-test("Gate 0C treatment staging uses a Git-archived candidate and V2 wcbs plugin installation, never the V1 adapter installer", async () => {
+test("Gate 0C stages the exact pinned Git candidate through V2 wcbs plugin installation", async () => {
   const directory = makeTemporaryDirectory();
   try {
     const stubs = writeStubCommands(directory);
+    const protocol = fixtureProtocol(stubs);
+    const preflight = preflightProtocol({ root, protocol, strict: true });
+    assert.equal(preflight.status, "PASS");
     const result = await executeProtocol({
       root,
-      protocol: fixtureProtocol(stubs),
+      protocol,
       run_id: "fixture-two-arm",
       run_directory: path.join(directory, "run"),
       seed: "fixture-seed-two-arm",
@@ -186,6 +193,8 @@ test("Gate 0C treatment staging uses a Git-archived candidate and V2 wcbs plugin
     assert.equal(wcbs.installation.command.join(" ").includes("install-adapter.mjs"), false);
     assert.equal(wcbs.candidate.commit, fixtureCandidate.commit);
     assert.equal(wcbs.candidate.tree, fixtureCandidate.tree);
+    const archivedPackage = path.join(directory, "run", wcbs.candidate.source, "package.json");
+    assert.equal(fs.readFileSync(archivedPackage, "utf8"), fs.readFileSync(path.join(root, "package.json"), "utf8"));
     assert.ok(wcbs.artifacts.transcript_sha256);
     assert.ok(fs.existsSync(path.join(directory, "run", wcbs.artifacts.workspace_manifest)));
     assert.ok(fs.existsSync(path.join(directory, "run", wcbs.artifacts.workspace_diff)));
@@ -198,6 +207,13 @@ test("Gate 0C treatment staging uses a Git-archived candidate and V2 wcbs plugin
 test("evaluation fixtures derive their WCBS candidate identity from the checkout tip", () => {
   assert.equal(fixtureCandidate.commit, testGit(["rev-parse", "HEAD"]).trim());
   assert.equal(fixtureCandidate.tree, testGit(["rev-parse", "HEAD^{tree}"]).trim());
+});
+
+test("published Phase 5 and Phase 6 preregistrations pin the exact release candidate identity", () => {
+  for (const file of ["evals/gate-0c-preregistration.json", "evals/superpowers-comparison-preregistration.json"]) {
+    const preregistration = JSON.parse(fs.readFileSync(path.join(root, file), "utf8"));
+    assert.deepEqual(preregistration.wcbs_candidate, publishedReleaseCandidate, file);
+  }
 });
 
 test("evaluator Git resolution prefers an explicit configured command", () => {
