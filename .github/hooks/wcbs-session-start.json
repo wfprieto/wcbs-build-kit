@@ -4,8 +4,9 @@
     "sessionStart": [
       {
         "type": "command",
+        "cwd": ".",
         "bash": "./hooks/run-hook session-start --runtime github-copilot",
-        "powershell": "& .\\hooks\\run-hook.cmd session-start --runtime github-copilot"
+        "powershell": "cmd.exe /d /s /c \"call .\\hooks\\run-hook.cmd session-start --runtime github-copilot\""
       }
     ]
   }

@@ -14,8 +14,9 @@ test("Cursor and Copilot declare their native project session-start bridges", ()
   const copilot = JSON.parse(read(".github/hooks/wcbs-session-start.json"));
   assert.deepEqual(copilot.hooks.sessionStart, [{
     type: "command",
+    cwd: ".",
     bash: "./hooks/run-hook session-start --runtime github-copilot",
-    powershell: "& .\\hooks\\run-hook.cmd session-start --runtime github-copilot"
+    powershell: "cmd.exe /d /s /c \"call .\\hooks\\run-hook.cmd session-start --runtime github-copilot\""
   }]);
   assert.equal(fs.existsSync(path.join(root, "hooks", "hooks-cursor.json")), false);
 });

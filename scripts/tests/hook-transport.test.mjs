@@ -26,11 +26,15 @@ function runHook({ args = ["session-start"], env = {}, cwd = root } = {}) {
   return { status: result.status, stdout: result.stdout ?? "", stderr: result.stderr ?? "", error: result.error };
 }
 
+function powerShellEnvironment(env = {}, inherited = process.env) {
+  return { ...inherited, HOME: os.tmpdir(), ...env };
+}
+
 function runPowerShell(command, { env = {}, cwd = root } = {}) {
   const result = spawnSync("pwsh", ["-NoProfile", "-NonInteractive", "-Command", command], {
     cwd,
     encoding: "utf8",
-    env: { PATH: process.env.PATH, HOME: os.tmpdir(), ...env }
+    env: powerShellEnvironment(env)
   });
   return { status: result.status, stdout: result.stdout ?? "", stderr: result.stderr ?? "", error: result.error };
 }
@@ -81,15 +85,30 @@ test("each native hook registration points to an executable project-safe transpo
   const copilot = readJson(".github/hooks/wcbs-session-start.json");
   assert.deepEqual(copilot.hooks.sessionStart, [{
     type: "command",
+    cwd: ".",
     bash: "./hooks/run-hook session-start --runtime github-copilot",
-    powershell: "& .\\hooks\\run-hook.cmd session-start --runtime github-copilot"
+    powershell: "cmd.exe /d /s /c \"call .\\hooks\\run-hook.cmd session-start --runtime github-copilot\""
   }]);
+});
+
+test("PowerShell transport preserves the inherited Windows command-resolution environment", () => {
+  const inherited = {
+    PATH: "C:\\Windows\\System32",
+    SystemRoot: "C:\\Windows",
+    ComSpec: "C:\\Windows\\System32\\cmd.exe",
+    PATHEXT: ".COM;.EXE;.BAT;.CMD"
+  };
+  assert.deepEqual(powerShellEnvironment({ NODE: "node.exe" }, inherited), {
+    ...inherited,
+    HOME: os.tmpdir(),
+    NODE: "node.exe"
+  });
 });
 
 test("Copilot's configured PowerShell SessionStart path emits one fail-open-safe envelope on Windows", () => {
   const copilot = readJson(".github/hooks/wcbs-session-start.json");
   const [sessionStart] = copilot.hooks.sessionStart;
-  assert.equal(sessionStart.powershell, "& .\\hooks\\run-hook.cmd session-start --runtime github-copilot", "Windows requires the documented PowerShell SessionStart route");
+  assert.equal(sessionStart.powershell, "cmd.exe /d /s /c \"call .\\hooks\\run-hook.cmd session-start --runtime github-copilot\"", "Windows must invoke the project-root bridge through cmd.exe");
   if (!isWindows) return;
 
   const success = parseSinglePayload(runPowerShell(sessionStart.powershell));
