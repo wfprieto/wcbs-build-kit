@@ -59,13 +59,27 @@ function windowsCmdExecutable(env) {
 
 function windowsSystemDirectory(env) { return path.win32.dirname(windowsCmdExecutable(env)); }
 
-function trustedWindowsCommandEnvironment(env) {
+function windowsGitRuntimeDirectories(executable) {
+  if (typeof executable !== "string" || !path.win32.isAbsolute(executable)) return [];
+  const binaryDirectory = path.win32.dirname(executable);
+  const directoryName = path.win32.basename(binaryDirectory).toLowerCase();
+  if (!["bin", "cmd"].includes(directoryName)) return [binaryDirectory];
+  const gitRoot = path.win32.dirname(binaryDirectory);
+  return [
+    path.win32.join(gitRoot, "bin"),
+    path.win32.join(gitRoot, "cmd"),
+    path.win32.join(gitRoot, "mingw64", "bin"),
+    path.win32.join(gitRoot, "usr", "bin")
+  ];
+}
+
+function trustedWindowsCommandEnvironment(env, gitExecutable) {
   const systemDirectory = windowsSystemDirectory(env);
   const systemRoot = path.win32.dirname(systemDirectory);
   return {
     SystemRoot: systemRoot,
     WINDIR: systemRoot,
-    Path: systemDirectory,
+    Path: [systemDirectory, ...windowsGitRuntimeDirectories(gitExecutable)].join(";"),
     PATHEXT: ".COM;.EXE;.BAT;.CMD"
   };
 }
@@ -121,7 +135,8 @@ export function createGitInvocation(args, { git, env = process.env, platform = p
 
 export function runGitCommand(args, { cwd, env = process.env, platform = process.platform, git, encoding = "utf8", input, maxBuffer, timeout, spawn = spawnSync, currentDirectory = process.cwd, changeDirectory = process.chdir } = {}) {
   const windows = platform === "win32";
-  const invocation = createGitInvocation(windows ? windowsGitArguments(args, cwd) : args, { git, env, platform });
+  const executable = git ?? resolveGitExecutable({ env, platform });
+  const invocation = createGitInvocation(windows ? windowsGitArguments(args, cwd) : args, { git: executable, env, platform });
   const options = {
     cwd: windows ? windowsSystemDirectory(env) : cwd,
     encoding,
@@ -130,7 +145,7 @@ export function runGitCommand(args, { cwd, env = process.env, platform = process
     timeout,
     windowsHide: true
   };
-  if (windows) options.env = trustedWindowsCommandEnvironment(env);
+  if (windows) options.env = trustedWindowsCommandEnvironment(env, executable);
   else options.env = env;
   if (!windows) return spawn(invocation.command, invocation.args, options);
   const originalDirectory = currentDirectory();

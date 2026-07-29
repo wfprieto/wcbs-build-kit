@@ -266,6 +266,13 @@ test("evaluator Git commands isolate bare CMD from an untrusted source directory
   const source = "C:\\untrusted-source";
   const untrustedCmd = path.win32.join(source, "cmd.exe");
   const systemDirectory = path.win32.join(systemRoot, "System32");
+  const gitRuntimePath = [
+    systemDirectory,
+    "C:\\Program Files\\Git\\bin",
+    "C:\\Program Files\\Git\\cmd",
+    "C:\\Program Files\\Git\\mingw64\\bin",
+    "C:\\Program Files\\Git\\usr\\bin"
+  ].join(";");
   const env = {
     SystemRoot: systemRoot,
     SYSTEMROOT: "C:\\spoofed-windows",
@@ -298,7 +305,8 @@ test("evaluator Git commands isolate bare CMD from an untrusted source directory
   assert.equal(calls[0].options.encoding, null);
   assert.equal(calls[0].options.windowsVerbatimArguments, undefined);
   assert.equal(calls[0].options.env.SystemRoot, systemRoot);
-  assert.equal(calls[0].options.env.Path, systemDirectory);
+  assert.equal(calls[0].options.env.Path, gitRuntimePath);
+  assert.equal(calls[0].options.env.Path.includes(source), false);
   assert.equal(calls[0].options.env.WINDIR, systemRoot);
   assert.equal(calls[0].options.env.ComSpec, undefined);
   assert.equal(calls[0].options.env.SYSTEMROOT, undefined);
@@ -345,7 +353,13 @@ test("evaluator Git commands use the SystemRoot command directory for bare CMD d
   assert.equal(calls.length, 1);
   assert.equal(calls[0].command, "cmd.exe");
   assert.equal(calls[0].options.cwd, "C:\\Windows\\System32");
-  assert.equal(calls[0].options.env.Path, "C:\\Windows\\System32");
+  assert.equal(calls[0].options.env.Path, [
+    "C:\\Windows\\System32",
+    "C:\\Program Files\\Git\\bin",
+    "C:\\Program Files\\Git\\cmd",
+    "C:\\Program Files\\Git\\mingw64\\bin",
+    "C:\\Program Files\\Git\\usr\\bin"
+  ].join(";"));
   assert.equal(calls[0].options.env.SystemRoot, "C:\\Windows");
   assert.deepEqual(chdirCalls, ["C:\\Windows\\System32", "C:\\original-source"]);
 });
