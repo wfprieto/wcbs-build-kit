@@ -273,7 +273,38 @@ test("evaluator Git resolution accepts an existing Git-for-Windows executable wi
   assert.equal(executable, bin);
 });
 
-test("evaluator Git commands use the absolute SystemRoot CMD executable from an untrusted source directory", () => {
+test("evaluator Git resolution rejects relative and batch Windows executable configurations", () => {
+  for (const configured of ["git.exe", "C:\\WCBS Tools\\git.cmd", "C:\\WCBS Tools\\git.bat"]) {
+    assert.throws(
+      () => resolveGitExecutable({
+        env: { WCBS_GIT_EXECUTABLE: configured },
+        platform: "win32",
+        probe: () => true
+      }),
+      /absolute Windows .exe path/
+    );
+  }
+});
+
+test("direct Windows Git execution rejects batch bridges before spawn", () => {
+  const env = { SystemRoot: "C:\\Windows" };
+  assert.throws(
+    () => createGitInvocation(["--version"], { git: "C:\\WCBS Tools\\git.cmd", env, platform: "win32" }),
+    /absolute Windows .exe path/
+  );
+  assert.throws(
+    () => runGitCommand(["--version"], {
+      git: "C:\\WCBS Tools\\git.bat",
+      env,
+      platform: "win32",
+      cwd: "C:\\source",
+      spawn: () => { throw new Error("must not spawn"); }
+    }),
+    /absolute Windows .exe path/
+  );
+});
+
+test("evaluator Git commands use the direct absolute Git executable from an untrusted source directory", () => {
   const git = "C:\\Program Files\\Git\\bin\\git.exe";
   const systemRoot = "C:\\Windows";
   const source = "C:\\untrusted-source";
@@ -308,10 +339,10 @@ test("evaluator Git commands use the absolute SystemRoot CMD executable from an 
   });
   assert.equal(result.stdout, archive);
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].command, path.win32.join(systemRoot, "System32", "cmd.exe"));
+  assert.equal(calls[0].command, git);
   assert.notEqual(calls[0].command, untrustedCmd);
   assert.equal(calls[0].options.cwd, source);
-  assert.deepEqual(calls[0].args, ["/d", "/v:off", "/s", "/c", `"\"${git}\" \"archive\" \"--format=tar\" \"${"a".repeat(40)}\""`]);
+  assert.deepEqual(calls[0].args, ["archive", "--format=tar", "a".repeat(40)]);
   assert.equal(calls[0].options.encoding, null);
   assert.equal(calls[0].options.windowsVerbatimArguments, undefined);
   assert.equal(calls[0].options.env.SystemRoot, systemRoot);
@@ -323,23 +354,19 @@ test("evaluator Git commands use the absolute SystemRoot CMD executable from an 
   assert.equal(calls[0].options.env.PATH, undefined);
 
   const revisionInvocation = createGitInvocation(["rev-parse", "HEAD^{tree}"], { git, env, platform: "win32" });
-  assert.equal(revisionInvocation.command, path.win32.join(systemRoot, "System32", "cmd.exe"));
-  assert.equal(revisionInvocation.args[4], `"\"${git}\" \"rev-parse\" \"HEAD^^{tree}\""`);
-  assert.throws(
-    () => createGitInvocation(["rev-parse", "HEAD"], { git, env: {}, platform: "win32" }),
-    /SystemRoot/
-  );
-  assert.throws(
-    () => createGitInvocation(["rev-parse", "HEAD & whoami"], { git, env, platform: "win32" }),
-    /unsafe for the Windows Git launcher/
+  assert.equal(revisionInvocation.command, git);
+  assert.deepEqual(revisionInvocation.args, ["rev-parse", "HEAD^{tree}"]);
+  assert.deepEqual(
+    createGitInvocation(["rev-parse", "HEAD & whoami"], { git, env, platform: "win32" }),
+    { command: git, args: ["rev-parse", "HEAD & whoami"] }
   );
   assert.throws(
     () => runGitCommand(["rev-parse", "HEAD"], { git, env, platform: "win32", cwd: "C:\\source & whoami", spawn: () => { throw new Error("must not spawn"); } }),
-    /unsafe for the Windows Git launcher/
+    /unsafe for Windows Git execution/
   );
 });
 
-test("evaluator Git commands use the absolute SystemRoot CMD executable", () => {
+test("evaluator Git commands use the direct absolute Git executable", () => {
   const calls = [];
   const originalSystemRoot = process.env.SYSTEMROOT;
   process.env.SYSTEMROOT = "C:\\Windows";
@@ -359,7 +386,7 @@ test("evaluator Git commands use the absolute SystemRoot CMD executable", () => 
     else process.env.SYSTEMROOT = originalSystemRoot;
   }
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].command, "C:\\Windows\\System32\\cmd.exe");
+  assert.equal(calls[0].command, "C:\\Program Files\\Git\\bin\\git.exe");
   assert.equal(calls[0].options.cwd, "C:\\original-source");
   assert.equal(calls[0].options.env.Path, [
     "C:\\Windows\\System32",

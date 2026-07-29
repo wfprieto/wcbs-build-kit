@@ -13,7 +13,7 @@ function diagnostic(result) {
   return [result.error?.message, result.stderr?.toString(), result.stdout?.toString()].filter(Boolean).join("\n");
 }
 
-test("Windows Git launcher does not execute a source-shadowed cmd.exe while retaining the workspace drive", { skip: process.platform !== "win32" }, () => {
+test("Windows Git uses direct execution and does not execute a source-shadowed cmd.exe", { skip: process.platform !== "win32" }, () => {
   const original = process.cwd();
   let source = null;
   try {

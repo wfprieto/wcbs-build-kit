@@ -12,7 +12,6 @@ const sha256 = (value) => crypto.createHash("sha256").update(value).digest("hex"
 const json = (value) => JSON.stringify(value);
 const posix = (value) => value.split(path.sep).join("/");
 const WINDOWS_SAFE_GIT_TOKEN = /^[A-Za-z0-9._:@/\\{}=+\- ()]+$/;
-const WINDOWS_TREE_REVISION = /^(?:HEAD|[a-f0-9]{40})\^\{tree\}$/i;
 
 function now() { return new Date().toISOString(); }
 
@@ -51,13 +50,18 @@ function normalizeWindowsEnvironment(env) {
   return Object.fromEntries(values.values());
 }
 
-function windowsCmdExecutable(env) {
+function windowsSystemDirectory(env) {
   const systemRoot = windowsEnvironmentValue(env, "SystemRoot");
-  if (typeof systemRoot !== "string" || !path.win32.isAbsolute(systemRoot)) throw new Error("Blocked: Windows Git launcher requires an absolute SystemRoot.");
-  return path.win32.join(systemRoot, "System32", "cmd.exe");
+  if (typeof systemRoot !== "string" || !path.win32.isAbsolute(systemRoot)) throw new Error("Blocked: Windows Git execution requires an absolute SystemRoot.");
+  return path.win32.join(systemRoot, "System32");
 }
 
-function windowsSystemDirectory(env) { return path.win32.dirname(windowsCmdExecutable(env)); }
+function requireWindowsGitExecutable(executable, label = "Windows Git executable") {
+  if (typeof executable !== "string" || !path.win32.isAbsolute(executable) || path.win32.extname(executable).toLowerCase() !== ".exe") {
+    throw new Error(`Blocked: ${label} must be an absolute Windows .exe path.`);
+  }
+  return executable;
+}
 
 function windowsGitRuntimeDirectories(executable) {
   if (typeof executable !== "string" || !path.win32.isAbsolute(executable)) return [];
@@ -73,7 +77,7 @@ function windowsGitRuntimeDirectories(executable) {
   ];
 }
 
-function trustedWindowsCommandEnvironment(env, gitExecutable) {
+function trustedWindowsGitEnvironment(env, gitExecutable) {
   const systemDirectory = windowsSystemDirectory(env);
   const systemRoot = path.win32.dirname(systemDirectory);
   return {
@@ -87,7 +91,7 @@ function trustedWindowsCommandEnvironment(env, gitExecutable) {
 function windowsGitWorkingDirectory(cwd) {
   if (cwd === undefined) return cwd;
   if (typeof cwd !== "string" || !path.win32.isAbsolute(cwd) || !WINDOWS_SAFE_GIT_TOKEN.test(cwd)) {
-    throw new Error("Blocked: Windows Git source directory contains characters unsafe for the Windows Git launcher.");
+    throw new Error("Blocked: Windows Git source directory contains characters unsafe for Windows Git execution.");
   }
   return cwd;
 }
@@ -103,35 +107,23 @@ function gitForWindowsCandidates(env) {
 
 export function resolveGitExecutable({ env = process.env, platform = process.platform, exists = fs.existsSync, probe = (command, probeEnv) => defaultGitProbe(command, probeEnv, platform) } = {}) {
   const configured = [env.WCBS_GIT_EXECUTABLE, env.GIT_EXECUTABLE].filter((command) => typeof command === "string" && command.trim());
-  for (const command of configured) if (probe(command, env)) return command;
+  for (const command of configured) {
+    if (platform === "win32") requireWindowsGitExecutable(command, "Windows Git executable configuration");
+    if (probe(command, env)) return command;
+  }
   if (platform === "win32") {
-    for (const command of gitForWindowsCandidates(env)) if (exists(command)) return command;
+    for (const command of gitForWindowsCandidates(env)) if (exists(command)) return requireWindowsGitExecutable(command);
+    throw new Error("Blocked: an absolute Git-for-Windows executable is unavailable. Configure WCBS_GIT_EXECUTABLE with an absolute path.");
   }
-  const pathCommands = platform === "win32" ? ["git.exe", "git"] : ["git"];
-  for (const command of pathCommands) if (probe(command, env)) return command;
+  for (const command of ["git"]) if (probe(command, env)) return command;
   throw new Error("Blocked: Git executable is unavailable. Configure WCBS_GIT_EXECUTABLE or make Git available on PATH.");
-}
-
-function quoteWindowsGitToken(value, label, allowTreeRevision = false) {
-  if (typeof value !== "string" || !value) throw new Error(`Blocked: ${label} must be a non-empty string.`);
-  if (!WINDOWS_SAFE_GIT_TOKEN.test(value) && !(allowTreeRevision && WINDOWS_TREE_REVISION.test(value))) {
-    throw new Error(`Blocked: ${label} contains characters unsafe for the Windows Git launcher.`);
-  }
-  return `"${value.replace(/\^/g, "^^")}"`;
 }
 
 export function createGitInvocation(args, { git, env = process.env, platform = process.platform } = {}) {
   if (!Array.isArray(args) || args.some((arg) => typeof arg !== "string")) throw new Error("Blocked: Git arguments must be a string array.");
   const executable = git ?? resolveGitExecutable({ env, platform });
-  if (platform !== "win32") return { command: executable, args: [...args] };
-  const command = [
-    quoteWindowsGitToken(executable, "Git executable"),
-    ...args.map((arg) => quoteWindowsGitToken(arg, "Git argument", true))
-  ].join(" ");
-  return {
-    command: windowsCmdExecutable(env),
-    args: ["/d", "/v:off", "/s", "/c", `"${command}"`]
-  };
+  if (platform === "win32") requireWindowsGitExecutable(executable);
+  return { command: executable, args: [...args] };
 }
 
 export function runGitCommand(args, { cwd, env = process.env, platform = process.platform, git, encoding = "utf8", input, maxBuffer, timeout, spawn = spawnSync } = {}) {
@@ -146,7 +138,7 @@ export function runGitCommand(args, { cwd, env = process.env, platform = process
     timeout,
     windowsHide: true
   };
-  if (windows) options.env = trustedWindowsCommandEnvironment(env, executable);
+  if (windows) options.env = trustedWindowsGitEnvironment(env, executable);
   else options.env = env;
   return spawn(invocation.command, invocation.args, options);
 }
