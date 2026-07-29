@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 import test from "node:test";
@@ -16,10 +15,13 @@ function diagnostic(result) {
 
 test("Windows Git launcher does not execute a source-shadowed cmd.exe while retaining the workspace drive", { skip: process.platform !== "win32" }, () => {
   const original = process.cwd();
-  const source = fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-windows-cmd-shadow-"));
-  fs.writeFileSync(path.join(source, "cmd.exe"), "this must never execute\n");
-  process.chdir(source);
+  let source = null;
   try {
+    const scratch = path.join(root, "dist");
+    fs.mkdirSync(scratch, { recursive: true });
+    source = fs.mkdtempSync(path.join(scratch, "wcbs-windows-cmd-shadow-"));
+    fs.writeFileSync(path.join(source, "cmd.exe"), "this must never execute\n");
+    process.chdir(source);
     const version = runGitCommand(["--version"], { cwd: source, encoding: "utf8" });
     assert.equal(version.status, 0, diagnostic(version));
     assert.match(version.stdout, /^git version /);
@@ -28,7 +30,9 @@ test("Windows Git launcher does not execute a source-shadowed cmd.exe while reta
     assert.match(revision.stdout, /^[a-f0-9]{40}\r?\n$/i);
     assert.equal(process.cwd(), source, "the launcher must not change the parent process directory");
   } finally {
-    process.chdir(original);
-    fs.rmSync(source, { recursive: true, force: true });
+    try { process.chdir(original); }
+    finally {
+      if (source) fs.rmSync(source, { recursive: true, force: true });
+    }
   }
 });

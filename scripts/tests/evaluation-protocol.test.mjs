@@ -6,6 +6,7 @@ import path from "node:path";
 import process from "node:process";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   analyzeAdjudicatedScores,
@@ -20,7 +21,7 @@ import {
   validateScoreLedgers
 } from "../lib/evaluation-protocol.mjs";
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..", "..");
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 function testGit(args, cwd = root) {
   const result = runGitCommand(args, { cwd, encoding: "utf8" });
   if (result.error) throw result.error;
@@ -33,6 +34,18 @@ const fixtureCandidate = {
   tree: testGit(["rev-parse", "HEAD^{tree}"]).trim()
 };
 const sha256 = (value) => crypto.createHash("sha256").update(value).digest("hex");
+
+test("evaluation protocol resolves its root from a native file URL path", () => {
+  const windowsUrl = new URL("file:///C:/wcbs/scripts/tests/evaluation-protocol.test.mjs");
+  assert.equal(windowsUrl.pathname, "/C:/wcbs/scripts/tests/evaluation-protocol.test.mjs");
+  assert.equal(fileURLToPath(windowsUrl, { windows: true }), "C:\\wcbs\\scripts\\tests\\evaluation-protocol.test.mjs");
+  const testFile = fileURLToPath(import.meta.url);
+  assert.equal(root, path.resolve(path.dirname(testFile), "..", ".."));
+  if (process.platform === "win32") {
+    assert.match(testFile, /^[A-Za-z]:\\/);
+    assert.equal(testFile.startsWith("/"), false);
+  }
+});
 
 function makeTemporaryDirectory() {
   return fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-evaluation-protocol-"));
