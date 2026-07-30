@@ -76,7 +76,7 @@ function assertNoSymlinkInExistingPath(absolute) {
     // macOS exposes its system temporary directory through /var -> /private/var.
     // Permit only that fixed OS alias; all user-controlled path links still block.
     if (stat.isSymbolicLink() && !isMacOSSystemVarAlias(current)) throw new Error(`Blocked: plugin directory path must not contain a symbolic link: ${display(current)}.`);
-    if (!stat.isDirectory() && current !== absolute) throw new Error(`Blocked: plugin directory ancestor is not a directory: ${display(current)}.`);
+    if (!stat.isDirectory() && !isMacOSSystemVarAlias(current) && current !== absolute) throw new Error(`Blocked: plugin directory ancestor is not a directory: ${display(current)}.`);
   }
 }
 function assertSafePluginDir(value) {
