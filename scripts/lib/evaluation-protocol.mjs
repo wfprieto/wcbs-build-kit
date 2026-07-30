@@ -180,16 +180,17 @@ export function resolveEvidenceEntry(handle, relative, { kind = "input", allowMi
   return { target, parent: parentIdentity, relative: segments.join("/") };
 }
 
-/** Atomic, no-follow, same-parent evidence writer. It detects but cannot prevent a privileged or same-authority parent-replacement race between syscalls. */
+/** Atomic, exclusive-create evidence writer with no-follow where the platform provides it. It detects but cannot prevent a privileged or same-authority parent-replacement race between syscalls. */
 export function writeEvidenceFile(handle, relative, content) {
-  if (typeof fs.constants.O_NOFOLLOW !== "number") throw new Error("Blocked: this platform lacks the required no-follow evidence-write primitive.");
+  const noFollow = typeof fs.constants.O_NOFOLLOW === "number" ? fs.constants.O_NOFOLLOW : 0;
+  if (!noFollow && process.platform !== "win32") throw new Error("Blocked: this platform lacks the required no-follow evidence-write primitive.");
   const entry = resolveEvidenceEntry(handle, relative, { kind: "output", allowMissingFinal: true, createParents: true });
   if (fs.existsSync(entry.target)) throw new Error(`Blocked: evidence output ${entry.relative} already exists and will not be replaced.`);
   const temporaryName = `.${entry.relative.split("/").at(-1)}.${process.pid}.${crypto.randomUUID()}.tmp`;
   const temporary = path.join(entry.parent.realpath, temporaryName);
   let descriptor = null;
   try {
-    descriptor = fs.openSync(temporary, fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW, 0o600);
+    descriptor = fs.openSync(temporary, fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_EXCL | noFollow, 0o600);
     fs.writeFileSync(descriptor, content, { encoding: "utf8" });
     fs.fsyncSync(descriptor);
     fs.closeSync(descriptor);
