@@ -1076,9 +1076,11 @@ test("evaluation subject claim target and release artifact content manifest must
     fs.writeFileSync(shippedEvaluationFile, `${originalReadme}\nmutable drift\n`);
     assert.equal(validateEvaluationProvenance({ root: fixtureRoot, protocol }).status, "BLOCKED");
     fs.writeFileSync(shippedEvaluationFile, originalReadme);
-    fs.chmodSync(hook, 0o644);
-    assert.equal(validateEvaluationProvenance({ root: fixtureRoot, protocol }).status, "BLOCKED");
-    fs.chmodSync(hook, originalHookMode);
+    if (process.platform !== "win32") {
+      fs.chmodSync(hook, 0o644);
+      assert.equal(validateEvaluationProvenance({ root: fixtureRoot, protocol }).status, "BLOCKED");
+      fs.chmodSync(hook, originalHookMode);
+    }
     const parent = testGit(["rev-parse", "HEAD^"], fixtureRoot).trim();
     const unequal = structuredClone(protocol);
     unequal.claim_target = { commit: parent, tree: testGit(["rev-parse", `${parent}^{tree}`], fixtureRoot).trim() };
