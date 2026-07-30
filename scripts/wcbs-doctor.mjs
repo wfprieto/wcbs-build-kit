@@ -37,17 +37,18 @@ const requiredFiles = [
   "skills/subagent-driven-development/tests/test_make_review_package.py",
   ...["PRE_FLIGHT_CONFLICT_REPORT", "TASK_BRIEF", "IMPLEMENTER_REPORT", "TASK_REVIEW_REPORT", "FIX_REPORT", "FINAL_BRANCH_REVIEW"].map(x => `60_templates/${x}_TEMPLATE.md`),
   "60_templates/PROGRESS_LEDGER_TEMPLATE.jsonl",
-  "runtime_adapters/README.md", "runtime_adapters/PORTABILITY_CONTRACT.md", "runtime_adapters/PORTING_GUIDE.md", "runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md", "runtime_adapters/adapter-registry.yaml", "runtime_adapters/CAPABILITY_MATRIX.md", "runtime_adapters/VERIFIED_SUPPORT_LEVELS.md", "runtime_adapters/INSTALLATION_MATRIX.md", "runtime_adapters/ACTIVATION_TESTS.md", "runtime_adapters/generated/using-wcbs-bootstrap.md", "runtime_adapters/generated/skill-catalog.json",
+  "runtime_adapters/README.md", "runtime_adapters/PORTABILITY_CONTRACT.md", "runtime_adapters/PORTING_GUIDE.md", "runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md", "runtime_adapters/adapter-registry.yaml", "runtime_adapters/CAPABILITY_MATRIX.md", "runtime_adapters/VERIFIED_SUPPORT_LEVELS.md", "runtime_adapters/INSTALLATION_MATRIX.md", "runtime_adapters/ACTIVATION_TESTS.md", "runtime_adapters/generated/using-wcbs-bootstrap.md", "runtime_adapters/generated/runtime-startup-contract.md", "runtime_adapters/generated/skill-catalog.json",
   ...["adapter-manifest", "tool-mapping", "bootstrap-controller", "handoff-envelope", "capability-routing", "bootstrap-certificate", "capability-resolution", "elite-goals-ledger", "evidence-ledger", "project-profile", "engineering-team", "risk-register", "release-state"].map(x => `runtime_adapters/schemas/${x}.schema.json`),
   "60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md", "60_templates/STABLE_RELEASE_REPORT_TEMPLATE.md",
   "docs/USING_THE_SUPER_BUILD_KIT.md", "docs/COMMON_WORKFLOWS.md", "docs/V2_RUNTIME_EVIDENCE.md", "docs/V2_MIGRATION.md", "evals/README.md", "evals/v2-core-skill-preregistration.json", "evals/v2-core-skill-cases.json",
   "scripts/generate-capability-matrix.mjs", "scripts/generate-v2-metadata.mjs", "scripts/render-session-bootstrap.mjs", "scripts/generate-bootstrap-controller.mjs", "scripts/generate-load-order.mjs", "scripts/check-whitespace.mjs", "scripts/run-python-tests.mjs", "scripts/wcbs-system-test.mjs", "scripts/check-install.mjs", "scripts/install-adapter.mjs", "scripts/wcbs.mjs", "scripts/adapter-smoke-test.mjs", "scripts/verify-v2-eval-design.mjs", "scripts/lib/adapter-contract.mjs", "scripts/lib/json-schema.mjs", "scripts/lib/bootstrap-artifacts.mjs", "scripts/lib/certificate-canonicalization.mjs", "scripts/audit-duplicate-guidance.mjs", "scripts/audit-skill-size.mjs", "scripts/audit-skill-contract.mjs", "scripts/audit-layer-budgets.mjs", "scripts/run-evals.mjs", "scripts/publish-activation-evidence.mjs",
   "tests/system/routing-fixtures.json", "tests/system/activation-scenarios.json",
-  ...["controller-contract", "adapter-contract", "schema-enforcement", "schema-keyword-support", "bootstrap-fixtures", "long-horizon-memory-contract", "wcbs-doctor", "artifact-bundle", "kernel-contract", "bootstrap-controller", "activation-marker-reachability", "skill-contract", "npm-script-entry-points", "v2-registry", "v2-bootstrap-renderer", "wcbs-cli", "native-adapter-packages", "hook-transport", "v2-eval-design"].map(x => `scripts/tests/${x}.test.mjs`),
+  ...["controller-contract", "adapter-contract", "schema-enforcement", "schema-keyword-support", "bootstrap-fixtures", "long-horizon-memory-contract", "wcbs-doctor", "artifact-bundle", "kernel-contract", "bootstrap-controller", "activation-marker-reachability", "runtime-entry-contract", "skill-contract", "npm-script-entry-points", "v2-registry", "v2-bootstrap-renderer", "wcbs-cli", "native-adapter-packages", "hook-transport", "v2-eval-design"].map(x => `scripts/tests/${x}.test.mjs`),
   "scripts/tests/fixtures/run-bundle/findings.json", "scripts/tests/fixtures/run-bundle/progress-ledger.jsonl", "scripts/tests/fixtures/run-bundle/tasks/T-01/task-artifact.json", "scripts/tests/fixtures/run-bundle/tasks/T-02/task-artifact.json",
   ...["bootstrap-certificate.json", "capability-resolution.json", "elite-goals-ledger.json", "evidence-ledger.jsonl", "engineering-team.json", "project-profile.json", "risk-register.json", "release-state.json"].map(x => `scripts/tests/fixtures/bootstrap/${x}`),
   ".gitattributes", ".gitignore", ".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json", ".kimi-plugin/plugin.json", ".opencode/plugins/wcbs.js", ".pi/extensions/wcbs.ts", ".cursor/rules/super-build-kit.mdc", ".cursor/hooks.json", ".github/copilot-instructions.md", ".github/hooks/wcbs-session-start.json", "hooks/session-start", "hooks/run-hook", "hooks/run-hook.cmd", "hooks/hooks.json",
-  ".github/workflows/verify.yml", ".github/workflows/release-check.yml", ".github/RELEASE_CANDIDATE_CHECKLIST.md"
+  ".github/workflows/verify.yml", ".github/workflows/release-check.yml", ".github/RELEASE_CANDIDATE_CHECKLIST.md", ".github/CODEOWNERS", ".github/dependabot.yml",
+  "scripts/tests/repository-governance.test.mjs"
 ];
 
 function json(p) {
@@ -280,7 +281,28 @@ function checkWorkflowFiles() {
   const dir = resolve(".github/workflows"); if (!fs.existsSync(dir)) return;
   for (const entry of fs.readdirSync(dir)) if (/\.ya?ml$/i.test(entry)) { const file = `.github/workflows/${entry}`, content = read(file); if (!content.includes("permissions:")) fail(`${file} must define permissions.`); }
   if (exists(".github/workflows/verify.yml") && !read(".github/workflows/verify.yml").includes("npm run verify")) fail(".github/workflows/verify.yml must run npm run verify.");
-  if (exists(".github/workflows/release-check.yml") && !read(".github/workflows/release-check.yml").includes("npm run system-test")) fail(".github/workflows/release-check.yml must run npm run system-test.");
+  if (exists(".github/workflows/release-check.yml")) {
+    const release = read(".github/workflows/release-check.yml");
+    const activeLines = release.split("\n").filter((line) => !line.trimStart().startsWith("#"));
+    const pullRequest = activeLines.indexOf("  pull_request:");
+    const nextTrigger = pullRequest < 0 ? -1 : activeLines.findIndex((line, index) => index > pullRequest && /^  [A-Za-z_][A-Za-z0-9_-]*:$/.test(line));
+    const pullRequestBlock = pullRequest < 0 ? [] : activeLines.slice(pullRequest + 1, nextTrigger < 0 ? activeLines.length : nextTrigger);
+    if (!pullRequestBlock.includes("    branches:") || !pullRequestBlock.includes("      - main")) fail(".github/workflows/release-check.yml must actively trigger on pull requests targeting main.");
+    if (!activeLines.some((line) => /^\s*run:\s*npm run release-check\s*(?:#.*)?$/.test(line))) fail(".github/workflows/release-check.yml must run the authoritative npm run release-check command.");
+  }
+}
+function checkRepositoryGovernance() {
+  const codeowners = exists(".github/CODEOWNERS") ? read(".github/CODEOWNERS") : "";
+  for (const entry of [
+    "/scripts/install-adapter.mjs @wfprieto", "/scripts/check-install.mjs @wfprieto", "/scripts/wcbs.mjs @wfprieto", "/scripts/wcbs-doctor.mjs @wfprieto", "/scripts/build-release-artifacts.mjs @wfprieto",
+    "/scripts/lib/evaluation-protocol.mjs @wfprieto", "/scripts/lib/hardened-git.mjs @wfprieto", "/runtime_adapters/adapter-registry.yaml @wfprieto", "/.github/workflows/ @wfprieto", "/.github/RELEASE_CANDIDATE_CHECKLIST.md @wfprieto", "/evals/ @wfprieto", "/SECURITY.md @wfprieto", "/RELEASE_PROCESS.md @wfprieto", "/10_governance/RELEASE_GATES.md @wfprieto"
+  ]) if (!codeowners.split("\n").includes(entry)) fail(`.github/CODEOWNERS must own critical path: ${entry}`);
+  const dependabot = exists(".github/dependabot.yml") ? read(".github/dependabot.yml") : "";
+  if (!/^version: 2$/m.test(dependabot)) fail(".github/dependabot.yml must declare version 2.");
+  for (const ecosystem of ["npm", "github-actions"]) {
+    const block = new RegExp(`- package-ecosystem: ${ecosystem}\\n\\s+directory: "\\/"\\n\\s+schedule:\\n\\s+interval: weekly`);
+    if (!block.test(dependabot)) fail(`.github/dependabot.yml must schedule weekly root updates for ${ecosystem}.`);
+  }
 }
 function checkSecretPatterns() {
   const highSignal = /(gho_[A-Za-z0-9_]+|gh[pousr]_[A-Za-z0-9]{16,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{16,}|AIza[0-9A-Za-z_-]{20,}|xox[abposr]-[A-Za-z0-9-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|OPENAI_API_KEY\s*=)/;
@@ -298,6 +320,7 @@ checkRequiredFiles();
 json(".codex-plugin/plugin.json");
 checkPackage();
 checkWorkflowFiles();
+checkRepositoryGovernance();
 checkSkills();
 checkWiring();
 checkEvidenceVocabulary();

@@ -1,6 +1,35 @@
 {
   "schema_version": 1,
   "generated_notice": "GENERATED SOURCE IS FORBIDDEN. This registry is canonical and intentionally uses JSON-compatible YAML.",
+  "runtime_startup_contract": {
+    "schema_version": 1,
+    "kernel_route": "Read and execute `BOOTSTRAP.md` before project work. If the Kernel cannot transfer to its Controller, stop and emit only the transport failure envelope.",
+    "startup_files": [
+      "00_start_here/START_HERE.md",
+      "00_start_here/SOURCE_OF_TRUTH.md",
+      "00_start_here/LOAD_ORDER.md",
+      "50_audits/AUDIT_TIER_ROUTER.md",
+      "skills/super-build-kit/SKILL.md"
+    ],
+    "thin_entry_points": {
+      "claude": "CLAUDE.md",
+      "codex": "AGENTS.md",
+      "cursor": ".cursor/rules/super-build-kit.mdc",
+      "gemini": "GEMINI.md",
+      "github-copilot": ".github/copilot-instructions.md",
+      "manus": "Manus.md",
+      "replit": "REPLIT.md"
+    },
+    "common_controls": [
+      "Classify the APIVR tier before implementation or release claims.",
+      "Apply the applicable Elite Build Goals and preserve the source-of-truth hierarchy.",
+      "Load only the task-specific files selected by LOAD_ORDER.md.",
+      "Use a failing test or documented evidence-first substitute before production code changes.",
+      "Do not claim a check passed unless it was actually run.",
+      "Do not bypass evidence, release gates, or stop conditions for speed.",
+      "End material work with APIVR tier, evidence state, verification performed and not performed, release-gate status, final verdict, and one next action."
+    ]
+  },
   "adapters": [
     {
       "runtime_id": "claude",

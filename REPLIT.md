@@ -1,46 +1,15 @@
-WCBS EOS Kernel route: read and execute `BOOTSTRAP.md` before any project work. Do not restate Kernel or governance logic here. If the Kernel or Controller cannot be loaded, stop and report the transport failure.
-
 # Replit Agent Runtime Adapter
 
-Replit Agent must use this repository as the LLM-agnostic Super Build Kit.
+Read and execute `BOOTSTRAP.md` before project work. If the Kernel cannot transfer to its Controller, stop and emit only the transport failure envelope.
 
-## Required Startup
+Before any project work, read and follow `runtime_adapters/generated/runtime-startup-contract.md`.
 
-Before planning, editing, auditing, verifying, or deploying:
-
-1. Read `00_start_here/START_HERE.md`.
-2. Read `00_start_here/SOURCE_OF_TRUTH.md`.
-3. Read `00_start_here/LOAD_ORDER.md`.
-4. Read `50_audits/AUDIT_TIER_ROUTER.md`.
-5. Read `skills/super-build-kit/SKILL.md`.
-
-## Replit-Specific Rules
-
-- Classify the APIVR tier before implementation.
-- Inspect the actual Replit project files, app state, dependencies, environment variables, workflows, and deployment settings before proposing fixes.
-- Do not modify secrets, production data, deployment settings, databases, or irreversible state without explicit authorization and rollback planning.
-- For UI work, verify the running app behavior, not only the code.
-- For deploy work, include rollback and post-deploy verification.
-- For implementation work, use `skills/writing-plans/SKILL.md` and `skills/test-driven-development/SKILL.md`.
-- For delegated work, use `skills/dispatching-parallel-agents/SKILL.md` and `skills/subagent-driven-development/SKILL.md`.
-- For recurring audits, iterative remediation, monitors, bounded retries, post-deploy stabilization checks, or repeat-until-stable workflows, use `skills/repeatable-agent-loops/SKILL.md`.
-- For long-running, multi-stage, tool-heavy, artifact-heavy, Comprehensive, Forensic, or handoff-sensitive work, use `skills/long-horizon-agent-runtime/SKILL.md` and `skills/agent-observability-and-run-tracing/SKILL.md`.
-- For install, bootstrap, config, first-run, dependency, or setup work, use `skills/project-bootstrap-and-setup/SKILL.md`.
-- For MCP servers, plugin tools, connectors, tool auth, permission scope, overlap, or tool evidence, use `skills/mcp-tool-governance/SKILL.md`.
-- For cybersecurity, app security, AI security, incidents, supply chain, vulnerability, scanning, red-team, phishing, credential, malware, prompt injection, MCP probing, or other dual-use work, use `skills/cybersecurity-risk-routing/SKILL.md`.
-- For LLM apps, RAG, vector stores, AI tools, model/data leakage, or prompt security, use `skills/ai-application-security/SKILL.md`.
-- For alerts, suspected compromise, unauthorized access, exfiltration, malware, ransomware, containment, or recovery, use `skills/security-incident-response/SKILL.md`.
-- For dependencies, CI/CD, containers, IaC, SBOMs, signatures, provenance, or release artifact trust, use `skills/supply-chain-and-build-provenance/SKILL.md`.
-- For frontend UI, UX, copy, reports, prompts, or strategic communication, use `skills/ui-ux-design-quality/SKILL.md`, `skills/anti-ai-writing-quality/SKILL.md`, and `skills/strategist-writing-dna/SKILL.md` as applicable.
-
-## Authority
-
-This adapter is not a source of truth. If it conflicts with APIVR or the Elite Build Goals, APIVR and the Elite Build Goals win.
+Replit-specific transport: inspect the actual project and deployment state before proposing changes. Do not change secrets, production data, deployment settings, databases, or irreversible state without explicit authorization and rollback planning.
 
 ## Activation Marker
 
-After the startup sequence above completes, and before any other content in your first response of a session, emit this exact string on its own line:
+After the startup contract completes, and before any other content in the first response, emit this exact string:
 
 `WCBS_KIT_ACTIVE:replit`
 
-Emit it exactly once per session. Do not emit it if the startup sequence did not complete. This is a marker-test observation only; it does not by itself prove full runtime support.
+Emit it once only. This is a marker observation, not runtime-support proof.

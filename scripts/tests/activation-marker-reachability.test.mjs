@@ -22,6 +22,7 @@ const nativeArtifacts = new Map([
   ["opencode", ".opencode/plugins/wcbs.js"],
   ["pi", ".pi/extensions/wcbs.ts"]
 ]);
+const startupContract = read("runtime_adapters/generated/runtime-startup-contract.md");
 
 test("every registry adapter has one observable activation route", () => {
   for (const adapter of registry.adapters) {
@@ -32,7 +33,11 @@ test("every registry adapter has one observable activation route", () => {
     const artifact = instruction ?? native;
     const content = read(artifact);
     assert.ok(content.includes(manifest.activation_marker), `${artifact} does not contain ${manifest.activation_marker}`);
-    assert.match(content, /using-wcbs|using-wcbs-bootstrap|BOOTSTRAP\.md|WCBS EOS Kernel/i, `${artifact} does not route through WCBS bootstrap`);
+    const routesDirectly = /using-wcbs|using-wcbs-bootstrap|BOOTSTRAP\.md|WCBS EOS Kernel/i.test(content);
+    const routesThroughCanonicalContract = content.includes("runtime_adapters/generated/runtime-startup-contract.md")
+      && /`BOOTSTRAP\.md`/.test(startupContract)
+      && /task-specific files.*LOAD_ORDER\.md/i.test(startupContract);
+    assert.ok(routesDirectly || routesThroughCanonicalContract, `${artifact} does not route through WCBS bootstrap`);
     if (instruction || manifest.runtime_id === "kimi") {
       assert.match(content, /emit this exact string/i, `${artifact} does not direct emission of the marker`);
       assert.match(content, /first response/i, `${artifact} does not define marker timing`);
