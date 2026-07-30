@@ -55,6 +55,11 @@ function resolveTarget(requestedTarget = target) {
   if (!adapter) throw new Error(`Blocked: choose --target from ${registry.adapters.map((item) => item.runtime_id).sort().join(", ")}.`);
   return adapter;
 }
+function isMacOSSystemVarAlias(current) {
+  if (process.platform !== "darwin" || current !== "/var") return false;
+  try { return fs.realpathSync(current) === "/private/var"; }
+  catch { return false; }
+}
 function assertNoSymlinkInExistingPath(absolute) {
   const parsed = path.parse(absolute);
   const segments = path.relative(parsed.root, absolute).split(path.sep).filter(Boolean);
@@ -68,7 +73,9 @@ function assertNoSymlinkInExistingPath(absolute) {
       if (error?.code === "ENOENT") break;
       throw error;
     }
-    if (stat.isSymbolicLink()) throw new Error(`Blocked: plugin directory path must not contain a symbolic link: ${display(current)}.`);
+    // macOS exposes its system temporary directory through /var -> /private/var.
+    // Permit only that fixed OS alias; all user-controlled path links still block.
+    if (stat.isSymbolicLink() && !isMacOSSystemVarAlias(current)) throw new Error(`Blocked: plugin directory path must not contain a symbolic link: ${display(current)}.`);
     if (!stat.isDirectory() && current !== absolute) throw new Error(`Blocked: plugin directory ancestor is not a directory: ${display(current)}.`);
   }
 }

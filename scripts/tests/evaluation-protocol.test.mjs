@@ -1197,7 +1197,7 @@ test("external evidence roots reject source-contained and symlinked paths before
     fs.symlinkSync(target, link, "dir");
     assert.throws(() => resolveExternalEvidenceRun({ root, evidence_dir: link, run_id: runId, create: true }), /non-symlink/i);
     const resolved = resolveExternalEvidenceRun({ root, evidence_dir: target, run_id: runId, create: true });
-    assert.equal(resolved.run_directory, path.join(target, runId));
+    assert.equal(resolved.run_directory, path.join(fs.realpathSync(target), runId));
     assert.equal(fs.existsSync(resolved.run_directory), false, "only executeProtocol may create the validated run child");
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
