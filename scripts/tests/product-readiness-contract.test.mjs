@@ -59,7 +59,8 @@ test("product maturity docs exist", () => {
 test("release workflows expose every forensic product gate", () => {
   const release = read(".github/workflows/release-check.yml");
   const crossPlatform = read(".github/workflows/cross-platform.yml");
-  assert.match(release, /build:release-artifacts/);
+  assert.match(release, /^ {2}pull_request:\s*\n {4}branches:\s*\n {6}- main\s*$/m);
+  assert.match(release, /^\s*run:\s*npm run release-check\s*(?:#.*)?$/m);
   for (const command of [
     "npm run check:whitespace",
     "npm run verify",
@@ -80,5 +81,5 @@ test("release scripts retain a tracked-file whitespace gate", () => {
   const packageJson = JSON.parse(read("package.json"));
   assert.equal(packageJson.scripts["check:whitespace"], "node scripts/check-whitespace.mjs");
   assert.match(packageJson.scripts.check, /npm run check:whitespace/);
-  assert.match(read(".github/workflows/release-check.yml"), /npm run check:whitespace/);
+  assert.match(read(".github/workflows/release-check.yml"), /^\s*run:\s*npm run release-check\s*(?:#.*)?$/m);
 });

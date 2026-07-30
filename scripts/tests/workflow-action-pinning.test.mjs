@@ -20,3 +20,11 @@ test("GitHub Actions dependencies are pinned to immutable full commit SHAs", () 
 
   assert.deepEqual(unpinned, [], `Mutable GitHub Action references found:\n${unpinned.join("\n")}`);
 });
+
+test("the authoritative release gate is required on pull requests to main", () => {
+  const release = fs.readFileSync(path.join(workflowsDir, "release-check.yml"), "utf8");
+  assert.match(release, /^ {2}pull_request:\s*\n {4}branches:\s*\n {6}- main\s*$/m);
+  assert.match(release, /^\s*run:\s*npm run release-check\s*(?:#.*)?$/m);
+  assert.doesNotMatch("  # pull_request:\n    # branches:\n      # - main\n        # run: npm run release-check\n", /^ {2}pull_request:\s*\n {4}branches:\s*\n {6}- main\s*$/m);
+  assert.doesNotMatch("        # run: npm run release-check\n", /^\s*run:\s*npm run release-check\s*(?:#.*)?$/m);
+});
