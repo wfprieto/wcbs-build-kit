@@ -1337,6 +1337,25 @@ test("evidence paths reject descendant symlink escapes and output-parent replace
   }
 });
 
+test("Windows writes new evidence through the hardened exclusive-create path", { skip: process.platform !== "win32" }, () => {
+  const directory = makeTemporaryDirectory();
+  try {
+    const evidenceRoot = path.join(directory, "external-evidence");
+    fs.mkdirSync(evidenceRoot, { mode: 0o700 });
+    const evidence = createExternalEvidenceRun(resolveExternalEvidenceRun({
+      root: fixtureRoot,
+      evidence_dir: evidenceRoot,
+      run_id: "windows-evidence-write",
+      create: true
+    }));
+
+    const written = writeEvidenceFile(evidence, "outputs/record.json", "{}\n");
+    assert.equal(fs.readFileSync(written, "utf8"), "{}\n");
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
 test("producer signature blocks coherent pre-judging packet substitution", async () => {
   const directory = makeTemporaryDirectory();
   try {
