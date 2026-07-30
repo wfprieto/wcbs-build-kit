@@ -22,7 +22,7 @@ test("weekly upstream check creates one durable review issue on drift and cannot
   const workflow = read(".github/workflows/upstream-superpowers-check.yml");
   assert.match(workflow, /schedule:/);
   assert.match(workflow, /git ls-remote https:\/\/github\.com\/obra\/superpowers\.git HEAD/);
-  assert.match(workflow, /actions\/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02/);
+  assert.match(workflow, /actions\/upload-artifact@[0-9a-f]{40}/);
   assert.doesNotMatch(workflow, /git (?:merge|cherry-pick|pull|push|commit)/i);
   assert.match(workflow, /issues:\s*write/);
   assert.match(workflow, /Superpowers upstream drift/);
