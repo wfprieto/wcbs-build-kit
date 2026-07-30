@@ -1,4 +1,0 @@
-{
-  "__comment":"Invariant: PASS is forbidden when any mandatory input is Unknown.",
-  "mutation":{"path":"inputs[0].state","value":"Unknown"}
-}

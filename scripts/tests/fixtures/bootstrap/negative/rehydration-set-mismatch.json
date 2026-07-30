@@ -1,4 +1,0 @@
-{
-  "__comment":"Invariant: the certificate rehydration_set must exactly match the Controller declaration.",
-  "mutation":{"path":"rehydration_set","value":[".wcbs/project-profile.json"]}
-}

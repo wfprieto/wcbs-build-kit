@@ -1,3 +1,0 @@
-{"ts":"2026-07-27T15:00:00Z","state":"Verified","claim":"Project profile validated","source":"scripts/tests/fixtures/bootstrap/project-profile.json","phase":"CLASSIFY_PROJECT"}
-{"ts":"2026-07-27T15:01:00Z","state":"Verified","claim":"Capability resolution validated","source":"scripts/tests/fixtures/bootstrap/capability-resolution.json","phase":"RESOLVE_CAPABILITIES"}
-{"ts":"2026-07-27T15:02:00Z","state":"Verified","claim":"Initialization certificate issued","source":"scripts/tests/fixtures/bootstrap/bootstrap-certificate.json","phase":"CERTIFY"}

@@ -1,8 +1,0 @@
-{
-  "files": [
-    "package.json",
-    ".codex-plugin/plugin.json",
-    "CHANGELOG.md",
-    "RELEASE_NOTES.md"
-  ]
-}

@@ -1,4 +1,0 @@
-{
-  "__comment":"Invariant: PASS is forbidden when unresolved blockers are present.",
-  "mutation":{"path":"unresolved_blockers","value":["R-001 remains unresolved"]}
-}

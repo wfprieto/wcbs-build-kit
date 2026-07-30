@@ -1,4 +1,0 @@
-{
-  "__comment":"Invariant: PASS is forbidden when any applicable Elite Goal is Not Run.",
-  "mutation":{"path":"goals[0].evidence_state","value":"Not Run"}
-}

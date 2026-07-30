@@ -1,9 +1,0 @@
-{
-  "roles": ["bootstrap-controller", "verification-reviewer"],
-  "required_skills": ["project-bootstrap-and-setup", "long-horizon-agent-runtime"],
-  "optional_skills": [],
-  "audits": ["schema-enforcement"],
-  "templates": ["DESIGN_SPEC_TEMPLATE"],
-  "gates": ["A", "B"],
-  "not_applicable": [{"capability": "external-deployment", "justification": "No deployment is in initialization scope"}]
-}
