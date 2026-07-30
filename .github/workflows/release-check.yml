@@ -1,6 +1,9 @@
 name: Release Check
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     tags:
       - "v*"
@@ -24,20 +27,8 @@ jobs:
         with:
           node-version: "24"
 
-      - name: Verify kit
-        run: npm run verify
-
-      - name: Tracked-file whitespace verification
-        run: npm run check:whitespace
-
-      - name: Run system tests
-        run: npm run system-test
-
-      - name: Run install and adapter smoke checks
-        run: npm run check-install
-
-      - name: Build release artifacts
-        run: npm run build:release-artifacts
+      - name: Run authoritative release gate
+        run: npm run release-check
 
       - name: Verify extracted release artifact transport
         run: node --test scripts/tests/release-artifact-execution.test.mjs

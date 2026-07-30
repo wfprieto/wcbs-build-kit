@@ -1,0 +1,16 @@
+# Critical delivery controls require repository-owner review when branch protection
+# is configured to enforce CODEOWNERS. This file does not replace that setting.
+/scripts/install-adapter.mjs @wfprieto
+/scripts/check-install.mjs @wfprieto
+/scripts/wcbs.mjs @wfprieto
+/scripts/wcbs-doctor.mjs @wfprieto
+/scripts/build-release-artifacts.mjs @wfprieto
+/scripts/lib/evaluation-protocol.mjs @wfprieto
+/scripts/lib/hardened-git.mjs @wfprieto
+/runtime_adapters/adapter-registry.yaml @wfprieto
+/.github/workflows/ @wfprieto
+/.github/RELEASE_CANDIDATE_CHECKLIST.md @wfprieto
+/evals/ @wfprieto
+/SECURITY.md @wfprieto
+/RELEASE_PROCESS.md @wfprieto
+/10_governance/RELEASE_GATES.md @wfprieto

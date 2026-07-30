@@ -20,6 +20,16 @@ const REQUIRED_MANIFEST_FIELDS = ["runtime_id", "display_name", "owner", "suppor
 class ContractError extends Error {}
 const bad = message => { throw new ContractError(message); };
 
+export function resolveContainedPosixRelativePath(root, relative) {
+  if (typeof relative !== "string" || !relative || relative.includes("\\") || path.isAbsolute(relative) || path.posix.isAbsolute(relative) || path.posix.normalize(relative) !== relative || relative.split("/").some((segment) => !segment || segment === "." || segment === "..")) {
+    bad(`expected a safe POSIX-relative repository path, got: ${String(relative)}`);
+  }
+  const resolvedRoot = path.resolve(root);
+  const resolved = path.resolve(resolvedRoot, ...relative.split("/"));
+  if (!resolved.startsWith(`${resolvedRoot}${path.sep}`)) bad(`expected a safe POSIX-relative repository path, got: ${relative}`);
+  return resolved;
+}
+
 export function validateManifest(manifest, { root } = {}) {
   if (!manifest || typeof manifest !== "object") bad("manifest must be an object");
   for (const field of REQUIRED_MANIFEST_FIELDS) if (manifest[field] === undefined || manifest[field] === null) bad(`manifest missing required field: ${field}`);

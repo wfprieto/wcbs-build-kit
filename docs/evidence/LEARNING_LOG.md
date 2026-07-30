@@ -1,5 +1,15 @@
 # Learning Log
 
+## 2026-07-30 — Thin runtime entries require a direct Kernel fail-close route
+
+**Observed:** Centralizing shared runtime policy behind a generated contract initially removed the direct Kernel transfer instruction from primary runtime entry files.
+
+**Root cause:** The canonicalization design treated the generated document as sufficient routing, but the delivery-plane entry must still tell an agent to stop if the generated contract is unavailable.
+
+**Verified prevention:** Every registry-named thin entry now retains the same short Kernel/failure-envelope route. The generated contract carries only higher-order common policy. `runtime-entry-contract.test.mjs`, strict doctor, and the V2 install lifecycle cover the route.
+
+**Do not repeat:** Do not replace a delivery-plane fail-closed instruction with an indirect reference alone.
+
 ## 2026-07-29: Hardened release builds must be usable in secure local checkouts
 
 - Observation: the consolidated V2 release-artifact test failed because the

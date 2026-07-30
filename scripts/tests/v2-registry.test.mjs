@@ -53,6 +53,7 @@ test("V2 derived metadata is reproducible and cannot be hand-edited", () => {
     "runtime_adapters/INSTALLATION_MATRIX.md",
     "runtime_adapters/VERIFIED_SUPPORT_LEVELS.md",
     "runtime_adapters/generated/using-wcbs-bootstrap.md",
+    "runtime_adapters/generated/runtime-startup-contract.md",
     "runtime_adapters/generated/skill-catalog.json",
     "runtime_adapters/generated/specialist-skill-catalog.json"
   ]) {

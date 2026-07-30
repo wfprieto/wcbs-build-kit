@@ -27,6 +27,7 @@ const required = [
   "scripts/adapter-smoke-test.mjs",
   "runtime_adapters/adapter-registry.yaml",
   "runtime_adapters/generated/using-wcbs-bootstrap.md",
+  "runtime_adapters/generated/runtime-startup-contract.md",
   "docs/V2_RUNTIME_EVIDENCE.md",
   "docs/V2_MIGRATION.md"
 ];
@@ -87,8 +88,12 @@ for (const adapter of v2Registry.adapters) {
       fs.writeFileSync(file, content, "utf8");
       hashes.set(relative, crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex"));
     }
+    run(`${adapter.runtime_id} v2 install`, ["scripts/wcbs.mjs", "install", "--target", adapter.runtime_id, "--plugin-dir", plugin, "--json"]);
+    const installedStartupContract = path.join(plugin, "runtime_adapters", "generated", "runtime-startup-contract.md");
+    if (!fs.existsSync(installedStartupContract) || !fs.readFileSync(installedStartupContract, "utf8").includes("Read and execute `BOOTSTRAP.md` before project work.")) {
+      throw new Error(`V2 install omitted the canonical runtime startup contract for ${adapter.runtime_id}.`);
+    }
     for (const [action, args] of [
-      ["v2 install", ["scripts/wcbs.mjs", "install", "--target", adapter.runtime_id, "--plugin-dir", plugin, "--json"]],
       ["v2 doctor", ["scripts/wcbs.mjs", "doctor", "--plugin-dir", plugin, "--json"]],
       ["v2 status", ["scripts/wcbs.mjs", "status", "--plugin-dir", plugin, "--json"]],
       ["v2 uninstall", ["scripts/wcbs.mjs", "uninstall", "--plugin-dir", plugin, "--json"]]

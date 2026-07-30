@@ -11,7 +11,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import { renderCapabilityMatrix, validateActivationMarkerUniqueness, validateManifest, validateManifestMappingConsistency, validateToolMapping } from "./lib/adapter-contract.mjs";
+import { renderCapabilityMatrix, resolveContainedPosixRelativePath, validateActivationMarkerUniqueness, validateManifest, validateManifestMappingConsistency, validateToolMapping } from "./lib/adapter-contract.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const registryPath = path.join(root, "runtime_adapters", "adapter-registry.yaml");
@@ -131,6 +131,17 @@ function loadRegistry() {
   if (!fs.existsSync(registryPath)) throw new Error("Missing runtime_adapters/adapter-registry.yaml. Run --import-legacy exactly once from the V1 baseline.");
   const registry = JSON.parse(fs.readFileSync(registryPath, "utf8"));
   if (registry?.schema_version !== 1 || !Array.isArray(registry.adapters) || !Array.isArray(registry.core_skills) || !Array.isArray(registry.specialist_skills)) throw new Error("Invalid V2 adapter registry structure.");
+  const startup = registry.runtime_startup_contract;
+  if (startup?.schema_version !== 1 || typeof startup.kernel_route !== "string" || !Array.isArray(startup.startup_files) || startup.startup_files.length !== 5 || !startup.thin_entry_points || typeof startup.thin_entry_points !== "object" || Array.isArray(startup.thin_entry_points) || !Array.isArray(startup.common_controls) || startup.common_controls.length < 6) {
+    throw new Error("Invalid runtime startup contract in the canonical V2 registry.");
+  }
+  for (const relative of startup.startup_files) {
+    let resolved;
+    try { resolved = resolveContainedPosixRelativePath(root, relative); }
+    catch (error) { throw new Error(`Runtime startup contract has an unsafe startup file path: ${error.message}`); }
+    if (!fs.existsSync(resolved)) throw new Error(`Runtime startup contract references a missing file: ${relative}`);
+  }
+  for (const control of startup.common_controls) if (typeof control !== "string" || !control.trim()) throw new Error("Runtime startup contract contains an invalid common control.");
   const ids = new Set();
   for (const adapter of registry.adapters) {
     if (!adapter.runtime_id || ids.has(adapter.runtime_id)) throw new Error(`Adapter registry contains an invalid or duplicate runtime_id: ${adapter?.runtime_id ?? "<missing>"}`);
@@ -148,6 +159,16 @@ function loadRegistry() {
     validateManifestMappingConsistency(adapter.manifest, adapter.tool_mapping);
   }
   validateActivationMarkerUniqueness(registry.adapters.map((adapter) => adapter.manifest));
+  const entryPaths = new Set();
+  for (const [runtimeId, relative] of Object.entries(startup.thin_entry_points)) {
+    if (!ids.has(runtimeId)) throw new Error(`Runtime startup contract names unknown runtime entry: ${runtimeId}`);
+    let resolved;
+    try { resolved = resolveContainedPosixRelativePath(root, relative); }
+    catch (error) { throw new Error(`Runtime startup contract has an unsafe thin entry path for ${runtimeId}: ${error.message}`); }
+    if (!fs.existsSync(resolved)) throw new Error(`Runtime startup contract references a missing thin entry file for ${runtimeId}: ${relative}`);
+    if (entryPaths.has(relative)) throw new Error(`Runtime startup contract reuses thin entry path: ${relative}`);
+    entryPaths.add(relative);
+  }
   const names = new Set();
   for (const skill of registry.core_skills) {
     if (!skill.name || names.has(skill.name)) throw new Error(`Core skill catalog contains an invalid or duplicate name: ${skill?.name ?? "<missing>"}`);
@@ -203,6 +224,30 @@ function renderBootstrap(registry) {
   ].join("\n"));
 }
 
+function renderRuntimeStartupContract(registry) {
+  const startup = registry.runtime_startup_contract;
+  return newline([
+    "# WCBS Runtime Startup Contract",
+    "",
+    "<!-- GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml. -->",
+    "",
+    "This is the common non-Kernel policy for thin runtime entry files. Every entry file must also retain the direct Kernel fail-closed transport invariant before routing here, plus its native transport details and exact marker.",
+    "",
+    "## Kernel Route",
+    "",
+    startup.kernel_route,
+    "",
+    "## Required Startup",
+    "",
+    ...startup.startup_files.map((relative, index) => `${index + 1}. \`${relative}\``),
+    "",
+    "## Common Controls",
+    "",
+    ...startup.common_controls.map((control) => `- ${control}`),
+    ""
+  ].join("\n"));
+}
+
 function renderCoreSkillCases(registry) {
   const primary = new Set(["using-wcbs", "brainstorming", "writing-plans", "test-driven-development", "systematic-debugging", "requesting-code-review", "verification-before-completion", "finishing-a-development-branch"]);
   const cases = registry.core_skills.flatMap((skill) => skill.scenarios.map((scenario) => ({
@@ -235,6 +280,7 @@ function outputs(registry) {
   files.set("runtime_adapters/INSTALLATION_MATRIX.md", renderInstallationMatrix(adapters));
   files.set("runtime_adapters/VERIFIED_SUPPORT_LEVELS.md", renderVerifiedSupport(adapters));
   files.set("runtime_adapters/generated/using-wcbs-bootstrap.md", renderBootstrap(registry));
+  files.set("runtime_adapters/generated/runtime-startup-contract.md", renderRuntimeStartupContract(registry));
   files.set("runtime_adapters/generated/skill-catalog.json", `${JSON.stringify({ generated: "GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml.", core_skills: registry.core_skills }, null, 2)}\n`);
   files.set("runtime_adapters/generated/specialist-skill-catalog.json", `${JSON.stringify({ generated: "GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml.", specialist_skills: registry.specialist_skills }, null, 2)}\n`);
   files.set("evals/v2-core-skill-cases.json", renderCoreSkillCases(registry));
