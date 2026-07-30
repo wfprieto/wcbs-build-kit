@@ -1,0 +1,10 @@
+{
+  "name": "Forensic security audit",
+  "apivr_tier": "Forensic",
+  "elite_goals": ["security", "authorization", "evidence"],
+  "skills": ["skills/cybersecurity-risk-routing/SKILL.md", "skills/security-incident-response/SKILL.md"],
+  "evidence_state": "Blocked",
+  "release_gate_status": "BLOCKED without authorization or core safety evidence",
+  "verification": ["authorization scope check", "security evidence ledger"],
+  "final_verdict": "BLOCKED"
+}

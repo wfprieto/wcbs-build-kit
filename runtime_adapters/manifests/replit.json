@@ -1,0 +1,41 @@
+{
+  "runtime_id": "replit",
+  "display_name": "Replit Agent",
+  "owner": "wfprieto",
+  "support_level": "Partial",
+  "activation_tier": "T2",
+  "integration_shape": "always_on_instruction_file",
+  "native_install_mechanism": "REPLIT.md repository instruction file",
+  "install_scope": "project",
+  "bootstrap_path": "REPLIT.md",
+  "bootstrap_mode": "automatic",
+  "activation_marker": "WCBS_KIT_ACTIVE:replit",
+  "tool_mapping_path": "runtime_adapters/tool_mappings/replit.json",
+  "capabilities": {
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "unavailable",
+    "task_tracking": "native",
+    "web_access": "native",
+    "browser_verification": "degradable",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "native"
+  },
+  "fallbacks": {
+    "subagents": "Sequential fresh-context review using the exact base..head package; report degraded independence.",
+    "browser_verification": "Use Replit preview evidence and record automated browser assertions as Not Run."
+  },
+  "supported_runtime_versions": "Replit Agent workspaces that read repository instruction files",
+  "supported_operating_systems": [
+    "linux"
+  ],
+  "modifies_user_files": false,
+  "install": "Commit REPLIT.md at the repository root of the Repl.",
+  "update": "Edit REPLIT.md in the Repl.",
+  "uninstall": "Delete REPLIT.md.",
+  "rollback": "Restore the previous revision from version control.",
+  "limitations": "Linux-only container. No independent subagents. Activation is instructed and must be measured in a clean session.",
+  "deprecation": "Designed adapter; runtime activation evidence is pending."
+}

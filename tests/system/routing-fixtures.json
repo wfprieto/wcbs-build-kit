@@ -1,0 +1,33 @@
+{
+  "fixtures": [
+    {
+      "name": "startup",
+      "requiredFiles": [
+        "00_start_here/START_HERE.md",
+        "00_start_here/SOURCE_OF_TRUTH.md",
+        "00_start_here/LOAD_ORDER.md",
+        "50_audits/AUDIT_TIER_ROUTER.md",
+        "skills/super-build-kit/SKILL.md"
+      ],
+      "requiredTerms": ["APIVR", "Elite Build Goals", "Verified", "Blocked"]
+    },
+    {
+      "name": "standard-plan",
+      "requiredFiles": [
+        "skills/writing-plans/SKILL.md",
+        "skills/test-driven-development/SKILL.md",
+        "60_templates/IMPLEMENTATION_BLUEPRINT_TEMPLATE.md"
+      ],
+      "requiredTerms": ["Red Phase", "Green Phase", "Refactor Phase"]
+    },
+    {
+      "name": "forensic-security",
+      "requiredFiles": [
+        "skills/cybersecurity-risk-routing/SKILL.md",
+        "60_templates/SECURITY_EVIDENCE_LEDGER_TEMPLATE.md",
+        "60_templates/SECURITY_AUTHORIZATION_AND_SCOPE_TEMPLATE.md"
+      ],
+      "requiredTerms": ["authorization", "dual-use", "Unknown"]
+    }
+  ]
+}

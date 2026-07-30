@@ -1,0 +1,23 @@
+{
+  "project_id": "atlas-bootstrap",
+  "goals": [
+    {"goal_id":"META-0","applicable":true,"execution_path":"00_start_here/bootstrap-controller.json","verification_path":"scripts/tests/bootstrap-fixtures.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"1","applicable":true,"execution_path":"00_start_here/KERNEL_CONTRACT.md","verification_path":"scripts/tests/kernel-contract.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"2","applicable":true,"execution_path":"00_start_here/BOOTSTRAP_CONTROLLER.md","verification_path":"scripts/tests/bootstrap-controller.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"3","applicable":true,"execution_path":"runtime_adapters/schemas/project-profile.schema.json","verification_path":"scripts/tests/schema-enforcement.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"4","applicable":true,"execution_path":"runtime_adapters/schemas/capability-resolution.schema.json","verification_path":"scripts/tests/schema-enforcement.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"5","applicable":true,"execution_path":"runtime_adapters/schemas/engineering-team.schema.json","verification_path":"scripts/tests/schema-enforcement.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"6","applicable":true,"execution_path":"runtime_adapters/schemas/elite-goals-ledger.schema.json","verification_path":"scripts/tests/schema-enforcement.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"7","applicable":true,"execution_path":"runtime_adapters/schemas/evidence-ledger.schema.json","verification_path":"scripts/tests/schema-enforcement.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"8","applicable":true,"execution_path":"runtime_adapters/schemas/risk-register.schema.json","verification_path":"scripts/tests/schema-enforcement.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"9","applicable":true,"execution_path":"runtime_adapters/schemas/release-state.schema.json","verification_path":"scripts/tests/schema-enforcement.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"10","applicable":true,"execution_path":"runtime_adapters/schemas/bootstrap-certificate.schema.json","verification_path":"scripts/tests/certificate-canonicalization.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"11","applicable":true,"execution_path":"scripts/lib/json-schema.mjs","verification_path":"scripts/tests/schema-keyword-support.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"12","applicable":true,"execution_path":"scripts/wcbs-doctor.mjs","verification_path":"scripts/tests/product-readiness-contract.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"13","applicable":true,"execution_path":"skills/long-horizon-agent-runtime/SKILL.md","verification_path":"scripts/tests/bootstrap-fixtures.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"14","applicable":true,"execution_path":"00_start_here/CERTIFICATE_CANONICALIZATION.md","verification_path":"scripts/tests/certificate-canonicalization.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"15","applicable":true,"execution_path":"runtime_adapters/CAPABILITY_MATRIX.md","verification_path":"scripts/tests/adapter-contract.test.mjs","evidence_state":"Verified"},
+    {"goal_id":"16","applicable":true,"execution_path":"package.json","verification_path":"npm run check","evidence_state":"Verified"}
+  ],
+  "updated_at": "2026-07-27T15:00:00Z"
+}

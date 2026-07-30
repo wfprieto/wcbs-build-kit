@@ -1,0 +1,29 @@
+{
+  "run_id": "RUN-FIXTURE",
+  "task_id": "T-02",
+  "title": "Committed fixture task with unresolved uncertainty",
+  "producer_role": "controller",
+  "created_utc": "2026-07-11T02:00:00Z",
+  "apivr_tier": "Standard",
+  "task_base_sha": "1111111111111111111111111111111111111111",
+  "task_head_sha": "2222222222222222222222222222222222222222",
+  "brief_revision": 1,
+  "revision_reason": null,
+  "files_editable": ["src/other.js"],
+  "files_forbidden": ["package-lock.json"],
+  "canonical_sources": ["skills/subagent-driven-development/SKILL.md"],
+  "test_first_requirement": "Run the named covering test and preserve unresolved evidence as Unknown.",
+  "acceptance_criteria": ["The task artifact remains durable even when final evidence is unresolved."],
+  "preserved_behavior": ["CANNOT_VERIFY_FROM_DIFF remains visible and blocks an unconditional release pass."],
+  "global_constraints_verbatim": "Audit wide. Fix narrow. Prove everything.",
+  "dependencies": ["T-01"],
+  "stop_conditions": ["Stop if the missing external evidence cannot be obtained safely."],
+  "repair_budget": 3,
+  "required_artifacts": ["implementer-report.md", "review-report.md", "test evidence"],
+  "reviewer_capability": "advanced",
+  "status": "DONE_WITH_CONCERNS",
+  "artifact_paths": {
+    "task_brief": "tasks/T-02/task-brief.md",
+    "implementer_report": "tasks/T-02/implementer-report.md"
+  }
+}

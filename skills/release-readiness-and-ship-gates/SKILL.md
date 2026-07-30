@@ -1,0 +1,71 @@
+---
+name: release-readiness-and-ship-gates
+description: Use when preparing to merge, ship, deploy, publish, hand off, or declare done. Applies release readiness dashboards, changelog discipline, deploy/canary/post-release checks, rollback readiness, evidence classification, and APIVR release-gate enforcement.
+activation: Activate when the description trigger applies to the current task.
+required_inputs: Task request, relevant repository context, constraints, and authority dependencies.
+required_outputs: Skill-specific artifact, verification evidence, canonical verdict, and next action.
+authority_dependencies: 00_start_here/SOURCE_OF_TRUTH.md; 10_governance/APIVR_EXECUTION_LIFECYCLE.md; 10_governance/source_of_truth/Elite_Build_Goals_v3.md.
+evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked state for every material claim.
+---
+
+# Release Readiness And Ship Gates
+
+Use during APIVR Phase 5 Verify Implementation and Phase 6 Re-Audit.
+
+<HARD-GATE>
+Do not say shipped, done, ready, or PASS while any applicable release gate is failed, unknown, not run, or blocked without named risk acceptance.
+</HARD-GATE>
+
+## Ship Flow
+
+```mermaid
+flowchart TD
+  A["Candidate ready"] --> B["Classify release gates A-H"]
+  B --> C{"Any failed or unknown core gate?"}
+  C -- "Yes" --> D["Block release or get explicit accepted risk"]
+  C -- "No" --> E["Run final verification"]
+  E --> F["Prepare rollback and changelog"]
+  F --> G{"Deployment needed?"}
+  G -- "Yes" --> H["Canary or post-deploy checks"]
+  G -- "No" --> I["Compound-learning decision"]
+  H --> I
+  I --> J["Completion report"]
+```
+
+## Required Outputs
+
+- Release gate table.
+- Evidence ledger or security evidence ledger when applicable.
+- Rollback trigger and restoration path.
+- Changelog or user-facing note when behavior changes.
+- 20 Pass Protocol summary when final release instructions, rollback instructions, launch prompts, source-file changes, or signoff claims are high-stakes.
+- Post-release verification horizon for production changes.
+- External integration launch gate verdict when provider callbacks, webhooks, cron routes, OAuth/Auth redirects, payment/email/SMS providers, deployment protection, or Preview/Production environment separation are in scope.
+- Compound-learning decision for Standard and above: update canonical guidance, create a solved-problem learning entry, schedule knowledge refresh, or do not preserve.
+
+## Worked Example
+
+Scenario: Shipping a subscription cancellation fix.
+
+- Gate C: auth and permission tests verified.
+- Gate D: duplicate cancellation and billing reconciliation verified.
+- Gate E: rollback is feature-flag disable plus previous handler restore.
+- Gate H: evidence ledger complete.
+- Compound learning: capture the provider replay lesson only if it is not already covered by canonical external API guidance.
+- Verdict: `PASS` after targeted tests and provider sandbox replay are Verified.
+
+Scenario: Shipping a Stripe webhook or OAuth callback.
+
+- External integration launch gate applies.
+- Gate C: provider route contract proves no human login is required and provider signature/state validation remains enforced.
+- Gate E: provider dashboard delivery into the deployed URL is verified; no 307 `/login`, Vercel protection block, or wrong-domain redirect remains.
+- Gate H: provider event ID, deployed URL, database effect, app log, and user-visible proof are recorded.
+- Verdict: `PASS` only after the real deployed provider-to-app path is Verified.
+
+## Knowledge Closeout
+
+Before final done claims for Standard and above:
+
+- If the release exposed a reusable pattern, load `skills/compound-learning-capture/SKILL.md`.
+- If the release changed active kit guidance or revealed duplicate/stale rules, load `skills/knowledge-refresh-and-drift-control/SKILL.md`.
+- If no reusable lesson exists, state `No durable learning captured` in the completion report.

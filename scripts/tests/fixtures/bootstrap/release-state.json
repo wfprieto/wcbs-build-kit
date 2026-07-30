@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS",
+  "gates": {
+    "A":{"status":"PASS","evidence_state":"Verified","summary":"Authority loaded"},
+    "B":{"status":"PASS","evidence_state":"Verified","summary":"Initialization structure validated"},
+    "C":{"status":"PASS","evidence_state":"Verified","summary":"Measurement prerequisites ready"},
+    "D":{"status":"PASS","evidence_state":"Verified","summary":"Design gate ready"},
+    "E":{"status":"PASS","evidence_state":"Verified","summary":"Implementation gate ready"},
+    "F":{"status":"PASS","evidence_state":"Verified","summary":"Verification gate ready"},
+    "G":{"status":"PASS","evidence_state":"Verified","summary":"Release gate ready"},
+    "H":{"status":"PASS","evidence_state":"Verified","summary":"Handoff gate ready"},
+    "I":{"status":"PASS","evidence_state":"Verified","summary":"Lifecycle gate ready"}
+  },
+  "blockers": [],
+  "accepted_risks": [],
+  "updated_at": "2026-07-27T15:03:00Z"
+}

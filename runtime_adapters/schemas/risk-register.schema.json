@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["project_id", "risks", "updated_at"],
+  "properties": {
+    "project_id": {"type": "string", "minLength": 1},
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "likelihood", "impact", "owner", "mitigation", "status", "evidence_state"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "description": {"type": "string", "minLength": 1},
+          "likelihood": {"enum": ["Low", "Medium", "High"]},
+          "impact": {"enum": ["Low", "Medium", "High", "Critical"]},
+          "owner": {"type": "string", "minLength": 1},
+          "mitigation": {"type": "string", "minLength": 1},
+          "status": {"enum": ["Open", "Mitigating", "Accepted", "Closed"]},
+          "evidence_state": {"enum": ["Verified", "Likely", "Suspected", "Unknown", "Not Run", "Blocked"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "updated_at": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": false
+}

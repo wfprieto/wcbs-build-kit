@@ -1,0 +1,29 @@
+{
+  "run_id": "RUN-FIXTURE",
+  "task_id": "T-01",
+  "title": "Committed fixture task",
+  "producer_role": "controller",
+  "created_utc": "2026-07-11T00:00:00Z",
+  "apivr_tier": "Standard",
+  "task_base_sha": "0000000000000000000000000000000000000000",
+  "task_head_sha": "1111111111111111111111111111111111111111",
+  "brief_revision": 1,
+  "revision_reason": null,
+  "files_editable": ["src/example.js"],
+  "files_forbidden": ["package-lock.json"],
+  "canonical_sources": ["skills/subagent-driven-development/SKILL.md"],
+  "test_first_requirement": "Run the named covering test and record its failing result before implementation.",
+  "acceptance_criteria": ["The committed task artifact validates without any live .wcbs directory."],
+  "preserved_behavior": ["The clean-checkout gate remains independent of developer-local state."],
+  "global_constraints_verbatim": "Audit wide. Fix narrow. Prove everything.",
+  "dependencies": [],
+  "stop_conditions": ["Stop rather than guess if a required artifact field is unknown."],
+  "repair_budget": 3,
+  "required_artifacts": ["implementer-report.md", "test evidence"],
+  "reviewer_capability": "advanced",
+  "status": "COMPLETE",
+  "artifact_paths": {
+    "task_brief": "tasks/T-01/task-brief.md",
+    "implementer_report": "tasks/T-01/implementer-report.md"
+  }
+}

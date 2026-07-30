@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "controller_version": "2.0.0",
+  "behavior_classification": "Instructed",
+  "technical_enforcement": "Repository checks validate the Controller schema, graph, generated documentation, and inspectable state artifacts. This contract does not make an external agent's compliance technically unavoidable.",
+  "rehydration_set": [
+    ".wcbs/project-profile.json",
+    ".wcbs/capability-resolution.json",
+    ".wcbs/engineering-team.json",
+    ".wcbs/elite-goals-ledger.json",
+    ".wcbs/risk-register.json",
+    ".wcbs/release-state.json",
+    ".wcbs/evidence-ledger.jsonl"
+  ],
+  "states": [
+    {
+      "id": "DISCOVER",
+      "entry_conditions": ["valid handoff envelope received"],
+      "required_inputs": ["project_root", "controller_sha256"],
+      "produced_artifacts": ["validated project-root context"],
+      "failure_conditions": ["project root missing or outside allowed boundary"],
+      "recovery_behavior": ["return BLOCKED with the missing or invalid input"],
+      "evidence_produced": ["Verified", "Blocked"],
+      "allowed_transitions": ["VALIDATE"],
+      "blocking": true
+    },
+    {
+      "id": "VALIDATE",
+      "entry_conditions": ["DISCOVER completed"],
+      "required_inputs": ["Kernel handoff envelope", "Controller schema"],
+      "produced_artifacts": ["validated handoff record"],
+      "failure_conditions": ["handoff envelope or Controller schema invalid"],
+      "recovery_behavior": ["return BLOCKED and name the envelope or schema failure"],
+      "evidence_produced": ["Verified", "Blocked"],
+      "allowed_transitions": ["VALIDATE_RUNTIME"],
+      "blocking": true
+    },
+    {
+      "id": "VALIDATE_RUNTIME",
+      "entry_conditions": ["VALIDATE completed"],
+      "required_inputs": ["delivery_environment", "asserted_activation_tier", "runtime manifests"],
+      "produced_artifacts": [".wcbs/capability-resolution.json"],
+      "failure_conditions": ["delivery environment has no manifest or required fallback"],
+      "recovery_behavior": ["degrade to the highest substantiated tier or return BLOCKED"],
+      "evidence_produced": ["Verified", "Likely", "Blocked"],
+      "allowed_transitions": ["LOAD_AUTHORITY"],
+      "blocking": true
+    },
+    {
+      "id": "LOAD_AUTHORITY",
+      "entry_conditions": ["VALIDATE_RUNTIME completed"],
+      "required_inputs": ["00_start_here/SOURCE_OF_TRUTH.md"],
+      "produced_artifacts": ["authority load evidence"],
+      "failure_conditions": ["authority source missing or unreadable"],
+      "recovery_behavior": ["return BLOCKED and stop initialization"],
+      "evidence_produced": ["Verified", "Blocked"],
+      "allowed_transitions": ["LOAD_GOVERNANCE"],
+      "blocking": true
+    },
+    {
+      "id": "LOAD_GOVERNANCE",
+      "entry_conditions": ["LOAD_AUTHORITY completed"],
+      "required_inputs": ["APIVR lifecycle", "Elite Build Goals", "release gates"],
+      "produced_artifacts": ["governance load evidence"],
+      "failure_conditions": ["mandatory governance input missing"],
+      "recovery_behavior": ["return BLOCKED and identify the missing input"],
+      "evidence_produced": ["Verified", "Blocked"],
+      "allowed_transitions": ["INITIALIZE_STATE"],
+      "blocking": true
+    },
+    {
+      "id": "INITIALIZE_STATE",
+      "entry_conditions": ["LOAD_GOVERNANCE completed"],
+      "required_inputs": [".wcbs state if present", "rehydration_set"],
+      "produced_artifacts": [".wcbs/evidence-ledger.jsonl rehydration evidence"],
+      "failure_conditions": ["state exists without the authoritative .wcbs/bootstrap-certificate.json", "rehydration hash mismatch"],
+      "recovery_behavior": ["treat all partial state as non-authoritative and force complete re-initialization before continuation"],
+      "evidence_produced": ["Verified", "Unknown", "Blocked"],
+      "allowed_transitions": ["CLASSIFY_PROJECT"],
+      "blocking": true
+    },
+    {
+      "id": "CLASSIFY_PROJECT",
+      "entry_conditions": ["INITIALIZE_STATE completed"],
+      "required_inputs": ["project request", "project files and constraints"],
+      "produced_artifacts": [".wcbs/project-profile.json"],
+      "failure_conditions": ["project intent or material constraints unresolved"],
+      "recovery_behavior": ["record PARTIAL or BLOCKED and request only the missing material input"],
+      "evidence_produced": ["Verified", "Likely", "Unknown", "Blocked"],
+      "allowed_transitions": ["RESOLVE_CAPABILITIES"],
+      "blocking": true
+    },
+    {
+      "id": "RESOLVE_CAPABILITIES",
+      "entry_conditions": ["CLASSIFY_PROJECT completed"],
+      "required_inputs": ["project profile", "capability-routing.json"],
+      "produced_artifacts": [".wcbs/capability-resolution.json"],
+      "failure_conditions": ["required capability has no routing path"],
+      "recovery_behavior": ["return BLOCKED and name the unrouted capability"],
+      "evidence_produced": ["Verified", "Blocked"],
+      "allowed_transitions": ["ASSEMBLE_TEAM"],
+      "blocking": true
+    },
+    {
+      "id": "ASSEMBLE_TEAM",
+      "entry_conditions": ["RESOLVE_CAPABILITIES completed"],
+      "required_inputs": ["capability resolution"],
+      "produced_artifacts": [".wcbs/engineering-team.json", ".wcbs/elite-goals-ledger.json"],
+      "failure_conditions": ["required capability lacks a role, skill, audit, template, or gate"],
+      "recovery_behavior": ["return BLOCKED and name the missing execution path"],
+      "evidence_produced": ["Verified", "Blocked"],
+      "allowed_transitions": ["RUN_PREFLIGHT"],
+      "blocking": true
+    },
+    {
+      "id": "RUN_PREFLIGHT",
+      "entry_conditions": ["ASSEMBLE_TEAM completed"],
+      "required_inputs": ["design approval", "required pre-build gates"],
+      "produced_artifacts": ["preflight evidence"],
+      "failure_conditions": ["design not approved", "mandatory gate failed or Not Run"],
+      "recovery_behavior": ["stop implementation and return the canonical verdict supported by evidence"],
+      "evidence_produced": ["Verified", "Not Run", "Blocked"],
+      "allowed_transitions": ["CERTIFY"],
+      "blocking": true
+    },
+    {
+      "id": "CERTIFY",
+      "entry_conditions": ["RUN_PREFLIGHT completed"],
+      "required_inputs": ["all initialization artifacts", "certificate canonicalization v1"],
+      "produced_artifacts": [".wcbs/bootstrap-certificate.json as the sole authoritative initialization-completeness artifact"],
+      "failure_conditions": ["mandatory input Unknown or Not Run", "unresolved blocker for PASS"],
+      "recovery_behavior": ["issue PARTIAL, FAIL, or BLOCKED; never issue PASS"],
+      "evidence_produced": ["Verified", "Unknown", "Not Run", "Blocked"],
+      "allowed_transitions": ["HAND_OFF_TO_LIFECYCLE"],
+      "blocking": true
+    },
+    {
+      "id": "HAND_OFF_TO_LIFECYCLE",
+      "entry_conditions": ["authoritative bootstrap certificate issued without FAIL or BLOCKED"],
+      "required_inputs": ["bootstrap certificate", "APIVR lifecycle"],
+      "produced_artifacts": ["lifecycle handoff evidence"],
+      "failure_conditions": ["certificate invalid or capability ceiling exceeded"],
+      "recovery_behavior": ["return BLOCKED and stop project execution"],
+      "evidence_produced": ["Verified", "Blocked"],
+      "allowed_transitions": [],
+      "blocking": true
+    }
+  ]
+}

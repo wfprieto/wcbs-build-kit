@@ -1,0 +1,44 @@
+{
+  "runtime_id": "github-copilot",
+  "display_name": "GitHub Copilot",
+  "owner": "wfprieto",
+  "support_level": "Partial",
+  "activation_tier": "T1",
+  "integration_shape": "hybrid",
+  "native_install_mechanism": "Repository custom instructions plus the repository SessionStart hook at .github/hooks/wcbs-session-start.json",
+  "install_scope": "project",
+  "bootstrap_path": ".github/copilot-instructions.md",
+  "bootstrap_mode": "automatic",
+  "activation_marker": "WCBS_KIT_ACTIVE:github-copilot",
+  "tool_mapping_path": "runtime_adapters/tool_mappings/github-copilot.json",
+  "capabilities": {
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "unavailable",
+    "task_tracking": "degradable",
+    "web_access": "native",
+    "browser_verification": "unavailable",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "native"
+  },
+  "fallbacks": {
+    "subagents": "Sequential self-review in a fresh context window using the exact base..head review package; report degraded independence.",
+    "browser_verification": "Use command-line verification and record rendered-UI evidence as Not Run.",
+    "task_tracking": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl."
+  },
+  "supported_runtime_versions": "GitHub Copilot Chat with repository custom-instructions support",
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
+  "modifies_user_files": false,
+  "install": "Commit .github/copilot-instructions.md, .github/hooks/wcbs-session-start.json, and hooks/. The repository SessionStart hook invokes the WCBS transport.",
+  "update": "Edit the instructions, repository hook registration, Kernel, and hook files in the repository.",
+  "uninstall": "Delete .github/copilot-instructions.md, .github/hooks/wcbs-session-start.json, and WCBS-owned hook files.",
+  "rollback": "Restore the previous revision from version control.",
+  "limitations": "No independent subagents and no native browser verification. The project hook path is structurally tested, but a clean Copilot runtime session is Not Run.",
+  "deprecation": "Designed adapter; runtime activation evidence is pending."
+}

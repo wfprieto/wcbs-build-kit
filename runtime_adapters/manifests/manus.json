@@ -1,0 +1,45 @@
+{
+  "runtime_id": "manus",
+  "display_name": "Manus Agent",
+  "owner": "wfprieto",
+  "support_level": "Manual",
+  "activation_tier": "T4",
+  "integration_shape": "always_on_instruction_file",
+  "native_install_mechanism": "Manus.md repository instruction file",
+  "install_scope": "project",
+  "bootstrap_path": "Manus.md",
+  "bootstrap_mode": "manual",
+  "activation_marker": "WCBS_KIT_ACTIVE:manus",
+  "tool_mapping_path": "runtime_adapters/tool_mappings/manus.json",
+  "capabilities": {
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "unavailable",
+    "task_tracking": "degradable",
+    "web_access": "native",
+    "browser_verification": "degradable",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "degradable"
+  },
+  "fallbacks": {
+    "subagents": "Sequential fresh-context review using the exact base..head package; report degraded independence.",
+    "task_tracking": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl.",
+    "browser_verification": "Capture screenshot or page text evidence and record automated assertions as Not Run.",
+    "human_approval_gates": "Halt, print the exact pending action, and require an explicit human reply."
+  },
+  "supported_runtime_versions": "Manus Agent (version-dependent)",
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
+  "modifies_user_files": false,
+  "install": "Commit Manus.md and manually provide BOOTSTRAP.md or reference it at session start.",
+  "update": "Edit Manus.md in the repository.",
+  "uninstall": "Delete Manus.md.",
+  "rollback": "Restore the previous revision from version control.",
+  "limitations": "Automatic session-start ingestion is not established. Activation is Manual and must never be reported as enforced.",
+  "deprecation": "None. Adapter is active but requires per-session activation."
+}

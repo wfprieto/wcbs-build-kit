@@ -1,0 +1,12 @@
+{
+  "name": "wcbs-build-kit",
+  "owner": {"name": "Bill Prieto", "email": "wfprieto@gmail.com"},
+  "plugins": [
+    {
+      "name": "wcbs-build-kit",
+      "source": "./",
+      "description": "WCBS Engineering Operating System delivery package.",
+      "version": "2.0.0"
+    }
+  ]
+}

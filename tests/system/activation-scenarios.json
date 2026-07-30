@@ -1,0 +1,34 @@
+{
+  "scenarios": [
+    {
+      "name": "startup-apivr-routing",
+      "requiredFiles": [
+        "00_start_here/START_HERE.md",
+        "00_start_here/SOURCE_OF_TRUTH.md",
+        "00_start_here/LOAD_ORDER.md",
+        "50_audits/AUDIT_TIER_ROUTER.md",
+        "skills/super-build-kit/SKILL.md"
+      ],
+      "requiredTerms": [
+        "APIVR",
+        "Elite Build Goals",
+        "Verified",
+        "Not Run",
+        "Blocked",
+        "Audit wide. Fix narrow. Prove everything."
+      ]
+    },
+    {
+      "name": "unsupported-tool-honesty",
+      "requiredFiles": [
+        "runtime_adapters/PORTABILITY_CONTRACT.md",
+        "runtime_adapters/VERIFIED_SUPPORT_LEVELS.md"
+      ],
+      "requiredTerms": [
+        "Do not claim `Runtime Verified`",
+        "Agents may not invent a tool",
+        "A file's existence does not imply Full or Partial support"
+      ]
+    }
+  ]
+}

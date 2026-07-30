@@ -1,0 +1,10 @@
+{
+  "name": "Rapid fix",
+  "apivr_tier": "Rapid",
+  "elite_goals": ["source of truth", "evidence"],
+  "skills": ["skills/super-build-kit/SKILL.md"],
+  "evidence_state": "Verified",
+  "release_gate_status": "PASS for local reversible fix",
+  "verification": ["targeted command or inspection recorded"],
+  "final_verdict": "PASS"
+}

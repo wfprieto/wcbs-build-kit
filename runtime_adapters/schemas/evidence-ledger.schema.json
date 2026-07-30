@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["ts", "state", "claim", "source", "phase"],
+  "properties": {
+    "ts": {"type": "string", "format": "date-time"},
+    "state": {"enum": ["Verified", "Likely", "Suspected", "Unknown", "Not Run", "Blocked"]},
+    "claim": {"type": "string", "minLength": 1},
+    "source": {"type": "string", "minLength": 1},
+    "phase": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

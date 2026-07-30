@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "./hooks/run-hook session-start --runtime cursor",
+        "timeout": 30,
+        "failClosed": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "vocabulary_version", "deprecations", "capabilities", "unrouted"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "vocabulary_version": {"type": "string"},
+    "deprecations": {"type": "array", "items": {"type": "object"}},
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "subcapabilities", "roles", "required_skills", "optional_skills", "required_audits", "required_templates", "required_release_gates"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^needs-[a-z0-9-]+$"},
+          "subcapabilities": {"type": "array", "items": {"type": "string"}},
+          "roles": {"type": "array", "items": {"type": "string"}},
+          "required_skills": {"type": "array", "items": {"type": "string"}},
+          "optional_skills": {"type": "array", "items": {"type": "string"}},
+          "required_audits": {"type": "array", "items": {"type": "string"}},
+          "required_templates": {"type": "array", "items": {"type": "string"}},
+          "required_release_gates": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "unrouted": {"type": "array", "items": {"type": "object", "required": ["skill", "justification"], "properties": {"skill": {"type": "string"}, "justification": {"type": "string"}}, "additionalProperties": false}}
+  },
+  "additionalProperties": false
+}

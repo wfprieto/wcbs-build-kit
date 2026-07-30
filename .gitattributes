@@ -1,0 +1,26 @@
+* text=auto
+
+*.md text eol=lf
+*.mjs text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.py text eol=lf
+*.ps1 text eol=lf
+*.txt text eol=lf
+
+# This wrapper is parsed by both cmd.exe and bash; CRLF would break its Bash
+# here-document guard before a hook can reach the renderer.
+hooks/run-hook.cmd text eol=lf
+hooks/run-hook text eol=lf
+hooks/session-start text eol=lf
+
+*.gz binary
+*.zip binary
+*.tar binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary

@@ -1,0 +1,4 @@
+interface:
+  display_name: "External Integration Launch Gate"
+  short_description: "Blocks broken provider callbacks before launch."
+  default_prompt: "Use this gate before planning, building, auditing, debugging, testing, deploying, or declaring done for any outside provider callback, webhook, cron route, OAuth/Auth redirect, payment/email/SMS integration, deployment protection, sandbox/live split, or Preview/Production environment variable work."
