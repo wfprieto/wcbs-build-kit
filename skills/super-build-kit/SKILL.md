@@ -157,8 +157,7 @@ Scenario: Build a webhook-backed reporting feature.
 
 End with APIVR verdict, evidence summary, release-gate status when applicable, and the single next required action.
 
-## Process
+## Workflow
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+Select the smallest routed skill before acting, add APIVR only when its tier is
+material, and leave the final decision tied to observed evidence.

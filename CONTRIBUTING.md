@@ -29,7 +29,19 @@ If a check cannot run, say exactly which command was not run and why.
 - Release gates affected.
 - Known limitations or follow-up work.
 
+For runtime activation, adapter, or behavioral-evaluation changes, also record
+the exact runtime/CLI and model identity, the expected support tier, redacted
+reproduction material, and the clean-session evidence impact. Fixture evidence
+may not be used to upgrade a runtime to `Runtime Verified`.
+
 ## Skill And Guidance Changes
 
 Skill changes should be self-contained, operational, and linked through `00_start_here/LOAD_ORDER.md` when they affect activation. Prefer upgrading an existing canonical skill over adding a duplicate skill with overlapping authority.
 
+## Upstream compatibility
+
+Superpowers changes are assessed under
+`docs/upstream/SUPERPOWERS_COMPATIBILITY.md`. Record an adopt, adapt, defer, or
+reject decision in `docs/upstream/ADOPTION_LEDGER.md` before copying or
+adapting material. The scheduled upstream report is review-only and never
+imports code automatically.

@@ -46,43 +46,66 @@ export function buildEvalEnvironment({ credential, credentialName = "WCBS_EVAL_C
 }
 
 function atomicWrite(file, content) {
-  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const parent = path.dirname(file);
+  if (!fs.existsSync(parent)) fs.mkdirSync(parent, { recursive: true, mode: 0o700 });
+  const parentStat = fs.lstatSync(parent);
+  if (parentStat.isSymbolicLink() || !parentStat.isDirectory()) throw new Error("Blocked: transcript parent must be a non-symlink directory.");
   const temporary = `${file}.${process.pid}.${Date.now()}.tmp`;
   fs.writeFileSync(temporary, content, { encoding: "utf8", mode: 0o600 });
   fs.renameSync(temporary, file);
 }
 
-export async function runEval({ command, args = [], cwd = process.cwd(), transcriptPath, credential, credentialName = "WCBS_EVAL_CREDENTIAL", env = {}, timeoutMs = 120000 }) {
+export async function runEval({ command, args = [], cwd = process.cwd(), transcriptPath, writeTranscript = null, credential, credentialName = "WCBS_EVAL_CREDENTIAL", env = {}, timeoutMs = 120000, profileDirectory = null }) {
   if (!command) throw new Error("command is required");
   if (!transcriptPath) throw new Error("transcriptPath is required");
   const protectedValue = String(credential ?? "");
   if (protectedValue.length < MIN_PROTECTED_VALUE_LENGTH) throw new Error(`Blocked: protected credential values must be at least ${MIN_PROTECTED_VALUE_LENGTH} characters`);
-  const temporaryHome = fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-eval-home-"));
-  const childEnv = buildEvalEnvironment({ credential: protectedValue, credentialName, extra: { ...env, HOME: temporaryHome, USERPROFILE: temporaryHome } });
+  const ownsProfile = !profileDirectory;
+  const runtimeProfile = profileDirectory ? path.resolve(profileDirectory) : fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-eval-home-"));
+  fs.mkdirSync(runtimeProfile, { recursive: true, mode: 0o700 });
+  try { fs.chmodSync(runtimeProfile, 0o700); } catch {}
+  const childEnv = buildEvalEnvironment({ credential: protectedValue, credentialName, extra: { ...env, HOME: runtimeProfile, USERPROFILE: runtimeProfile } });
   const secrets = [protectedValue];
   let stdout = "", stderr = "", settled = false;
   let child;
-  const cleanup = () => fs.rmSync(temporaryHome, { recursive: true, force: true });
+  const cleanup = () => { if (ownsProfile) fs.rmSync(runtimeProfile, { recursive: true, force: true }); };
   const stop = (signal) => { if (child && !child.killed) child.kill(signal); };
   const handlers = new Map([["SIGINT", () => stop("SIGINT")], ["SIGTERM", () => stop("SIGTERM")]]);
   for (const [signal, handler] of handlers) process.once(signal, handler);
   try {
-    const result = await new Promise((resolve, reject) => {
+    const result = await new Promise((resolve) => {
+      let completed = false;
+      let timedOut = false;
+      let timeoutKiller = null;
+      const finish = (value) => {
+        if (completed) return;
+        completed = true;
+        if (timeoutKiller) clearTimeout(timeoutKiller);
+        resolve({ timed_out: timedOut, ...value });
+      };
       child = spawn(command, args, { cwd, env: childEnv, stdio: ["ignore", "pipe", "pipe"], windowsHide: true });
-      const timer = setTimeout(() => { stop("SIGTERM"); reject(new Error(`eval timed out after ${timeoutMs}ms`)); }, timeoutMs);
+      const timer = setTimeout(() => {
+        timedOut = true;
+        stop("SIGTERM");
+        timeoutKiller = setTimeout(() => stop("SIGKILL"), 1_000);
+      }, timeoutMs);
       child.stdout.on("data", (chunk) => { stdout += chunk.toString("utf8"); });
       child.stderr.on("data", (chunk) => { stderr += chunk.toString("utf8"); });
-      child.once("error", (error) => { clearTimeout(timer); reject(error); });
-      child.once("close", (code, signal) => { clearTimeout(timer); resolve({ code, signal }); });
+      child.once("error", (error) => { clearTimeout(timer); finish({ code: null, signal: null, tool_error: error.message }); });
+      child.once("close", (code, signal) => { clearTimeout(timer); finish({ code, signal, tool_error: null }); });
     });
     const transcript = {
       command: [command, ...args],
       exit_code: result.code,
       signal: result.signal,
+      timed_out: result.timed_out,
+      tool_error: result.tool_error,
       stdout: redactValues(stdout, secrets),
       stderr: redactValues(stderr, secrets)
     };
-    atomicWrite(transcriptPath, `${JSON.stringify(transcript, null, 2)}\n`);
+    const serialized = `${JSON.stringify(transcript, null, 2)}\n`;
+    if (writeTranscript) writeTranscript(serialized);
+    else atomicWrite(transcriptPath, serialized);
     settled = true;
     return transcript;
   } finally {

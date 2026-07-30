@@ -81,8 +81,7 @@ Scenario: Add a monthly revenue export.
 
 Report output format, source of truth, data checks, permission checks, evidence state, reusable-learning decision, and APIVR verdict.
 
-## Process
+## Workflow
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+Define the decision and audience, validate source data and transformations,
+then publish a traceable report with its uncertainty and refresh path.

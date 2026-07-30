@@ -11,7 +11,8 @@ This README does not inventory skills. `00_start_here/LOAD_ORDER.md` owns skill 
 | Understand the adapter architecture and its binding rules | `runtime_adapters/PORTABILITY_CONTRACT.md` |
 | Know what your runtime can and cannot do | runtime_adapters/manifests/&lt;runtime&gt;.json |
 | Know the real tool names for your runtime | runtime_adapters/tool_mappings/&lt;runtime&gt;.json |
-| Compare runtimes, or pick a fallback | `runtime_adapters/CAPABILITY_MATRIX.md` (generated) |
+| Compare runtimes, or pick a fallback | `runtime_adapters/CAPABILITY_MATRIX.md` (generated from the registry) |
+| Inspect the canonical adapter and skill catalog | `runtime_adapters/adapter-registry.yaml` |
 | Add support for a new runtime | `runtime_adapters/PORTING_GUIDE.md` |
 | Submit an adapter change | `runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md` |
 
@@ -28,7 +29,7 @@ At session start, load **only** the active runtime's manifest and tool mapping. 
 | **Manual** | Essential capabilities present, but activation requires a user action each session. |
 | **Unsupported** | An essential capability is unavailable, or no compliant native install path exists. |
 
-**A file's existence does not imply support.** An instruction file in the repository proves a file exists. It does not prove the runtime reads it at session start. Current levels are in `runtime_adapters/CAPABILITY_MATRIX.md`, derived from the manifests.
+**A file's existence does not imply support.** An instruction file in the repository proves a file exists. It does not prove the runtime reads it at session start. Current levels are in `runtime_adapters/CAPABILITY_MATRIX.md`, derived from the canonical registry through validated manifests. Evidence labels are in `runtime_adapters/VERIFIED_SUPPORT_LEVELS.md`.
 
 ## Activation Entry Points
 
@@ -52,10 +53,10 @@ Every manifest documents install, update, uninstall, and rollback. Adapters use 
 Regenerate the capability matrix after any manifest change:
 
 ```bash
-npm run generate:matrix
+npm run generate:v2-metadata
 ```
 
-Never hand-edit `CAPABILITY_MATRIX.md`. Manifests are canonical, and `npm run verify` enforces it.
+Never hand-edit generated adapter files. `runtime_adapters/adapter-registry.yaml` is canonical, and `npm run verify` enforces it.
 
 ## Rule
 

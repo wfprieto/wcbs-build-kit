@@ -64,3 +64,15 @@ test("release artifact builder creates zip, checksums, and manifest",()=>{
     fs.rmSync(dir,{recursive:true,force:true});
   }
 });
+
+test("evaluation provenance ships one hardened Git policy and records its version",()=>{
+  const builder=readText("scripts/build-release-artifacts.mjs");
+  const hardened=readText("scripts/lib/hardened-git.mjs");
+  assert.match(builder,/from "\.\/lib\/hardened-git\.mjs"/);
+  assert.match(builder,/inspectHardenedGitPolicy\(callerRoot\)/);
+  assert.match(builder,/manifest\.hardened_git/);
+  assert.match(hardened,/GIT_CONFIG_NOSYSTEM/);
+  assert.match(hardened,/core\.hooksPath/);
+  assert.match(hardened,/shell: false/);
+  assert.match(hardened,/neutralized_local_config/);
+});

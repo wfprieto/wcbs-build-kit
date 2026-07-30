@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Publish observed markers only. This does not score case-level activation and
-// never upgrades runtime support based on marker output alone.
+// Publishes observed activation markers from a complete V2 evaluation run only.
+// Marker output is never a runtime-support verdict or behavioral score.
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { readEvidenceFile, resolveExternalEvidenceRun, validateManifestSelfHash, writeEvidenceFile } from "./lib/evaluation-protocol.mjs";
 
 const root = process.cwd();
-const runsRoot = path.join(root, "evals", "runs");
 const args = process.argv.slice(2);
 const option = (name, fallback = null) => {
   const prefix = `--${name}=`;
@@ -20,98 +20,66 @@ const markerPattern = /WCBS_KIT_ACTIVE:[a-z0-9-]+/g;
 
 function repositoryPath(relative, label) {
   if (typeof relative !== "string" || !relative) throw new Error(`${label} must be a non-empty repository-relative path.`);
-  const resolved = path.resolve(root, relative);
+  const resolved = path.resolve(root, ...relative.split("/"));
   if (resolved !== root && !resolved.startsWith(`${root}${path.sep}`)) throw new Error(`${label} escapes the repository root: ${relative}`);
   return resolved;
 }
 
-function latestRunId() {
-  if (!fs.existsSync(runsRoot)) return null;
-  const entries = fs.readdirSync(runsRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort();
-  return entries.at(-1) ?? null;
+function readJson(file, label) {
+  try { return JSON.parse(fs.readFileSync(file, "utf8")); }
+  catch (error) { throw new Error(`${label} is not valid JSON: ${error.message}`); }
 }
 
-const runId = option("run-id", latestRunId());
-if (!runId) { console.error("BLOCKED: no eval run directory found under evals/runs. Run npm run eval -- --execute first."); process.exit(1); }
-if (!validRunId(runId)) { console.error("BLOCKED: run-id must be one safe path segment."); process.exit(1); }
-const runDir = path.join(runsRoot, runId);
-const manifestFile = path.join(runDir, "run-manifest.json");
-if (!fs.existsSync(manifestFile)) { console.error(`BLOCKED: evals/runs/${runId}/run-manifest.json does not exist.`); process.exit(1); }
-
-let manifest;
-try { manifest = JSON.parse(fs.readFileSync(manifestFile, "utf8")); }
-catch (error) { console.error(`BLOCKED: run manifest is not valid JSON: ${error.message}`); process.exit(1); }
-let preregistration, registry;
+const runId = option("run-id");
+const protocolPath = option("protocol", "evals/gate-0c-preregistration.json");
+const evidenceDir = option("evidence-dir");
+if (!validRunId(runId)) { console.error("BLOCKED: --run-id must be one safe path segment."); process.exit(1); }
 try {
-  preregistration = JSON.parse(fs.readFileSync(repositoryPath("evals/gate-0c-preregistration.json", "preregistration"), "utf8"));
-  registry = JSON.parse(fs.readFileSync(repositoryPath(preregistration.case_registry, "case registry"), "utf8"));
-} catch (error) {
-  console.error(`BLOCKED: could not read the locked eval design: ${error.message}`);
-  process.exit(1);
-}
-const expectedMarker = typeof manifest.treatment_runtime_id === "string" ? `WCBS_KIT_ACTIVE:${manifest.treatment_runtime_id}` : null;
-if (!expectedMarker) { console.error("BLOCKED: run manifest does not declare treatment_runtime_id."); process.exit(1); }
-const lockedRuns = registry?.runs_per_case_per_arm;
-const expectedRecords = [];
-for (const testCase of registry?.cases ?? []) {
-  for (const arm of ["baseline", "treatment"]) {
-    for (let index = 0; index < lockedRuns; index += 1) expectedRecords.push({ case: testCase.id, arm, index });
+  const evidenceRun = resolveExternalEvidenceRun({ root, evidence_dir: evidenceDir, run_id: runId });
+  const runDirectory = evidenceRun.run_directory;
+  const manifest = JSON.parse(readEvidenceFile(evidenceRun, "run-manifest.json", "run manifest").toString("utf8"));
+  validateManifestSelfHash(manifest);
+  const protocol = readJson(repositoryPath(protocolPath, "protocol preregistration"), "protocol preregistration");
+  if (manifest.protocol_id !== protocol.protocol_id) throw new Error("run manifest protocol does not match the locked preregistration.");
+  if (!Array.isArray(manifest.records) || manifest.records.length !== protocol.expected_total_runs) throw new Error("run manifest does not contain the complete preregistered record count.");
+  const expected = new Set((manifest.schedule?.records ?? []).map((record) => record.run_id));
+  const seen = new Set();
+  for (const record of manifest.records) {
+    if (!expected.has(record.run_id) || seen.has(record.run_id) || record.status !== "Complete") throw new Error("run manifest contains an incomplete, duplicate, or unregistered record.");
+    seen.add(record.run_id);
   }
-}
-const recordKey = (record) => `${record.case}\u0000${record.arm}\u0000${record.index}`;
-const expectedKeys = new Set(expectedRecords.map(recordKey));
-const actualRecords = Array.isArray(manifest.transcripts) ? manifest.transcripts : [];
-const actualKeys = new Set();
-const manifestFailures = [];
-if (manifest.treatment_runtime_id !== preregistration.treatment_runtime_id) manifestFailures.push("treatment runtime does not match the locked preregistration");
-if (manifest.runs_per_case_per_arm !== lockedRuns || preregistration.runs_per_case_per_arm !== lockedRuns) manifestFailures.push("runs_per_case_per_arm does not match the locked eval design");
-for (const record of actualRecords) {
-  const key = recordKey(record);
-  if (!expectedKeys.has(key)) manifestFailures.push(`unexpected transcript record: ${key}`);
-  else if (actualKeys.has(key)) manifestFailures.push(`duplicate transcript record: ${key}`);
-  actualKeys.add(key);
-  if (record.exit_code !== 0 || record.activation === "Blocked") manifestFailures.push(`incomplete transcript record: ${key}`);
-}
-for (const key of expectedKeys) if (!actualKeys.has(key)) manifestFailures.push(`missing transcript record: ${key}`);
-if (manifestFailures.length) {
-  console.error("BLOCKED: eval run manifest is incomplete or inconsistent with the locked design:");
-  for (const failure of manifestFailures) console.error(`- ${failure}`);
-  process.exit(1);
-}
-const observations = [];
-for (const record of manifest.transcripts ?? []) {
-  if (!record.transcript || record.exit_code !== 0) { observations.push({ ...record, markers: [], evidence: "Blocked" }); continue; }
-  const transcriptFile = path.resolve(root, record.transcript);
-  if (!transcriptFile.startsWith(`${runDir}${path.sep}`)) { observations.push({ ...record, markers: [], evidence: "Blocked", reason: "transcript path escapes run directory" }); continue; }
-  if (!fs.existsSync(transcriptFile)) { observations.push({ ...record, markers: [], evidence: "Blocked", reason: "transcript missing" }); continue; }
-  try {
-    const transcript = JSON.parse(fs.readFileSync(transcriptFile, "utf8"));
+  if (seen.size !== expected.size) throw new Error("run manifest is missing a scheduled record.");
+  const expectedMarker = `WCBS_KIT_ACTIVE:${protocol.runtime_id}`;
+  const observations = manifest.records.map((record) => {
+    const relative = record.artifacts?.transcript;
+    if (!relative) throw new Error(`record ${record.run_id} has no retained transcript.`);
+    if (typeof relative !== "string" || path.isAbsolute(relative)) throw new Error(`record ${record.run_id} transcript must be evidence-run-relative.`);
+    const transcript = JSON.parse(readEvidenceFile(evidenceRun, relative, `transcript for ${record.run_id}`).toString("utf8"));
     const markers = [...new Set(`${transcript.stdout ?? ""}\n${transcript.stderr ?? ""}`.match(markerPattern) ?? [])];
-    const expected = markers.includes(expectedMarker);
-    observations.push({ case: record.case, arm: record.arm, index: record.index, transcript: record.transcript, markers, evidence: expected ? "Verified" : "Not Run" });
-  } catch (error) {
-    observations.push({ ...record, markers: [], evidence: "Blocked", reason: `invalid transcript JSON: ${error.message}` });
-  }
+    return { run_id: record.run_id, case_id: record.case_id, arm: record.arm, repetition: record.repetition, transcript: relative, markers, evidence: markers.includes(expectedMarker) ? "Observed" : "Not Observed" };
+  });
+  const rate = (arm) => {
+    const subset = observations.filter((entry) => entry.arm === arm);
+    return subset.length ? subset.filter((entry) => entry.markers.includes(expectedMarker)).length / subset.length : null;
+  };
+  const evidence = {
+    schema_version: 2,
+    run_id: runId,
+    protocol_id: protocol.protocol_id,
+    execution_identity: manifest.execution_identity ?? null,
+    expected_marker: expectedMarker,
+    total_records: observations.length,
+    observed_marker_rate_by_arm: Object.fromEntries((protocol.arms ?? []).map((arm) => [arm, rate(arm)])),
+    interpretation: "Observed marker output is one transport signal only. It neither proves a native runtime session nor substitutes for blinded behavioral scoring, and it cannot alter a support label.",
+    observations
+  };
+  const outputPath = writeEvidenceFile(evidenceRun, "activation-evidence.json", `${JSON.stringify(evidence, null, 2)}\n`);
+  const wcbsObserved = observations.filter((entry) => entry.arm === "wcbs" && entry.markers.includes(expectedMarker)).length;
+  console.log(`Run: ${runId}`);
+  console.log(`WCBS records with ${expectedMarker}: ${wcbsObserved}`);
+  console.log(`Written: ${outputPath}`);
+  console.log("PASS: observed marker evidence was published. No runtime or behavioral claim was produced.");
+} catch (error) {
+  console.error(`BLOCKED: evidence publication refused: ${error.message}`);
+  process.exit(1);
 }
-const treatment = observations.filter((observation) => observation.arm === "treatment");
-const baseline = observations.filter((observation) => observation.arm === "baseline");
-const rate = (set) => set.length ? set.filter((observation) => observation.markers?.includes(expectedMarker)).length / set.length : null;
-const evidence = {
-  run_id: runId,
-  execution_identity: manifest.execution_identity ?? null,
-  treatment_runtime_id: manifest.treatment_runtime_id,
-  expected_marker: expectedMarker,
-  total_transcripts: observations.length,
-  treatment_marker_rate: rate(treatment),
-  baseline_marker_rate: rate(baseline),
-  interpretation: "Observed marker output satisfies only the marker-test criterion. Human review must score the case-level activation criteria before any runtime-support or Gate 0C claim.",
-  observations
-};
-fs.writeFileSync(path.join(runDir, "activation-evidence.json"), `${JSON.stringify(evidence, null, 2)}\n`, "utf8");
-const observed = treatment.filter((observation) => observation.markers?.includes(expectedMarker));
-console.log(`Run: ${runId}`);
-console.log(`Treatment transcripts: ${treatment.length}`);
-console.log(`Treatment transcripts with ${expectedMarker}: ${observed.length}`);
-console.log(`Written: evals/runs/${runId}/activation-evidence.json`);
-if (!observed.length) { console.error("BLOCKED: no successful treatment transcript contained the expected marker. Do not record runtime activation."); process.exit(1); }
-console.log("PASS: observed marker evidence was published. Case-level scoring remains required.");

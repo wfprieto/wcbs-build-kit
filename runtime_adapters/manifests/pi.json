@@ -1,0 +1,46 @@
+{
+  "runtime_id": "pi",
+  "display_name": "Pi",
+  "owner": "wfprieto",
+  "support_level": "Partial",
+  "activation_tier": "T2",
+  "integration_shape": "in_process_plugin",
+  "native_install_mechanism": "Native Pi plugin or extension package",
+  "install_scope": "project",
+  "bootstrap_path": ".pi/extensions/wcbs.ts",
+  "bootstrap_mode": "automatic",
+  "activation_marker": "WCBS_KIT_ACTIVE:pi",
+  "tool_mapping_path": "runtime_adapters/tool_mappings/pi.json",
+  "capabilities": {
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "degradable",
+    "task_tracking": "degradable",
+    "web_access": "degradable",
+    "browser_verification": "unavailable",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "degradable"
+  },
+  "fallbacks": {
+    "subagents": "Run a fresh-context sequential review from the exact task brief and base..head review package; report degraded independence.",
+    "task_tracking": "Append task state to .wcbs/runs/<run-id>/progress-ledger.jsonl.",
+    "web_access": "Use supplied sources and record Unknown rather than guessing.",
+    "browser_verification": "Use command-line evidence and record rendered verification as Not Run.",
+    "human_approval_gates": "Stop and require explicit human approval before the pending action."
+  },
+  "supported_runtime_versions": "Version support is experimental until a clean-session evidence record exists.",
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
+  "modifies_user_files": false,
+  "install": "Install the package artifact at .pi/extensions/wcbs.ts through the runtime's native plugin route.",
+  "update": "Update the plugin package through the runtime's native extension manager.",
+  "uninstall": "Remove only the WCBS plugin or extension through the runtime's native manager.",
+  "rollback": "Reinstall the previously tagged WCBS plugin package.",
+  "limitations": "Package contract is tested locally. Runtime loading, tool mapping, and clean-session activation are not yet verified.",
+  "deprecation": "Experimental adapter. Do not claim Runtime Verified until evidence is recorded."
+}

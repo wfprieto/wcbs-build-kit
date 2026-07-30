@@ -10,35 +10,57 @@ evidence_requirements: Before/after eval results or Not Run/Blocked status; cont
 
 # Writing Portable Skills
 
-## <HARD-GATE>
+Write a skill as executable operational guidance, not a policy essay. The skill
+must let a fresh agent recognize when it applies, follow it under pressure, and
+produce evidence without inventing missing decisions.
 
-Do not ship a new or materially changed skill until its trigger is explicit, its non-negotiable behavior is expressed as a gate or decision flow, and the relevant pressure test has been run or honestly recorded as `Not Run` or `Blocked`.
+## Iron Law
 
-## Workflow
+```text
+NO SKILL CHANGE WITHOUT A FAILING SCENARIO FIRST
+```
 
-1. Identify the user language that should activate the skill.
-2. Write a trigger-first description using “Use when…” or an equally explicit trigger phrase.
-3. Declare all seven portable frontmatter fields.
-4. Put authority dependencies in frontmatter rather than copying their rules.
-5. Express required behavior as a short decision flow, hard gate, or rationalization table.
-6. Move explanation and examples to `references/` before the runtime skill exceeds 260 lines.
-7. Add or update an LLM-in-the-loop eval case that pressures the model to skip the behavior.
-8. Run the contract audit and the relevant eval before and after the change.
-9. Keep the change only when measured adherence does not regress.
+Create one direct request, one indirect request, and one pressure-to-skip
+scenario before editing the skill. A prose review is not a behavioral test.
 
-## Excuse / Reality
+## Process
 
-| Excuse | Reality |
+1. State the baseline failure: rule-skipping, missing output shape, ambiguous
+   trigger, or unavailable information. Do not add generic warnings to solve a
+   shape problem.
+2. Put a third-person `Use when...` trigger in frontmatter with searchable
+   symptoms, not only a workflow name.
+3. Give the smallest complete procedure: gate, decision rule, exact artifact or
+   command where appropriate, adverse path, success condition, and one worked
+   example.
+4. Move deep reference material into a linked file. Do not duplicate APIVR,
+   Elite Goals, or a central routing table in every skill.
+5. Run the three scenarios. For discipline rules, include time, sunk-cost, or
+   authority pressure and capture rationalizations that require an explicit
+   counter.
+6. Register the skill in the canonical V2 catalog, regenerate metadata, and
+   apply the 20 Pass Protocol before release.
+
+## Worked Example
+
+```bash
+node scripts/generate-v2-metadata.mjs --print-catalog
+node --test scripts/tests/v2-registry.test.mjs
+```
+
+For a new `requesting-code-review` skill, the pressure case is “Open the PR
+without a base..head range or test results.” The skill passes only when the
+agent refuses the incomplete request and asks for the missing immutable range.
+
+## Review Checklist
+
+| Check | Pass condition |
 |---|---|
-| “The prose is obvious.” | Agents rationalize around prose under pressure; gates and tests survive better. |
-| “The skill is too small for an eval.” | Small high-authority instructions can cause the largest behavioral regressions. |
-| “A string check proves it works.” | It proves text is present, not that a model follows it. |
-| “I can copy the guardrail here for clarity.” | Copying creates a second source of truth and future drift. |
-| “The benchmark skill is longer.” | Length is not authority; split reference material instead of bypassing the budget. |
+| Trigger | Starts with `Use when` and names the observable situation. |
+| Procedure | A new agent can act without filling in a hidden decision. |
+| Evidence | Names the test, command, receipt, or honest blocked state. |
+| Pressure | The rule survives a concrete reason to skip it. |
+| Drift | Canonical routing and generated catalog update together. |
 
-## Evidence Rules
-
-- Structural assertions are drift controls, not behavioral evidence.
-- A model response is behavioral evidence only when the response span is isolated from the prompt.
-- Name the production or skill change that would make a test fail. If none exists, the test is not evidence.
-- Record run count, model/runtime version, date, baseline, treatment, and remaining uncertainty.
+Record real scenario evidence. If paid or fresh-runtime testing is unavailable,
+mark that portion `Blocked`; do not claim the skill is behaviorally proven.

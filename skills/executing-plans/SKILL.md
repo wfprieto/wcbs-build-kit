@@ -10,32 +10,68 @@ evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked
 
 # Executing Plans
 
-Use this skill when a plan is approved but subagents are unavailable, unsafe, or unnecessary.
+Execute an approved plan one verifiable slice at a time. A plan authorizes only
+the stated change, not improvisation around a failing command or vague scope.
 
-## Rules
+## Before the First Task
 
-- Keep APIVR and the 16 Elite Build Goals active.
-- Execute one independently verifiable slice at a time.
-- Use `skills/test-driven-development/SKILL.md` for code changes.
-- Record progress in the evidence ledger or run trace.
-- Stop on ambiguous requirements, failed baseline, missing evidence, or release-blocking unknowns.
-- After all slices, use `skills/finishing-a-development-branch/SKILL.md`.
+```bash
+git status --short --branch
+git log -1 --oneline
+```
 
-## Loop
-
-1. Read the plan and pre-flight conflict report.
-2. Confirm exact slice, files, tests, and rollback trigger.
-3. Run Red-Green-Refactor or evidence-first substitute.
-4. Audit the implementation against the slice.
-5. Verify targeted and relevant broader checks.
-6. Record evidence state and continue only if no material finding remains open.
-
-## Final Output
-
-Report APIVR tier, completed slices, tests and checks run, evidence state, release-gate status, remaining risks, final verdict, and next action.
+Confirm the branch, worktree, plan revision, target behavior, and rollback
+point. Read all task dependencies before starting, then start only the first
+independently testable slice.
 
 ## Process
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+1. Copy the exact task objective and acceptance check into a task receipt.
+2. Write or identify the focused failing test. Run it and capture Red evidence.
+3. Make the smallest production change that can make that test pass.
+4. Re-run the focused test, then its direct neighbors. Refactor only while
+   they remain Green.
+5. Inspect the diff for unplanned files, generated artifacts, and weakened
+   tests. If scope drift appears, stop and return to the plan owner.
+6. Commit or checkpoint only a coherent task boundary. Do not batch unrelated
+   “while here” cleanup into a verified slice.
+
+## Per-Task Receipt
+
+```text
+Task and plan section:
+Behavior and preserved behavior:
+Red command and observed failure:
+Green command and result:
+Files changed:
+Diff / scope audit:
+Rollback point:
+Evidence state and next step:
+```
+
+## Worked Example
+
+```bash
+node --test scripts/tests/v2-registry.test.mjs
+# Expected before implementation: missing registry or stale generated metadata.
+
+node scripts/generate-v2-metadata.mjs
+node --test scripts/tests/v2-registry.test.mjs
+# Expected after implementation: pass.
+
+git diff --check
+git diff -- scripts/generate-v2-metadata.mjs runtime_adapters/
+```
+
+If the generator changes an unrelated manifest, that is a scope failure, not a
+reason to update the plan silently.
+
+## Stop Conditions
+
+- A required test fails for a different reason: repair the test setup first.
+- A task needs new architecture, authority, credential, or user-file change:
+  return to `writing-plans`.
+- A checkpoint reveals a security or data-integrity risk: escalate APIVR tier.
+
+When every task receipt is complete, use `verification-before-completion`, then
+`finishing-a-development-branch` for the branch decision.

@@ -124,6 +124,19 @@ For PR flow, do not clean up the worktree until PR iteration is complete.
 
 When implementation is complete, use `skills/finishing-a-development-branch/SKILL.md` before merge, PR, keep, discard, or cleanup decisions.
 
+## Worked Example
+
+```bash
+git status --short --branch
+git worktree list --porcelain
+git check-ignore -q .worktrees || printf '.worktrees/ must be ignored before creating it\n'
+git worktree add ".worktrees/feature-v2" -b feature/v2
+```
+
+If `git worktree list --porcelain` shows the current path is already a linked
+worktree, stop before the add command. If the project has a native worktree
+tool, use that tool instead of the fallback command and record its ownership.
+
 ## Red Flags
 
 Never:
@@ -135,8 +148,8 @@ Never:
 - clean up a harness-owned worktree manually;
 - proceed from failing baseline tests without recording evidence and user approval.
 
-## Process
+## Workflow
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+Verify repository state and ownership, create the isolated worktree with the
+native Git command, record its branch and baseline, then remove it only after
+the merge or explicit discard decision is proven.

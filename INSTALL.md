@@ -20,6 +20,59 @@ npm.cmd run verify
 
 ## Agent Runtime Setup
 
+## V2 Native Plugin Install (Default)
+
+Choose the runtime identity and that runtime's dedicated plugin directory. The
+directory is explicit because WCBS will not infer a user project or modify one
+to simulate plugin installation.
+
+```bash
+npm run wcbs -- status --json
+npm run wcbs -- install --target <runtime> --plugin-dir <runtime-plugin-directory> --json
+npm run wcbs -- doctor --plugin-dir <runtime-plugin-directory> --json
+```
+
+For Codex CLI, add the installed plugin's marketplace root and install the
+listed plugin through Codex itself. Start a new session after installation:
+
+```bash
+codex plugin marketplace add <runtime-plugin-directory>
+codex plugin add wcbs-build-kit@wcbs-build-kit
+```
+
+If Codex CLI is installed, replay the isolated native marketplace lifecycle
+(this checks package installation, not model activation):
+
+```bash
+npm run codex:marketplace-check
+```
+
+The V2 bundle contains only WCBS-owned package files beneath the selected
+plugin directory. `doctor` validates hashes and generated metadata. It reports
+runtime activation as `Not Run` until the clean-session procedure in
+`docs/V2_RUNTIME_EVIDENCE.md` has been executed and independently replayed.
+
+Cursor and GitHub Copilot session hooks are discovered from the project root,
+not an isolated V2 bundle. Use the project-local compatibility installer for
+those two runtimes until V2 has an explicit, separately verified project
+integration command. A successful V2 bundle integrity check is not evidence
+that either runtime registered or fired a project hook.
+
+To remove V2, use the same explicit directory:
+
+```bash
+npm run wcbs -- uninstall --plugin-dir <runtime-plugin-directory> --json
+```
+
+Uninstall refuses modified owned files; it never deletes a plugin directory
+without a valid V2 ownership manifest.
+
+## V1 Project-Local Compatibility Route
+
+The following project-local commands are retained only for existing V1
+installations and safe migration. They vendor WCBS files into the destination,
+so they are not the default V2 path.
+
 Use the adapter file for your runtime:
 
 | Runtime | Read First |
@@ -63,7 +116,7 @@ node scripts/install-adapter.mjs --target codex --dry-run
 node scripts/install-adapter.mjs --list-targets
 ```
 
-## Project-Local Adapter Install
+## Project-Local Adapter Install (V1 compatibility)
 
 Resolve runtime and destination before using an installation command:
 
@@ -96,3 +149,9 @@ Supported target names:
 - `generic-agent`
 
 The installer records owned files in `.wcbs/adapter-install-manifest.json`. Uninstall refuses to run without that manifest so it cannot remove unowned project files.
+
+For Cursor and GitHub Copilot, this path also installs the documented project
+hook registrations: `.cursor/hooks.json` and
+`.github/hooks/wcbs-session-start.json`, respectively, with the WCBS-owned
+`hooks/` transport directory. Their actual runtime activation remains `Not Run`
+until a clean authenticated session is recorded and independently replayed.

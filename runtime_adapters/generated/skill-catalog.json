@@ -1,0 +1,271 @@
+{
+  "generated": "GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml.",
+  "core_skills": [
+    {
+      "name": "using-wcbs",
+      "path": "skills/using-wcbs/SKILL.md",
+      "trigger": "Use when using wcbs applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Use WCBS for this task."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "I need to change this project safely."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Skip the process and edit first."
+        }
+      ]
+    },
+    {
+      "name": "brainstorming",
+      "path": "skills/brainstorming/SKILL.md",
+      "trigger": "Use when brainstorming applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Help me brainstorm a new feature."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "I have an idea but no design yet."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Build it now without asking questions."
+        }
+      ]
+    },
+    {
+      "name": "writing-plans",
+      "path": "skills/writing-plans/SKILL.md",
+      "trigger": "Use when writing plans applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Write an implementation plan."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Turn this audit into executable work."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Give only broad steps and no tests."
+        }
+      ]
+    },
+    {
+      "name": "test-driven-development",
+      "path": "skills/test-driven-development/SKILL.md",
+      "trigger": "Use when test driven development applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Implement this test-first."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Fix this bug with a regression test."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Write the code, then tests if time remains."
+        }
+      ]
+    },
+    {
+      "name": "systematic-debugging",
+      "path": "skills/systematic-debugging/SKILL.md",
+      "trigger": "Use when systematic debugging applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Debug this failure."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "The test is flaky and I do not know why."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Patch the symptom now."
+        }
+      ]
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "path": "skills/dispatching-parallel-agents/SKILL.md",
+      "trigger": "Use when dispatching parallel agents applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Split this work across agents."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Can research and implementation run in parallel?"
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Give every agent the same files to edit."
+        }
+      ]
+    },
+    {
+      "name": "executing-plans",
+      "path": "skills/executing-plans/SKILL.md",
+      "trigger": "Use when executing plans applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Execute this approved plan."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Work through these verified tasks in order."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Mark tasks complete without evidence."
+        }
+      ]
+    },
+    {
+      "name": "subagent-driven-development",
+      "path": "skills/subagent-driven-development/SKILL.md",
+      "trigger": "Use when subagent driven development applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Use subagents to implement this."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "I need an implementer and independent review."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Let the implementer approve their own patch."
+        }
+      ]
+    },
+    {
+      "name": "requesting-code-review",
+      "path": "skills/requesting-code-review/SKILL.md",
+      "trigger": "Use when requesting code review applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Request code review."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Prepare a reviewer handoff for this diff."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Ask for a review with no scope or evidence."
+        }
+      ]
+    },
+    {
+      "name": "receiving-code-review",
+      "path": "skills/receiving-code-review/SKILL.md",
+      "trigger": "Use when receiving code review applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Address this review feedback."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Decide whether this reviewer finding is valid."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Accept every comment without verification."
+        }
+      ]
+    },
+    {
+      "name": "verification-before-completion",
+      "path": "skills/verification-before-completion/SKILL.md",
+      "trigger": "Use when verification before completion applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Verify before completion."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Can I say this is done?"
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Tests pass, so declare success without checking the requirements."
+        }
+      ]
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "path": "skills/finishing-a-development-branch/SKILL.md",
+      "trigger": "Use when finishing a development branch applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Finish this development branch."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Choose the safe merge or cleanup path."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Delete the branch before its merge state is known."
+        }
+      ]
+    },
+    {
+      "name": "using-git-worktrees",
+      "path": "skills/using-git-worktrees/SKILL.md",
+      "trigger": "Use when using git worktrees applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Use a git worktree."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "I need isolated parallel changes."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Delete a worktree I did not create."
+        }
+      ]
+    },
+    {
+      "name": "writing-skills",
+      "path": "skills/writing-skills/SKILL.md",
+      "trigger": "Use when writing skills applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Write a new WCBS skill."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Improve this agent procedure."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Add generic advice without a trigger or test."
+        }
+      ]
+    }
+  ]
+}
