@@ -75,8 +75,7 @@ Scenario: A webhook implementation passes tests.
 - Learning Reviewer routes the final verified replay lesson to canonical external API guidance instead of creating a duplicate note.
 - APIVR verdict: `CONDITIONAL PASS` only after those tests pass or the release owner explicitly accepts non-critical risk. For payment webhooks, this is normally Blocking.
 
-## Process
+## Workflow
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+Package the exact review range, collect independent findings, verify each one,
+and retain unresolved risk in the final review receipt.

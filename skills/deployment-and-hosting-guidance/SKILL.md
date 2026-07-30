@@ -86,8 +86,7 @@ Scenario: A Stripe webhook fails on a preview deployment.
 
 Report hosting decision, tradeoffs, cost risk, rollback method, verification performed, remaining risk, and APIVR verdict.
 
-## Process
+## Workflow
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+Confirm the deployment target, protect secrets and rollback, deploy the
+smallest approved change, then verify the live result through its real boundary.

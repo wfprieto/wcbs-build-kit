@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "status": "preregistered-before-paid-runs",
+  "case_registry": "evals/v2-core-skill-cases.json",
+  "treatment_runtime_id": "claude",
+  "arms": {
+    "control": "Pinned neutral project with no WCBS package, instruction files, hooks, or global WCBS state.",
+    "treatment": "The same project and runtime profile with one WCBS V2 native plugin installation."
+  },
+  "randomization": {
+    "protocol": "Randomize case and arm presentation order with a recorded seed before execution. Keep arm labels out of judge materials.",
+    "seed_source": "Recorded cryptographic seed in the immutable run manifest."
+  },
+  "judging": {
+    "protocol": "An independent blinded judge scores each locked criterion from redacted transcripts and produced artifacts. No self-scoring and no arm label disclosure.",
+    "failure_taxonomy": ["activation-missing", "wrong-skill", "premature-action", "verification-bypass", "unsafe-claim", "runtime-blocked"]
+  },
+  "execution_identity": {
+    "agent_version": null,
+    "model_id": null,
+    "state": "Blocked until the exact runtime version and immutable model identity are committed before the first paid run."
+  },
+  "cost_cap_usd": 250,
+  "timeout_ms_max": 3600000,
+  "redaction_rules": [
+    "Use a dedicated evaluation credential and never persist it.",
+    "Remove user, project, and credential secrets before judge review.",
+    "Store transcript hashes and immutable run metadata before scoring."
+  ],
+  "release_rule": "No parity or superiority claim may cite this design until all planned runs, blinded scoring, and independent evidence review are complete."
+}

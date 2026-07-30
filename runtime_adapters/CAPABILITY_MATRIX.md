@@ -1,23 +1,26 @@
 # Capability Matrix
 
-<!-- GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/manifests/*.json. Regenerate with: npm run generate:matrix -->
+<!-- GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml. Regenerate with: npm run generate:v2-metadata -->
 
-This file is generated from the runtime manifests. Editing it by hand creates a second source of truth and will fail `npm run verify`.
+This file is generated from the canonical adapter registry through validated manifests. Editing it by hand creates a second source of truth and will fail `npm run verify`.
 
-## Support And Activation
+## Designed Support And Activation
 
-| Runtime | Support | Activation tier | Integration shape | Bootstrap | Install scope | Modifies user files |
+| Runtime | Designed support | Activation tier | Integration shape | Bootstrap design | Install scope | Modifies user files |
 |---|---|---|---|---|---|---|
-| Claude and Claude Code (`claude`) | **Full** | **T1** | hybrid | automatic | project | no |
-| OpenAI Codex (`codex`) | **Full** | **T2** | in_process_plugin | automatic | project | no |
-| Cursor (`cursor`) | **Full** | **T1** | hybrid | automatic | project | no |
-| Gemini CLI (`gemini`) | **Partial** | **T2** | always_on_instruction_file | automatic | project | no |
-| Generic LLM Agent (`generic-agent`) | **Manual** | **T4** | always_on_instruction_file | manual | project | no |
-| GitHub Copilot (`github-copilot`) | **Partial** | **T2** | always_on_instruction_file | automatic | project | no |
-| Manus Agent (`manus`) | **Manual** | **T4** | always_on_instruction_file | manual | project | no |
-| Replit Agent (`replit`) | **Partial** | **T2** | always_on_instruction_file | automatic | project | no |
+| Claude and Claude Code (`claude`) | **Designed Full** | **T1** | hybrid | automatic | project | no |
+| OpenAI Codex (`codex`) | **Designed Full** | **T2** | in_process_plugin | automatic | project | no |
+| Cursor (`cursor`) | **Designed Full** | **T1** | hybrid | automatic | project | no |
+| Gemini CLI (`gemini`) | **Designed Partial** | **T2** | always_on_instruction_file | automatic | project | no |
+| Generic LLM Agent (`generic-agent`) | **Designed Manual** | **T4** | always_on_instruction_file | manual | project | no |
+| GitHub Copilot (`github-copilot`) | **Designed Partial** | **T1** | hybrid | automatic | project | no |
+| Kimi Code (`kimi`) | **Designed Partial** | **T2** | in_process_plugin | automatic | project | no |
+| Manus Agent (`manus`) | **Designed Manual** | **T4** | always_on_instruction_file | manual | project | no |
+| OpenCode (`opencode`) | **Designed Partial** | **T2** | in_process_plugin | automatic | project | no |
+| Pi (`pi`) | **Designed Partial** | **T2** | in_process_plugin | automatic | project | no |
+| Replit Agent (`replit`) | **Designed Partial** | **T2** | always_on_instruction_file | automatic | project | no |
 
-A file's existence does not imply Full support or verified activation. See `runtime_adapters/PORTABILITY_CONTRACT.md` and `runtime_adapters/VERIFIED_SUPPORT_LEVELS.md`.
+Designed support is a contract target, not a runtime claim. The authoritative public evidence label is in `runtime_adapters/VERIFIED_SUPPORT_LEVELS.md`; every current runtime is `Not Run`. See `runtime_adapters/PORTABILITY_CONTRACT.md` for definitions.
 
 ## Essential Capabilities
 
@@ -31,7 +34,10 @@ An adapter with any essential capability unavailable is `Unsupported`.
 | `gemini` | native | native | native | native |
 | `generic-agent` | native | native | native | native |
 | `github-copilot` | native | native | native | native |
+| `kimi` | native | native | native | native |
 | `manus` | native | native | native | native |
+| `opencode` | native | native | native | native |
+| `pi` | native | native | native | native |
 | `replit` | native | native | native | native |
 
 ## Optional Capabilities And Exact Fallbacks
@@ -46,16 +52,22 @@ Every `degradable` or `unavailable` cell states its exact fallback. Agents may n
 | `gemini` | unavailable — Sequential fresh-context review using the exact base..head package; report degraded independence. | degradable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl. | native | unavailable — Use command-line verification and record rendered-UI evidence as Not Run. | native | native |
 | `generic-agent` | unavailable — Sequential fresh-context review using the exact base..head package; report degraded independence. | unavailable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl. | degradable — Require supplied source material and record Unknown rather than guessing. | unavailable — Use command-line evidence and record rendered-UI verification as Not Run. | degradable — Write project-local .wcbs artifacts. | degradable — Halt and require an explicit human reply. |
 | `github-copilot` | unavailable — Sequential self-review in a fresh context window using the exact base..head review package; report degraded independence. | degradable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl. | native | unavailable — Use command-line verification and record rendered-UI evidence as Not Run. | native | native |
+| `kimi` | degradable — Run a fresh-context sequential review from the exact task brief and base..head review package; report degraded independence. | degradable — Append task state to .wcbs/runs/<run-id>/progress-ledger.jsonl. | degradable — Use supplied sources and record Unknown rather than guessing. | unavailable — Use command-line evidence and record rendered verification as Not Run. | native | degradable — Stop and require explicit human approval before the pending action. |
 | `manus` | unavailable — Sequential fresh-context review using the exact base..head package; report degraded independence. | degradable — Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl. | native | degradable — Capture screenshot or page text evidence and record automated assertions as Not Run. | native | degradable — Halt, print the exact pending action, and require an explicit human reply. |
+| `opencode` | degradable — Run a fresh-context sequential review from the exact task brief and base..head review package; report degraded independence. | degradable — Append task state to .wcbs/runs/<run-id>/progress-ledger.jsonl. | degradable — Use supplied sources and record Unknown rather than guessing. | unavailable — Use command-line evidence and record rendered verification as Not Run. | native | degradable — Stop and require explicit human approval before the pending action. |
+| `pi` | degradable — Run a fresh-context sequential review from the exact task brief and base..head review package; report degraded independence. | degradable — Append task state to .wcbs/runs/<run-id>/progress-ledger.jsonl. | degradable — Use supplied sources and record Unknown rather than guessing. | unavailable — Use command-line evidence and record rendered verification as Not Run. | native | degradable — Stop and require explicit human approval before the pending action. |
 | `replit` | unavailable — Sequential fresh-context review using the exact base..head package; report degraded independence. | native | native | degradable — Use Replit preview evidence and record automated browser assertions as Not Run. | native | native |
 
 ## Known Limitations
 
 - **Claude and Claude Code**: Surfaces without plugin hooks degrade to CLAUDE.md T2 or manual activation and must record that lower tier.
 - **OpenAI Codex**: Plugin skill discovery requires the Codex plugin runtime to be enabled for the workspace. The root hook is deliberately disabled for Codex.
-- **Cursor**: If native hook registration is unavailable, activation degrades to the always-on rule and is recorded as T2.
+- **Cursor**: The project hook path is structurally tested, but a clean Cursor runtime session is Not Run. If the hook is unavailable, activation degrades to the always-on rule and is recorded as T2.
 - **Gemini CLI**: No independent subagents and no native browser verification; activation is instructed rather than enforced.
 - **Generic LLM Agent**: No native activation mechanism exists, so this is Manual by definition. If command execution is unavailable, the runtime is Unsupported.
-- **GitHub Copilot**: No independent subagents and no native browser verification; activation is instructed rather than enforced.
+- **GitHub Copilot**: No independent subagents and no native browser verification. The project hook path is structurally tested, but a clean Copilot runtime session is Not Run.
+- **Kimi Code**: Package contract is tested locally. Runtime loading, tool mapping, and clean-session activation are not yet verified.
 - **Manus Agent**: Automatic session-start ingestion is not established. Activation is Manual and must never be reported as enforced.
+- **OpenCode**: Package contract is tested locally. Runtime loading, tool mapping, and clean-session activation are not yet verified.
+- **Pi**: Package contract is tested locally. Runtime loading, tool mapping, and clean-session activation are not yet verified.
 - **Replit Agent**: Linux-only container. No independent subagents. Activation is instructed and must be measured in a clean session.

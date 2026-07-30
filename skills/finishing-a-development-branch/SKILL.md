@@ -10,33 +10,60 @@ evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked
 
 # Finishing A Development Branch
 
-Use this skill after plan execution, subagent-driven development, or isolated feature work.
-
-## Required Finish Gate
-
-1. Verify current branch and worktree state.
-2. Run the planned verification commands.
-3. Run or confirm the final whole-branch review when subagents were used.
-4. Check release gates and rollback triggers.
-5. Present or execute one explicit finish path:
-   - merge locally after verification;
-   - create or prepare PR;
-   - keep branch/worktree for more iteration;
-   - discard branch/worktree after explicit approval.
-
-## Cleanup Rules
-
-- Never remove a worktree you did not create or do not own.
-- Never delete a branch before merge/PR status is known.
-- For manual `.worktrees/` cleanup: merge or discard first, verify from outside the worktree, remove worktree, then prune.
-- For PR flow: keep the worktree until review iteration is complete.
-
-## APIVR Closeout
-
-End with APIVR tier, verification performed, verification not run, release-gate status, cleanup action, residual risks, final verdict, and next required action.
+Choose an explicit finish path only after the branch proves its claimed
+behavior. “The implementation looks complete” is not a merge decision.
 
 ## Process
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+```bash
+git status --short --branch
+git log --oneline --decorate origin/main..HEAD
+git diff --check origin/main...HEAD
+```
+
+Then complete, in order:
+
+1. Run every verification command named by the plan and list anything Not Run.
+2. Re-read the complete `origin/main...HEAD` diff for scope, user-file safety,
+   generated artifact drift, secrets, and weakened assertions.
+3. Run the final review path. If a runtime has no independent reviewer, label
+   the fresh-context substitute as degraded independence.
+4. Check release gates, hosted CI requirements, rollback trigger, and support
+   claims. A local pass does not replace a required hosted or authenticated
+   runtime check.
+5. Select exactly one path: open PR, merge after verified protected CI, retain
+   branch for iteration, or discard after explicit approval.
+
+## Worked Example
+
+```bash
+npm run release-check
+git diff --check origin/main...HEAD
+git status --short
+```
+
+If all local checks pass but the Windows matrix is still queued, the correct
+status is `CONDITIONAL PASS`, not merge-ready. Keep the branch and wait for the
+required hosted evidence. If a runtime clean-session test is Blocked, lower the
+adapter’s verified support label rather than weakening the test.
+
+## Cleanup Rules
+
+- Never remove a worktree you did not create or cannot identify as yours.
+- Never delete a branch until merge/PR state and remote protection are known.
+- For a discard path, verify from outside the worktree, preserve the commit or
+  patch needed for recovery, remove the worktree, then run `git worktree prune`.
+- For a PR path, retain the worktree until review and re-review are complete.
+
+## Final Receipt
+
+```text
+Branch and immutable head:
+Verification run / not run:
+Review and re-review state:
+Release-gate status:
+Chosen finish path:
+Rollback trigger:
+Evidence state and APIVR verdict:
+Single next action:
+```

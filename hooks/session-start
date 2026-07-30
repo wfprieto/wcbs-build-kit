@@ -1,23 +1,41 @@
 #!/usr/bin/env bash
+# Native WCBS SessionStart transport. It emits exactly one native envelope on
+# success and one native blocked envelope when the renderer cannot execute.
 unset BASH_ENV ENV CDPATH GLOBIGNORE
 IFS=$' \t\n'
 export LC_ALL=C
 set -uo pipefail
 
-fallback='{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"{\"kernel_status\":\"unable_to_transfer\",\"reason\":\"kernel_artifact_unreadable\"}"}}'
-trap 'printf "%s\n" "$fallback"; exit 0' ERR EXIT
-
 PLUGIN_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-P="$PLUGIN_ROOT/BOOTSTRAP.md"
-[ -f "$P" ] && [ ! -L "$P" ]
-resolved="$(cd "$(dirname "$P")" && pwd -P)/$(basename "$P")"
-case "$resolved" in "$PLUGIN_ROOT"/*) ;; *) exit 0 ;; esac
-content=$(<"$P") || content=""
-[ -n "$content" ]
-content=${content//\\/\\\\}
-content=${content//\"/\\\"}
-content=${content//$'\n'/\\n}
-content=${content//$'\r'/\\r}
-trap - ERR EXIT
-printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "$content"
-exit 0
+NODE_BIN="${NODE:-node}"
+
+runtime=""
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --runtime) runtime="${2:-}"; shift 2 ;;
+    *) shift ;;
+  esac
+done
+if [ -z "$runtime" ]; then
+  if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then runtime="cursor"
+  elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then runtime="claude"
+  else runtime="github-copilot"
+  fi
+fi
+
+case "$runtime" in
+  claude) shape="claude"; fallback='{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"{\"kernel_status\":\"unable_to_transfer\",\"reason\":\"kernel_artifact_unreadable\"}"}}' ;;
+  cursor) shape="cursor"; fallback='{"additional_context":"{\"kernel_status\":\"unable_to_transfer\",\"reason\":\"kernel_artifact_unreadable\"}"}' ;;
+  github-copilot) shape="sdk"; fallback='{"additionalContext":"{\"kernel_status\":\"unable_to_transfer\",\"reason\":\"kernel_artifact_unreadable\"}"}' ;;
+  *) runtime="github-copilot"; shape="sdk"; fallback='{"additionalContext":"{\"kernel_status\":\"unable_to_transfer\",\"reason\":\"delivery_environment_unresolved\"}"}' ;;
+esac
+
+payload="$("$NODE_BIN" "$PLUGIN_ROOT/scripts/render-session-bootstrap.mjs" --runtime "$runtime" --shape "$shape" 2>/dev/null)" || {
+  printf '%s\n' "$fallback"
+  exit 0
+}
+if [ -z "$payload" ]; then
+  printf '%s\n' "$fallback"
+  exit 0
+fi
+printf '%s\n' "$payload"

@@ -1,0 +1,63 @@
+name: Superpowers Upstream Change Report
+
+on:
+  schedule:
+    - cron: "17 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    name: Report pinned-baseline drift
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query upstream head without importing it
+        id: upstream
+        shell: bash
+        run: |
+          set -euo pipefail
+          pinned="3dcbd5c4b48e02263fbf4a3c01e3fe4f81d584d9"
+          observed="$(git ls-remote https://github.com/obra/superpowers.git HEAD | awk '{print $1}')"
+          test -n "$observed"
+          {
+            echo "# Superpowers upstream report"
+            echo
+            echo "- Pinned baseline: \`$pinned\`"
+            echo "- Observed remote HEAD: \`$observed\`"
+            if [ "$observed" = "$pinned" ]; then
+              echo "- Status: unchanged"
+            else
+              echo "- Status: review required. Record adopt, adapt, defer, or reject in docs/upstream/ADOPTION_LEDGER.md."
+            fi
+          } > superpowers-upstream-report.md
+          cat superpowers-upstream-report.md >> "$GITHUB_STEP_SUMMARY"
+          echo "observed=$observed" >> "$GITHUB_OUTPUT"
+          if [ "$observed" = "$pinned" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create durable review issue for upstream drift
+        if: steps.upstream.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OBSERVED: ${{ steps.upstream.outputs.observed }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          title="[WCBS] Superpowers upstream drift: ${OBSERVED}"
+          existing="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "\"$title\" in:title" --json title --jq 'length' 2>/dev/null || true)"
+          if [ "$existing" = "0" ] || [ -z "$existing" ]; then
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "Upstream HEAD changed from the pinned WCBS baseline. Before any import, record an adopt, adapt, defer, or reject decision with compatibility evidence in docs/upstream/ADOPTION_LEDGER.md. This issue is the durable review record; close it only after that ledger decision is committed."
+          fi
+
+      - name: Upload report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: superpowers-upstream-report
+          path: superpowers-upstream-report.md
+          retention-days: 30

@@ -1,7 +1,7 @@
 # Elite Software Build Goals
 ## LLM-Neutral Execution Standard for Production-Ready Software
 
-**Version:** 3.1 Meta-Initialized  
+**Version:** 3.1 Meta-Initialized
 **Operating law:** **Audit wide. Fix narrow. Prove everything.**
 
 ---

@@ -112,10 +112,9 @@ Scenario: A scheduled report sends duplicate emails.
 
 ## Reference
 
-Read `references/testing-anti-patterns.md` when tests pass too easily, assertions feel weak, snapshots dominate, mocks replace the behavior under test, or a reviewer questions test quality.
+Read `references/writing-good-tests.md` to choose the smallest truthful test boundary and build a runnable red-green case. Read `references/testing-anti-patterns.md` when tests pass too easily, assertions feel weak, snapshots dominate, mocks replace the behavior under test, or a reviewer questions test quality.
 
-## Process
+## Workflow
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+Select the public behavior, run the intentionally failing test, implement the
+smallest change, rerun it, and then broaden verification only by adjacent risk.

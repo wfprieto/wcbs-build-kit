@@ -1,6 +1,8 @@
 /**
  * Canonical adapter-contract validation for the WCBS Engineering Operating System.
- * Manifests are the source of truth. CAPABILITY_MATRIX.md is generated from them.
+ * The V2 adapter registry is the source of truth. Generated manifests are a
+ * validated intermediate representation; CAPABILITY_MATRIX.md is derived from
+ * those generated manifests.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -104,9 +106,9 @@ const cell = (manifest, capability) => {
 };
 export function renderCapabilityMatrix(manifests) {
   const lines = [];
-  lines.push("# Capability Matrix", "", "<!-- GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/manifests/*.json. Regenerate with: npm run generate:matrix -->", "", "This file is generated from the runtime manifests. Editing it by hand creates a second source of truth and will fail `npm run verify`.", "", "## Support And Activation", "", "| Runtime | Support | Activation tier | Integration shape | Bootstrap | Install scope | Modifies user files |", "|---|---|---|---|---|---|---|");
-  for (const manifest of manifests) lines.push(`| ${manifest.display_name} (\`${manifest.runtime_id}\`) | **${manifest.support_level}** | **${manifest.activation_tier}** | ${manifest.integration_shape} | ${manifest.bootstrap_mode} | ${manifest.install_scope} | ${manifest.modifies_user_files ? "yes" : "no"} |`);
-  lines.push("", "A file's existence does not imply Full support or verified activation. See `runtime_adapters/PORTABILITY_CONTRACT.md` and `runtime_adapters/VERIFIED_SUPPORT_LEVELS.md`.", "", "## Essential Capabilities", "", "An adapter with any essential capability unavailable is `Unsupported`.", "", `| Runtime | ${ESSENTIAL_CAPABILITIES.join(" | ")} |`, `|---|${ESSENTIAL_CAPABILITIES.map(() => "---").join("|")}|`);
+  lines.push("# Capability Matrix", "", "<!-- GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml. Regenerate with: npm run generate:v2-metadata -->", "", "This file is generated from the canonical adapter registry through validated manifests. Editing it by hand creates a second source of truth and will fail `npm run verify`.", "", "## Designed Support And Activation", "", "| Runtime | Designed support | Activation tier | Integration shape | Bootstrap design | Install scope | Modifies user files |", "|---|---|---|---|---|---|---|");
+  for (const manifest of manifests) lines.push(`| ${manifest.display_name} (\`${manifest.runtime_id}\`) | **Designed ${manifest.support_level}** | **${manifest.activation_tier}** | ${manifest.integration_shape} | ${manifest.bootstrap_mode} | ${manifest.install_scope} | ${manifest.modifies_user_files ? "yes" : "no"} |`);
+  lines.push("", "Designed support is a contract target, not a runtime claim. The authoritative public evidence label is in `runtime_adapters/VERIFIED_SUPPORT_LEVELS.md`; every current runtime is `Not Run`. See `runtime_adapters/PORTABILITY_CONTRACT.md` for definitions.", "", "## Essential Capabilities", "", "An adapter with any essential capability unavailable is `Unsupported`.", "", `| Runtime | ${ESSENTIAL_CAPABILITIES.join(" | ")} |`, `|---|${ESSENTIAL_CAPABILITIES.map(() => "---").join("|")}|`);
   for (const manifest of manifests) lines.push(`| \`${manifest.runtime_id}\` | ${ESSENTIAL_CAPABILITIES.map(capability => cell(manifest, capability)).join(" | ")} |`);
   lines.push("", "## Optional Capabilities And Exact Fallbacks", "", "Every `degradable` or `unavailable` cell states its exact fallback. Agents may not invent a tool.", "", `| Runtime | ${OPTIONAL_CAPABILITIES.join(" | ")} |`, `|---|${OPTIONAL_CAPABILITIES.map(() => "---").join("|")}|`);
   for (const manifest of manifests) lines.push(`| \`${manifest.runtime_id}\` | ${OPTIONAL_CAPABILITIES.map(capability => cell(manifest, capability)).join(" | ")} |`);

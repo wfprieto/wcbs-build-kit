@@ -12,7 +12,16 @@
   "activation_marker": "WCBS_KIT_ACTIVE:manus",
   "tool_mapping_path": "runtime_adapters/tool_mappings/manus.json",
   "capabilities": {
-    "file_read": "native", "file_write": "native", "file_edit": "native", "execute_command": "native", "subagents": "unavailable", "task_tracking": "degradable", "web_access": "native", "browser_verification": "degradable", "durable_artifact_storage": "native", "human_approval_gates": "degradable"
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "unavailable",
+    "task_tracking": "degradable",
+    "web_access": "native",
+    "browser_verification": "degradable",
+    "durable_artifact_storage": "native",
+    "human_approval_gates": "degradable"
   },
   "fallbacks": {
     "subagents": "Sequential fresh-context review using the exact base..head package; report degraded independence.",
@@ -21,7 +30,11 @@
     "human_approval_gates": "Halt, print the exact pending action, and require an explicit human reply."
   },
   "supported_runtime_versions": "Manus Agent (version-dependent)",
-  "supported_operating_systems": ["macos", "linux", "windows"],
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
   "modifies_user_files": false,
   "install": "Commit Manus.md and manually provide BOOTSTRAP.md or reference it at session start.",
   "update": "Edit Manus.md in the repository.",

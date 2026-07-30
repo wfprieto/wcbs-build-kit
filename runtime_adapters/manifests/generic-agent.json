@@ -12,7 +12,16 @@
   "activation_marker": "WCBS_KIT_ACTIVE:generic-agent",
   "tool_mapping_path": "runtime_adapters/tool_mappings/generic-agent.json",
   "capabilities": {
-    "file_read": "native", "file_write": "native", "file_edit": "native", "execute_command": "native", "subagents": "unavailable", "task_tracking": "unavailable", "web_access": "degradable", "browser_verification": "unavailable", "durable_artifact_storage": "degradable", "human_approval_gates": "degradable"
+    "file_read": "native",
+    "file_write": "native",
+    "file_edit": "native",
+    "execute_command": "native",
+    "subagents": "unavailable",
+    "task_tracking": "unavailable",
+    "web_access": "degradable",
+    "browser_verification": "unavailable",
+    "durable_artifact_storage": "degradable",
+    "human_approval_gates": "degradable"
   },
   "fallbacks": {
     "subagents": "Sequential fresh-context review using the exact base..head package; report degraded independence.",
@@ -23,7 +32,11 @@
     "human_approval_gates": "Halt and require an explicit human reply."
   },
   "supported_runtime_versions": "Any LLM agent with file read, write, edit, and command execution",
-  "supported_operating_systems": ["macos", "linux", "windows"],
+  "supported_operating_systems": [
+    "macos",
+    "linux",
+    "windows"
+  ],
   "modifies_user_files": false,
   "install": "Provide BOOTSTRAP.md at the start of every session.",
   "update": "Provide the updated Kernel file.",

@@ -46,8 +46,7 @@ Scenario: Build subscription analytics.
 - Slice 4: add scheduled email after report accuracy is verified.
 - Each slice can be tested and released independently.
 
-## Process
+## Workflow
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+Turn approved requirements into vertical slices with user-visible acceptance
+evidence, dependency order, and an explicit out-of-scope boundary.

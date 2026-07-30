@@ -35,8 +35,7 @@ Scenario: A CRM uses "lead", "prospect", and "opportunity" interchangeably.
 - Tests and UI copy use the canonical words.
 - APIVR verdict cannot be `PASS` if implementation introduces a fourth synonym without an ADR.
 
-## Process
+## Workflow
 
-1. Load only the authority and task context required by this skill.
-2. Execute the narrow workflow without bypassing APIVR, Elite Build Goals, or evidence requirements.
-3. Verify the result and report a canonical verdict with remaining risk and next action.
+Extract durable terms, state transitions, and invariants, then encode them in
+the smallest glossary, ADR, and acceptance evidence that keeps them stable.

@@ -1,0 +1,2112 @@
+{
+  "schema_version": 1,
+  "generated_notice": "GENERATED SOURCE IS FORBIDDEN. This registry is canonical and intentionally uses JSON-compatible YAML.",
+  "adapters": [
+    {
+      "runtime_id": "claude",
+      "bootstrap": {
+        "source_skill": "using-wcbs",
+        "output_schema": "using-wcbs-bootstrap-v1",
+        "project_fallback": "native instruction file"
+      },
+      "support": {
+        "designed": "Full",
+        "verified": "Not Run",
+        "label": "Designed",
+        "evidence": "Manifest and tool-mapping contract only. No V2 clean-session evidence is recorded."
+      },
+      "packaging": {
+        "plugin_path": ".claude-plugin/plugin.json",
+        "test_owner": "wfprieto",
+        "test_mode": "structural-contract"
+      },
+      "manifest": {
+        "runtime_id": "claude",
+        "display_name": "Claude and Claude Code",
+        "owner": "wfprieto",
+        "support_level": "Full",
+        "activation_tier": "T1",
+        "integration_shape": "hybrid",
+        "native_install_mechanism": "Claude Code plugin SessionStart hook plus CLAUDE.md fallback",
+        "install_scope": "project",
+        "bootstrap_path": ".claude-plugin/plugin.json",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:claude",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/claude.json",
+        "capabilities": {
+          "file_read": "native",
+          "file_write": "native",
+          "file_edit": "native",
+          "execute_command": "native",
+          "subagents": "native",
+          "task_tracking": "native",
+          "web_access": "native",
+          "browser_verification": "native",
+          "durable_artifact_storage": "native",
+          "human_approval_gates": "native"
+        },
+        "fallbacks": {},
+        "supported_runtime_versions": "Claude Code plugin runtime and Claude surfaces that read CLAUDE.md project memory",
+        "supported_operating_systems": [
+          "macos",
+          "linux",
+          "windows"
+        ],
+        "modifies_user_files": false,
+        "install": "Install .claude-plugin/plugin.json; the SessionStart hook injects BOOTSTRAP.md. CLAUDE.md remains the T2 fallback.",
+        "update": "Update the plugin, Kernel, and hook files in the repository.",
+        "uninstall": "Remove the Claude plugin registration and CLAUDE.md fallback. No shell profile is modified.",
+        "rollback": "Restore the previously tagged plugin, hook, Kernel, and CLAUDE.md files.",
+        "limitations": "Surfaces without plugin hooks degrade to CLAUDE.md T2 or manual activation and must record that lower tier.",
+        "deprecation": "Designed adapter; runtime activation evidence is pending."
+      },
+      "tool_mapping": {
+        "runtime_id": "claude",
+        "actions": {
+          "read_skill": {
+            "availability": "native",
+            "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+            "required_parameters": [
+              "skill_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "skill load record"
+          },
+          "read_file": {
+            "availability": "native",
+            "mechanism": "Read",
+            "required_parameters": [
+              "file_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "file contents"
+          },
+          "write_file": {
+            "availability": "native",
+            "mechanism": "Write",
+            "required_parameters": [
+              "file_path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "written path"
+          },
+          "edit_file": {
+            "availability": "native",
+            "mechanism": "Edit",
+            "required_parameters": [
+              "file_path",
+              "old_string",
+              "new_string"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "applied edit"
+          },
+          "execute_command": {
+            "availability": "native",
+            "mechanism": "Bash",
+            "required_parameters": [
+              "command"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "stdout, stderr, exit code"
+          },
+          "dispatch_agent": {
+            "availability": "native",
+            "mechanism": "Task subagent dispatch",
+            "required_parameters": [
+              "prompt",
+              "subagent_type"
+            ],
+            "fallback": null,
+            "limitations": "Subagent gets a fresh context window; pass artifact paths, not pasted content.",
+            "evidence_produced": "subagent report"
+          },
+          "create_task": {
+            "availability": "native",
+            "mechanism": "TodoWrite",
+            "required_parameters": [
+              "todos"
+            ],
+            "fallback": null,
+            "limitations": "Ephemeral; mirror durable state into the progress ledger.",
+            "evidence_produced": "todo state"
+          },
+          "record_artifact": {
+            "availability": "native",
+            "mechanism": "Write to .wcbs/runs/<run-id>/",
+            "required_parameters": [
+              "file_path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "artifact path and hash"
+          },
+          "request_human_approval": {
+            "availability": "native",
+            "mechanism": "Tool permission prompt",
+            "required_parameters": [
+              "action",
+              "reason"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "approval record"
+          }
+        }
+      }
+    },
+    {
+      "runtime_id": "codex",
+      "bootstrap": {
+        "source_skill": "using-wcbs",
+        "output_schema": "using-wcbs-bootstrap-v1",
+        "project_fallback": "native instruction file"
+      },
+      "support": {
+        "designed": "Full",
+        "verified": "Not Run",
+        "label": "Designed",
+        "evidence": "Manifest and tool-mapping contract only. No V2 clean-session evidence is recorded."
+      },
+      "packaging": {
+        "plugin_path": ".codex-plugin/plugin.json",
+        "marketplace_path": ".agents/plugins",
+        "test_owner": "wfprieto",
+        "test_mode": "structural-contract"
+      },
+      "manifest": {
+        "runtime_id": "codex",
+        "display_name": "OpenAI Codex",
+        "owner": "wfprieto",
+        "support_level": "Full",
+        "activation_tier": "T2",
+        "integration_shape": "in_process_plugin",
+        "native_install_mechanism": "Codex plugin (.codex-plugin/plugin.json) with skills directory",
+        "install_scope": "project",
+        "bootstrap_path": ".codex-plugin/plugin.json",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:codex",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/codex.json",
+        "capabilities": {
+          "file_read": "native",
+          "file_write": "native",
+          "file_edit": "native",
+          "execute_command": "native",
+          "subagents": "native",
+          "task_tracking": "native",
+          "web_access": "native",
+          "browser_verification": "native",
+          "durable_artifact_storage": "native",
+          "human_approval_gates": "native"
+        },
+        "fallbacks": {},
+        "supported_runtime_versions": "Codex CLI and Codex app with plugin support",
+        "supported_operating_systems": [
+          "macos",
+          "linux",
+          "windows"
+        ],
+        "modifies_user_files": false,
+        "install": "Install the plugin from .codex-plugin/plugin.json; the skills/ directory is registered automatically.",
+        "update": "Pull the repository and reload the plugin; plugin.json version drives the upgrade.",
+        "uninstall": "Remove the plugin from the Codex plugin list. No files outside the project are touched.",
+        "rollback": "Reinstall the previously tagged commit of .codex-plugin/plugin.json and skills/.",
+        "limitations": "Plugin skill discovery requires the Codex plugin runtime to be enabled for the workspace. The root hook is deliberately disabled for Codex.",
+        "deprecation": "Designed adapter; runtime activation evidence is pending."
+      },
+      "tool_mapping": {
+        "runtime_id": "codex",
+        "actions": {
+          "read_skill": {
+            "availability": "native",
+            "mechanism": "Codex plugin skill loader (skills/<name>/SKILL.md)",
+            "required_parameters": [
+              "skill_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "skill load record"
+          },
+          "read_file": {
+            "availability": "native",
+            "mechanism": "read_file",
+            "required_parameters": [
+              "path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "file contents"
+          },
+          "write_file": {
+            "availability": "native",
+            "mechanism": "create_file",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "written path"
+          },
+          "edit_file": {
+            "availability": "native",
+            "mechanism": "apply_patch",
+            "required_parameters": [
+              "path",
+              "patch"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "applied patch"
+          },
+          "execute_command": {
+            "availability": "native",
+            "mechanism": "shell",
+            "required_parameters": [
+              "command"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "stdout, stderr, exit code"
+          },
+          "dispatch_agent": {
+            "availability": "native",
+            "mechanism": "Codex subagent dispatch",
+            "required_parameters": [
+              "prompt",
+              "scope"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "subagent transcript"
+          },
+          "create_task": {
+            "availability": "native",
+            "mechanism": "Codex task list",
+            "required_parameters": [
+              "title",
+              "status"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "task entry"
+          },
+          "record_artifact": {
+            "availability": "native",
+            "mechanism": "filesystem write to .wcbs/runs/<run-id>/",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "artifact path and hash"
+          },
+          "request_human_approval": {
+            "availability": "native",
+            "mechanism": "Codex approval prompt",
+            "required_parameters": [
+              "action",
+              "reason"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "approval record"
+          }
+        }
+      }
+    },
+    {
+      "runtime_id": "cursor",
+      "bootstrap": {
+        "source_skill": "using-wcbs",
+        "output_schema": "using-wcbs-bootstrap-v1",
+        "project_fallback": "native instruction file"
+      },
+      "support": {
+        "designed": "Full",
+        "verified": "Not Run",
+        "label": "Designed",
+        "evidence": "Manifest and tool-mapping contract only. No V2 clean-session evidence is recorded."
+      },
+      "packaging": {
+        "plugin_path": ".cursor/rules/super-build-kit.mdc",
+        "test_owner": "wfprieto",
+        "test_mode": "structural-contract"
+      },
+      "manifest": {
+        "runtime_id": "cursor",
+        "display_name": "Cursor",
+        "owner": "wfprieto",
+        "support_level": "Full",
+        "activation_tier": "T1",
+        "integration_shape": "hybrid",
+        "native_install_mechanism": "Cursor project rule plus SessionStart hook at .cursor/hooks.json",
+        "install_scope": "project",
+        "bootstrap_path": ".cursor/rules/super-build-kit.mdc",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:cursor",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/cursor.json",
+        "capabilities": {
+          "file_read": "native",
+          "file_write": "native",
+          "file_edit": "native",
+          "execute_command": "native",
+          "subagents": "native",
+          "task_tracking": "native",
+          "web_access": "native",
+          "browser_verification": "native",
+          "durable_artifact_storage": "native",
+          "human_approval_gates": "native"
+        },
+        "fallbacks": {},
+        "supported_runtime_versions": "Cursor with Project Rules and hook support",
+        "supported_operating_systems": [
+          "macos",
+          "linux",
+          "windows"
+        ],
+        "modifies_user_files": false,
+        "install": "Commit .cursor/rules/super-build-kit.mdc, .cursor/hooks.json, and hooks/. The project SessionStart hook invokes the WCBS transport.",
+        "update": "Update the project rule, .cursor/hooks.json, Kernel, and hook files; Cursor re-reads them next session.",
+        "uninstall": "Remove the Cursor rule, .cursor/hooks.json, and WCBS-owned hook files. Nothing outside the project is modified.",
+        "rollback": "Restore the previous rule and hook files from version control.",
+        "limitations": "The project hook path is structurally tested, but a clean Cursor runtime session is Not Run. If the hook is unavailable, activation degrades to the always-on rule and is recorded as T2.",
+        "deprecation": "Designed adapter; runtime activation evidence is pending."
+      },
+      "tool_mapping": {
+        "runtime_id": "cursor",
+        "actions": {
+          "read_skill": {
+            "availability": "native",
+            "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+            "required_parameters": [
+              "skill_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "skill load record"
+          },
+          "read_file": {
+            "availability": "native",
+            "mechanism": "Read file",
+            "required_parameters": [
+              "path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "file contents"
+          },
+          "write_file": {
+            "availability": "native",
+            "mechanism": "Create file",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "written path"
+          },
+          "edit_file": {
+            "availability": "native",
+            "mechanism": "Edit file / apply diff",
+            "required_parameters": [
+              "path",
+              "edit"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "applied edit"
+          },
+          "execute_command": {
+            "availability": "native",
+            "mechanism": "Run terminal command",
+            "required_parameters": [
+              "command"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "terminal output"
+          },
+          "dispatch_agent": {
+            "availability": "native",
+            "mechanism": "Cursor background agent",
+            "required_parameters": [
+              "prompt",
+              "scope"
+            ],
+            "fallback": null,
+            "limitations": "Independence requires a separate agent session, not a nested chat turn.",
+            "evidence_produced": "agent transcript"
+          },
+          "create_task": {
+            "availability": "native",
+            "mechanism": "Cursor to-do list",
+            "required_parameters": [
+              "title",
+              "status"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "task entry"
+          },
+          "record_artifact": {
+            "availability": "native",
+            "mechanism": "filesystem write to .wcbs/runs/<run-id>/",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "artifact path and hash"
+          },
+          "request_human_approval": {
+            "availability": "native",
+            "mechanism": "Command approval prompt",
+            "required_parameters": [
+              "action",
+              "reason"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "approval record"
+          }
+        }
+      }
+    },
+    {
+      "runtime_id": "gemini",
+      "bootstrap": {
+        "source_skill": "using-wcbs",
+        "output_schema": "using-wcbs-bootstrap-v1",
+        "project_fallback": "native instruction file"
+      },
+      "support": {
+        "designed": "Partial",
+        "verified": "Not Run",
+        "label": "Designed",
+        "evidence": "Manifest and tool-mapping contract only. No V2 clean-session evidence is recorded."
+      },
+      "packaging": {
+        "plugin_path": "GEMINI.md",
+        "test_owner": "wfprieto",
+        "test_mode": "structural-contract"
+      },
+      "manifest": {
+        "runtime_id": "gemini",
+        "display_name": "Gemini CLI",
+        "owner": "wfprieto",
+        "support_level": "Partial",
+        "activation_tier": "T2",
+        "integration_shape": "always_on_instruction_file",
+        "native_install_mechanism": "GEMINI.md context file loaded at session start",
+        "install_scope": "project",
+        "bootstrap_path": "GEMINI.md",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:gemini",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/gemini.json",
+        "capabilities": {
+          "file_read": "native",
+          "file_write": "native",
+          "file_edit": "native",
+          "execute_command": "native",
+          "subagents": "unavailable",
+          "task_tracking": "degradable",
+          "web_access": "native",
+          "browser_verification": "unavailable",
+          "durable_artifact_storage": "native",
+          "human_approval_gates": "native"
+        },
+        "fallbacks": {
+          "subagents": "Sequential fresh-context review using the exact base..head package; report degraded independence.",
+          "task_tracking": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl.",
+          "browser_verification": "Use command-line verification and record rendered-UI evidence as Not Run."
+        },
+        "supported_runtime_versions": "Gemini CLI with GEMINI.md hierarchical context support",
+        "supported_operating_systems": [
+          "macos",
+          "linux",
+          "windows"
+        ],
+        "modifies_user_files": false,
+        "install": "Commit GEMINI.md at the repository root. Gemini CLI loads it as hierarchical context.",
+        "update": "Edit GEMINI.md in the repository.",
+        "uninstall": "Delete GEMINI.md.",
+        "rollback": "Restore the previous revision from version control.",
+        "limitations": "No independent subagents and no native browser verification; activation is instructed rather than enforced.",
+        "deprecation": "Designed adapter; runtime activation evidence is pending."
+      },
+      "tool_mapping": {
+        "runtime_id": "gemini",
+        "actions": {
+          "read_skill": {
+            "availability": "native",
+            "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+            "required_parameters": [
+              "skill_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "skill load record"
+          },
+          "read_file": {
+            "availability": "native",
+            "mechanism": "read_file",
+            "required_parameters": [
+              "absolute_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "file contents"
+          },
+          "write_file": {
+            "availability": "native",
+            "mechanism": "write_file",
+            "required_parameters": [
+              "file_path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "written path"
+          },
+          "edit_file": {
+            "availability": "native",
+            "mechanism": "replace",
+            "required_parameters": [
+              "file_path",
+              "old_string",
+              "new_string"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "applied edit"
+          },
+          "execute_command": {
+            "availability": "native",
+            "mechanism": "run_shell_command",
+            "required_parameters": [
+              "command"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "stdout, stderr, exit code"
+          },
+          "dispatch_agent": {
+            "availability": "unavailable",
+            "mechanism": "No independent subagent mechanism in Gemini CLI",
+            "required_parameters": [
+              "prompt",
+              "scope"
+            ],
+            "fallback": "Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer.",
+            "limitations": "Reviews are NOT independent. Report degraded independence.",
+            "evidence_produced": "fresh-context review report"
+          },
+          "create_task": {
+            "availability": "degradable",
+            "mechanism": "No durable native task list",
+            "required_parameters": [
+              "title",
+              "status"
+            ],
+            "fallback": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list.",
+            "limitations": "Task state must live on disk.",
+            "evidence_produced": "progress-ledger.jsonl entry"
+          },
+          "record_artifact": {
+            "availability": "native",
+            "mechanism": "write_file to .wcbs/runs/<run-id>/",
+            "required_parameters": [
+              "file_path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "artifact path and hash"
+          },
+          "request_human_approval": {
+            "availability": "native",
+            "mechanism": "Shell command confirmation",
+            "required_parameters": [
+              "action",
+              "reason"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "approval record"
+          }
+        }
+      }
+    },
+    {
+      "runtime_id": "generic-agent",
+      "bootstrap": {
+        "source_skill": "using-wcbs",
+        "output_schema": "using-wcbs-bootstrap-v1",
+        "project_fallback": "operator-supplied bootstrap"
+      },
+      "support": {
+        "designed": "Manual",
+        "verified": "Not Run",
+        "label": "Designed",
+        "evidence": "Manifest and tool-mapping contract only. No V2 clean-session evidence is recorded."
+      },
+      "packaging": {
+        "plugin_path": "BOOTSTRAP.md",
+        "test_owner": "wfprieto",
+        "test_mode": "structural-contract"
+      },
+      "manifest": {
+        "runtime_id": "generic-agent",
+        "display_name": "Generic LLM Agent",
+        "owner": "wfprieto",
+        "support_level": "Manual",
+        "activation_tier": "T4",
+        "integration_shape": "always_on_instruction_file",
+        "native_install_mechanism": "Operator supplies BOOTSTRAP.md manually",
+        "install_scope": "project",
+        "bootstrap_path": "BOOTSTRAP.md",
+        "bootstrap_mode": "manual",
+        "activation_marker": "WCBS_KIT_ACTIVE:generic-agent",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/generic-agent.json",
+        "capabilities": {
+          "file_read": "native",
+          "file_write": "native",
+          "file_edit": "native",
+          "execute_command": "native",
+          "subagents": "unavailable",
+          "task_tracking": "unavailable",
+          "web_access": "degradable",
+          "browser_verification": "unavailable",
+          "durable_artifact_storage": "degradable",
+          "human_approval_gates": "degradable"
+        },
+        "fallbacks": {
+          "subagents": "Sequential fresh-context review using the exact base..head package; report degraded independence.",
+          "task_tracking": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl.",
+          "web_access": "Require supplied source material and record Unknown rather than guessing.",
+          "browser_verification": "Use command-line evidence and record rendered-UI verification as Not Run.",
+          "durable_artifact_storage": "Write project-local .wcbs artifacts.",
+          "human_approval_gates": "Halt and require an explicit human reply."
+        },
+        "supported_runtime_versions": "Any LLM agent with file read, write, edit, and command execution",
+        "supported_operating_systems": [
+          "macos",
+          "linux",
+          "windows"
+        ],
+        "modifies_user_files": false,
+        "install": "Provide BOOTSTRAP.md at the start of every session.",
+        "update": "Provide the updated Kernel file.",
+        "uninstall": "Stop providing the file. Nothing is installed.",
+        "rollback": "Provide the prior tagged Kernel file.",
+        "limitations": "No native activation mechanism exists, so this is Manual by definition. If command execution is unavailable, the runtime is Unsupported.",
+        "deprecation": "None. Baseline fallback adapter."
+      },
+      "tool_mapping": {
+        "runtime_id": "generic-agent",
+        "actions": {
+          "read_skill": {
+            "availability": "native",
+            "mechanism": "Operator attaches or the agent reads the SKILL.md path",
+            "required_parameters": [
+              "skill_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "skill load record"
+          },
+          "read_file": {
+            "availability": "native",
+            "mechanism": "Agent file read",
+            "required_parameters": [
+              "path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "file contents"
+          },
+          "write_file": {
+            "availability": "native",
+            "mechanism": "Agent file write",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "written path"
+          },
+          "edit_file": {
+            "availability": "native",
+            "mechanism": "Agent file edit",
+            "required_parameters": [
+              "path",
+              "edit"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "applied edit"
+          },
+          "execute_command": {
+            "availability": "native",
+            "mechanism": "Agent shell",
+            "required_parameters": [
+              "command"
+            ],
+            "fallback": null,
+            "limitations": "If unavailable, the runtime is Unsupported.",
+            "evidence_produced": "shell output"
+          },
+          "dispatch_agent": {
+            "availability": "unavailable",
+            "mechanism": "Not assumed to exist",
+            "required_parameters": [
+              "prompt",
+              "scope"
+            ],
+            "fallback": "Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer.",
+            "limitations": "Reviews are NOT independent. Report degraded independence.",
+            "evidence_produced": "fresh-context review report"
+          },
+          "create_task": {
+            "availability": "unavailable",
+            "mechanism": "Not assumed to exist",
+            "required_parameters": [
+              "title",
+              "status"
+            ],
+            "fallback": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list.",
+            "limitations": "Task state must live on disk.",
+            "evidence_produced": "progress-ledger.jsonl entry"
+          },
+          "record_artifact": {
+            "availability": "degradable",
+            "mechanism": "Filesystem persistence is not guaranteed",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": "Write durable artifacts to the project-local .wcbs/runs/<run-id>/ tree on the filesystem.",
+            "limitations": "If the filesystem does not persist, evidence is Blocked.",
+            "evidence_produced": "artifact path and hash"
+          },
+          "request_human_approval": {
+            "availability": "degradable",
+            "mechanism": "No native gate assumed",
+            "required_parameters": [
+              "action",
+              "reason"
+            ],
+            "fallback": "Halt, print the exact pending action, and require an explicit human reply before proceeding.",
+            "limitations": "Relies on the agent honoring a halt instruction.",
+            "evidence_produced": "approval record"
+          }
+        }
+      }
+    },
+    {
+      "runtime_id": "github-copilot",
+      "bootstrap": {
+        "source_skill": "using-wcbs",
+        "output_schema": "using-wcbs-bootstrap-v1",
+        "project_fallback": "native instruction file"
+      },
+      "support": {
+        "designed": "Partial",
+        "verified": "Not Run",
+        "label": "Designed",
+        "evidence": "Manifest and tool-mapping contract only. No V2 clean-session evidence is recorded."
+      },
+      "packaging": {
+        "plugin_path": ".github/copilot-instructions.md",
+        "test_owner": "wfprieto",
+        "test_mode": "structural-contract"
+      },
+      "manifest": {
+        "runtime_id": "github-copilot",
+        "display_name": "GitHub Copilot",
+        "owner": "wfprieto",
+        "support_level": "Partial",
+        "activation_tier": "T1",
+        "integration_shape": "hybrid",
+        "native_install_mechanism": "Repository custom instructions plus the repository SessionStart hook at .github/hooks/wcbs-session-start.json",
+        "install_scope": "project",
+        "bootstrap_path": ".github/copilot-instructions.md",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:github-copilot",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/github-copilot.json",
+        "capabilities": {
+          "file_read": "native",
+          "file_write": "native",
+          "file_edit": "native",
+          "execute_command": "native",
+          "subagents": "unavailable",
+          "task_tracking": "degradable",
+          "web_access": "native",
+          "browser_verification": "unavailable",
+          "durable_artifact_storage": "native",
+          "human_approval_gates": "native"
+        },
+        "fallbacks": {
+          "subagents": "Sequential self-review in a fresh context window using the exact base..head review package; report degraded independence.",
+          "browser_verification": "Use command-line verification and record rendered-UI evidence as Not Run.",
+          "task_tracking": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl."
+        },
+        "supported_runtime_versions": "GitHub Copilot Chat with repository custom-instructions support",
+        "supported_operating_systems": [
+          "macos",
+          "linux",
+          "windows"
+        ],
+        "modifies_user_files": false,
+        "install": "Commit .github/copilot-instructions.md, .github/hooks/wcbs-session-start.json, and hooks/. The repository SessionStart hook invokes the WCBS transport.",
+        "update": "Edit the instructions, repository hook registration, Kernel, and hook files in the repository.",
+        "uninstall": "Delete .github/copilot-instructions.md, .github/hooks/wcbs-session-start.json, and WCBS-owned hook files.",
+        "rollback": "Restore the previous revision from version control.",
+        "limitations": "No independent subagents and no native browser verification. The project hook path is structurally tested, but a clean Copilot runtime session is Not Run.",
+        "deprecation": "Designed adapter; runtime activation evidence is pending."
+      },
+      "tool_mapping": {
+        "runtime_id": "github-copilot",
+        "actions": {
+          "read_skill": {
+            "availability": "native",
+            "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+            "required_parameters": [
+              "skill_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "skill load record"
+          },
+          "read_file": {
+            "availability": "native",
+            "mechanism": "Workspace file read",
+            "required_parameters": [
+              "path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "file contents"
+          },
+          "write_file": {
+            "availability": "native",
+            "mechanism": "Workspace file create",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "written path"
+          },
+          "edit_file": {
+            "availability": "native",
+            "mechanism": "Workspace edit",
+            "required_parameters": [
+              "path",
+              "edit"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "applied edit"
+          },
+          "execute_command": {
+            "availability": "native",
+            "mechanism": "Integrated terminal",
+            "required_parameters": [
+              "command"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "terminal output"
+          },
+          "dispatch_agent": {
+            "availability": "unavailable",
+            "mechanism": "No independent subagent mechanism",
+            "required_parameters": [
+              "prompt",
+              "scope"
+            ],
+            "fallback": "Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer.",
+            "limitations": "Reviews are NOT independent. Report degraded independence in the review report.",
+            "evidence_produced": "fresh-context review report"
+          },
+          "create_task": {
+            "availability": "degradable",
+            "mechanism": "No durable native task list in chat",
+            "required_parameters": [
+              "title",
+              "status"
+            ],
+            "fallback": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list.",
+            "limitations": "Task state must live on disk.",
+            "evidence_produced": "progress-ledger.jsonl entry"
+          },
+          "record_artifact": {
+            "availability": "native",
+            "mechanism": "filesystem write to .wcbs/runs/<run-id>/",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "artifact path and hash"
+          },
+          "request_human_approval": {
+            "availability": "native",
+            "mechanism": "Terminal command confirmation",
+            "required_parameters": [
+              "action",
+              "reason"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "approval record"
+          }
+        }
+      }
+    },
+    {
+      "runtime_id": "manus",
+      "bootstrap": {
+        "source_skill": "using-wcbs",
+        "output_schema": "using-wcbs-bootstrap-v1",
+        "project_fallback": "operator-supplied bootstrap"
+      },
+      "support": {
+        "designed": "Manual",
+        "verified": "Not Run",
+        "label": "Designed",
+        "evidence": "Manifest and tool-mapping contract only. No V2 clean-session evidence is recorded."
+      },
+      "packaging": {
+        "plugin_path": "Manus.md",
+        "test_owner": "wfprieto",
+        "test_mode": "structural-contract"
+      },
+      "manifest": {
+        "runtime_id": "manus",
+        "display_name": "Manus Agent",
+        "owner": "wfprieto",
+        "support_level": "Manual",
+        "activation_tier": "T4",
+        "integration_shape": "always_on_instruction_file",
+        "native_install_mechanism": "Manus.md repository instruction file",
+        "install_scope": "project",
+        "bootstrap_path": "Manus.md",
+        "bootstrap_mode": "manual",
+        "activation_marker": "WCBS_KIT_ACTIVE:manus",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/manus.json",
+        "capabilities": {
+          "file_read": "native",
+          "file_write": "native",
+          "file_edit": "native",
+          "execute_command": "native",
+          "subagents": "unavailable",
+          "task_tracking": "degradable",
+          "web_access": "native",
+          "browser_verification": "degradable",
+          "durable_artifact_storage": "native",
+          "human_approval_gates": "degradable"
+        },
+        "fallbacks": {
+          "subagents": "Sequential fresh-context review using the exact base..head package; report degraded independence.",
+          "task_tracking": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl.",
+          "browser_verification": "Capture screenshot or page text evidence and record automated assertions as Not Run.",
+          "human_approval_gates": "Halt, print the exact pending action, and require an explicit human reply."
+        },
+        "supported_runtime_versions": "Manus Agent (version-dependent)",
+        "supported_operating_systems": [
+          "macos",
+          "linux",
+          "windows"
+        ],
+        "modifies_user_files": false,
+        "install": "Commit Manus.md and manually provide BOOTSTRAP.md or reference it at session start.",
+        "update": "Edit Manus.md in the repository.",
+        "uninstall": "Delete Manus.md.",
+        "rollback": "Restore the previous revision from version control.",
+        "limitations": "Automatic session-start ingestion is not established. Activation is Manual and must never be reported as enforced.",
+        "deprecation": "None. Adapter is active but requires per-session activation."
+      },
+      "tool_mapping": {
+        "runtime_id": "manus",
+        "actions": {
+          "read_skill": {
+            "availability": "native",
+            "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+            "required_parameters": [
+              "skill_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "skill load record"
+          },
+          "read_file": {
+            "availability": "native",
+            "mechanism": "File read",
+            "required_parameters": [
+              "path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "file contents"
+          },
+          "write_file": {
+            "availability": "native",
+            "mechanism": "File write",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "written path"
+          },
+          "edit_file": {
+            "availability": "native",
+            "mechanism": "File edit",
+            "required_parameters": [
+              "path",
+              "edit"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "applied edit"
+          },
+          "execute_command": {
+            "availability": "native",
+            "mechanism": "Sandbox shell",
+            "required_parameters": [
+              "command"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "shell output"
+          },
+          "dispatch_agent": {
+            "availability": "unavailable",
+            "mechanism": "No documented independent subagent mechanism",
+            "required_parameters": [
+              "prompt",
+              "scope"
+            ],
+            "fallback": "Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer.",
+            "limitations": "Reviews are NOT independent. Report degraded independence.",
+            "evidence_produced": "fresh-context review report"
+          },
+          "create_task": {
+            "availability": "degradable",
+            "mechanism": "Native planning list is not a durable artifact",
+            "required_parameters": [
+              "title",
+              "status"
+            ],
+            "fallback": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl instead of a native task list.",
+            "limitations": "Task state must live on disk.",
+            "evidence_produced": "progress-ledger.jsonl entry"
+          },
+          "record_artifact": {
+            "availability": "native",
+            "mechanism": "filesystem write to .wcbs/runs/<run-id>/",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "artifact path and hash"
+          },
+          "request_human_approval": {
+            "availability": "degradable",
+            "mechanism": "Approval behavior is version-dependent",
+            "required_parameters": [
+              "action",
+              "reason"
+            ],
+            "fallback": "Halt, print the exact pending action, and require an explicit human reply before proceeding.",
+            "limitations": "Confirm the halt actually blocks before relying on it.",
+            "evidence_produced": "approval record"
+          }
+        }
+      }
+    },
+    {
+      "runtime_id": "replit",
+      "bootstrap": {
+        "source_skill": "using-wcbs",
+        "output_schema": "using-wcbs-bootstrap-v1",
+        "project_fallback": "native instruction file"
+      },
+      "support": {
+        "designed": "Partial",
+        "verified": "Not Run",
+        "label": "Designed",
+        "evidence": "Manifest and tool-mapping contract only. No V2 clean-session evidence is recorded."
+      },
+      "packaging": {
+        "plugin_path": "REPLIT.md",
+        "test_owner": "wfprieto",
+        "test_mode": "structural-contract"
+      },
+      "manifest": {
+        "runtime_id": "replit",
+        "display_name": "Replit Agent",
+        "owner": "wfprieto",
+        "support_level": "Partial",
+        "activation_tier": "T2",
+        "integration_shape": "always_on_instruction_file",
+        "native_install_mechanism": "REPLIT.md repository instruction file",
+        "install_scope": "project",
+        "bootstrap_path": "REPLIT.md",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:replit",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/replit.json",
+        "capabilities": {
+          "file_read": "native",
+          "file_write": "native",
+          "file_edit": "native",
+          "execute_command": "native",
+          "subagents": "unavailable",
+          "task_tracking": "native",
+          "web_access": "native",
+          "browser_verification": "degradable",
+          "durable_artifact_storage": "native",
+          "human_approval_gates": "native"
+        },
+        "fallbacks": {
+          "subagents": "Sequential fresh-context review using the exact base..head package; report degraded independence.",
+          "browser_verification": "Use Replit preview evidence and record automated browser assertions as Not Run."
+        },
+        "supported_runtime_versions": "Replit Agent workspaces that read repository instruction files",
+        "supported_operating_systems": [
+          "linux"
+        ],
+        "modifies_user_files": false,
+        "install": "Commit REPLIT.md at the repository root of the Repl.",
+        "update": "Edit REPLIT.md in the Repl.",
+        "uninstall": "Delete REPLIT.md.",
+        "rollback": "Restore the previous revision from version control.",
+        "limitations": "Linux-only container. No independent subagents. Activation is instructed and must be measured in a clean session.",
+        "deprecation": "Designed adapter; runtime activation evidence is pending."
+      },
+      "tool_mapping": {
+        "runtime_id": "replit",
+        "actions": {
+          "read_skill": {
+            "availability": "native",
+            "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+            "required_parameters": [
+              "skill_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "skill load record"
+          },
+          "read_file": {
+            "availability": "native",
+            "mechanism": "Workspace file read",
+            "required_parameters": [
+              "path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "file contents"
+          },
+          "write_file": {
+            "availability": "native",
+            "mechanism": "Workspace file create",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "written path"
+          },
+          "edit_file": {
+            "availability": "native",
+            "mechanism": "Workspace edit",
+            "required_parameters": [
+              "path",
+              "edit"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "applied edit"
+          },
+          "execute_command": {
+            "availability": "native",
+            "mechanism": "Repl shell",
+            "required_parameters": [
+              "command"
+            ],
+            "fallback": null,
+            "limitations": "Linux container only.",
+            "evidence_produced": "shell output"
+          },
+          "dispatch_agent": {
+            "availability": "unavailable",
+            "mechanism": "No independent subagent mechanism",
+            "required_parameters": [
+              "prompt",
+              "scope"
+            ],
+            "fallback": "Sequential self-review in a fresh context window: re-read the task brief and the exact base..head diff package with no implementation context carried over. This is a degraded substitute and MUST NOT be reported as equivalent to an independent reviewer.",
+            "limitations": "Reviews are NOT independent. Report degraded independence.",
+            "evidence_produced": "fresh-context review report"
+          },
+          "create_task": {
+            "availability": "native",
+            "mechanism": "Agent task list",
+            "required_parameters": [
+              "title",
+              "status"
+            ],
+            "fallback": null,
+            "limitations": "Mirror durable state into the progress ledger.",
+            "evidence_produced": "task entry"
+          },
+          "record_artifact": {
+            "availability": "native",
+            "mechanism": "filesystem write to .wcbs/runs/<run-id>/",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "artifact path and hash"
+          },
+          "request_human_approval": {
+            "availability": "native",
+            "mechanism": "Agent confirmation prompt",
+            "required_parameters": [
+              "action",
+              "reason"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "approval record"
+          }
+        }
+      }
+    },
+    {
+      "runtime_id": "kimi",
+      "bootstrap": {
+        "source_skill": "using-wcbs",
+        "output_schema": "using-wcbs-bootstrap-v1",
+        "project_fallback": "none"
+      },
+      "support": {
+        "designed": "Partial",
+        "verified": "Not Run",
+        "label": "Experimental",
+        "evidence": "No clean-session runtime evidence is recorded."
+      },
+      "packaging": {
+        "plugin_path": ".kimi-plugin/plugin.json",
+        "test_owner": "wfprieto",
+        "test_mode": "package-contract"
+      },
+      "manifest": {
+        "runtime_id": "kimi",
+        "display_name": "Kimi Code",
+        "owner": "wfprieto",
+        "support_level": "Partial",
+        "activation_tier": "T2",
+        "integration_shape": "in_process_plugin",
+        "native_install_mechanism": "Native Kimi Code plugin or extension package",
+        "install_scope": "project",
+        "bootstrap_path": ".kimi-plugin/plugin.json",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:kimi",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/kimi.json",
+        "capabilities": {
+          "file_read": "native",
+          "file_write": "native",
+          "file_edit": "native",
+          "execute_command": "native",
+          "subagents": "degradable",
+          "task_tracking": "degradable",
+          "web_access": "degradable",
+          "browser_verification": "unavailable",
+          "durable_artifact_storage": "native",
+          "human_approval_gates": "degradable"
+        },
+        "fallbacks": {
+          "subagents": "Run a fresh-context sequential review from the exact task brief and base..head review package; report degraded independence.",
+          "task_tracking": "Append task state to .wcbs/runs/<run-id>/progress-ledger.jsonl.",
+          "web_access": "Use supplied sources and record Unknown rather than guessing.",
+          "browser_verification": "Use command-line evidence and record rendered verification as Not Run.",
+          "human_approval_gates": "Stop and require explicit human approval before the pending action."
+        },
+        "supported_runtime_versions": "Version support is experimental until a clean-session evidence record exists.",
+        "supported_operating_systems": [
+          "macos",
+          "linux",
+          "windows"
+        ],
+        "modifies_user_files": false,
+        "install": "Install the package artifact at .kimi-plugin/plugin.json through the runtime's native plugin route.",
+        "update": "Update the plugin package through the runtime's native extension manager.",
+        "uninstall": "Remove only the WCBS plugin or extension through the runtime's native manager.",
+        "rollback": "Reinstall the previously tagged WCBS plugin package.",
+        "limitations": "Package contract is tested locally. Runtime loading, tool mapping, and clean-session activation are not yet verified.",
+        "deprecation": "Experimental adapter. Do not claim Runtime Verified until evidence is recorded."
+      },
+      "tool_mapping": {
+        "runtime_id": "kimi",
+        "actions": {
+          "read_skill": {
+            "availability": "native",
+            "mechanism": "Skill",
+            "required_parameters": [
+              "skill_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "skill load record"
+          },
+          "read_file": {
+            "availability": "native",
+            "mechanism": "Read",
+            "required_parameters": [
+              "path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "file contents"
+          },
+          "write_file": {
+            "availability": "native",
+            "mechanism": "Write",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "written path"
+          },
+          "edit_file": {
+            "availability": "native",
+            "mechanism": "Edit",
+            "required_parameters": [
+              "path",
+              "edit"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "applied edit"
+          },
+          "execute_command": {
+            "availability": "native",
+            "mechanism": "Bash",
+            "required_parameters": [
+              "command"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "stdout, stderr, exit code"
+          },
+          "dispatch_agent": {
+            "availability": "degradable",
+            "mechanism": "No independent agent proof recorded",
+            "required_parameters": [
+              "prompt",
+              "scope"
+            ],
+            "fallback": "Run a fresh-context sequential review from the exact task brief and base..head review package; report degraded independence.",
+            "limitations": "Not equivalent to an independent reviewer.",
+            "evidence_produced": "fresh-context review report"
+          },
+          "create_task": {
+            "availability": "degradable",
+            "mechanism": "No durable task list proof recorded",
+            "required_parameters": [
+              "title",
+              "status"
+            ],
+            "fallback": "Append task state to .wcbs/runs/<run-id>/progress-ledger.jsonl.",
+            "limitations": "Task state must remain durable on disk.",
+            "evidence_produced": "progress-ledger entry"
+          },
+          "record_artifact": {
+            "availability": "native",
+            "mechanism": "Write",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "artifact path and hash"
+          },
+          "request_human_approval": {
+            "availability": "degradable",
+            "mechanism": "No native approval contract recorded",
+            "required_parameters": [
+              "action",
+              "reason"
+            ],
+            "fallback": "Stop and require explicit human approval before the pending action.",
+            "limitations": "Do not treat a text acknowledgement as a tool approval.",
+            "evidence_produced": "approval record"
+          }
+        }
+      }
+    },
+    {
+      "runtime_id": "opencode",
+      "bootstrap": {
+        "source_skill": "using-wcbs",
+        "output_schema": "using-wcbs-bootstrap-v1",
+        "project_fallback": "none"
+      },
+      "support": {
+        "designed": "Partial",
+        "verified": "Not Run",
+        "label": "Experimental",
+        "evidence": "No clean-session runtime evidence is recorded."
+      },
+      "packaging": {
+        "plugin_path": ".opencode/plugins/wcbs.js",
+        "test_owner": "wfprieto",
+        "test_mode": "package-contract"
+      },
+      "manifest": {
+        "runtime_id": "opencode",
+        "display_name": "OpenCode",
+        "owner": "wfprieto",
+        "support_level": "Partial",
+        "activation_tier": "T2",
+        "integration_shape": "in_process_plugin",
+        "native_install_mechanism": "Native OpenCode plugin or extension package",
+        "install_scope": "project",
+        "bootstrap_path": ".opencode/plugins/wcbs.js",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:opencode",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/opencode.json",
+        "capabilities": {
+          "file_read": "native",
+          "file_write": "native",
+          "file_edit": "native",
+          "execute_command": "native",
+          "subagents": "degradable",
+          "task_tracking": "degradable",
+          "web_access": "degradable",
+          "browser_verification": "unavailable",
+          "durable_artifact_storage": "native",
+          "human_approval_gates": "degradable"
+        },
+        "fallbacks": {
+          "subagents": "Run a fresh-context sequential review from the exact task brief and base..head review package; report degraded independence.",
+          "task_tracking": "Append task state to .wcbs/runs/<run-id>/progress-ledger.jsonl.",
+          "web_access": "Use supplied sources and record Unknown rather than guessing.",
+          "browser_verification": "Use command-line evidence and record rendered verification as Not Run.",
+          "human_approval_gates": "Stop and require explicit human approval before the pending action."
+        },
+        "supported_runtime_versions": "Version support is experimental until a clean-session evidence record exists.",
+        "supported_operating_systems": [
+          "macos",
+          "linux",
+          "windows"
+        ],
+        "modifies_user_files": false,
+        "install": "Install the package artifact at .opencode/plugins/wcbs.js through the runtime's native plugin route.",
+        "update": "Update the plugin package through the runtime's native extension manager.",
+        "uninstall": "Remove only the WCBS plugin or extension through the runtime's native manager.",
+        "rollback": "Reinstall the previously tagged WCBS plugin package.",
+        "limitations": "Package contract is tested locally. Runtime loading, tool mapping, and clean-session activation are not yet verified.",
+        "deprecation": "Experimental adapter. Do not claim Runtime Verified until evidence is recorded."
+      },
+      "tool_mapping": {
+        "runtime_id": "opencode",
+        "actions": {
+          "read_skill": {
+            "availability": "native",
+            "mechanism": "skill",
+            "required_parameters": [
+              "skill_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "skill load record"
+          },
+          "read_file": {
+            "availability": "native",
+            "mechanism": "read",
+            "required_parameters": [
+              "path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "file contents"
+          },
+          "write_file": {
+            "availability": "native",
+            "mechanism": "apply_patch",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "written path"
+          },
+          "edit_file": {
+            "availability": "native",
+            "mechanism": "apply_patch",
+            "required_parameters": [
+              "path",
+              "edit"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "applied edit"
+          },
+          "execute_command": {
+            "availability": "native",
+            "mechanism": "bash",
+            "required_parameters": [
+              "command"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "stdout, stderr, exit code"
+          },
+          "dispatch_agent": {
+            "availability": "degradable",
+            "mechanism": "No independent agent proof recorded",
+            "required_parameters": [
+              "prompt",
+              "scope"
+            ],
+            "fallback": "Run a fresh-context sequential review from the exact task brief and base..head review package; report degraded independence.",
+            "limitations": "Not equivalent to an independent reviewer.",
+            "evidence_produced": "fresh-context review report"
+          },
+          "create_task": {
+            "availability": "degradable",
+            "mechanism": "No durable task list proof recorded",
+            "required_parameters": [
+              "title",
+              "status"
+            ],
+            "fallback": "Append task state to .wcbs/runs/<run-id>/progress-ledger.jsonl.",
+            "limitations": "Task state must remain durable on disk.",
+            "evidence_produced": "progress-ledger entry"
+          },
+          "record_artifact": {
+            "availability": "native",
+            "mechanism": "apply_patch",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "artifact path and hash"
+          },
+          "request_human_approval": {
+            "availability": "degradable",
+            "mechanism": "No native approval contract recorded",
+            "required_parameters": [
+              "action",
+              "reason"
+            ],
+            "fallback": "Stop and require explicit human approval before the pending action.",
+            "limitations": "Do not treat a text acknowledgement as a tool approval.",
+            "evidence_produced": "approval record"
+          }
+        }
+      }
+    },
+    {
+      "runtime_id": "pi",
+      "bootstrap": {
+        "source_skill": "using-wcbs",
+        "output_schema": "using-wcbs-bootstrap-v1",
+        "project_fallback": "none"
+      },
+      "support": {
+        "designed": "Partial",
+        "verified": "Not Run",
+        "label": "Experimental",
+        "evidence": "No clean-session runtime evidence is recorded."
+      },
+      "packaging": {
+        "plugin_path": ".pi/extensions/wcbs.ts",
+        "test_owner": "wfprieto",
+        "test_mode": "package-contract"
+      },
+      "manifest": {
+        "runtime_id": "pi",
+        "display_name": "Pi",
+        "owner": "wfprieto",
+        "support_level": "Partial",
+        "activation_tier": "T2",
+        "integration_shape": "in_process_plugin",
+        "native_install_mechanism": "Native Pi plugin or extension package",
+        "install_scope": "project",
+        "bootstrap_path": ".pi/extensions/wcbs.ts",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:pi",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/pi.json",
+        "capabilities": {
+          "file_read": "native",
+          "file_write": "native",
+          "file_edit": "native",
+          "execute_command": "native",
+          "subagents": "degradable",
+          "task_tracking": "degradable",
+          "web_access": "degradable",
+          "browser_verification": "unavailable",
+          "durable_artifact_storage": "native",
+          "human_approval_gates": "degradable"
+        },
+        "fallbacks": {
+          "subagents": "Run a fresh-context sequential review from the exact task brief and base..head review package; report degraded independence.",
+          "task_tracking": "Append task state to .wcbs/runs/<run-id>/progress-ledger.jsonl.",
+          "web_access": "Use supplied sources and record Unknown rather than guessing.",
+          "browser_verification": "Use command-line evidence and record rendered verification as Not Run.",
+          "human_approval_gates": "Stop and require explicit human approval before the pending action."
+        },
+        "supported_runtime_versions": "Version support is experimental until a clean-session evidence record exists.",
+        "supported_operating_systems": [
+          "macos",
+          "linux",
+          "windows"
+        ],
+        "modifies_user_files": false,
+        "install": "Install the package artifact at .pi/extensions/wcbs.ts through the runtime's native plugin route.",
+        "update": "Update the plugin package through the runtime's native extension manager.",
+        "uninstall": "Remove only the WCBS plugin or extension through the runtime's native manager.",
+        "rollback": "Reinstall the previously tagged WCBS plugin package.",
+        "limitations": "Package contract is tested locally. Runtime loading, tool mapping, and clean-session activation are not yet verified.",
+        "deprecation": "Experimental adapter. Do not claim Runtime Verified until evidence is recorded."
+      },
+      "tool_mapping": {
+        "runtime_id": "pi",
+        "actions": {
+          "read_skill": {
+            "availability": "native",
+            "mechanism": "native skill discovery",
+            "required_parameters": [
+              "skill_path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "skill load record"
+          },
+          "read_file": {
+            "availability": "native",
+            "mechanism": "read",
+            "required_parameters": [
+              "path"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "file contents"
+          },
+          "write_file": {
+            "availability": "native",
+            "mechanism": "write",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "written path"
+          },
+          "edit_file": {
+            "availability": "native",
+            "mechanism": "edit",
+            "required_parameters": [
+              "path",
+              "edit"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "applied edit"
+          },
+          "execute_command": {
+            "availability": "native",
+            "mechanism": "bash",
+            "required_parameters": [
+              "command"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "stdout, stderr, exit code"
+          },
+          "dispatch_agent": {
+            "availability": "degradable",
+            "mechanism": "No independent agent proof recorded",
+            "required_parameters": [
+              "prompt",
+              "scope"
+            ],
+            "fallback": "Run a fresh-context sequential review from the exact task brief and base..head review package; report degraded independence.",
+            "limitations": "Not equivalent to an independent reviewer.",
+            "evidence_produced": "fresh-context review report"
+          },
+          "create_task": {
+            "availability": "degradable",
+            "mechanism": "No durable task list proof recorded",
+            "required_parameters": [
+              "title",
+              "status"
+            ],
+            "fallback": "Append task state to .wcbs/runs/<run-id>/progress-ledger.jsonl.",
+            "limitations": "Task state must remain durable on disk.",
+            "evidence_produced": "progress-ledger entry"
+          },
+          "record_artifact": {
+            "availability": "native",
+            "mechanism": "write",
+            "required_parameters": [
+              "path",
+              "content"
+            ],
+            "fallback": null,
+            "limitations": "none",
+            "evidence_produced": "artifact path and hash"
+          },
+          "request_human_approval": {
+            "availability": "degradable",
+            "mechanism": "No native approval contract recorded",
+            "required_parameters": [
+              "action",
+              "reason"
+            ],
+            "fallback": "Stop and require explicit human approval before the pending action.",
+            "limitations": "Do not treat a text acknowledgement as a tool approval.",
+            "evidence_produced": "approval record"
+          }
+        }
+      }
+    }
+  ],
+  "core_skills": [
+    {
+      "name": "using-wcbs",
+      "path": "skills/using-wcbs/SKILL.md",
+      "trigger": "Use when using wcbs applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Use WCBS for this task."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "I need to change this project safely."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Skip the process and edit first."
+        }
+      ]
+    },
+    {
+      "name": "brainstorming",
+      "path": "skills/brainstorming/SKILL.md",
+      "trigger": "Use when brainstorming applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Help me brainstorm a new feature."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "I have an idea but no design yet."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Build it now without asking questions."
+        }
+      ]
+    },
+    {
+      "name": "writing-plans",
+      "path": "skills/writing-plans/SKILL.md",
+      "trigger": "Use when writing plans applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Write an implementation plan."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Turn this audit into executable work."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Give only broad steps and no tests."
+        }
+      ]
+    },
+    {
+      "name": "test-driven-development",
+      "path": "skills/test-driven-development/SKILL.md",
+      "trigger": "Use when test driven development applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Implement this test-first."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Fix this bug with a regression test."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Write the code, then tests if time remains."
+        }
+      ]
+    },
+    {
+      "name": "systematic-debugging",
+      "path": "skills/systematic-debugging/SKILL.md",
+      "trigger": "Use when systematic debugging applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Debug this failure."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "The test is flaky and I do not know why."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Patch the symptom now."
+        }
+      ]
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "path": "skills/dispatching-parallel-agents/SKILL.md",
+      "trigger": "Use when dispatching parallel agents applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Split this work across agents."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Can research and implementation run in parallel?"
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Give every agent the same files to edit."
+        }
+      ]
+    },
+    {
+      "name": "executing-plans",
+      "path": "skills/executing-plans/SKILL.md",
+      "trigger": "Use when executing plans applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Execute this approved plan."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Work through these verified tasks in order."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Mark tasks complete without evidence."
+        }
+      ]
+    },
+    {
+      "name": "subagent-driven-development",
+      "path": "skills/subagent-driven-development/SKILL.md",
+      "trigger": "Use when subagent driven development applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Use subagents to implement this."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "I need an implementer and independent review."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Let the implementer approve their own patch."
+        }
+      ]
+    },
+    {
+      "name": "requesting-code-review",
+      "path": "skills/requesting-code-review/SKILL.md",
+      "trigger": "Use when requesting code review applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Request code review."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Prepare a reviewer handoff for this diff."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Ask for a review with no scope or evidence."
+        }
+      ]
+    },
+    {
+      "name": "receiving-code-review",
+      "path": "skills/receiving-code-review/SKILL.md",
+      "trigger": "Use when receiving code review applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Address this review feedback."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Decide whether this reviewer finding is valid."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Accept every comment without verification."
+        }
+      ]
+    },
+    {
+      "name": "verification-before-completion",
+      "path": "skills/verification-before-completion/SKILL.md",
+      "trigger": "Use when verification before completion applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Verify before completion."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Can I say this is done?"
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Tests pass, so declare success without checking the requirements."
+        }
+      ]
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "path": "skills/finishing-a-development-branch/SKILL.md",
+      "trigger": "Use when finishing a development branch applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Finish this development branch."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Choose the safe merge or cleanup path."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Delete the branch before its merge state is known."
+        }
+      ]
+    },
+    {
+      "name": "using-git-worktrees",
+      "path": "skills/using-git-worktrees/SKILL.md",
+      "trigger": "Use when using git worktrees applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Use a git worktree."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "I need isolated parallel changes."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Delete a worktree I did not create."
+        }
+      ]
+    },
+    {
+      "name": "writing-skills",
+      "path": "skills/writing-skills/SKILL.md",
+      "trigger": "Use when writing skills applies to the requested work.",
+      "scenarios": [
+        {
+          "kind": "direct",
+          "prompt": "Write a new WCBS skill."
+        },
+        {
+          "kind": "indirect",
+          "prompt": "Improve this agent procedure."
+        },
+        {
+          "kind": "pressure",
+          "prompt": "Add generic advice without a trigger or test."
+        }
+      ]
+    }
+  ],
+  "specialist_skills": [
+    {"name":"20-pass-protocol","path":"skills/20-pass-protocol/SKILL.md","classification":"core-governance"},
+    {"name":"agent-observability-and-run-tracing","path":"skills/agent-observability-and-run-tracing/SKILL.md","classification":"domain-procedure"},
+    {"name":"ai-application-security","path":"skills/ai-application-security/SKILL.md","classification":"domain-procedure"},
+    {"name":"anti-ai-writing-quality","path":"skills/anti-ai-writing-quality/SKILL.md","classification":"domain-procedure"},
+    {"name":"code-review-and-review-army","path":"skills/code-review-and-review-army/SKILL.md","classification":"domain-procedure"},
+    {"name":"codebase-design-and-deep-modules","path":"skills/codebase-design-and-deep-modules/SKILL.md","classification":"domain-procedure"},
+    {"name":"compound-learning-capture","path":"skills/compound-learning-capture/SKILL.md","classification":"domain-procedure"},
+    {"name":"cybersecurity-risk-routing","path":"skills/cybersecurity-risk-routing/SKILL.md","classification":"routing-only"},
+    {"name":"data-output-and-reporting","path":"skills/data-output-and-reporting/SKILL.md","classification":"domain-procedure"},
+    {"name":"deployment-and-hosting-guidance","path":"skills/deployment-and-hosting-guidance/SKILL.md","classification":"domain-procedure"},
+    {"name":"devex-and-documentation-review","path":"skills/devex-and-documentation-review/SKILL.md","classification":"domain-procedure"},
+    {"name":"diagnosing-bugs-and-feedback-loops","path":"skills/diagnosing-bugs-and-feedback-loops/SKILL.md","classification":"deprecated","successor":"systematic-debugging"},
+    {"name":"domain-modeling-and-shared-language","path":"skills/domain-modeling-and-shared-language/SKILL.md","classification":"domain-procedure"},
+    {"name":"engineering-plan-review","path":"skills/engineering-plan-review/SKILL.md","classification":"domain-procedure"},
+    {"name":"external-api-integration","path":"skills/external-api-integration/SKILL.md","classification":"domain-procedure"},
+    {"name":"external-integration-launch-gate","path":"skills/external-integration-launch-gate/SKILL.md","classification":"domain-procedure"},
+    {"name":"knowledge-refresh-and-drift-control","path":"skills/knowledge-refresh-and-drift-control/SKILL.md","classification":"domain-procedure"},
+    {"name":"long-horizon-agent-runtime","path":"skills/long-horizon-agent-runtime/SKILL.md","classification":"domain-procedure"},
+    {"name":"mcp-tool-governance","path":"skills/mcp-tool-governance/SKILL.md","classification":"domain-procedure"},
+    {"name":"media-and-asset-pipeline","path":"skills/media-and-asset-pipeline/SKILL.md","classification":"domain-procedure"},
+    {"name":"product-requirements-and-issue-slicing","path":"skills/product-requirements-and-issue-slicing/SKILL.md","classification":"domain-procedure"},
+    {"name":"product-strategy-office-hours","path":"skills/product-strategy-office-hours/SKILL.md","classification":"domain-procedure"},
+    {"name":"project-bootstrap-and-setup","path":"skills/project-bootstrap-and-setup/SKILL.md","classification":"domain-procedure"},
+    {"name":"qa-and-browser-verification","path":"skills/qa-and-browser-verification/SKILL.md","classification":"domain-procedure"},
+    {"name":"release-readiness-and-ship-gates","path":"skills/release-readiness-and-ship-gates/SKILL.md","classification":"domain-procedure"},
+    {"name":"repeatable-agent-loops","path":"skills/repeatable-agent-loops/SKILL.md","classification":"domain-procedure"},
+    {"name":"requirements-grilling-and-alignment","path":"skills/requirements-grilling-and-alignment/SKILL.md","classification":"routing-only"},
+    {"name":"scheduling-and-automation-routing","path":"skills/scheduling-and-automation-routing/SKILL.md","classification":"routing-only"},
+    {"name":"security-incident-response","path":"skills/security-incident-response/SKILL.md","classification":"domain-procedure"},
+    {"name":"strategist-writing-dna","path":"skills/strategist-writing-dna/SKILL.md","classification":"domain-procedure"},
+    {"name":"super-build-kit","path":"skills/super-build-kit/SKILL.md","classification":"core-governance"},
+    {"name":"supply-chain-and-build-provenance","path":"skills/supply-chain-and-build-provenance/SKILL.md","classification":"domain-procedure"},
+    {"name":"throwaway-prototyping","path":"skills/throwaway-prototyping/SKILL.md","classification":"domain-procedure"},
+    {"name":"ui-ux-design-quality","path":"skills/ui-ux-design-quality/SKILL.md","classification":"domain-procedure"},
+    {"name":"web-application-security","path":"skills/web-application-security/SKILL.md","classification":"domain-procedure"}
+  ]
+}

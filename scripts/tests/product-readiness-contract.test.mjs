@@ -61,6 +61,7 @@ test("release workflows expose every forensic product gate", () => {
   const crossPlatform = read(".github/workflows/cross-platform.yml");
   assert.match(release, /build:release-artifacts/);
   for (const command of [
+    "npm run check:whitespace",
     "npm run verify",
     "npm run check:matrix",
     "npm run version:audit",
@@ -73,4 +74,11 @@ test("release workflows expose every forensic product gate", () => {
   ]) {
     assert.match(crossPlatform, new RegExp(command.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `missing cross-platform gate: ${command}`);
   }
+});
+
+test("release scripts retain a tracked-file whitespace gate", () => {
+  const packageJson = JSON.parse(read("package.json"));
+  assert.equal(packageJson.scripts["check:whitespace"], "node scripts/check-whitespace.mjs");
+  assert.match(packageJson.scripts.check, /npm run check:whitespace/);
+  assert.match(read(".github/workflows/release-check.yml"), /npm run check:whitespace/);
 });

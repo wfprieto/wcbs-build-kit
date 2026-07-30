@@ -10,6 +10,10 @@ evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked
 
 # Requirements Grilling And Alignment
 
+For a new product, feature, workflow, or behavior where the user has not yet
+approved a design, load `skills/brainstorming/SKILL.md` first. This skill then
+handles the requirement-specific questions and acceptance evidence.
+
 Use this skill during APIVR Phase 1 when the request needs sharper requirements before a plan can be trusted.
 
 <HARD-GATE>
