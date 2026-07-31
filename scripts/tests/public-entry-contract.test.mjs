@@ -35,12 +35,12 @@ test("README gives a single public URL entry path", () => {
   assert.match(readme, /do not claim activation until the installed adapter passes its doctor and smoke test/i);
 });
 
-test("GET_STARTED defines autonomous install and verification without overstating URL enforcement", () => {
+test("GET_STARTED makes project-scoped installation the default until a native V2 registration route is verified", () => {
   assert.match(getStarted, /Coding agent arriving from the GitHub URL/);
-  assert.match(getStarted, /node scripts\/install-adapter\.mjs --list-targets/);
-  assert.match(getStarted, /--target <runtime> --dest <project> --install/);
-  assert.match(getStarted, /--target <runtime> --dest <project> --doctor/);
-  assert.match(getStarted, /node scripts\/adapter-smoke-test\.mjs --target <runtime> --dest <project>/);
+  assert.match(getStarted, /V1 Project-Local Compatibility Route \(Current Default\)/);
+  assert.match(getStarted, /resolve-install-context\.mjs --target <runtime> --candidate <path>/);
+  assert.match(getStarted, /A V2 package integrity result is not a runtime registration result/);
+  assert.match(getStarted, /docs\/V2_RUNTIME_EVIDENCE\.md/);
   assert.match(getStarted, /URL-paste discovery is `REQUESTED`, not `ENFORCED`/);
   assert.match(getStarted, /Do not claim activation/);
 });
@@ -52,15 +52,12 @@ test("runtime selection fails closed instead of guessing", () => {
   assert.match(getStarted, /Do not infer a runtime from model style, repository contents, or familiarity/);
 });
 
-test("destination selection is resolved before an install command is presented", () => {
-  assert.match(getStarted, /A destination is deterministic only when exactly one project root is explicitly identifiable/);
-  assert.match(getStarted, /The current directory alone is not destination evidence/);
-  assert.match(getStarted, /Which project should receive the WCBS adapter\?/);
-  assert.match(getStarted, /No destination project exists yet\./);
-  assert.match(getStarted, /report `Blocked`/);
-  const resolution = getStarted.indexOf("### Destination identification rule");
-  const install = getStarted.indexOf("--install", resolution);
-  assert.ok(resolution >= 0 && install > resolution, "destination resolution must precede the install command");
+test("V1 compatibility keeps destination resolution ahead of project writes", () => {
+  assert.match(getStarted, /V1 Project-Local Compatibility Route/);
+  assert.match(getStarted, /resolve-install-context\.mjs --target <runtime> --candidate <path>/);
+  assert.match(getStarted, /State: Ready/);
+  assert.match(getStarted, /writes\s+nothing/i);
+  assert.match(getStarted, /returns `Blocked`/);
 });
 
 test("unreferenced Controller hashes are observations, not integrity verification", () => {
