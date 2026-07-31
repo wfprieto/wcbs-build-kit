@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          pinned="3dcbd5c4b48e02263fbf4a3c01e3fe4f81d584d9"
+          pinned="44c9b2d6e889982ac18c27d05a19fefe335194e1"
           observed="$(git ls-remote https://github.com/obra/superpowers.git HEAD | awk '{print $1}')"
           test -n "$observed"
           {
@@ -30,7 +30,7 @@ jobs:
             if [ "$observed" = "$pinned" ]; then
               echo "- Status: unchanged"
             else
-              echo "- Status: review required. Record adopt, adapt, defer, or reject in docs/upstream/ADOPTION_LEDGER.md."
+              echo "- Status: review required. Record a decision in docs/upstream/ADOPTION_LEDGER.md and update the complete integration matrix."
             fi
           } > superpowers-upstream-report.md
           cat superpowers-upstream-report.md >> "$GITHUB_STEP_SUMMARY"
@@ -52,7 +52,7 @@ jobs:
           title="[WCBS] Superpowers upstream drift: ${OBSERVED}"
           existing="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "\"$title\" in:title" --json title --jq 'length' 2>/dev/null || true)"
           if [ "$existing" = "0" ] || [ -z "$existing" ]; then
-            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "Upstream HEAD changed from the pinned WCBS baseline. Before any import, record an adopt, adapt, defer, or reject decision with compatibility evidence in docs/upstream/ADOPTION_LEDGER.md. This issue is the durable review record; close it only after that ledger decision is committed."
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "Upstream HEAD changed from the pinned WCBS baseline. Before any import, record a decision and compatibility evidence in docs/upstream/ADOPTION_LEDGER.md and docs/upstream/SUPERPOWERS_INTEGRATION_MATRIX.json. This issue is the durable review record; close it only after those records are committed."
           fi
 
       - name: Upload report
