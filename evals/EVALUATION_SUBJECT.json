@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-07-31T03:30:00Z",
+  "purpose": "Immutable source identities used by WCBS behavioral-evaluation preregistrations. This record validates source pins only; it does not authorize execution or claim a behavioral result.",
+  "wcbs": {
+    "repository": "https://github.com/wfprieto/wcbs-build-kit",
+    "commit": "82d9dd61dffb4e26ae1046887b95c43e89c3cbe8",
+    "tree": "a65def1dfe7f474a5993698d48eea0bdea99eadc"
+  },
+  "superpowers": {
+    "repository": "https://github.com/obra/superpowers",
+    "commit": "44c9b2d6e889982ac18c27d05a19fefe335194e1",
+    "tree": "dcb98a8f3aa03c8aef4144efda4e2bf9a77c40de"
+  }
+}

@@ -94,6 +94,7 @@ Designed support and verified support are separate facts:
 
 - `runtime_adapters/CAPABILITY_MATRIX.md` reports designed support from manifests.
 - `runtime_adapters/VERIFIED_SUPPORT_LEVELS.md` reports evidence that has actually been run.
+- `runtime_adapters/RUNTIME_PROOF_PACKS.json` is the generated, runtime-specific proof requirement catalog. It defines the five evidence tiers, clean-install checks, evidence manifest, uninstall boundary, and blocked-state handling; it does not itself prove any runtime result.
 
 Do not claim `Runtime Verified` from manifest validity, file presence, dry-run instructions, or structural tests. Runtime verification requires a clean-session runtime test or an explicitly recorded equivalent evidence artifact.
 

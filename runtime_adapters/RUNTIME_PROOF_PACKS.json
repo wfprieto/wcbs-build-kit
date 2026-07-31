@@ -1,0 +1,961 @@
+{
+  "schema_version": 1,
+  "generated_from": "runtime_adapters/adapter-registry.yaml",
+  "registry_sha256": "ed85435c10e50d2a7a6d572f68abf7810a193905cae22de3068c7fd37c34ab9b",
+  "evidence_tier_order": [
+    "package_integrity",
+    "structural_lifecycle",
+    "registration",
+    "clean_session_activation",
+    "clean_session_invocation"
+  ],
+  "packs": [
+    {
+      "runtime_id": "claude",
+      "display_name": "Claude and Claude Code",
+      "designed_support": "Full",
+      "public_label": "Designed",
+      "evidence_tiers": [
+        {
+          "id": "package_integrity",
+          "acceptance_criterion": "The exact WCBS package or project-scoped installer identity validates with its owned-file manifest and checksum."
+        },
+        {
+          "id": "structural_lifecycle",
+          "acceptance_criterion": "Install, doctor, smoke, uninstall, and no-residue lifecycle checks pass in an isolated destination."
+        },
+        {
+          "id": "registration",
+          "acceptance_criterion": "A runtime-native registration step is recorded with the exact runtime version and package identity; package presence alone does not satisfy this tier."
+        },
+        {
+          "id": "clean_session_activation",
+          "acceptance_criterion": "A new authenticated vendor session displays the exact runtime marker and canonical startup route without a pasted WCBS prompt."
+        },
+        {
+          "id": "clean_session_invocation",
+          "acceptance_criterion": "The same clean session routes one representative skill or workflow through the runtime-native mechanism, with evidence that distinguishes real routing from text-only file presence."
+        }
+      ],
+      "clean_install": {
+        "required": true,
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Install .claude-plugin/plugin.json; the SessionStart hook injects BOOTSTRAP.md. CLAUDE.md remains the T2 fallback.. User-owned sentinel files retain their pre-install hashes."
+      },
+      "native_lifecycle": {
+        "install_scope": "project",
+        "install": "Install .claude-plugin/plugin.json; the SessionStart hook injects BOOTSTRAP.md. CLAUDE.md remains the T2 fallback.",
+        "update": "Update the plugin, Kernel, and hook files in the repository.",
+        "uninstall": "Remove the Claude plugin registration and CLAUDE.md fallback. No shell profile is modified.",
+        "rollback": "Restore the previously tagged plugin, hook, Kernel, and CLAUDE.md files."
+      },
+      "runtime_registration": {
+        "native_install_mechanism": "Claude Code plugin SessionStart hook plus CLAUDE.md fallback",
+        "bootstrap_path": ".claude-plugin/plugin.json",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:claude",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/claude.json",
+        "package_paths": {
+          "plugin_path": ".claude-plugin/plugin.json"
+        }
+      },
+      "representative_invocation": {
+        "action": "read_skill",
+        "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+        "required_parameters": [
+          "skill_path"
+        ],
+        "evidence_produced": "skill load record"
+      },
+      "evidence_manifest": {
+        "required_fields": [
+          "runtime_id",
+          "runtime_version",
+          "operating_system",
+          "wcbs_package_identity",
+          "timestamp_utc",
+          "command",
+          "expected_result",
+          "actual_result",
+          "evidence_location_or_sha256",
+          "reviewer",
+          "evidence_state"
+        ],
+        "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
+      },
+      "uninstall": {
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Remove the Claude plugin registration and CLAUDE.md fallback. No shell profile is modified. Rollback: Restore the previously tagged plugin, hook, Kernel, and CLAUDE.md files."
+      },
+      "failure_and_rollback": [
+        "partial install",
+        "unsupported runtime",
+        "failed activation",
+        "unavailable credentials or vendor session"
+      ],
+      "clean_session_evidence": {
+        "state": "Blocked",
+        "blocker": "A clean authenticated vendor session and independent reviewer record have not been retained."
+      }
+    },
+    {
+      "runtime_id": "codex",
+      "display_name": "OpenAI Codex",
+      "designed_support": "Full",
+      "public_label": "Designed",
+      "evidence_tiers": [
+        {
+          "id": "package_integrity",
+          "acceptance_criterion": "The exact WCBS package or project-scoped installer identity validates with its owned-file manifest and checksum."
+        },
+        {
+          "id": "structural_lifecycle",
+          "acceptance_criterion": "Install, doctor, smoke, uninstall, and no-residue lifecycle checks pass in an isolated destination."
+        },
+        {
+          "id": "registration",
+          "acceptance_criterion": "A runtime-native registration step is recorded with the exact runtime version and package identity; package presence alone does not satisfy this tier."
+        },
+        {
+          "id": "clean_session_activation",
+          "acceptance_criterion": "A new authenticated vendor session displays the exact runtime marker and canonical startup route without a pasted WCBS prompt."
+        },
+        {
+          "id": "clean_session_invocation",
+          "acceptance_criterion": "The same clean session routes one representative skill or workflow through the runtime-native mechanism, with evidence that distinguishes real routing from text-only file presence."
+        }
+      ],
+      "clean_install": {
+        "required": true,
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Install the plugin from .codex-plugin/plugin.json; the skills/ directory is registered automatically.. User-owned sentinel files retain their pre-install hashes."
+      },
+      "native_lifecycle": {
+        "install_scope": "project",
+        "install": "Install the plugin from .codex-plugin/plugin.json; the skills/ directory is registered automatically.",
+        "update": "Pull the repository and reload the plugin; plugin.json version drives the upgrade.",
+        "uninstall": "Remove the plugin from the Codex plugin list. No files outside the project are touched.",
+        "rollback": "Reinstall the previously tagged commit of .codex-plugin/plugin.json and skills/."
+      },
+      "runtime_registration": {
+        "native_install_mechanism": "Codex plugin (.codex-plugin/plugin.json) with skills directory",
+        "bootstrap_path": ".codex-plugin/plugin.json",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:codex",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/codex.json",
+        "package_paths": {
+          "plugin_path": ".codex-plugin/plugin.json",
+          "marketplace_path": ".agents/plugins"
+        }
+      },
+      "representative_invocation": {
+        "action": "read_skill",
+        "mechanism": "Codex plugin skill loader (skills/<name>/SKILL.md)",
+        "required_parameters": [
+          "skill_path"
+        ],
+        "evidence_produced": "skill load record"
+      },
+      "evidence_manifest": {
+        "required_fields": [
+          "runtime_id",
+          "runtime_version",
+          "operating_system",
+          "wcbs_package_identity",
+          "timestamp_utc",
+          "command",
+          "expected_result",
+          "actual_result",
+          "evidence_location_or_sha256",
+          "reviewer",
+          "evidence_state"
+        ],
+        "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
+      },
+      "uninstall": {
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Remove the plugin from the Codex plugin list. No files outside the project are touched. Rollback: Reinstall the previously tagged commit of .codex-plugin/plugin.json and skills/."
+      },
+      "failure_and_rollback": [
+        "partial install",
+        "unsupported runtime",
+        "failed activation",
+        "unavailable credentials or vendor session"
+      ],
+      "clean_session_evidence": {
+        "state": "Blocked",
+        "blocker": "A clean authenticated vendor session and independent reviewer record have not been retained."
+      }
+    },
+    {
+      "runtime_id": "cursor",
+      "display_name": "Cursor",
+      "designed_support": "Full",
+      "public_label": "Designed",
+      "evidence_tiers": [
+        {
+          "id": "package_integrity",
+          "acceptance_criterion": "The exact WCBS package or project-scoped installer identity validates with its owned-file manifest and checksum."
+        },
+        {
+          "id": "structural_lifecycle",
+          "acceptance_criterion": "Install, doctor, smoke, uninstall, and no-residue lifecycle checks pass in an isolated destination."
+        },
+        {
+          "id": "registration",
+          "acceptance_criterion": "A runtime-native registration step is recorded with the exact runtime version and package identity; package presence alone does not satisfy this tier."
+        },
+        {
+          "id": "clean_session_activation",
+          "acceptance_criterion": "A new authenticated vendor session displays the exact runtime marker and canonical startup route without a pasted WCBS prompt."
+        },
+        {
+          "id": "clean_session_invocation",
+          "acceptance_criterion": "The same clean session routes one representative skill or workflow through the runtime-native mechanism, with evidence that distinguishes real routing from text-only file presence."
+        }
+      ],
+      "clean_install": {
+        "required": true,
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Commit .cursor/rules/super-build-kit.mdc, .cursor/hooks.json, and hooks/. The project SessionStart hook invokes the WCBS transport.. User-owned sentinel files retain their pre-install hashes."
+      },
+      "native_lifecycle": {
+        "install_scope": "project",
+        "install": "Commit .cursor/rules/super-build-kit.mdc, .cursor/hooks.json, and hooks/. The project SessionStart hook invokes the WCBS transport.",
+        "update": "Update the project rule, .cursor/hooks.json, Kernel, and hook files; Cursor re-reads them next session.",
+        "uninstall": "Remove the Cursor rule, .cursor/hooks.json, and WCBS-owned hook files. Nothing outside the project is modified.",
+        "rollback": "Restore the previous rule and hook files from version control."
+      },
+      "runtime_registration": {
+        "native_install_mechanism": "Cursor project rule plus SessionStart hook at .cursor/hooks.json",
+        "bootstrap_path": ".cursor/rules/super-build-kit.mdc",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:cursor",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/cursor.json",
+        "package_paths": {
+          "plugin_path": ".cursor/rules/super-build-kit.mdc"
+        }
+      },
+      "representative_invocation": {
+        "action": "read_skill",
+        "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+        "required_parameters": [
+          "skill_path"
+        ],
+        "evidence_produced": "skill load record"
+      },
+      "evidence_manifest": {
+        "required_fields": [
+          "runtime_id",
+          "runtime_version",
+          "operating_system",
+          "wcbs_package_identity",
+          "timestamp_utc",
+          "command",
+          "expected_result",
+          "actual_result",
+          "evidence_location_or_sha256",
+          "reviewer",
+          "evidence_state"
+        ],
+        "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
+      },
+      "uninstall": {
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Remove the Cursor rule, .cursor/hooks.json, and WCBS-owned hook files. Nothing outside the project is modified. Rollback: Restore the previous rule and hook files from version control."
+      },
+      "failure_and_rollback": [
+        "partial install",
+        "unsupported runtime",
+        "failed activation",
+        "unavailable credentials or vendor session"
+      ],
+      "clean_session_evidence": {
+        "state": "Blocked",
+        "blocker": "A clean authenticated vendor session and independent reviewer record have not been retained."
+      }
+    },
+    {
+      "runtime_id": "gemini",
+      "display_name": "Gemini CLI",
+      "designed_support": "Partial",
+      "public_label": "Designed",
+      "evidence_tiers": [
+        {
+          "id": "package_integrity",
+          "acceptance_criterion": "The exact WCBS package or project-scoped installer identity validates with its owned-file manifest and checksum."
+        },
+        {
+          "id": "structural_lifecycle",
+          "acceptance_criterion": "Install, doctor, smoke, uninstall, and no-residue lifecycle checks pass in an isolated destination."
+        },
+        {
+          "id": "registration",
+          "acceptance_criterion": "A runtime-native registration step is recorded with the exact runtime version and package identity; package presence alone does not satisfy this tier."
+        },
+        {
+          "id": "clean_session_activation",
+          "acceptance_criterion": "A new authenticated vendor session displays the exact runtime marker and canonical startup route without a pasted WCBS prompt."
+        },
+        {
+          "id": "clean_session_invocation",
+          "acceptance_criterion": "The same clean session routes one representative skill or workflow through the runtime-native mechanism, with evidence that distinguishes real routing from text-only file presence."
+        }
+      ],
+      "clean_install": {
+        "required": true,
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Commit GEMINI.md at the repository root. Gemini CLI loads it as hierarchical context.. User-owned sentinel files retain their pre-install hashes."
+      },
+      "native_lifecycle": {
+        "install_scope": "project",
+        "install": "Commit GEMINI.md at the repository root. Gemini CLI loads it as hierarchical context.",
+        "update": "Edit GEMINI.md in the repository.",
+        "uninstall": "Delete GEMINI.md.",
+        "rollback": "Restore the previous revision from version control."
+      },
+      "runtime_registration": {
+        "native_install_mechanism": "GEMINI.md context file loaded at session start",
+        "bootstrap_path": "GEMINI.md",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:gemini",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/gemini.json",
+        "package_paths": {
+          "plugin_path": "GEMINI.md"
+        }
+      },
+      "representative_invocation": {
+        "action": "read_skill",
+        "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+        "required_parameters": [
+          "skill_path"
+        ],
+        "evidence_produced": "skill load record"
+      },
+      "evidence_manifest": {
+        "required_fields": [
+          "runtime_id",
+          "runtime_version",
+          "operating_system",
+          "wcbs_package_identity",
+          "timestamp_utc",
+          "command",
+          "expected_result",
+          "actual_result",
+          "evidence_location_or_sha256",
+          "reviewer",
+          "evidence_state"
+        ],
+        "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
+      },
+      "uninstall": {
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Delete GEMINI.md. Rollback: Restore the previous revision from version control."
+      },
+      "failure_and_rollback": [
+        "partial install",
+        "unsupported runtime",
+        "failed activation",
+        "unavailable credentials or vendor session"
+      ],
+      "clean_session_evidence": {
+        "state": "Blocked",
+        "blocker": "A clean authenticated vendor session and independent reviewer record have not been retained."
+      }
+    },
+    {
+      "runtime_id": "generic-agent",
+      "display_name": "Generic LLM Agent",
+      "designed_support": "Manual",
+      "public_label": "Designed",
+      "evidence_tiers": [
+        {
+          "id": "package_integrity",
+          "acceptance_criterion": "The exact WCBS package or project-scoped installer identity validates with its owned-file manifest and checksum."
+        },
+        {
+          "id": "structural_lifecycle",
+          "acceptance_criterion": "Install, doctor, smoke, uninstall, and no-residue lifecycle checks pass in an isolated destination."
+        },
+        {
+          "id": "registration",
+          "acceptance_criterion": "A runtime-native registration step is recorded with the exact runtime version and package identity; package presence alone does not satisfy this tier."
+        },
+        {
+          "id": "clean_session_activation",
+          "acceptance_criterion": "A new authenticated vendor session displays the exact runtime marker and canonical startup route without a pasted WCBS prompt."
+        },
+        {
+          "id": "clean_session_invocation",
+          "acceptance_criterion": "The same clean session routes one representative skill or workflow through the runtime-native mechanism, with evidence that distinguishes real routing from text-only file presence."
+        }
+      ],
+      "clean_install": {
+        "required": true,
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Provide BOOTSTRAP.md at the start of every session.. User-owned sentinel files retain their pre-install hashes."
+      },
+      "native_lifecycle": {
+        "install_scope": "project",
+        "install": "Provide BOOTSTRAP.md at the start of every session.",
+        "update": "Provide the updated Kernel file.",
+        "uninstall": "Stop providing the file. Nothing is installed.",
+        "rollback": "Provide the prior tagged Kernel file."
+      },
+      "runtime_registration": {
+        "native_install_mechanism": "Operator supplies BOOTSTRAP.md manually",
+        "bootstrap_path": "BOOTSTRAP.md",
+        "bootstrap_mode": "manual",
+        "activation_marker": "WCBS_KIT_ACTIVE:generic-agent",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/generic-agent.json",
+        "package_paths": {
+          "plugin_path": "BOOTSTRAP.md"
+        }
+      },
+      "representative_invocation": {
+        "action": "read_skill",
+        "mechanism": "Operator attaches or the agent reads the SKILL.md path",
+        "required_parameters": [
+          "skill_path"
+        ],
+        "evidence_produced": "skill load record"
+      },
+      "evidence_manifest": {
+        "required_fields": [
+          "runtime_id",
+          "runtime_version",
+          "operating_system",
+          "wcbs_package_identity",
+          "timestamp_utc",
+          "command",
+          "expected_result",
+          "actual_result",
+          "evidence_location_or_sha256",
+          "reviewer",
+          "evidence_state"
+        ],
+        "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
+      },
+      "uninstall": {
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Stop providing the file. Nothing is installed. Rollback: Provide the prior tagged Kernel file."
+      },
+      "failure_and_rollback": [
+        "partial install",
+        "unsupported runtime",
+        "failed activation",
+        "unavailable credentials or vendor session"
+      ],
+      "clean_session_evidence": {
+        "state": "Blocked",
+        "blocker": "A clean authenticated vendor session and independent reviewer record have not been retained."
+      }
+    },
+    {
+      "runtime_id": "github-copilot",
+      "display_name": "GitHub Copilot",
+      "designed_support": "Partial",
+      "public_label": "Designed",
+      "evidence_tiers": [
+        {
+          "id": "package_integrity",
+          "acceptance_criterion": "The exact WCBS package or project-scoped installer identity validates with its owned-file manifest and checksum."
+        },
+        {
+          "id": "structural_lifecycle",
+          "acceptance_criterion": "Install, doctor, smoke, uninstall, and no-residue lifecycle checks pass in an isolated destination."
+        },
+        {
+          "id": "registration",
+          "acceptance_criterion": "A runtime-native registration step is recorded with the exact runtime version and package identity; package presence alone does not satisfy this tier."
+        },
+        {
+          "id": "clean_session_activation",
+          "acceptance_criterion": "A new authenticated vendor session displays the exact runtime marker and canonical startup route without a pasted WCBS prompt."
+        },
+        {
+          "id": "clean_session_invocation",
+          "acceptance_criterion": "The same clean session routes one representative skill or workflow through the runtime-native mechanism, with evidence that distinguishes real routing from text-only file presence."
+        }
+      ],
+      "clean_install": {
+        "required": true,
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Commit .github/copilot-instructions.md, .github/hooks/wcbs-session-start.json, and hooks/. The repository SessionStart hook invokes the WCBS transport.. User-owned sentinel files retain their pre-install hashes."
+      },
+      "native_lifecycle": {
+        "install_scope": "project",
+        "install": "Commit .github/copilot-instructions.md, .github/hooks/wcbs-session-start.json, and hooks/. The repository SessionStart hook invokes the WCBS transport.",
+        "update": "Edit the instructions, repository hook registration, Kernel, and hook files in the repository.",
+        "uninstall": "Delete .github/copilot-instructions.md, .github/hooks/wcbs-session-start.json, and WCBS-owned hook files.",
+        "rollback": "Restore the previous revision from version control."
+      },
+      "runtime_registration": {
+        "native_install_mechanism": "Repository custom instructions plus the repository SessionStart hook at .github/hooks/wcbs-session-start.json",
+        "bootstrap_path": ".github/copilot-instructions.md",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:github-copilot",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/github-copilot.json",
+        "package_paths": {
+          "plugin_path": ".github/copilot-instructions.md"
+        }
+      },
+      "representative_invocation": {
+        "action": "read_skill",
+        "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+        "required_parameters": [
+          "skill_path"
+        ],
+        "evidence_produced": "skill load record"
+      },
+      "evidence_manifest": {
+        "required_fields": [
+          "runtime_id",
+          "runtime_version",
+          "operating_system",
+          "wcbs_package_identity",
+          "timestamp_utc",
+          "command",
+          "expected_result",
+          "actual_result",
+          "evidence_location_or_sha256",
+          "reviewer",
+          "evidence_state"
+        ],
+        "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
+      },
+      "uninstall": {
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Delete .github/copilot-instructions.md, .github/hooks/wcbs-session-start.json, and WCBS-owned hook files. Rollback: Restore the previous revision from version control."
+      },
+      "failure_and_rollback": [
+        "partial install",
+        "unsupported runtime",
+        "failed activation",
+        "unavailable credentials or vendor session"
+      ],
+      "clean_session_evidence": {
+        "state": "Blocked",
+        "blocker": "A clean authenticated vendor session and independent reviewer record have not been retained."
+      }
+    },
+    {
+      "runtime_id": "kimi",
+      "display_name": "Kimi Code",
+      "designed_support": "Partial",
+      "public_label": "Experimental",
+      "evidence_tiers": [
+        {
+          "id": "package_integrity",
+          "acceptance_criterion": "The exact WCBS package or project-scoped installer identity validates with its owned-file manifest and checksum."
+        },
+        {
+          "id": "structural_lifecycle",
+          "acceptance_criterion": "Install, doctor, smoke, uninstall, and no-residue lifecycle checks pass in an isolated destination."
+        },
+        {
+          "id": "registration",
+          "acceptance_criterion": "A runtime-native registration step is recorded with the exact runtime version and package identity; package presence alone does not satisfy this tier."
+        },
+        {
+          "id": "clean_session_activation",
+          "acceptance_criterion": "A new authenticated vendor session displays the exact runtime marker and canonical startup route without a pasted WCBS prompt."
+        },
+        {
+          "id": "clean_session_invocation",
+          "acceptance_criterion": "The same clean session routes one representative skill or workflow through the runtime-native mechanism, with evidence that distinguishes real routing from text-only file presence."
+        }
+      ],
+      "clean_install": {
+        "required": true,
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Install the package artifact at .kimi-plugin/plugin.json through the runtime's native plugin route.. User-owned sentinel files retain their pre-install hashes."
+      },
+      "native_lifecycle": {
+        "install_scope": "project",
+        "install": "Install the package artifact at .kimi-plugin/plugin.json through the runtime's native plugin route.",
+        "update": "Update the plugin package through the runtime's native extension manager.",
+        "uninstall": "Remove only the WCBS plugin or extension through the runtime's native manager.",
+        "rollback": "Reinstall the previously tagged WCBS plugin package."
+      },
+      "runtime_registration": {
+        "native_install_mechanism": "Native Kimi Code plugin or extension package",
+        "bootstrap_path": ".kimi-plugin/plugin.json",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:kimi",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/kimi.json",
+        "package_paths": {
+          "plugin_path": ".kimi-plugin/plugin.json"
+        }
+      },
+      "representative_invocation": {
+        "action": "read_skill",
+        "mechanism": "Skill",
+        "required_parameters": [
+          "skill_path"
+        ],
+        "evidence_produced": "skill load record"
+      },
+      "evidence_manifest": {
+        "required_fields": [
+          "runtime_id",
+          "runtime_version",
+          "operating_system",
+          "wcbs_package_identity",
+          "timestamp_utc",
+          "command",
+          "expected_result",
+          "actual_result",
+          "evidence_location_or_sha256",
+          "reviewer",
+          "evidence_state"
+        ],
+        "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
+      },
+      "uninstall": {
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Remove only the WCBS plugin or extension through the runtime's native manager. Rollback: Reinstall the previously tagged WCBS plugin package."
+      },
+      "failure_and_rollback": [
+        "partial install",
+        "unsupported runtime",
+        "failed activation",
+        "unavailable credentials or vendor session"
+      ],
+      "clean_session_evidence": {
+        "state": "Blocked",
+        "blocker": "A clean authenticated vendor session and independent reviewer record have not been retained."
+      }
+    },
+    {
+      "runtime_id": "manus",
+      "display_name": "Manus Agent",
+      "designed_support": "Manual",
+      "public_label": "Designed",
+      "evidence_tiers": [
+        {
+          "id": "package_integrity",
+          "acceptance_criterion": "The exact WCBS package or project-scoped installer identity validates with its owned-file manifest and checksum."
+        },
+        {
+          "id": "structural_lifecycle",
+          "acceptance_criterion": "Install, doctor, smoke, uninstall, and no-residue lifecycle checks pass in an isolated destination."
+        },
+        {
+          "id": "registration",
+          "acceptance_criterion": "A runtime-native registration step is recorded with the exact runtime version and package identity; package presence alone does not satisfy this tier."
+        },
+        {
+          "id": "clean_session_activation",
+          "acceptance_criterion": "A new authenticated vendor session displays the exact runtime marker and canonical startup route without a pasted WCBS prompt."
+        },
+        {
+          "id": "clean_session_invocation",
+          "acceptance_criterion": "The same clean session routes one representative skill or workflow through the runtime-native mechanism, with evidence that distinguishes real routing from text-only file presence."
+        }
+      ],
+      "clean_install": {
+        "required": true,
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Commit Manus.md and manually provide BOOTSTRAP.md or reference it at session start.. User-owned sentinel files retain their pre-install hashes."
+      },
+      "native_lifecycle": {
+        "install_scope": "project",
+        "install": "Commit Manus.md and manually provide BOOTSTRAP.md or reference it at session start.",
+        "update": "Edit Manus.md in the repository.",
+        "uninstall": "Delete Manus.md.",
+        "rollback": "Restore the previous revision from version control."
+      },
+      "runtime_registration": {
+        "native_install_mechanism": "Manus.md repository instruction file",
+        "bootstrap_path": "Manus.md",
+        "bootstrap_mode": "manual",
+        "activation_marker": "WCBS_KIT_ACTIVE:manus",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/manus.json",
+        "package_paths": {
+          "plugin_path": "Manus.md"
+        }
+      },
+      "representative_invocation": {
+        "action": "read_skill",
+        "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+        "required_parameters": [
+          "skill_path"
+        ],
+        "evidence_produced": "skill load record"
+      },
+      "evidence_manifest": {
+        "required_fields": [
+          "runtime_id",
+          "runtime_version",
+          "operating_system",
+          "wcbs_package_identity",
+          "timestamp_utc",
+          "command",
+          "expected_result",
+          "actual_result",
+          "evidence_location_or_sha256",
+          "reviewer",
+          "evidence_state"
+        ],
+        "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
+      },
+      "uninstall": {
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Delete Manus.md. Rollback: Restore the previous revision from version control."
+      },
+      "failure_and_rollback": [
+        "partial install",
+        "unsupported runtime",
+        "failed activation",
+        "unavailable credentials or vendor session"
+      ],
+      "clean_session_evidence": {
+        "state": "Blocked",
+        "blocker": "A clean authenticated vendor session and independent reviewer record have not been retained."
+      }
+    },
+    {
+      "runtime_id": "opencode",
+      "display_name": "OpenCode",
+      "designed_support": "Partial",
+      "public_label": "Experimental",
+      "evidence_tiers": [
+        {
+          "id": "package_integrity",
+          "acceptance_criterion": "The exact WCBS package or project-scoped installer identity validates with its owned-file manifest and checksum."
+        },
+        {
+          "id": "structural_lifecycle",
+          "acceptance_criterion": "Install, doctor, smoke, uninstall, and no-residue lifecycle checks pass in an isolated destination."
+        },
+        {
+          "id": "registration",
+          "acceptance_criterion": "A runtime-native registration step is recorded with the exact runtime version and package identity; package presence alone does not satisfy this tier."
+        },
+        {
+          "id": "clean_session_activation",
+          "acceptance_criterion": "A new authenticated vendor session displays the exact runtime marker and canonical startup route without a pasted WCBS prompt."
+        },
+        {
+          "id": "clean_session_invocation",
+          "acceptance_criterion": "The same clean session routes one representative skill or workflow through the runtime-native mechanism, with evidence that distinguishes real routing from text-only file presence."
+        }
+      ],
+      "clean_install": {
+        "required": true,
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Install the package artifact at .opencode/plugins/wcbs.js through the runtime's native plugin route.. User-owned sentinel files retain their pre-install hashes."
+      },
+      "native_lifecycle": {
+        "install_scope": "project",
+        "install": "Install the package artifact at .opencode/plugins/wcbs.js through the runtime's native plugin route.",
+        "update": "Update the plugin package through the runtime's native extension manager.",
+        "uninstall": "Remove only the WCBS plugin or extension through the runtime's native manager.",
+        "rollback": "Reinstall the previously tagged WCBS plugin package."
+      },
+      "runtime_registration": {
+        "native_install_mechanism": "Native OpenCode plugin or extension package",
+        "bootstrap_path": ".opencode/plugins/wcbs.js",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:opencode",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/opencode.json",
+        "package_paths": {
+          "plugin_path": ".opencode/plugins/wcbs.js"
+        }
+      },
+      "representative_invocation": {
+        "action": "read_skill",
+        "mechanism": "skill",
+        "required_parameters": [
+          "skill_path"
+        ],
+        "evidence_produced": "skill load record"
+      },
+      "evidence_manifest": {
+        "required_fields": [
+          "runtime_id",
+          "runtime_version",
+          "operating_system",
+          "wcbs_package_identity",
+          "timestamp_utc",
+          "command",
+          "expected_result",
+          "actual_result",
+          "evidence_location_or_sha256",
+          "reviewer",
+          "evidence_state"
+        ],
+        "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
+      },
+      "uninstall": {
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Remove only the WCBS plugin or extension through the runtime's native manager. Rollback: Reinstall the previously tagged WCBS plugin package."
+      },
+      "failure_and_rollback": [
+        "partial install",
+        "unsupported runtime",
+        "failed activation",
+        "unavailable credentials or vendor session"
+      ],
+      "clean_session_evidence": {
+        "state": "Blocked",
+        "blocker": "A clean authenticated vendor session and independent reviewer record have not been retained."
+      }
+    },
+    {
+      "runtime_id": "pi",
+      "display_name": "Pi",
+      "designed_support": "Partial",
+      "public_label": "Experimental",
+      "evidence_tiers": [
+        {
+          "id": "package_integrity",
+          "acceptance_criterion": "The exact WCBS package or project-scoped installer identity validates with its owned-file manifest and checksum."
+        },
+        {
+          "id": "structural_lifecycle",
+          "acceptance_criterion": "Install, doctor, smoke, uninstall, and no-residue lifecycle checks pass in an isolated destination."
+        },
+        {
+          "id": "registration",
+          "acceptance_criterion": "A runtime-native registration step is recorded with the exact runtime version and package identity; package presence alone does not satisfy this tier."
+        },
+        {
+          "id": "clean_session_activation",
+          "acceptance_criterion": "A new authenticated vendor session displays the exact runtime marker and canonical startup route without a pasted WCBS prompt."
+        },
+        {
+          "id": "clean_session_invocation",
+          "acceptance_criterion": "The same clean session routes one representative skill or workflow through the runtime-native mechanism, with evidence that distinguishes real routing from text-only file presence."
+        }
+      ],
+      "clean_install": {
+        "required": true,
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Install the package artifact at .pi/extensions/wcbs.ts through the runtime's native plugin route.. User-owned sentinel files retain their pre-install hashes."
+      },
+      "native_lifecycle": {
+        "install_scope": "project",
+        "install": "Install the package artifact at .pi/extensions/wcbs.ts through the runtime's native plugin route.",
+        "update": "Update the plugin package through the runtime's native extension manager.",
+        "uninstall": "Remove only the WCBS plugin or extension through the runtime's native manager.",
+        "rollback": "Reinstall the previously tagged WCBS plugin package."
+      },
+      "runtime_registration": {
+        "native_install_mechanism": "Native Pi plugin or extension package",
+        "bootstrap_path": ".pi/extensions/wcbs.ts",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:pi",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/pi.json",
+        "package_paths": {
+          "plugin_path": ".pi/extensions/wcbs.ts"
+        }
+      },
+      "representative_invocation": {
+        "action": "read_skill",
+        "mechanism": "native skill discovery",
+        "required_parameters": [
+          "skill_path"
+        ],
+        "evidence_produced": "skill load record"
+      },
+      "evidence_manifest": {
+        "required_fields": [
+          "runtime_id",
+          "runtime_version",
+          "operating_system",
+          "wcbs_package_identity",
+          "timestamp_utc",
+          "command",
+          "expected_result",
+          "actual_result",
+          "evidence_location_or_sha256",
+          "reviewer",
+          "evidence_state"
+        ],
+        "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
+      },
+      "uninstall": {
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Remove only the WCBS plugin or extension through the runtime's native manager. Rollback: Reinstall the previously tagged WCBS plugin package."
+      },
+      "failure_and_rollback": [
+        "partial install",
+        "unsupported runtime",
+        "failed activation",
+        "unavailable credentials or vendor session"
+      ],
+      "clean_session_evidence": {
+        "state": "Blocked",
+        "blocker": "A clean authenticated vendor session and independent reviewer record have not been retained."
+      }
+    },
+    {
+      "runtime_id": "replit",
+      "display_name": "Replit Agent",
+      "designed_support": "Partial",
+      "public_label": "Designed",
+      "evidence_tiers": [
+        {
+          "id": "package_integrity",
+          "acceptance_criterion": "The exact WCBS package or project-scoped installer identity validates with its owned-file manifest and checksum."
+        },
+        {
+          "id": "structural_lifecycle",
+          "acceptance_criterion": "Install, doctor, smoke, uninstall, and no-residue lifecycle checks pass in an isolated destination."
+        },
+        {
+          "id": "registration",
+          "acceptance_criterion": "A runtime-native registration step is recorded with the exact runtime version and package identity; package presence alone does not satisfy this tier."
+        },
+        {
+          "id": "clean_session_activation",
+          "acceptance_criterion": "A new authenticated vendor session displays the exact runtime marker and canonical startup route without a pasted WCBS prompt."
+        },
+        {
+          "id": "clean_session_invocation",
+          "acceptance_criterion": "The same clean session routes one representative skill or workflow through the runtime-native mechanism, with evidence that distinguishes real routing from text-only file presence."
+        }
+      ],
+      "clean_install": {
+        "required": true,
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Commit REPLIT.md at the repository root of the Repl.. User-owned sentinel files retain their pre-install hashes."
+      },
+      "native_lifecycle": {
+        "install_scope": "project",
+        "install": "Commit REPLIT.md at the repository root of the Repl.",
+        "update": "Edit REPLIT.md in the Repl.",
+        "uninstall": "Delete REPLIT.md.",
+        "rollback": "Restore the previous revision from version control."
+      },
+      "runtime_registration": {
+        "native_install_mechanism": "REPLIT.md repository instruction file",
+        "bootstrap_path": "REPLIT.md",
+        "bootstrap_mode": "automatic",
+        "activation_marker": "WCBS_KIT_ACTIVE:replit",
+        "tool_mapping_path": "runtime_adapters/tool_mappings/replit.json",
+        "package_paths": {
+          "plugin_path": "REPLIT.md"
+        }
+      },
+      "representative_invocation": {
+        "action": "read_skill",
+        "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
+        "required_parameters": [
+          "skill_path"
+        ],
+        "evidence_produced": "skill load record"
+      },
+      "evidence_manifest": {
+        "required_fields": [
+          "runtime_id",
+          "runtime_version",
+          "operating_system",
+          "wcbs_package_identity",
+          "timestamp_utc",
+          "command",
+          "expected_result",
+          "actual_result",
+          "evidence_location_or_sha256",
+          "reviewer",
+          "evidence_state"
+        ],
+        "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
+      },
+      "uninstall": {
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Delete REPLIT.md. Rollback: Restore the previous revision from version control."
+      },
+      "failure_and_rollback": [
+        "partial install",
+        "unsupported runtime",
+        "failed activation",
+        "unavailable credentials or vendor session"
+      ],
+      "clean_session_evidence": {
+        "state": "Blocked",
+        "blocker": "A clean authenticated vendor session and independent reviewer record have not been retained."
+      }
+    }
+  ]
+}

@@ -12,6 +12,10 @@ evidence_requirements: Executed checks or an honest Unknown, Not Run, or Blocked
 
 Use this skill during APIVR Phase 4 after implementation and before final verification claims.
 
+## Mandatory concise challenger pass
+
+For installer, security, runtime-adapter, evaluator, or release changes, one reviewer independent of the implementer must review the exact base-to-head diff before a release claim. The pass must check false support claims, tests that cannot fail, missing Red evidence, unsafe residue handling, evaluator self-approval, pin drift, rollback gaps, duplicated authority, unnecessary complexity, and skipped verification. Material findings require repair and a re-review of the same scope; a fix attempt alone does not clear the finding.
+
 ## Specialist Passes
 
 Select only relevant reviewers:

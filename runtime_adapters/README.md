@@ -13,6 +13,7 @@ This README does not inventory skills. `00_start_here/LOAD_ORDER.md` owns skill 
 | Know the real tool names for your runtime | runtime_adapters/tool_mappings/&lt;runtime&gt;.json |
 | Compare runtimes, or pick a fallback | `runtime_adapters/CAPABILITY_MATRIX.md` (generated from the registry) |
 | Inspect the canonical adapter and skill catalog | `runtime_adapters/adapter-registry.yaml` |
+| Prepare or verify clean-session runtime evidence | `runtime_adapters/RUNTIME_PROOF_PACKS.json` (generated from the registry) |
 | Add support for a new runtime | `runtime_adapters/PORTING_GUIDE.md` |
 | Submit an adapter change | `runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md` |
 
@@ -54,6 +55,7 @@ Regenerate the capability matrix after any manifest change:
 
 ```bash
 npm run generate:v2-metadata
+npm run generate:runtime-proof-packs
 ```
 
 Never hand-edit generated adapter files. `runtime_adapters/adapter-registry.yaml` is canonical, and `npm run verify` enforces it.
