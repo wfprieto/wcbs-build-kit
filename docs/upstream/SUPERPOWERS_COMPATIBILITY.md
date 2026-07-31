@@ -6,15 +6,20 @@ upstream benchmark and an attributed design input. It is not a silent fork.
 ## Pinned baseline
 
 - Repository: `https://github.com/obra/superpowers.git`
-- Commit: `3dcbd5c4b48e02263fbf4a3c01e3fe4f81d584d9`
-- Tree: `da1e7bb99212a060f90ffd6def69ff606775a79c`
+- Commit: `44c9b2d6e889982ac18c27d05a19fefe335194e1`
+- Tree: `dcb98a8f3aa03c8aef4144efda4e2bf9a77c40de`
 - License: MIT. Retain the upstream copyright and license notice with any
   distributed copied material. Conceptual adaptations are recorded as
   adaptations, not represented as original upstream code.
 
-The Phase 6 comparison protocol uses this exact identity. It must not be
-changed after measurement begins. A newer upstream release requires a new,
-versioned protocol and an updated comparison baseline.
+The Phase 6 comparison protocol retains its separately preregistered identity.
+This integration baseline must not be substituted into a measurement already in
+progress. A new comparison requires a new, versioned protocol.
+
+The complete current-cycle decision record is
+`docs/upstream/SUPERPOWERS_INTEGRATION_MATRIX.json`. It covers every evaluated
+capability, records the required WCBS test and provenance treatment, and never
+changes runtime support claims.
 
 ## Change-management rule
 
