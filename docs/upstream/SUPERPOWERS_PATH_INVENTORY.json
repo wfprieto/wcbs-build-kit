@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "generated_from": "git ls-tree -r --name-only 44c9b2d6e889982ac18c27d05a19fefe335194e1",
+  "upstream": {
+    "repository": "https://github.com/obra/superpowers.git",
+    "commit": "44c9b2d6e889982ac18c27d05a19fefe335194e1",
+    "tree": "dcb98a8f3aa03c8aef4144efda4e2bf9a77c40de"
+  },
+  "files": [
+    ".codex-plugin/plugin.json",
+    "RELEASE-NOTES.md",
+    "skills/brainstorming/SKILL.md",
+    "skills/dispatching-parallel-agents/SKILL.md",
+    "skills/executing-plans/SKILL.md",
+    "skills/finishing-a-development-branch/SKILL.md",
+    "skills/receiving-code-review/SKILL.md",
+    "skills/requesting-code-review/SKILL.md",
+    "skills/subagent-driven-development/SKILL.md",
+    "skills/subagent-driven-development/scripts/review-package",
+    "skills/subagent-driven-development/task-reviewer-prompt.md",
+    "skills/systematic-debugging/SKILL.md",
+    "skills/test-driven-development/SKILL.md",
+    "skills/test-driven-development/writing-good-tests.md",
+    "skills/using-git-worktrees/SKILL.md",
+    "skills/using-superpowers/SKILL.md",
+    "skills/verification-before-completion/SKILL.md",
+    "skills/writing-plans/SKILL.md",
+    "skills/writing-skills/SKILL.md"
+  ],
+  "scopes": [
+    "docs/",
+    "hooks/",
+    "skills/subagent-driven-development/",
+    "skills/using-superpowers/references/",
+    "tests/"
+  ]
+}
