@@ -25,7 +25,7 @@ const ignoredDirectoryNames = new Set([".git", ".agents", ".wcbs", "node_modules
 const registryPath = "runtime_adapters/adapter-registry.yaml";
 
 const requiredFiles = [
-  "README.md", "INSTALL.md", "GET_STARTED.md", "MANIFEST.md", "DISTRIBUTION_POLICY.md", "SUPPORT_MATRIX.md", "CHANGELOG.md", "RELEASE_PROCESS.md", "VERSIONING.md", "SECURITY.md", "GET_STARTED.md",
+  "README.md", "INSTALL.md", "GET_STARTED.md", "WCBS_START.md", "MANIFEST.md", "DISTRIBUTION_POLICY.md", "SUPPORT_MATRIX.md", "CHANGELOG.md", "RELEASE_PROCESS.md", "VERSIONING.md", "SECURITY.md", "GET_STARTED.md",
   "BOOTSTRAP.md", "AGENTS.md", "CLAUDE.md", "GEMINI.md", "REPLIT.md", "Manus.md",
   "00_start_here/START_HERE.md", "00_start_here/SOURCE_OF_TRUTH.md", "00_start_here/LOAD_ORDER.md", "00_start_here/KERNEL_CONTRACT.md", "00_start_here/bootstrap-controller.json", "00_start_here/BOOTSTRAP_CONTROLLER.md", "00_start_here/capability-routing.json", "00_start_here/CERTIFICATE_CANONICALIZATION.md",
   "10_governance/APIVR_EXECUTION_LIFECYCLE.md", "10_governance/ELITE_BUILD_GOALS_SUMMARY.md", "10_governance/RELEASE_GATES.md", "10_governance/DUPLICATE_GUIDANCE_BASELINE.json",
@@ -37,11 +37,11 @@ const requiredFiles = [
   "skills/subagent-driven-development/tests/test_make_review_package.py",
   ...["PRE_FLIGHT_CONFLICT_REPORT", "TASK_BRIEF", "IMPLEMENTER_REPORT", "TASK_REVIEW_REPORT", "FIX_REPORT", "FINAL_BRANCH_REVIEW"].map(x => `60_templates/${x}_TEMPLATE.md`),
   "60_templates/PROGRESS_LEDGER_TEMPLATE.jsonl",
-  "runtime_adapters/README.md", "runtime_adapters/PORTABILITY_CONTRACT.md", "runtime_adapters/PORTING_GUIDE.md", "runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md", "runtime_adapters/adapter-registry.yaml", "runtime_adapters/CAPABILITY_MATRIX.md", "runtime_adapters/VERIFIED_SUPPORT_LEVELS.md", "runtime_adapters/INSTALLATION_MATRIX.md", "runtime_adapters/ACTIVATION_TESTS.md", "runtime_adapters/generated/using-wcbs-bootstrap.md", "runtime_adapters/generated/runtime-startup-contract.md", "runtime_adapters/generated/skill-catalog.json",
+  "runtime_adapters/README.md", "runtime_adapters/PORTABILITY_CONTRACT.md", "runtime_adapters/PORTING_GUIDE.md", "runtime_adapters/ADAPTER_PULL_REQUEST_CHECKLIST.md", "runtime_adapters/adapter-registry.yaml", "runtime_adapters/CAPABILITY_MATRIX.md", "runtime_adapters/VERIFIED_SUPPORT_LEVELS.md", "runtime_adapters/RUNTIME_PROOF_PACKS.json", "runtime_adapters/INSTALLATION_MATRIX.md", "runtime_adapters/ACTIVATION_TESTS.md", "runtime_adapters/generated/using-wcbs-bootstrap.md", "runtime_adapters/generated/runtime-startup-contract.md", "runtime_adapters/generated/skill-catalog.json",
   ...["adapter-manifest", "tool-mapping", "bootstrap-controller", "handoff-envelope", "capability-routing", "bootstrap-certificate", "capability-resolution", "elite-goals-ledger", "evidence-ledger", "project-profile", "engineering-team", "risk-register", "release-state"].map(x => `runtime_adapters/schemas/${x}.schema.json`),
   "60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md", "60_templates/STABLE_RELEASE_REPORT_TEMPLATE.md",
-  "docs/USING_THE_SUPER_BUILD_KIT.md", "docs/COMMON_WORKFLOWS.md", "docs/V2_RUNTIME_EVIDENCE.md", "docs/V2_MIGRATION.md", "evals/README.md", "evals/v2-core-skill-preregistration.json", "evals/v2-core-skill-cases.json",
-  "scripts/generate-capability-matrix.mjs", "scripts/generate-v2-metadata.mjs", "scripts/render-session-bootstrap.mjs", "scripts/generate-bootstrap-controller.mjs", "scripts/generate-load-order.mjs", "scripts/check-whitespace.mjs", "scripts/run-python-tests.mjs", "scripts/wcbs-system-test.mjs", "scripts/check-install.mjs", "scripts/install-adapter.mjs", "scripts/wcbs.mjs", "scripts/adapter-smoke-test.mjs", "scripts/verify-v2-eval-design.mjs", "scripts/lib/adapter-contract.mjs", "scripts/lib/json-schema.mjs", "scripts/lib/bootstrap-artifacts.mjs", "scripts/lib/certificate-canonicalization.mjs", "scripts/audit-duplicate-guidance.mjs", "scripts/audit-skill-size.mjs", "scripts/audit-skill-contract.mjs", "scripts/audit-layer-budgets.mjs", "scripts/run-evals.mjs", "scripts/publish-activation-evidence.mjs",
+  "docs/USING_THE_SUPER_BUILD_KIT.md", "docs/COMMON_WORKFLOWS.md", "docs/V2_RUNTIME_EVIDENCE.md", "docs/V2_MIGRATION.md", "evals/README.md", "evals/EVALUATION_SUBJECT.json", "evals/v2-core-skill-preregistration.json", "evals/v2-core-skill-cases.json",
+  "scripts/generate-capability-matrix.mjs", "scripts/generate-v2-metadata.mjs", "scripts/generate-runtime-proof-packs.mjs", "scripts/verify-runtime-proof-packs.mjs", "scripts/evaluation-readiness.mjs", "scripts/render-session-bootstrap.mjs", "scripts/generate-bootstrap-controller.mjs", "scripts/generate-load-order.mjs", "scripts/check-whitespace.mjs", "scripts/run-python-tests.mjs", "scripts/wcbs-system-test.mjs", "scripts/check-install.mjs", "scripts/install-adapter.mjs", "scripts/wcbs.mjs", "scripts/adapter-smoke-test.mjs", "scripts/verify-v2-eval-design.mjs", "scripts/lib/adapter-contract.mjs", "scripts/lib/json-schema.mjs", "scripts/lib/bootstrap-artifacts.mjs", "scripts/lib/certificate-canonicalization.mjs", "scripts/audit-duplicate-guidance.mjs", "scripts/audit-skill-size.mjs", "scripts/audit-skill-contract.mjs", "scripts/audit-layer-budgets.mjs", "scripts/run-evals.mjs", "scripts/publish-activation-evidence.mjs",
   "tests/system/routing-fixtures.json", "tests/system/activation-scenarios.json",
   ...["controller-contract", "adapter-contract", "schema-enforcement", "schema-keyword-support", "bootstrap-fixtures", "long-horizon-memory-contract", "wcbs-doctor", "artifact-bundle", "kernel-contract", "bootstrap-controller", "activation-marker-reachability", "runtime-entry-contract", "skill-contract", "npm-script-entry-points", "v2-registry", "v2-bootstrap-renderer", "wcbs-cli", "native-adapter-packages", "hook-transport", "v2-eval-design"].map(x => `scripts/tests/${x}.test.mjs`),
   "scripts/tests/fixtures/run-bundle/findings.json", "scripts/tests/fixtures/run-bundle/progress-ledger.jsonl", "scripts/tests/fixtures/run-bundle/tasks/T-01/task-artifact.json", "scripts/tests/fixtures/run-bundle/tasks/T-02/task-artifact.json",
@@ -70,6 +70,8 @@ function checkPackage() {
     "check:v2-metadata": "node scripts/generate-v2-metadata.mjs --check",
     "check:controller": "node scripts/generate-bootstrap-controller.mjs --check",
     "check:load-order": "node scripts/generate-load-order.mjs --check",
+    "generate:runtime-proof-packs": "node scripts/generate-runtime-proof-packs.mjs",
+    "check:runtime-proof-packs": "node scripts/generate-runtime-proof-packs.mjs --check && node scripts/verify-runtime-proof-packs.mjs",
     "check:whitespace": "node scripts/check-whitespace.mjs",
     "test:node": "node --test scripts/tests/*.test.mjs",
     "test:python": "node scripts/run-python-tests.mjs",
@@ -80,6 +82,7 @@ function checkPackage() {
     eval: "node scripts/run-evals.mjs",
     "eval:strict": "node scripts/run-evals.mjs --strict",
     "eval:publish-evidence": "node scripts/publish-activation-evidence.mjs",
+    "eval:readiness": "node scripts/evaluation-readiness.mjs",
     "eval:core-skills": "node scripts/verify-v2-eval-design.mjs",
     "version:audit": "node scripts/audit-version-drift.mjs",
     "codex:marketplace-check": "node scripts/check-codex-marketplace.mjs",
@@ -88,7 +91,7 @@ function checkPackage() {
     "audit:layers": "node scripts/audit-layer-budgets.mjs",
     "audit:governance": "npm run audit:duplicates && npm run audit:skill-contract && npm run audit:layers",
     test: "npm run test:node && npm run test:python",
-    check: "npm run doctor && npm run check:v2-metadata && npm run check:matrix && npm run check:controller && npm run check:load-order && npm run check:whitespace && npm run version:audit && npm run audit:skill-contract && npm run audit:layers && npm run audit:governance && npm run eval && npm run eval:core-skills && npm run behavior-test && npm run test",
+    check: "npm run doctor && npm run check:v2-metadata && npm run check:matrix && npm run check:controller && npm run check:load-order && npm run check:runtime-proof-packs && npm run check:whitespace && npm run version:audit && npm run audit:skill-contract && npm run audit:layers && npm run audit:governance && npm run eval && npm run eval:core-skills && npm run behavior-test && npm run test",
     "release-check": "npm run check && npm run system-test && npm run check-install && npm run build:release-artifacts"
   };
   for (const [name, command] of Object.entries(expectedScripts)) if (p.scripts?.[name] !== command) fail(`package.json script ${name} must be exactly: ${command}`);

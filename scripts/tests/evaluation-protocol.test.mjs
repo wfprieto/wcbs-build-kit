@@ -69,10 +69,8 @@ const fixtureCandidate = {
   commit: testGit(["rev-parse", "HEAD"], fixtureRoot).trim(),
   tree: testGit(["rev-parse", "HEAD^{tree}"], fixtureRoot).trim()
 };
-const publishedReleaseCandidate = {
-  commit: "5eb0f297702e49a41f63946136b089a2eecfac97",
-  tree: "999234aec89d4ab63aa649c5dca56df7236c6b19"
-};
+const { commit: publishedCommit, tree: publishedTree } = JSON.parse(fs.readFileSync(path.join(root, "evals", "EVALUATION_SUBJECT.json"), "utf8")).wcbs;
+const publishedReleaseCandidate = { commit: publishedCommit, tree: publishedTree };
 const sha256 = (value) => crypto.createHash("sha256").update(value).digest("hex");
 const fixtureRoleKeys = (() => {
   const role = (key_id) => {
@@ -306,7 +304,7 @@ test("Gate 0C stages the exact pinned Git candidate through V2 wcbs plugin insta
     assert.equal(wcbs.candidate.commit, fixtureCandidate.commit);
     assert.equal(wcbs.candidate.tree, fixtureCandidate.tree);
     const archivedPackage = path.join(directory, "run", wcbs.candidate.source, "package.json");
-    assert.equal(fs.readFileSync(archivedPackage, "utf8"), fs.readFileSync(path.join(root, "package.json"), "utf8"));
+    assert.equal(fs.readFileSync(archivedPackage, "utf8"), testGit(["show", `${fixtureCandidate.commit}:package.json`], fixtureRoot));
     assert.ok(wcbs.artifacts.transcript_sha256);
     assert.ok(fs.existsSync(path.join(directory, "run", wcbs.artifacts.workspace_manifest)));
     assert.ok(fs.existsSync(path.join(directory, "run", wcbs.artifacts.workspace_diff)));

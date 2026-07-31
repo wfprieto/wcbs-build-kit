@@ -1,6 +1,6 @@
 # Get Started
 
-Use this file for the shortest safe path into the Super Build Kit.
+Use this file for the supported installation and use path. For the first decision among installation, contribution, release, and runtime evaluation, open `WCBS_START.md`.
 
 ## Current default: project-scoped installation
 

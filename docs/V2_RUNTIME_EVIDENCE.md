@@ -4,6 +4,13 @@ Structural tests and plugin package tests do not prove that an agent runtime
 loaded WCBS. Use this procedure before changing any adapter to `Runtime
 Verified`.
 
+The runtime-specific clean-install, registration, activation, invocation,
+uninstall, rollback, redaction, and evidence-manifest requirements are in the
+generated `runtime_adapters/RUNTIME_PROOF_PACKS.json`. Use the pack for the
+selected runtime before recording any result below. If a vendor session,
+credential, or independent reviewer is unavailable, record `Blocked` and do
+not advance the support label.
+
 1. Create a new ordinary project with a README, package file, and source file.
 2. Record SHA-256 hashes for those user-owned files.
 3. Install V2 into the runtime's dedicated plugin directory using `npm run wcbs

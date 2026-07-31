@@ -4,7 +4,11 @@
   "phase": "6",
   "status": "preregistered-before-paid-runs",
   "runtime_id": "claude",
-  "arms": ["neutral", "wcbs", "superpowers"],
+  "arms": [
+    "neutral",
+    "wcbs",
+    "superpowers"
+  ],
   "arm_definition": {
     "neutral": "Pinned control project alone in an isolated workspace.",
     "wcbs": "Pinned control project with the exact V2 WCBS candidate staged from its Git archive using scripts/wcbs.mjs.",
@@ -17,20 +21,21 @@
   "repetitions": 10,
   "expected_total_runs": 240,
   "wcbs_candidate": {
-    "commit": "5eb0f297702e49a41f63946136b089a2eecfac97",
-    "tree": "999234aec89d4ab63aa649c5dca56df7236c6b19"
+    "commit": "82d9dd61dffb4e26ae1046887b95c43e89c3cbe8",
+    "tree": "a65def1dfe7f474a5993698d48eea0bdea99eadc"
   },
   "evaluation_subject": {
-    "commit": "5eb0f297702e49a41f63946136b089a2eecfac97",
-    "tree": "999234aec89d4ab63aa649c5dca56df7236c6b19"
+    "commit": "82d9dd61dffb4e26ae1046887b95c43e89c3cbe8",
+    "tree": "a65def1dfe7f474a5993698d48eea0bdea99eadc"
   },
   "claim_target": {
-    "commit": "5eb0f297702e49a41f63946136b089a2eecfac97",
-    "tree": "999234aec89d4ab63aa649c5dca56df7236c6b19"
+    "commit": "82d9dd61dffb4e26ae1046887b95c43e89c3cbe8",
+    "tree": "a65def1dfe7f474a5993698d48eea0bdea99eadc"
   },
   "superpowers_source_identity": {
-    "commit": "3dcbd5c4b48e02263fbf4a3c01e3fe4f81d584d9",
-    "tree": "da1e7bb99212a060f90ffd6def69ff606775a79c",
+    "repository": "https://github.com/obra/superpowers",
+    "commit": "44c9b2d6e889982ac18c27d05a19fefe335194e1",
+    "tree": "dcb98a8f3aa03c8aef4144efda4e2bf9a77c40de",
     "access": "The source path is supplied with --superpowers-source, must resolve exactly to this checked-out HEAD and tree, and is archived read-only for every scheduled run."
   },
   "execution_identity": {
@@ -67,7 +72,7 @@
   },
   "evaluator_harness": {
     "path": "evals/evaluator-harness-manifest.json",
-    "sha256": "b5fe9243163fcbcfae668612541077042d4374b8c076c8d3e4c7555e4dbf04ab"
+    "sha256": "5e0b1465fcaf313e76d45d6c84812a651a5f85e37c1bd9883796be1cf568ea64"
   },
   "analysis": {
     "bootstrap_resamples": 10000,
