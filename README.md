@@ -14,11 +14,13 @@ Repository slug: `wcbs-build-kit`. Product/system name: Super Build Kit.
 
 This kit merges the permanent APIVR execution loop, the 16 Elite Build Goals, the reusable specialist/audit structure from `wfprieto/wcbs-build-kit`, and the portable skill/workflow mechanics from `obra/Superpowers`.
 
-## WCBS V2: Native Plugin First
+## WCBS V2: Package Integrity and Native Registration
 
-WCBS V2 installs into an explicit runtime plugin directory and leaves the
-user's project untouched. It does not bulk-copy WCBS into a project, edit a
-README, source file, package file, or existing instruction file.
+WCBS V2 can install into an explicit runtime plugin directory and leaves the
+user's project untouched. That proves only package integrity until the selected
+runtime has a documented, executed native registration route. Every current
+adapter manifest remains project-scoped, so use the safeguarded project-local
+route in `GET_STARTED.md` as the default.
 
 ```bash
 # First inspect the honest support and evidence state.
@@ -35,9 +37,9 @@ npm run wcbs -- uninstall --plugin-dir <runtime-plugin-directory> --json
 Every adapter remains below `Runtime Verified` until a raw, independently
 replayable clean-session record exists. See `docs/V2_RUNTIME_EVIDENCE.md`.
 
-The older `scripts/install-adapter.mjs` route is a V1 compatibility installer.
-Use it only for an existing V1 install and migrate with the V2 command after a
-dry run: `npm run wcbs -- migrate --project <v1-project> --plugin-dir <runtime-plugin-directory> --dry-run`.
+`scripts/install-adapter.mjs` is the current project-scoped default. Use the
+V2 command only after a target-specific native registration route is available
+and independently verified.
 
 ## Start Here
 

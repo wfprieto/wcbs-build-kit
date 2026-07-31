@@ -2,30 +2,45 @@
 
 Use this file for the shortest safe path into the Super Build Kit.
 
-## V2 default: native plugin, not project vendoring
+## Current default: project-scoped installation
 
-For a new installation, obtain the runtime identity and its dedicated native
-plugin directory. Do not write WCBS into the project merely because the
-project is the current directory.
+All current runtime manifests declare `install_scope: project`. Use the
+transactional project-local installer only after the destination is resolved.
+The installer protects unrelated files, records ownership, and refuses unsafe
+uninstall. Native V2 bundles are package-integrity artifacts, not a universal
+runtime-registration route.
 
 ```bash
-npm run wcbs -- status --json
-npm run wcbs -- install --target <runtime> --plugin-dir <runtime-plugin-directory> --json
-npm run wcbs -- doctor --plugin-dir <runtime-plugin-directory> --json
+node scripts/resolve-install-context.mjs --target <runtime> --candidate <path> [--candidate <path> ...]
+node scripts/resolve-install-context.mjs --target <runtime> --dest <project>
 ```
 
-If the runtime or plugin directory is unknown, ask for that one missing value
-and return `Blocked` without writing files. Use `docs/V2_RUNTIME_EVIDENCE.md`
-for the separate clean-session proof. The older project-local path below is
-V1 compatibility and migration guidance, not the default installation route.
+If the runtime or destination is unknown, ask for that one missing value and
+return `Blocked` without writing files. Use `docs/V2_RUNTIME_EVIDENCE.md` for
+the separate clean-session proof.
 
 ## Coding agent arriving from the GitHub URL
 
-When a user gives you this repository URL and asks you to use the WCBS Build Kit for a project:
+When a user gives you this repository URL and asks you to use WCBS:
 
 1. Obtain or open the repository without modifying the user's project.
 2. Read `BOOTSTRAP.md` and follow its transfer to `00_start_here/bootstrap-controller.json`.
-3. Identify the active runtime only far enough to select one supported adapter target.
+3. Identify the active runtime and resolve the destination project.
+4. Run the project-scoped lifecycle only after the resolver returns `State:
+   Ready`:
+
+```bash
+node scripts/resolve-install-context.mjs --target <runtime> --dest <project>
+node scripts/install-adapter.mjs --target <runtime> --dest <project> --install
+node scripts/install-adapter.mjs --target <runtime> --dest <project> --doctor
+node scripts/adapter-smoke-test.mjs --target <runtime> --dest <project>
+```
+
+5. Read `docs/V2_RUNTIME_EVIDENCE.md` before calling an external runtime
+activated. Installation, a smoke test, and a marker observation are not
+clean-session activation proof.
+6. Continue the requested work only after the applicable installed adapter
+passes doctor and smoke verification.
 
 ### Runtime identification rule
 
@@ -43,66 +58,42 @@ Then ask exactly one bounded question:
 
 > Which supported coding runtime is running this project? Choose one target from the list above.
 
-This is the only permitted runtime-selection question. Do not guess. If the runtime is still unknown, report it as `Blocked` and do not install an adapter.
+This is the only permitted runtime-selection question. Do not guess. If the
+runtime is still unknown, report it as `Blocked` and do not install an adapter.
 
-4. Resolve the destination project before producing an installation command.
+If the repository cannot be obtained, the runtime cannot be identified, the
+destination project is unknown, or doctor fails, stop with the specific blocker.
+Do not claim activation.
 
-### Destination identification rule
+## V1 Project-Local Compatibility Route (Current Default)
 
-A destination is deterministic only when exactly one project root is explicitly identifiable from the current execution context. Qualifying evidence is:
-
-- a project path explicitly supplied by the user;
-- one authoritative project root supplied by an invocation contract;
-- one authoritative project root exposed by a supported workspace or integration; or
-- one unambiguous target repository already established by the user's request and distinct from this Build Kit clone.
-
-The current directory alone is not destination evidence. The Build Kit clone is not a destination candidate. If the user asks to work on the Build Kit itself, no adapter installation into that same repository is needed; the installer rejects the Build Kit source as its own destination.
-
-Enumerate candidate paths from explicit user paths, authoritative workspace or integration roots, and discovered project repository roots. Pass each plausible path as `--candidate <path>`:
+This is the current default until a target-specific V2 registration command is
+independently verified. It intentionally writes only WCBS-owned files into the
+resolved destination:
 
 ```bash
 node scripts/resolve-install-context.mjs --target <runtime> --candidate <path> [--candidate <path> ...]
-```
-
-If no single destination is established, ask exactly one bounded question:
-
-> Which project should receive the WCBS adapter?
-
-List the actual candidate paths discovered in the current context. If no candidate project exists, include:
-
-> No destination project exists yet.
-
-Do not ask the user to choose WCBS files, adapter internals, manifests, skills, or load order. If the answer remains unresolved, report `Blocked`, name `destination project` as the missing input, and stop. Do not install, write adapter files, or claim initialization or activation.
-
-5. Once both runtime and destination are resolved, produce the install context:
-
-```bash
 node scripts/resolve-install-context.mjs --target <runtime> --dest <project>
 ```
 
-The ready result supplies the exact install, doctor, owned-file verification, and smoke-test commands. Run the installation command only after that result is ready:
+Once the resolver returns `State: Ready`, it supplies the exact V1 install,
+doctor, ownership verification, smoke test, and uninstall commands. If no
+single destination is established, it asks once, returns `Blocked`, and writes
+nothing.
+
+## V2 package integrity route
+
+V2 installs a bounded package into an explicit plugin directory:
 
 ```bash
-node scripts/install-adapter.mjs --target <runtime> --dest <project> --install
+npm run wcbs -- install --target <runtime> --plugin-dir <runtime-plugin-directory> --json
+npm run wcbs -- doctor --plugin-dir <runtime-plugin-directory> --json
 ```
 
-Supported targets are returned by:
-
-```bash
-node scripts/install-adapter.mjs --list-targets
-```
-
-6. Verify the installed files and activation marker:
-
-```bash
-node scripts/install-adapter.mjs --target <runtime> --dest <project> --doctor
-node scripts/install-adapter.mjs --target <runtime> --dest <project> --verify-owned-files
-node scripts/adapter-smoke-test.mjs --target <runtime> --dest <project>
-```
-
-7. Continue the user's requested work under the installed WCBS instructions. Do not make the user choose internal files, adapters, skills, or load order when the runtime and project destination can be determined safely.
-
-If the repository cannot be obtained, the runtime cannot be identified, the destination is ambiguous, or a required verification fails, stop with the specific blocker. Do not claim activation.
+A V2 package integrity result is not a runtime registration result. Do not
+continue under V2 instructions unless the selected runtime has a documented,
+executed native registration step and then passes the clean-session procedure
+in `docs/V2_RUNTIME_EVIDENCE.md`.
 
 URL-paste discovery is `REQUESTED`, not `ENFORCED`: this repository can make the correct path obvious after it is opened, but it cannot compel an external model to fetch a URL.
 
@@ -129,9 +120,9 @@ npm.cmd run check-install
 | Use the kit in this repository | `00_start_here/START_HERE.md` |
 | Audit a project | `50_audits/AUDIT_TIER_ROUTER.md` |
 | Plan a feature | `skills/writing-plans/SKILL.md` |
-| List supported runtime targets | `node scripts/install-adapter.mjs --list-targets` |
-| Install into a project | `node scripts/install-adapter.mjs --target <runtime> --dest <project> --install` |
-| Check an installed adapter | `node scripts/adapter-smoke-test.mjs --target <runtime> --dest <project>` |
+| List runtime targets | `node scripts/install-adapter.mjs --list-targets` |
+| Install the current default | `node scripts/resolve-install-context.mjs --target <runtime> --dest <project>` |
+| Verify V2 package integrity only | `npm run wcbs -- doctor --plugin-dir <runtime-plugin-directory> --json` |
 | Prepare a release | `RELEASE_PROCESS.md` |
 
 ## Operating law
