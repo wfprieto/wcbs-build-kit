@@ -17,8 +17,10 @@ The WCBS Build Kit at this revision does not contain:
 - a database-backed resource layer.
 
 Therefore, there is currently no URL or API request in the kit where changing
-an identifier could expose another user’s data. The security scan found zero
-reportable vulnerabilities for this surface.
+an identifier could expose another user’s data. This applicability assessment
+identified no reachable IDOR surface in the repository. No live security scan,
+credential test, or external target probe was run, and no scan-result claim is
+made.
 
 This is an applicability result, not proof that a future CodeSapper
 application is authorization-safe.
@@ -64,7 +66,9 @@ evidence, and final verdict in the canonical security evidence ledger.
 
 ## Limitations and next action
 
-No live probing, credential testing, or external target testing was performed.
+No live probing, credential testing, security scan, or external target testing
+was performed. This record is an applicability and evidence-boundary
+assessment, not a retained penetration-test report.
 The current result cannot establish behavior for CodeSapper because that
 application target does not yet exist in this repository.
 
