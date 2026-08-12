@@ -39,4 +39,6 @@ test("current WCBS IDOR assessment preserves applicability and evidence boundari
     "two accounts",
     "direct API"
   ]) assert.match(assessment, new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  assert.match(assessment, /No live security scan/i);
+  assert.doesNotMatch(assessment, /security scan found zero reportable vulnerabilities/i);
 });
