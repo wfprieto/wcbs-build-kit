@@ -22,6 +22,9 @@ test("simplest-safe-path is a routed, portable WCBS skill", () => {
   assert.ok(!route.required_skills.includes("simplest-safe-path"));
   assert.ok(route.optional_skills.includes("simplest-safe-path"));
   assert.match(skill, /Do not activate for a predetermined narrow edit/i);
+  const audit = read("50_audits/WCBS_SIMPLICITY_GUARDRAIL_AUDIT.md");
+  assert.match(audit, /conditional activation/i);
+  assert.doesNotMatch(audit, /new required skill/i);
 });
 
 test("current WCBS IDOR assessment preserves applicability and evidence boundaries", () => {
