@@ -19,7 +19,10 @@ test("simplest-safe-path is a routed, portable WCBS skill", () => {
   const routing = JSON.parse(read("00_start_here/capability-routing.json"));
   const route = routing.capabilities.find(capability => capability.id === "needs-release");
   assert.ok(route, "missing needs-release route");
-  assert.ok(route.required_skills.includes("simplest-safe-path"));
+  assert.ok(!route.required_skills.includes("simplest-safe-path"));
+  assert.ok(route.optional_skills.includes("simplest-safe-path"));
+  assert.match(skill, /Do not activate for a predetermined narrow edit/i);
+  assert.match(loadOrder, /only when a release task includes a design choice.*do not load it for a predetermined narrow edit/i);
 });
 
 test("current WCBS IDOR assessment preserves applicability and evidence boundaries", () => {
