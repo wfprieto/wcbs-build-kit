@@ -27,6 +27,7 @@ Load:
 - `skills/writing-plans/SKILL.md` for APIVR Phase 2 implementation plans
 - `skills/20-pass-protocol/SKILL.md` when the plan, prompt, source-file edit, agent handoff, release instruction, or other artifact is high-stakes and precision failure is expensive
 - `skills/engineering-plan-review/SKILL.md` before implementing high-risk, multi-file, architecture, migration, or integration plans
+- `skills/simplest-safe-path/SKILL.md` when design alternatives, new guardrails/stages/retries/dependencies, or complexity review are in scope
 - `skills/test-driven-development/SKILL.md` for APIVR Phase 3 implementation work
 - `skills/codebase-design-and-deep-modules/SKILL.md` when module boundaries, adapters, dependency direction, refactors, or architectural leverage are in scope
 - `skills/code-review-and-review-army/SKILL.md` for APIVR Phase 4 implementation audit and specialist review passes
@@ -88,6 +89,7 @@ Load:
 - `skills/repeatable-agent-loops/SKILL.md` when the audit is a repeated sweep or iterative remediation loop
 - `skills/knowledge-refresh-and-drift-control/SKILL.md` when the audit reviews skills, templates, knowledge files, lessons, load order, or stale/duplicated guidance
 - `skills/20-pass-protocol/SKILL.md` when the audit produces or reviews high-stakes prompts, agents, skills, source files, plans, runbooks, release instructions, or final reports
+- `skills/simplest-safe-path/SKILL.md` when an audit evaluates design minimality, guardrail justification, or unnecessary complexity
 - `skills/cybersecurity-risk-routing/SKILL.md` when cybersecurity, security release gates, dual-use, AI security, incident, supply-chain, MCP/tool security, or vulnerability work is in scope
 - `skills/external-integration-launch-gate/SKILL.md` when the audit includes provider callbacks, webhooks, OAuth redirects, payment/email/SMS providers, cron routes, deployment protection, provider dashboard URLs, or environment separation
 
@@ -148,6 +150,7 @@ Load:
 - `skills/super-build-kit/SKILL.md`
 - `skills/20-pass-protocol/SKILL.md`
 - `skills/writing-plans/SKILL.md` when producing reusable implementation plans or agent handoff plans
+- `skills/simplest-safe-path/SKILL.md` when a prompt, skill, agent, plan, or pipeline has multiple viable designs or adds complexity
 - `skills/requirements-grilling-and-alignment/SKILL.md` when prompt, skill, or agent design has ambiguous objectives, audiences, or scope
 - `skills/domain-modeling-and-shared-language/SKILL.md` when prompt, skill, or agent behavior depends on domain language or decisions
 - `skills/devex-and-documentation-review/SKILL.md` when instructions, docs, examples, adapters, or handoffs are created or changed
@@ -525,11 +528,11 @@ Gates: `10_governance/RELEASE_GATES.md`.
 
 ### needs-release
 
-Subcapabilities: `planning`, `implementation-control`, `independent-review`, `release-readiness`.
+Subcapabilities: `planning`, `implementation-control`, `independent-review`, `release-readiness`, `simplest-safe-design`, `complexity-budget`, `guardrail-justification`, `complexity-challenge`.
 
-Required skills: `skills/writing-plans/SKILL.md`, `skills/executing-plans/SKILL.md`, `skills/engineering-plan-review/SKILL.md`, `skills/code-review-and-review-army/SKILL.md`, `skills/release-readiness-and-ship-gates/SKILL.md`.
-Optional skills: `skills/dispatching-parallel-agents/SKILL.md`, `skills/subagent-driven-development/SKILL.md`, `skills/20-pass-protocol/SKILL.md`.
-Audits: `50_audits/AUDIT_TIER_ROUTER.md`.
+Required skills: `skills/writing-plans/SKILL.md`, `skills/executing-plans/SKILL.md`, `skills/engineering-plan-review/SKILL.md`, `skills/code-review-and-review-army/SKILL.md`, `skills/release-readiness-and-ship-gates/SKILL.md`, `skills/simplest-safe-path/SKILL.md`.
+Optional skills: `skills/dispatching-parallel-agents/SKILL.md`, `skills/subagent-driven-development/SKILL.md`, `skills/20-pass-protocol/SKILL.md`, `skills/codebase-design-and-deep-modules/SKILL.md`.
+Audits: `50_audits/AUDIT_TIER_ROUTER.md`, `50_audits/CANONICAL_AUDIT_PROTOCOLS.md`.
 Templates: `60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md`, `60_templates/STABLE_RELEASE_REPORT_TEMPLATE.md`.
 Gates: `10_governance/RELEASE_GATES.md`.
 

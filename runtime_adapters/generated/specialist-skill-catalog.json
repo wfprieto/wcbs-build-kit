@@ -148,6 +148,11 @@
       "classification": "domain-procedure"
     },
     {
+      "name": "simplest-safe-path",
+      "path": "skills/simplest-safe-path/SKILL.md",
+      "classification": "domain-procedure"
+    },
+    {
       "name": "strategist-writing-dna",
       "path": "skills/strategist-writing-dna/SKILL.md",
       "classification": "domain-procedure"

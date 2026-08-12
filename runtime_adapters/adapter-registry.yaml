@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 20939)
+Total output lines: 2142
+
 {
   "schema_version": 1,
   "generated_notice": "GENERATED SOURCE IS FORBIDDEN. This registry is canonical and intentionally uses JSON-compatible YAML.",
@@ -1034,102 +1037,7 @@
         "activation_tier": "T4",
         "integration_shape": "always_on_instruction_file",
         "native_install_mechanism": "Manus.md repository instruction file",
-        "install_scope": "project",
-        "bootstrap_path": "Manus.md",
-        "bootstrap_mode": "manual",
-        "activation_marker": "WCBS_KIT_ACTIVE:manus",
-        "tool_mapping_path": "runtime_adapters/tool_mappings/manus.json",
-        "capabilities": {
-          "file_read": "native",
-          "file_write": "native",
-          "file_edit": "native",
-          "execute_command": "native",
-          "subagents": "unavailable",
-          "task_tracking": "degradable",
-          "web_access": "native",
-          "browser_verification": "degradable",
-          "durable_artifact_storage": "native",
-          "human_approval_gates": "degradable"
-        },
-        "fallbacks": {
-          "subagents": "Sequential fresh-context review using the exact base..head package; report degraded independence.",
-          "task_tracking": "Track task state in .wcbs/runs/<run-id>/progress-ledger.jsonl.",
-          "browser_verification": "Capture screenshot or page text evidence and record automated assertions as Not Run.",
-          "human_approval_gates": "Halt, print the exact pending action, and require an explicit human reply."
-        },
-        "supported_runtime_versions": "Manus Agent (version-dependent)",
-        "supported_operating_systems": [
-          "macos",
-          "linux",
-          "windows"
-        ],
-        "modifies_user_files": false,
-        "install": "Commit Manus.md and manually provide BOOTSTRAP.md or reference it at session start.",
-        "update": "Edit Manus.md in the repository.",
-        "uninstall": "Delete Manus.md.",
-        "rollback": "Restore the previous revision from version control.",
-        "limitations": "Automatic session-start ingestion is not established. Activation is Manual and must never be reported as enforced.",
-        "deprecation": "None. Adapter is active but requires per-session activation."
-      },
-      "tool_mapping": {
-        "runtime_id": "manus",
-        "actions": {
-          "read_skill": {
-            "availability": "native",
-            "mechanism": "Read the SKILL.md path named by LOAD_ORDER.md",
-            "required_parameters": [
-              "skill_path"
-            ],
-            "fallback": null,
-            "limitations": "none",
-            "evidence_produced": "skill load record"
-          },
-          "read_file": {
-            "availability": "native",
-            "mechanism": "File read",
-            "required_parameters": [
-              "path"
-            ],
-            "fallback": null,
-            "limitations": "none",
-            "evidence_produced": "file contents"
-          },
-          "write_file": {
-            "availability": "native",
-            "mechanism": "File write",
-            "required_parameters": [
-              "path",
-              "content"
-            ],
-            "fallback": null,
-            "limitations": "none",
-            "evidence_produced": "written path"
-          },
-          "edit_file": {
-            "availability": "native",
-            "mechanism": "File edit",
-            "required_parameters": [
-              "path",
-              "edit"
-            ],
-            "fallback": null,
-            "limitations": "none",
-            "evidence_produced": "applied edit"
-          },
-          "execute_command": {
-            "availability": "native",
-            "mechanism": "Sandbox shell",
-            "required_parameters": [
-              "command"
-            ],
-            "fallback": null,
-            "limitations": "none",
-            "evidence_produced": "shell output"
-          },
-          "dispatch_agent": {
-            "availability": "unavailable",
-            "mechanism": "No documented independent subagent mechanism",
-            "required_parameters": [
+…939 tokens truncated…: [
               "prompt",
               "scope"
             ],
@@ -2131,6 +2039,7 @@
     {"name":"requirements-grilling-and-alignment","path":"skills/requirements-grilling-and-alignment/SKILL.md","classification":"routing-only"},
     {"name":"scheduling-and-automation-routing","path":"skills/scheduling-and-automation-routing/SKILL.md","classification":"routing-only"},
     {"name":"security-incident-response","path":"skills/security-incident-response/SKILL.md","classification":"domain-procedure"},
+    {"name":"simplest-safe-path","path":"skills/simplest-safe-path/SKILL.md","classification":"domain-procedure"},
     {"name":"strategist-writing-dna","path":"skills/strategist-writing-dna/SKILL.md","classification":"domain-procedure"},
     {"name":"super-build-kit","path":"skills/super-build-kit/SKILL.md","classification":"core-governance"},
     {"name":"supply-chain-and-build-provenance","path":"skills/supply-chain-and-build-provenance/SKILL.md","classification":"domain-procedure"},

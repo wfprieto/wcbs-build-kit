@@ -66,6 +66,7 @@ Do not substitute this README for the Kernel or Controller, and do not claim act
 - `skills/test-driven-development/SKILL.md` - APIVR Phase 3 test-first implementation gate.
 - `skills/codebase-design-and-deep-modules/SKILL.md` - architecture, deep modules, adapters, locality, and deletion tests.
 - `skills/engineering-plan-review/SKILL.md` - pre-implementation engineering review for executable technical plans.
+- `skills/simplest-safe-path/SKILL.md` - simplest-safe design selection, complexity budgets, and guardrail challenge.
 - `skills/code-review-and-review-army/SKILL.md` - APIVR Phase 4 specialist code review passes.
 - `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` - root-cause diagnosis with red-capable feedback loops.
 - `skills/qa-and-browser-verification/SKILL.md` - workflow QA, browser checks, issue taxonomy, and QA health reports.
@@ -101,7 +102,8 @@ Use:
 
 - `40_knowledge/WEB_APPLICATION_SECURITY_CONTROL_MATRIX.md` for control ownership and Elite Build Goal traceability;
 - `60_templates/WEB_APPLICATION_SECURITY_EVIDENCE_LEDGER_TEMPLATE.md` for reproducible control evidence;
-- `skills/web-application-security/SKILL.md` for APIVR routing and negative-test requirements.
+- `skills/web-application-security/SKILL.md` for APIVR routing and negative-test requirements;
+- `50_audits/WCBS_IDOR_APPLICABILITY_ASSESSMENT.md` when the target is the WCBS kit itself and applicability must be separated from live application proof.
 
 Security coverage percentages are informational only. A failed, unknown, not-run, or blocked release-critical control cannot be averaged into a passing verdict.
 
