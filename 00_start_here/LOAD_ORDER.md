@@ -532,7 +532,6 @@ Subcapabilities: `planning`, `implementation-control`, `independent-review`, `re
 
 Required skills: `skills/writing-plans/SKILL.md`, `skills/executing-plans/SKILL.md`, `skills/engineering-plan-review/SKILL.md`, `skills/code-review-and-review-army/SKILL.md`, `skills/release-readiness-and-ship-gates/SKILL.md`.
 Optional skills: `skills/simplest-safe-path/SKILL.md`, `skills/dispatching-parallel-agents/SKILL.md`, `skills/subagent-driven-development/SKILL.md`, `skills/20-pass-protocol/SKILL.md`, `skills/codebase-design-and-deep-modules/SKILL.md`.
-Load `skills/simplest-safe-path/SKILL.md` only when a release task includes a design choice, added guardrail, retry, fallback, dependency, abstraction, or complexity challenge; do not load it for a predetermined narrow edit.
 Audits: `50_audits/AUDIT_TIER_ROUTER.md`, `50_audits/CANONICAL_AUDIT_PROTOCOLS.md`.
 Templates: `60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md`, `60_templates/STABLE_RELEASE_REPORT_TEMPLATE.md`.
 Gates: `10_governance/RELEASE_GATES.md`.
