@@ -4,6 +4,13 @@ Use this composite audit for browser-delivered applications, authenticated web s
 
 This audit coordinates existing specialist audits. It does not replace them or create a second source of truth.
 
+When the target is the WCBS Build Kit itself, use
+`50_audits/WCBS_IDOR_APPLICABILITY_ASSESSMENT.md` to record whether an
+authorization boundary actually exists. A build kit without an application,
+session, user, tenant, ownership, or database layer cannot receive a live IDOR
+finding from a URL/API test; the future application still requires the full
+two-account negative-test matrix before authorization is considered verified.
+
 ## Operating Law
 
 **Audit wide. Fix narrow. Prove everything.**

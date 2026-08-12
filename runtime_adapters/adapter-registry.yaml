@@ -2131,6 +2131,7 @@
     {"name":"requirements-grilling-and-alignment","path":"skills/requirements-grilling-and-alignment/SKILL.md","classification":"routing-only"},
     {"name":"scheduling-and-automation-routing","path":"skills/scheduling-and-automation-routing/SKILL.md","classification":"routing-only"},
     {"name":"security-incident-response","path":"skills/security-incident-response/SKILL.md","classification":"domain-procedure"},
+    {"name":"simplest-safe-path","path":"skills/simplest-safe-path/SKILL.md","classification":"domain-procedure"},
     {"name":"strategist-writing-dna","path":"skills/strategist-writing-dna/SKILL.md","classification":"domain-procedure"},
     {"name":"super-build-kit","path":"skills/super-build-kit/SKILL.md","classification":"core-governance"},
     {"name":"supply-chain-and-build-provenance","path":"skills/supply-chain-and-build-provenance/SKILL.md","classification":"domain-procedure"},

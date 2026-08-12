@@ -33,11 +33,19 @@ Changes to these controls require intentional review because they alter release-
 The active composite web security system consists of:
 
 - `50_audits/WEB_APPLICATION_SECURITY_AUDIT.md`
+- `50_audits/WCBS_IDOR_APPLICABILITY_ASSESSMENT.md`
 - `skills/web-application-security/SKILL.md`
 - `40_knowledge/WEB_APPLICATION_SECURITY_CONTROL_MATRIX.md`
 - `60_templates/WEB_APPLICATION_SECURITY_EVIDENCE_LEDGER_TEMPLATE.md`
 
 These files coordinate existing AI, MCP/tool, external API, provider launch, supply-chain, QA/browser, incident-response, and release-readiness specialists. They are active canonical files, not provenance material.
+
+## Simplicity Design Guardrail
+
+- `skills/simplest-safe-path/SKILL.md`
+- `50_audits/WCBS_SIMPLICITY_GUARDRAIL_AUDIT.md`
+
+This skill owns simplest-safe design selection and complexity challenge while remaining subordinate to APIVR, security routing, and release gates.
 
 ## Provenance Files
 

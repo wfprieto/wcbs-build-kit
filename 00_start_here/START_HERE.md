@@ -28,6 +28,7 @@ Do not start from a fix. Start from the APIVR tier router, inspect the real syst
 - Use `skills/test-driven-development/SKILL.md` for APIVR Phase 3 code work.
 - Use `skills/codebase-design-and-deep-modules/SKILL.md` when architecture, module boundaries, adapters, or refactor shape matters.
 - Use `skills/engineering-plan-review/SKILL.md` before implementing high-risk or multi-file technical plans.
+- Use `skills/simplest-safe-path/SKILL.md` when more than one viable design exists or a new guardrail, stage, retry, fallback, dependency, abstraction, or complexity concern is proposed.
 - Use `skills/code-review-and-review-army/SKILL.md` for APIVR Phase 4 implementation audit and specialist review passes.
 - Use `skills/diagnosing-bugs-and-feedback-loops/SKILL.md` before fixing bugs, incidents, regressions, or unknown failures.
 - Use `skills/throwaway-prototyping/SKILL.md` when work is a spike, experiment, provider trial, or disposable proof of concept.
