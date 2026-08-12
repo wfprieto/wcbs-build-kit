@@ -45,13 +45,14 @@ complexity capability route, or a required complexity-budget decision record.
 ## Simplest safe remediation
 
 Add one specialist skill, `skills/simplest-safe-path/SKILL.md`, and wire it to
-the existing system:
+the existing system with conditional activation:
 
 1. Extend the existing `needs-release` capability route with design-complexity
-   subcapabilities and the new required skill, preserving the 20-capability
-   vocabulary budget.
+   subcapabilities and the conditionally activated optional skill, preserving the
+   20-capability vocabulary budget.
 2. Add the skill to the canonical V2 specialist catalog and regenerate derived
-   metadata.
+   metadata. Route it as optional for `needs-release`; activate it only when a
+   design choice or complexity challenge is present.
 3. Add it to the design, audit, and plan portions of `LOAD_ORDER.md` and the
    first-use guidance in `START_HERE.md`.
 4. Keep APIVR, TDD, review, release, and 20-pass ownership unchanged.
