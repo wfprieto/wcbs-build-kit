@@ -83,6 +83,11 @@
       "classification": "domain-procedure"
     },
     {
+      "name": "execution-graph",
+      "path": "skills/execution-graph/SKILL.md",
+      "classification": "domain-procedure"
+    },
+    {
       "name": "knowledge-refresh-and-drift-control",
       "path": "skills/knowledge-refresh-and-drift-control/SKILL.md",
       "classification": "domain-procedure"

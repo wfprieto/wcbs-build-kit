@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generated_from": "runtime_adapters/adapter-registry.yaml",
-  "registry_sha256": "88365335dbb9253e814fbd69923da25774a9b775720baff1165e36a7999e0970",
+  "registry_sha256": "d1ca55561e8795c97fcaff3579a5f8b43c80245569cc820c758d62f1718cf129",
   "evidence_tier_order": [
     "package_integrity",
     "structural_lifecycle",

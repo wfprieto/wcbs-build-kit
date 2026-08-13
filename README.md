@@ -77,6 +77,7 @@ Do not substitute this README for the Kernel or Controller, and do not claim act
 - `skills/throwaway-prototyping/SKILL.md` - isolated disposable spikes and provider trials.
 - `skills/dispatching-parallel-agents/SKILL.md` - safe parallelization decision protocol.
 - `skills/subagent-driven-development/SKILL.md` - delegated implementation, status handling, and two-stage review.
+- `skills/execution-graph/SKILL.md` - dependency-aware plan execution, requirement traceability, READY-frontier scheduling, topology validation, and evidence-backed node locking.
 - `skills/repeatable-agent-loops/SKILL.md` - bounded recurring, iterative, monitor-like, and repeat-until-stable workflows with receipts and stop conditions.
 - `skills/long-horizon-agent-runtime/SKILL.md` - staged long-running agent work with checkpoints, artifact boundaries, and handoff control.
 - `skills/project-bootstrap-and-setup/SKILL.md` - safe install, bootstrap, config, first-run, and setup-boundary handling.
