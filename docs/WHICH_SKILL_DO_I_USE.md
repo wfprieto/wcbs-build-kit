@@ -6,6 +6,7 @@
 | Write an implementation plan | `skills/writing-plans/SKILL.md` |
 | Change code | `skills/test-driven-development/SKILL.md` |
 | Execute a plan without subagents | `skills/executing-plans/SKILL.md` |
+| Execute dependency-bearing plan slices | `skills/execution-graph/SKILL.md` |
 | Delegate implementation/review | `skills/subagent-driven-development/SKILL.md` |
 | Finish branch or worktree | `skills/finishing-a-development-branch/SKILL.md` |
 | Install or bootstrap | `skills/project-bootstrap-and-setup/SKILL.md` |
@@ -14,4 +15,3 @@
 | High-stakes artifact | `skills/20-pass-protocol/SKILL.md` |
 
 Load the smallest complete set from `00_start_here/LOAD_ORDER.md`; do not load the whole kit by default.
-

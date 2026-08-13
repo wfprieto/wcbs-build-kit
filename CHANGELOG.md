@@ -11,6 +11,7 @@
 
 ## Unreleased - Web Application Security Expansion
 
+- Added the routed `execution-graph` skill for dependency-aware plan execution, requirement traceability, deterministic READY-frontier scheduling, topology validation, and evidence-backed node locking.
 - Added a composite Web Application Security Audit for authentication, sessions, authorization, tenant isolation, input and output security, browser controls, APIs, uploads, object storage, database controls, secrets, logging, business logic, AI and tool routing, supply chain, monitoring, recovery, and release decisions.
 - Added the runtime-loadable `web-application-security` skill.
 - Added a canonical web application security control matrix mapped to the 16 Elite Build Goals.

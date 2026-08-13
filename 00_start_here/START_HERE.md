@@ -37,6 +37,7 @@ Do not start from a fix. Start from the APIVR tier router, inspect the real syst
 - Use `skills/devex-and-documentation-review/SKILL.md` when setup, docs, examples, onboarding, API docs, release notes, or handoffs are affected.
 - Use `skills/dispatching-parallel-agents/SKILL.md` before splitting work.
 - Use `skills/subagent-driven-development/SKILL.md` when delegated agents implement, review, or verify work. It owns the deterministic controller protocol, and no delegated work may claim completion without its final whole-branch review.
+- Use `skills/execution-graph/SKILL.md` when an approved plan has two or more dependency-bearing execution or verification slices that need traceability, topology validation, READY-frontier scheduling, or evidence-backed node locking.
 - Use `runtime_adapters/PORTABILITY_CONTRACT.md` when designing, installing, troubleshooting, or porting a runtime adapter, or when claiming a support level. At session start, load only the active runtime manifest and tool mapping.
 - Use `skills/repeatable-agent-loops/SKILL.md` when work is recurring, iterative, monitor-like, or should repeat until a measurable condition is met or safely stopped.
 - Use `skills/long-horizon-agent-runtime/SKILL.md` when work spans many stages, tools, subagents, checkpoints, artifacts, or context windows.

@@ -2118,6 +2118,7 @@
     {"name":"engineering-plan-review","path":"skills/engineering-plan-review/SKILL.md","classification":"domain-procedure"},
     {"name":"external-api-integration","path":"skills/external-api-integration/SKILL.md","classification":"domain-procedure"},
     {"name":"external-integration-launch-gate","path":"skills/external-integration-launch-gate/SKILL.md","classification":"domain-procedure"},
+    {"name":"execution-graph","path":"skills/execution-graph/SKILL.md","classification":"domain-procedure"},
     {"name":"knowledge-refresh-and-drift-control","path":"skills/knowledge-refresh-and-drift-control/SKILL.md","classification":"domain-procedure"},
     {"name":"long-horizon-agent-runtime","path":"skills/long-horizon-agent-runtime/SKILL.md","classification":"domain-procedure"},
     {"name":"mcp-tool-governance","path":"skills/mcp-tool-governance/SKILL.md","classification":"domain-procedure"},

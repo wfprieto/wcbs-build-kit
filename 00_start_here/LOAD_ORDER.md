@@ -42,6 +42,7 @@ Load:
 - `skills/dispatching-parallel-agents/SKILL.md` when the work may benefit from parallel investigation, audit, implementation, or verification
 - `skills/subagent-driven-development/SKILL.md` when subagents will implement, review, or verify task slices
 - `skills/executing-plans/SKILL.md` when executing an approved plan sequentially without subagents
+- `skills/execution-graph/SKILL.md` when an approved plan has two or more dependency-bearing execution or verification slices requiring traceability, topology validation, READY-frontier scheduling, or evidence-backed node locking
 - `skills/finishing-a-development-branch/SKILL.md` when implementation is complete and merge, PR, keep, discard, or worktree cleanup decisions are needed
 - `runtime_adapters/PORTABILITY_CONTRACT.md` when designing, installing, updating, troubleshooting, or porting a runtime adapter, or when a support level or capability fallback is claimed
 - `runtime_adapters/PORTING_GUIDE.md` when adding support for a new runtime
@@ -531,7 +532,7 @@ Gates: `10_governance/RELEASE_GATES.md`.
 Subcapabilities: `planning`, `implementation-control`, `independent-review`, `release-readiness`, `simplest-safe-design`, `complexity-budget`, `guardrail-justification`, `complexity-challenge`.
 
 Required skills: `skills/writing-plans/SKILL.md`, `skills/executing-plans/SKILL.md`, `skills/engineering-plan-review/SKILL.md`, `skills/code-review-and-review-army/SKILL.md`, `skills/release-readiness-and-ship-gates/SKILL.md`.
-Optional skills: `skills/simplest-safe-path/SKILL.md`, `skills/dispatching-parallel-agents/SKILL.md`, `skills/subagent-driven-development/SKILL.md`, `skills/20-pass-protocol/SKILL.md`, `skills/codebase-design-and-deep-modules/SKILL.md`.
+Optional skills: `skills/execution-graph/SKILL.md`, `skills/simplest-safe-path/SKILL.md`, `skills/dispatching-parallel-agents/SKILL.md`, `skills/subagent-driven-development/SKILL.md`, `skills/20-pass-protocol/SKILL.md`, `skills/codebase-design-and-deep-modules/SKILL.md`.
 Audits: `50_audits/AUDIT_TIER_ROUTER.md`, `50_audits/CANONICAL_AUDIT_PROTOCOLS.md`.
 Templates: `60_templates/RELEASE_CANDIDATE_REPORT_TEMPLATE.md`, `60_templates/STABLE_RELEASE_REPORT_TEMPLATE.md`.
 Gates: `10_governance/RELEASE_GATES.md`.
