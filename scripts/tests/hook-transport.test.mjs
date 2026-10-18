@@ -161,9 +161,11 @@ test("POSIX bridge does not let BASH_ENV contaminate a hook payload", { skip: is
   }
 });
 
-test("Claude plugin component paths resolve from the plugin root without parent traversal", () => {
+test("Claude plugin uses the default hook file once and keeps skill paths contained", () => {
   const manifest = readJson(".claude-plugin/plugin.json");
-  for (const [key, expected] of Object.entries({ hooks: "./hooks/hooks.json", skills: "./skills/" })) {
+  assert.equal(Object.hasOwn(manifest, "hooks"), false, "Claude discovers hooks/hooks.json automatically; a manifest entry loads it twice");
+  assert.equal(fs.existsSync(path.join(root, "hooks", "hooks.json")), true);
+  for (const [key, expected] of Object.entries({ skills: "./skills/" })) {
     assert.equal(manifest[key], expected);
     assert.equal(manifest[key].includes(".."), false, `${key} must not escape the plugin root`);
     assert.equal(fs.existsSync(path.join(root, ...manifest[key].replace(/^\.\//, "").split("/"))), true, `${key} must resolve in the plugin root`);
