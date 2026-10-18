@@ -48,6 +48,7 @@ test("product maturity docs exist", () => {
     "docs/WHICH_SKILL_DO_I_USE.md",
     "docs/COMMON_TASKS.md",
     "docs/ADOPTION_EVIDENCE.md",
+    "docs/evidence/V2_0_0_AUDIT_UPDATE.md",
     "docs/VERIFIED_RUNTIME_TRANSCRIPTS.md",
     "RELEASE_NOTES.md",
     ".github/ISSUE_TEMPLATE/bug_report.md",
@@ -58,6 +59,20 @@ test("product maturity docs exist", () => {
   ]) {
     assert.ok(fs.existsSync(path.join(root, ...rel.split("/"))), rel);
   }
+});
+
+test("historical audit routes current release claims through a dated evidence update", () => {
+  const historical = read("docs/evidence/FINAL_20_PASS_AUDIT.md");
+  const update = read("docs/evidence/V2_0_0_AUDIT_UPDATE.md");
+  assert.match(historical, /V2_0_0_AUDIT_UPDATE\.md/);
+  assert.match(historical, /historical audit/i);
+  assert.match(update, /4d07eced7fac10a6cadf27fe54e70c91ec282f4a/);
+  assert.match(update, /39090877955/);
+  assert.match(update, /39090877951/);
+  assert.match(update, /b85e5e12a105cca07afa4926d991d7333b7a282f/);
+  assert.match(update, /Gate 0C.*160/i);
+  assert.match(update, /Superpowers comparison.*240/i);
+  assert.match(update, /Runtime Verified:\s+Not Run/i);
 });
 
 test("public adoption claims keep distribution separate from runtime proof", () => {
