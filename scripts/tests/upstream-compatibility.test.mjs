@@ -23,6 +23,11 @@ test("Superpowers compatibility governance pins provenance and a decision ledger
   assert.match(ledger, new RegExp(upstreamCommit));
   assert.match(ledger, /bb92a77741419a4ab5f06e711a283343f1ada0c3/);
   assert.match(ledger, /compatibility of the unreviewed delta is `Unknown`/);
+  assert.match(ledger, /Reviewed delta: 4 commits, 119 files/);
+  assert.match(ledger, /OpenCode V2/);
+  assert.match(ledger, /plan-scoped/);
+  assert.match(ledger, /Windows hook/);
+  assert.match(ledger, /no upstream import/i);
 });
 
 test("complete Superpowers integration matrix is pinned, reviewable, and decision-complete", () => {

@@ -7,6 +7,10 @@
 > be used as the current release decision until that ticket has a full release
 > rerun and independent re-review.
 
+The dated [v2.0.0 evidence update](V2_0_0_AUDIT_UPDATE.md) records later
+release checks and remaining blockers. It does not reinstate this historical
+Pass 14 result or turn this 20-pass record into a current release decision.
+
 Candidate baseline: `9cac90d5cfabb1b8d3d137058f4558c52149c7be`.
 
 Implementation candidate for the locked behavioral protocols:
