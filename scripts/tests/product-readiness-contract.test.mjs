@@ -80,6 +80,16 @@ test("current distribution reserves owned rights and preserves earlier grants", 
   }
 });
 
+test("rights transition has a distinct version from the MIT release", () => {
+  const version = JSON.parse(read("package.json")).version;
+  assert.notEqual(version, "2.0.0");
+  for (const rel of [".claude-plugin/plugin.json", ".codex-plugin/plugin.json", ".kimi-plugin/plugin.json", ".agents/plugins/marketplace.json"]) {
+    assert.equal(JSON.parse(read(rel)).version, version, rel);
+  }
+  assert.equal(JSON.parse(read(".claude-plugin/marketplace.json")).plugins[0].version, version);
+  assert.match(read("DISTRIBUTION_POLICY.md"), /distinct version/);
+});
+
 test("historical audit routes current release claims through a dated evidence update", () => {
   const historical = read("docs/evidence/FINAL_20_PASS_AUDIT.md");
   const update = read("docs/evidence/V2_0_0_AUDIT_UPDATE.md");

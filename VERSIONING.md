@@ -31,5 +31,6 @@ Use major versions for:
 - evidence vocabulary changes;
 - release-gate contract changes;
 - breaking adapter activation changes.
+- changes to the rights granted for newly distributed source or packages.
 
 The repository slug remains `wcbs-build-kit`.

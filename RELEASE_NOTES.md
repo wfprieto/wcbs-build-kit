@@ -1,5 +1,12 @@
 # Release Notes
 
+## 3.0.0 (unreleased)
+
+The current source reserves rights in owner material under `LICENSE`. Its
+package and plugin manifests use `UNLICENSED`. The tagged v2.0.0 release
+remains MIT-licensed. This source state has not been published as a release;
+installation checks for v2.0.0 do not establish v3.0.0 runtime behavior.
+
 ## Current Installation Guidance
 
 Project-local V1 installation remains the default until a target-specific V2

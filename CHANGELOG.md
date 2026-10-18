@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0 - Rights Reservation (unreleased)
+
+- Reserved rights in newly distributed owner material while preserving the MIT grant for prior copies and third-party terms.
+- Updated package and plugin metadata to `UNLICENSED`; retained the historical v2.0.0 release unchanged.
+- Enabled private vulnerability reporting, vulnerability alerts, and Dependabot security updates on GitHub.
+
 ## 2.0.0 - Native Plugin and Executable Skills
 
 - Added a registry-generated V2 adapter catalog, compact `using-wcbs` bootstrap, and direct/indirect/pressure scenarios for all 14 core skills.
