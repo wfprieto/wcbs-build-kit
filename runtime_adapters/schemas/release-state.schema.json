@@ -18,7 +18,7 @@
     "verdict": {"enum": ["PASS", "CONDITIONAL PASS", "PARTIAL", "FAIL", "BLOCKED"]},
     "gates": {
       "type": "object",
-      "required": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
+      "required": ["A", "B", "C", "D", "E", "F", "G", "H"],
       "properties": {
         "A": {"$ref": "#/$defs/gate"},
         "B": {"$ref": "#/$defs/gate"},
@@ -27,8 +27,7 @@
         "E": {"$ref": "#/$defs/gate"},
         "F": {"$ref": "#/$defs/gate"},
         "G": {"$ref": "#/$defs/gate"},
-        "H": {"$ref": "#/$defs/gate"},
-        "I": {"$ref": "#/$defs/gate"}
+        "H": {"$ref": "#/$defs/gate"}
       },
       "additionalProperties": false
     },

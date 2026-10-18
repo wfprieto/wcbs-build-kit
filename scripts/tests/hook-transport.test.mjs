@@ -174,6 +174,7 @@ test("legacy Cursor and Copilot installs deliver their documented hook registrat
   const target = fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-transport-install-"));
   try {
     for (const [adapter, expected, runtime, expectedKey] of [
+      ["claude", ".claude-plugin/plugin.json", "claude", "hookSpecificOutput"],
       ["cursor", ".cursor/hooks.json", "cursor", "additional_context"],
       ["github-copilot", ".github/hooks/wcbs-session-start.json", "github-copilot", "additionalContext"]
     ]) {
@@ -192,6 +193,15 @@ test("legacy Cursor and Copilot installs deliver their documented hook registrat
         });
         const payload = parseSinglePayload(invocation);
         assert.deepEqual(Object.keys(payload), [expectedKey], `${adapter} installed transport must keep its native envelope`);
+        const context = expectedKey === "hookSpecificOutput" ? payload.hookSpecificOutput.additionalContext : payload[expectedKey];
+        assert.match(context, new RegExp(`WCBS_KIT_ACTIVE:${runtime}`));
+        assert.doesNotMatch(context, /unable_to_transfer/);
+      } else {
+        const invocation = runPowerShell(`cmd.exe /d /s /c "call .\\hooks\\run-hook.cmd session-start --runtime ${runtime}"`, { cwd: target });
+        const payload = parseSinglePayload(invocation);
+        const context = expectedKey === "hookSpecificOutput" ? payload.hookSpecificOutput.additionalContext : payload[expectedKey];
+        assert.match(context, new RegExp(`WCBS_KIT_ACTIVE:${runtime}`));
+        assert.doesNotMatch(context, /unable_to_transfer/);
       }
       const uninstall = spawnSync(process.execPath, ["scripts/install-adapter.mjs", "--target", adapter, "--dest", target, "--uninstall"], { cwd: root, encoding: "utf8" });
       assert.equal(uninstall.status, 0, `${uninstall.stdout}${uninstall.stderr}`);

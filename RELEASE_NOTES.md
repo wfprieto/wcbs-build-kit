@@ -1,12 +1,21 @@
 # Release Notes
 
+## Current Installation Guidance
+
+Project-local V1 installation remains the default until a target-specific V2
+registration path has independent clean-session proof. V2 `doctor` verifies
+package integrity, not runtime activation. See `GET_STARTED.md` and
+`docs/V2_RUNTIME_EVIDENCE.md` before changing routes.
+
 ## 2.0.0
 
-WCBS 2.0.0 changes the default delivery path from V1 project vendoring to an
-explicit native plugin directory. It adds a generated adapter and skill
-registry, compact startup payload, executable core skills, native package
-contracts, safe install/doctor/status/uninstall/migration commands, and a
-pre-registered blinded behavioral-evaluation design.
+WCBS 2.0.0 adds an explicit native plugin bundle alongside the current
+project-local default. It includes a generated adapter and skill registry,
+compact startup payload, executable core skills, native package contracts,
+hash-backed V1 ownership, safe install/doctor/status/uninstall/migration
+commands, a web application security audit, and a pre-registered blinded
+behavioral-evaluation design. V2 package integrity is not evidence of native
+runtime registration or activation.
 
 Known limitations: package and deterministic adapter checks are complete, but
 real clean-session proof and paid blinded behavioral runs are still required

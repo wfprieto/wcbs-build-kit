@@ -1,8 +1,10 @@
 # WCBS V1 to V2 Migration
 
 V2 keeps the V1 installer only to allow a safe exit from project vendoring.
-Migration requires the V1 ownership manifest, the original V1 source root,
-and byte-identical V1-owned files. It never changes user-owned README,
+Migration requires the V1 ownership manifest and unchanged V1-owned files.
+Versioned receipts verify recorded per-file hashes even if the original source
+checkout moved. Older hashless receipts require the original V1 source root
+for byte comparison. Migration never changes user-owned README,
 package, source, or unrelated configuration files.
 
 Run the dry-run first:
@@ -26,8 +28,11 @@ codex plugin marketplace add <runtime-plugin-directory>
 codex plugin add wcbs-build-kit@wcbs-build-kit
 ```
 
-Migration blocks before writing if a V1-owned file changed, the original source
-is unavailable, the target is ambiguous, or the V2 plugin directory contains
+Migration blocks before writing if a V1-owned file changed, an owned path is
+redirected through a symlink, a hashless receipt's original source is
+unavailable, the target is ambiguous, or the V2 plugin directory contains
 unowned content. It installs the V2 plugin first and removes only V1 files
-whose ownership was verified. Keep the V1 source checkout until the V2 doctor
-and a real clean-session check have completed.
+whose ownership was verified. Keep the original checkout for hashless receipts
+until migration completes. V2 package integrity alone does not establish
+native runtime activation; follow `docs/V2_RUNTIME_EVIDENCE.md` before relying
+on the new installation.

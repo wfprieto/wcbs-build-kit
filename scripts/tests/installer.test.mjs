@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -30,6 +31,10 @@ function runSmoke(args, cwd = root) {
 
 function exists(dir, rel) {
   return fs.existsSync(path.join(dir, ...rel.split("/")));
+}
+
+function hash(file) {
+  return crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
 }
 
 function filesBelow(dir) {
@@ -75,6 +80,155 @@ test("codex adapter installs, verifies, updates, and uninstalls transactionally"
     assert.equal(exists(dir, "AGENTS.md"), false);
     assert.equal(exists(dir, ".wcbs/adapter-install-manifest.json"), false);
     assert.equal(fs.readFileSync(path.join(dir, "app.txt"), "utf8"), "user sentinel\n");
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("installer records immutable per-file hashes and refuses to overwrite or delete edited files", () => {
+  const dir = tmp();
+  try {
+    assert.equal(run(["--target", "codex", "--dest", dir, "--install"]).code, 0);
+    const manifest = JSON.parse(fs.readFileSync(path.join(dir, ".wcbs", "adapter-install-manifest.json"), "utf8"));
+    assert.equal(manifest.schema_version, 2);
+    assert.equal(manifest.file_hashes["AGENTS.md"], hash(path.join(dir, "AGENTS.md")));
+    fs.appendFileSync(path.join(dir, "AGENTS.md"), "\nuser edit\n");
+    const before = hash(path.join(dir, "GET_STARTED.md"));
+    for (const action of ["--update", "--repair", "--uninstall", "--doctor", "--verify-owned-files"]) {
+      const result = run(["--target", "codex", "--dest", dir, action]);
+      assert.notEqual(result.code, 0, `${action}: ${result.output}`);
+      assert.match(result.output, /modified|changed|integrity/i);
+      assert.match(fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8"), /user edit/);
+      assert.equal(hash(path.join(dir, "GET_STARTED.md")), before);
+      assert.ok(exists(dir, ".wcbs/adapter-install-manifest.json"));
+    }
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("repair restores only missing owned files without rewriting the receipt or intact files", () => {
+  const dir = tmp();
+  try {
+    assert.equal(run(["--target", "codex", "--dest", dir, "--install"]).code, 0);
+    const manifest = path.join(dir, ".wcbs", "adapter-install-manifest.json");
+    const receiptBefore = fs.readFileSync(manifest, "utf8");
+    const intact = path.join(dir, "GET_STARTED.md");
+    const oldTime = new Date("2001-01-01T00:00:00Z");
+    fs.utimesSync(intact, oldTime, oldTime);
+    const intactMtime = fs.statSync(intact).mtimeMs;
+    fs.rmSync(path.join(dir, "AGENTS.md"));
+    const result = run(["--target", "codex", "--dest", dir, "--repair"]);
+    assert.equal(result.code, 0, result.output);
+    assert.equal(fs.readFileSync(manifest, "utf8"), receiptBefore);
+    assert.equal(fs.statSync(intact).mtimeMs, intactMtime);
+    assert.equal(run(["--target", "codex", "--dest", dir, "--doctor"]).code, 0);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("uninstall rejects a manifest traversal path before touching an outside sentinel", () => {
+  const parent = tmp();
+  const dir = path.join(parent, "project");
+  fs.mkdirSync(dir);
+  const sentinel = path.join(parent, "sentinel.txt");
+  fs.writeFileSync(sentinel, "keep me\n");
+  try {
+    assert.equal(run(["--target", "codex", "--dest", dir, "--install"]).code, 0);
+    const file = path.join(dir, ".wcbs", "adapter-install-manifest.json");
+    const record = JSON.parse(fs.readFileSync(file, "utf8"));
+    record.files.push("../sentinel.txt");
+    record.file_hashes ??= {};
+    record.file_hashes["../sentinel.txt"] = hash(sentinel);
+    fs.writeFileSync(file, JSON.stringify(record));
+    const result = run(["--target", "codex", "--dest", dir, "--uninstall"]);
+    assert.notEqual(result.code, 0, result.output);
+    assert.equal(fs.readFileSync(sentinel, "utf8"), "keep me\n");
+    assert.ok(exists(dir, "AGENTS.md"));
+  } finally {
+    fs.rmSync(parent, { recursive: true, force: true });
+  }
+});
+
+test("legacy hashless manifest blocks destructive actions without touching installed files", () => {
+  const dir = tmp();
+  try {
+    assert.equal(run(["--target", "codex", "--dest", dir, "--install"]).code, 0);
+    const file = path.join(dir, ".wcbs", "adapter-install-manifest.json");
+    const record = JSON.parse(fs.readFileSync(file, "utf8"));
+    delete record.schema_version;
+    delete record.file_hashes;
+    fs.writeFileSync(file, JSON.stringify(record));
+    for (const action of ["--update", "--repair", "--uninstall"]) {
+      const result = run(["--target", "codex", "--dest", dir, action]);
+      assert.notEqual(result.code, 0, result.output);
+      assert.match(result.output, /legacy|hashless|file hashes/i);
+      assert.ok(exists(dir, "AGENTS.md"));
+    }
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("uninstall rollback restores all files after a controlled removal failure", () => {
+  const dir = tmp();
+  try {
+    assert.equal(run(["--target", "codex", "--dest", dir, "--install"]).code, 0);
+    const before = hash(path.join(dir, "AGENTS.md"));
+    const failed = run(["--target", "codex", "--dest", dir, "--uninstall"], root, { WCBS_TEST_FAIL_UNINSTALL_AFTER_REMOVALS: "2" });
+    assert.notEqual(failed.code, 0, failed.output);
+    assert.match(failed.output, /Injected uninstall removal failure/);
+    assert.equal(hash(path.join(dir, "AGENTS.md")), before);
+    assert.ok(exists(dir, ".wcbs/adapter-install-manifest.json"));
+    assert.equal(run(["--target", "codex", "--dest", dir, "--doctor"]).code, 0);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("incomplete uninstall rollback preserves staged backups for manual recovery", () => {
+  const dir = tmp();
+  try {
+    assert.equal(run(["--target", "codex", "--dest", dir, "--install"]).code, 0);
+    const manifest = JSON.parse(fs.readFileSync(path.join(dir, ".wcbs", "adapter-install-manifest.json"), "utf8"));
+    const firstRemoved = [...manifest.files].sort((a, b) => b.length - a.length)[0];
+    const result = run(["--target", "codex", "--dest", dir, "--uninstall"], root, {
+      WCBS_TEST_FAIL_UNINSTALL_AFTER_REMOVALS: "2",
+      WCBS_TEST_FAIL_ROLLBACK_REL: firstRemoved
+    });
+    assert.notEqual(result.code, 0, result.output);
+    assert.match(result.output, /rollback was incomplete/i);
+    const record = JSON.parse(fs.readFileSync(path.join(dir, ".wcbs", "adapter-install-recovery.json"), "utf8"));
+    assert.ok(record.backup_directory);
+    assert.ok(fs.existsSync(path.join(record.backup_directory, ...firstRemoved.split("/"))));
+  } finally {
+    const recovery = path.join(dir, ".wcbs", "adapter-install-recovery.json");
+    if (fs.existsSync(recovery)) {
+      const record = JSON.parse(fs.readFileSync(recovery, "utf8"));
+      const backup = path.resolve(record.backup_directory ?? "");
+      if (path.dirname(backup) === path.resolve(os.tmpdir()) && path.basename(backup).startsWith("wcbs-adapter-uninstall-")) fs.rmSync(backup, { recursive: true, force: true });
+    }
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("a target mismatch or unrecognized owned path cannot delete project files", () => {
+  const dir = tmp();
+  try {
+    fs.writeFileSync(path.join(dir, "user.txt"), "user data\n");
+    assert.equal(run(["--target", "codex", "--dest", dir, "--install"]).code, 0);
+    const wrongTarget = run(["--target", "cursor", "--dest", dir, "--uninstall"]);
+    assert.notEqual(wrongTarget.code, 0, wrongTarget.output);
+    const file = path.join(dir, ".wcbs", "adapter-install-manifest.json");
+    const record = JSON.parse(fs.readFileSync(file, "utf8"));
+    record.files.push("user.txt");
+    record.file_hashes["user.txt"] = hash(path.join(dir, "user.txt"));
+    fs.writeFileSync(file, JSON.stringify(record));
+    const poisoned = run(["--target", "codex", "--dest", dir, "--uninstall"]);
+    assert.notEqual(poisoned.code, 0, poisoned.output);
+    assert.equal(fs.readFileSync(path.join(dir, "user.txt"), "utf8"), "user data\n");
+    assert.ok(exists(dir, "AGENTS.md"));
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
