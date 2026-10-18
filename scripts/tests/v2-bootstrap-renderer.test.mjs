@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import fs from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -20,7 +21,32 @@ test("the session bootstrap renderer emits only the Claude hook contract", () =>
   assert.deepEqual(Object.keys(payload), ["hookSpecificOutput"]);
   assert.equal(payload.hookSpecificOutput.hookEventName, "SessionStart");
   assert.match(payload.hookSpecificOutput.additionalContext, /WCBS_KIT_ACTIVE:claude/);
+  assert.match(payload.hookSpecificOutput.additionalContext, /^WCBS_KIT_ACTIVE:claude$/m);
+  assert.doesNotMatch(payload.hookSpecificOutput.additionalContext, /`WCBS_KIT_ACTIVE:claude`/);
   assert.doesNotMatch(payload.hookSpecificOutput.additionalContext, /WCBS_KIT_ACTIVE:(?!claude\b)/);
+  assert.match(payload.hookSpecificOutput.additionalContext, /# Using WCBS/);
+  assert.match(payload.hookSpecificOutput.additionalContext, /Before a project action, do one of these explicitly:/);
+  assert.match(payload.hookSpecificOutput.additionalContext, /Naming a skill is not loading it/);
+  assert.match(payload.hookSpecificOutput.additionalContext, /do not provide a provisional plan, audit, fix, or release verdict/i);
+  assert.ok(payload.hookSpecificOutput.additionalContext.includes(path.join(root, "skills", "using-wcbs", "SKILL.md")));
+  assert.ok(payload.hookSpecificOutput.additionalContext.includes(path.join(root, "runtime_adapters", "tool_mappings", "claude.json")));
+  const hooks = JSON.parse(fs.readFileSync(path.join(root, "hooks", "hooks.json"), "utf8"));
+  assert.equal(hooks.hooks.SessionStart[0].matcher, "startup|resume|fork|clear|compact");
+});
+
+test("the Codex renderer emits a native SessionStart payload with the canonical router", () => {
+  const payload = parse(render("codex", "codex"));
+  assert.deepEqual(Object.keys(payload), ["hookSpecificOutput"]);
+  assert.equal(payload.hookSpecificOutput.hookEventName, "SessionStart");
+  const context = payload.hookSpecificOutput.additionalContext;
+  assert.match(context, /WCBS_KIT_ACTIVE:codex/);
+  assert.match(context, /# Using WCBS/);
+  assert.ok(context.includes(path.join(root, "skills", "using-wcbs", "SKILL.md")));
+  assert.ok(context.includes(path.join(root, "runtime_adapters", "tool_mappings", "codex.json")));
+  assert.equal(fs.existsSync(path.join(root, "hooks", "codex-hooks.json")), true);
+  const hooks = JSON.parse(fs.readFileSync(path.join(root, "hooks", "codex-hooks.json"), "utf8"));
+  assert.equal(hooks.hooks.SessionStart[0].matcher, "startup|resume|fork|clear|compact");
+  assert.match(hooks.hooks.SessionStart[0].hooks[0].command, /--runtime codex --shape codex/);
 });
 
 test("the session bootstrap renderer emits only the Cursor hook contract", () => {

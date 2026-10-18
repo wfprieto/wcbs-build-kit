@@ -46,6 +46,9 @@ codex plugin marketplace add <runtime-plugin-directory>
 codex plugin add wcbs-build-kit@wcbs-build-kit
 ```
 
+Review and trust the bundled SessionStart hook in Codex's native prompt. Codex
+skips untrusted plugin hooks, so installation alone does not activate WCBS.
+
 If Codex CLI is installed, replay the isolated native marketplace lifecycle
 (this checks package installation, not model activation):
 

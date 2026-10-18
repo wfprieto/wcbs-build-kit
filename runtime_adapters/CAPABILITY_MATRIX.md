@@ -9,7 +9,7 @@ This file is generated from the canonical adapter registry through validated man
 | Runtime | Designed support | Activation tier | Integration shape | Bootstrap design | Install scope | Modifies user files |
 |---|---|---|---|---|---|---|
 | Claude and Claude Code (`claude`) | **Designed Full** | **T1** | hybrid | automatic | project | no |
-| OpenAI Codex (`codex`) | **Designed Full** | **T2** | in_process_plugin | automatic | project | no |
+| OpenAI Codex (`codex`) | **Designed Full** | **T1** | hybrid | automatic | project | no |
 | Cursor (`cursor`) | **Designed Full** | **T1** | hybrid | automatic | project | no |
 | Gemini CLI (`gemini`) | **Designed Partial** | **T2** | always_on_instruction_file | automatic | project | no |
 | Generic LLM Agent (`generic-agent`) | **Designed Manual** | **T4** | always_on_instruction_file | manual | project | no |
@@ -61,7 +61,7 @@ Every `degradable` or `unavailable` cell states its exact fallback. Agents may n
 ## Known Limitations
 
 - **Claude and Claude Code**: Surfaces without plugin hooks degrade to CLAUDE.md T2 or manual activation and must record that lower tier.
-- **OpenAI Codex**: Plugin skill discovery requires the Codex plugin runtime to be enabled for the workspace. The root hook is deliberately disabled for Codex.
+- **OpenAI Codex**: Codex skips bundled hooks until the user reviews and trusts their current definition. Runtime activation remains Not Run until fresh-session proof passes.
 - **Cursor**: The project hook path is structurally tested, but a clean Cursor runtime session is Not Run. If the hook is unavailable, activation degrades to the always-on rule and is recorded as T2.
 - **Gemini CLI**: No independent subagents and no native browser verification; activation is instructed rather than enforced.
 - **Generic LLM Agent**: No native activation mechanism exists, so this is Manual by definition. If command execution is unavailable, the runtime is Unsupported.

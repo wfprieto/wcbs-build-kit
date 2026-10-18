@@ -46,7 +46,7 @@ const requiredFiles = [
   ...["controller-contract", "adapter-contract", "schema-enforcement", "schema-keyword-support", "bootstrap-fixtures", "long-horizon-memory-contract", "wcbs-doctor", "artifact-bundle", "kernel-contract", "bootstrap-controller", "activation-marker-reachability", "runtime-entry-contract", "skill-contract", "npm-script-entry-points", "v2-registry", "v2-bootstrap-renderer", "wcbs-cli", "native-adapter-packages", "hook-transport", "v2-eval-design"].map(x => `scripts/tests/${x}.test.mjs`),
   "scripts/tests/fixtures/run-bundle/findings.json", "scripts/tests/fixtures/run-bundle/progress-ledger.jsonl", "scripts/tests/fixtures/run-bundle/tasks/T-01/task-artifact.json", "scripts/tests/fixtures/run-bundle/tasks/T-02/task-artifact.json",
   ...["bootstrap-certificate.json", "capability-resolution.json", "elite-goals-ledger.json", "evidence-ledger.jsonl", "engineering-team.json", "project-profile.json", "risk-register.json", "release-state.json"].map(x => `scripts/tests/fixtures/bootstrap/${x}`),
-  ".gitattributes", ".gitignore", ".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json", ".kimi-plugin/plugin.json", ".opencode/plugins/wcbs.js", ".pi/extensions/wcbs.ts", ".cursor/rules/super-build-kit.mdc", ".cursor/hooks.json", ".github/copilot-instructions.md", ".github/hooks/wcbs-session-start.json", "hooks/session-start", "hooks/run-hook", "hooks/run-hook.cmd", "hooks/hooks.json",
+  ".gitattributes", ".gitignore", ".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json", ".kimi-plugin/plugin.json", ".opencode/plugins/wcbs.js", ".pi/extensions/wcbs.ts", ".cursor/rules/super-build-kit.mdc", ".cursor/hooks.json", ".github/copilot-instructions.md", ".github/hooks/wcbs-session-start.json", "hooks/session-start", "hooks/run-hook", "hooks/run-hook.cmd", "hooks/hooks.json", "hooks/codex-hooks.json",
   ".github/workflows/verify.yml", ".github/workflows/release-check.yml", ".github/RELEASE_CANDIDATE_CHECKLIST.md", ".github/CODEOWNERS", ".github/dependabot.yml",
   "scripts/tests/repository-governance.test.mjs"
 ];
@@ -112,7 +112,10 @@ function checkPackage() {
       }
     }
   }
-  if (json(".codex-plugin/plugin.json")?.hooks && JSON.stringify(json(".codex-plugin/plugin.json").hooks) !== "{}") fail(".codex-plugin/plugin.json hooks must be exactly {} to prevent hook auto-discovery.");
+  if (json(".codex-plugin/plugin.json")?.hooks !== "./hooks/codex-hooks.json") fail("Codex plugin must register only its owned SessionStart hook.");
+  const codexHooks = json("hooks/codex-hooks.json");
+  const starts = codexHooks?.hooks?.SessionStart;
+  if (!codexHooks?.hooks || Object.keys(codexHooks.hooks).length !== 1 || !Array.isArray(starts) || starts.length !== 1 || starts[0]?.matcher !== "startup|resume|fork|clear|compact" || starts[0]?.hooks?.length !== 1 || starts[0].hooks[0]?.type !== "command" || starts[0].hooks[0]?.command !== 'node "${PLUGIN_ROOT}/scripts/render-session-bootstrap.mjs" --runtime codex --shape codex') fail("Codex SessionStart hook must invoke the bundled Codex renderer exactly once.");
 }
 function checkSkills() {
   const dir = resolve("skills"); if (!fs.existsSync(dir)) { fail("Missing skills directory."); return; }
@@ -204,7 +207,7 @@ function checkHookTransport() {
   if (cmdWrapper.includes("\r\n")) fail("hooks/run-hook.cmd must remain LF-only because bash parses its polyglot guard.");
   const claude = json("hooks/hooks.json");
   const claudeCommand = claude?.hooks?.SessionStart?.[0]?.hooks?.[0]?.command ?? "";
-  if (!/"\$\{CLAUDE_PLUGIN_ROOT\}\/hooks\/run-hook\.cmd"/.test(claudeCommand) || !/--runtime claude/.test(claudeCommand)) fail("hooks/hooks.json must invoke the quoted Claude transport with --runtime claude.");
+  if (claude?.hooks?.SessionStart?.[0]?.matcher !== "startup|resume|fork|clear|compact" || !/"\$\{CLAUDE_PLUGIN_ROOT\}\/hooks\/run-hook\.cmd"/.test(claudeCommand) || !/--runtime claude/.test(claudeCommand)) fail("hooks/hooks.json must invoke the quoted Claude transport on every session start source.");
   const cursor = json(".cursor/hooks.json");
   if (cursor?.version !== 1 || !Array.isArray(cursor?.hooks?.sessionStart) || cursor.hooks.sessionStart[0]?.command !== "./hooks/run-hook session-start --runtime cursor") fail(".cursor/hooks.json must declare Cursor's POSIX project sessionStart transport.");
   const copilot = json(".github/hooks/wcbs-session-start.json");

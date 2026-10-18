@@ -204,20 +204,17 @@ function renderVerifiedSupport(adapters) {
   return newline(lines.join("\n"));
 }
 
-function renderBootstrap(registry) {
-  const names = registry.core_skills.map((skill) => `\`${skill.name}\``).join(", ");
+function renderBootstrap() {
   return newline([
     "# WCBS V2 Session Bootstrap",
     "",
     "<!-- GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml. -->",
     "",
-    "`{{activation_marker}}`",
+    "{{activation_marker}}",
     "",
-    "WCBS is active. Before changing a project, select and load the relevant skill. User instructions override WCBS. Do not invent absent tools; use the active runtime tool map. Stop and report `Blocked` when the skill catalog or tool map cannot be read.",
+    "WCBS is active. The canonical `using-wcbs` skill follows in this startup context. Apply its hard gate before any project action, then load the task-specific skill on demand. User instructions override WCBS. Do not invent tools; stop with `Blocked` if the skill catalog or active tool map is unavailable.",
     "",
-    "Route new behavior through `brainstorming`, plan or remediation work through `writing-plans`, code changes through `test-driven-development`, failures through `systematic-debugging`, review through the code-review skills, and final claims through `verification-before-completion`.",
-    "",
-    `Core skills: ${names}.`,
+    "On the first response after a successful session start, put the activation marker above on its own first line without backticks. Emit it once per session, not after every turn or compaction.",
     "",
     "The full APIVR, Elite Goals, and specialist skills load only when their trigger applies.",
     ""
@@ -279,7 +276,7 @@ function outputs(registry) {
   files.set("runtime_adapters/CAPABILITY_MATRIX.md", newline(renderCapabilityMatrix(manifests)));
   files.set("runtime_adapters/INSTALLATION_MATRIX.md", renderInstallationMatrix(adapters));
   files.set("runtime_adapters/VERIFIED_SUPPORT_LEVELS.md", renderVerifiedSupport(adapters));
-  files.set("runtime_adapters/generated/using-wcbs-bootstrap.md", renderBootstrap(registry));
+  files.set("runtime_adapters/generated/using-wcbs-bootstrap.md", renderBootstrap());
   files.set("runtime_adapters/generated/runtime-startup-contract.md", renderRuntimeStartupContract(registry));
   files.set("runtime_adapters/generated/skill-catalog.json", `${JSON.stringify({ generated: "GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml.", core_skills: registry.core_skills }, null, 2)}\n`);
   files.set("runtime_adapters/generated/specialist-skill-catalog.json", `${JSON.stringify({ generated: "GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml.", specialist_skills: registry.specialist_skills }, null, 2)}\n`);
