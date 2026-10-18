@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "protocol_id": "gate-0c-wcbs-v2-neutral-control-v1",
+  "protocol_id": "gate-0c-wcbs-v2-neutral-control-v2",
   "phase": "5",
   "status": "preregistered-before-paid-runs",
   "runtime_id": "claude",
@@ -101,7 +101,7 @@
   },
   "evaluator_harness": {
     "path": "evals/evaluator-harness-manifest.json",
-    "sha256": "3e82cd068ea1fc2769ebbf1cbfbe7ae48720a420239631ef6e02fdc116e63588"
+    "sha256": "60bc5d75bc2c372c89a1cfcf59e9d85e909aa061a7c43446f84f6f6f0bb1d2d4"
   },
   "analysis": {
     "bootstrap_resamples": 10000,
@@ -114,7 +114,7 @@
   },
   "randomization": {
     "method": "seeded Fisher-Yates schedule over every case-arm-repetition record",
-    "seed_requirement": "A safe seed is required at execute time and is retained in the run manifest before the first invocation.",
+    "seed_requirement": "A safe seed and complete randomized schedule are written once to run-plan.json before the first invocation; the final run manifest binds its byte hash.",
     "order": "The generated schedule, not canonical arm order, controls execution."
   },
   "blinding": {

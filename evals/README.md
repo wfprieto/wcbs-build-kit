@@ -4,10 +4,12 @@ This directory contains two immutable, evidence-gated behavioral protocols. Neit
 
 | Protocol | Arms | Minimum runs | Current state |
 | --- | --- | ---: | --- |
-| Gate 0C | neutral, WCBS | 160 | Configured; strict preflight and measured execution still required |
+| Gate 0C | neutral, WCBS | 160 | V2 restart configured; complete measured execution still required |
 | Superpowers comparison | neutral, WCBS, Superpowers | 240 | Configured; strict preflight and measured execution still required |
 
 Both protocols pin Claude Code CLI 2.1.228, `claude-sonnet-5`, the native executable SHA-256, and the same non-interactive launcher. The launcher validates the executable bytes and gives every arm the same model, tools, permission mode, effort, and per-attempt budget. Only the assigned non-neutral arm receives `--plugin-dir`. Its bounded `dontAsk` tool policy avoids a blanket permission bypass; denied commands and budget exhaustion remain failure-as-data, not grounds to change a protocol after measurement starts.
+
+The original Gate 0C V1 run `gate-0c-20261017-b85e5e1` was stopped after ten completed attempts because its schedule existed only in memory until the final manifest. Those retained attempts are aborted protocol evidence, not scoreable results. Gate 0C V2 keeps the same candidate, controls, cases, arms, run count, rubric, and pass rule; it changes only the evidence runner to write and hash the seed and complete schedule before the first attempt. The three-arm comparison had no measured attempts before this correction.
 
 ## Non-paid preflight
 
@@ -54,6 +56,8 @@ npm run eval:superpowers -- --execute --run-id comparison-YYYYMMDD --seed <safe-
 The public command validates the external root and that the named run is absent before strict preflight; only the execution protocol creates that one direct child at mode `0700`. It carries an opaque evidence capability to every producer and consumer. Every evidence path is normalized and checked component by component with `lstat`, `realpath`, device, and inode checks. Inputs must be regular non-symlink files. Outputs use a same-parent `O_NOFOLLOW | O_CREAT | O_EXCL` temporary file, `fsync`, and atomic rename, and are never overwritten.
 
 Those checks fail closed when the no-follow primitive is unavailable and detect parent substitution before and after writes. They cannot prevent a privileged or same-authority filesystem actor from replacing a parent between individual kernel calls; that bounded race limitation is not provenance, authorship, chronology, or human-independence evidence.
+
+Immediately after preflight and before staging the first attempt, the runner writes `run-plan.json` once with the protocol identity, seed, and entire randomized schedule. The final `run-manifest.json` binds its byte hash. Packet creation and delivery validation reject a missing or changed plan. An interrupted run remains incomplete and must not be scored or silently resumed under a new identity.
 
 The runner archives the fixed WCBS evaluation subject with hardened direct Git invocations and stages it through V2 `scripts/wcbs.mjs`; it never uses the V1 adapter installer. The hardened policy disables system/global configuration, aliases, hooks, filters, fsmonitor, and checkout-transforming attributes. It records local core transport settings that the hardened command explicitly overrides, while rejecting unneutralized local filter/include configuration and committed transform declarations before provenance or artifact materialization. The three-arm protocol verifies the supplied Superpowers checkout, then archives the exact preregistered commit rather than mutable `HEAD`. Every scheduled record creates one protected runtime profile shared by its loader setup and agent invocation, and retains raw custody evidence separately from the judge delivery package.
 
