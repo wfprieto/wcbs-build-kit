@@ -1,5 +1,6 @@
 {
   "name": "wcbs-build-kit",
+  "description": "WCBS Engineering Operating System self-hosted plugin marketplace.",
   "owner": {"name": "Bill Prieto", "email": "wfprieto@gmail.com"},
   "plugins": [
     {
