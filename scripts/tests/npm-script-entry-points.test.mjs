@@ -20,15 +20,16 @@ test("every npm script that invokes a local scripts file references an existing 
   assert.deepEqual(missing, [], `npm scripts reference missing files: ${missing.join(", ")}`);
 });
 
-test("default Gate 0C evaluation is non-paid and truthfully blocked pending immutable execution identity", () => {
+test("default Gate 0C evaluation is non-paid in either checkout state", () => {
   const result = spawnSync(process.execPath, ["scripts/run-evals.mjs"], { cwd: root, encoding: "utf8" });
   assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
   assert.match(result.stdout, /Scheduled runs: 160/);
-  assert.match(result.stdout, /Preflight: BLOCKED/);
-  assert.match(result.stdout, /No paid run, score, support-label update, or comparison claim was produced/i);
+  assert.match(result.stdout, /Mode: preflight/);
+  assert.match(result.stdout, /Preflight: (PASS|BLOCKED)/);
+  assert.match(result.stdout, /No paid run, score, support-label update, or comparison claim was produced|non-paid preflight is complete/i);
 });
 
-test("strict evaluation fails before a run directory is created when identity or loader is incomplete", () => {
+test("strict execution fails before a run directory is created without a protected credential", () => {
   const runId = `blocked-preflight-${process.pid}-${Date.now()}`;
   const evidenceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-external-evidence-"));
   try {
@@ -36,10 +37,10 @@ test("strict evaluation fails before a run directory is created when identity or
     const result = spawnSync(process.execPath, ["scripts/run-evals.mjs", "--strict", "--execute", "--run-id", runId, "--seed", "safe-test-seed", "--evidence-dir", evidenceRoot], {
       cwd: root,
       encoding: "utf8",
-      env: { ...process.env, WCBS_EVAL_CREDENTIAL: "synthetic-test-value-not-a-real-credential" }
+      env: { ...process.env, CLAUDE_CODE_OAUTH_TOKEN: "" }
     });
     assert.equal(result.status, 1, `${result.stdout}${result.stderr}`);
-    assert.match(`${result.stdout}${result.stderr}`, /strict preflight|immutable execution identity|runtime loader/i);
+    assert.match(`${result.stdout}${result.stderr}`, /strict preflight|CLAUDE_CODE_OAUTH_TOKEN is not set/i);
     assert.equal(fs.existsSync(runDirectory), false);
   } finally {
     fs.rmSync(evidenceRoot, { recursive: true, force: true });

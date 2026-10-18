@@ -23,7 +23,7 @@
     },
     {
       "path": "scripts/lib/evaluation-protocol.mjs",
-      "sha256": "f8a4676026601b5cc562e8422380bc8b07c8259da0fae4c2e73b4000d77bbaf2"
+      "sha256": "46e139956b6b93be17391d494f76393fdd55d5062e39c7016f6c5c3b0a4b10b5"
     },
     {
       "path": "scripts/lib/hardened-git.mjs",

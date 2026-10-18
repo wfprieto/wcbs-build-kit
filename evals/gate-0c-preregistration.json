@@ -86,7 +86,7 @@
     }
   },
   "loader_state": "Claude plugin validate checks the staged WCBS plugin; the pinned launcher loads it with --plugin-dir only in the WCBS arm.",
-  "verification_command_template": null,
+  "verification_command_template": { "command": "node", "arguments": ["--test", "test/task-store.test.mjs"] },
   "timeout_ms": 600000,
   "failure_policy": {
     "timeout": "failure",
@@ -101,7 +101,7 @@
   },
   "evaluator_harness": {
     "path": "evals/evaluator-harness-manifest.json",
-    "sha256": "96e1ce17c5291123e8efe65c69be984139d2d958a0abd9d7bd726e8845d77f1a"
+    "sha256": "3e82cd068ea1fc2769ebbf1cbfbe7ae48720a420239631ef6e02fdc116e63588"
   },
   "analysis": {
     "bootstrap_resamples": 10000,

@@ -23,6 +23,7 @@ import {
   executeProtocol,
   manifestSelfHash,
   preflightProtocol,
+  projectAgentStreamForJudge,
   resolveExternalEvidenceRun,
   resolveGitExecutable,
   runGitCommand,
@@ -929,6 +930,26 @@ test("three-arm judge packages omit nested structural loader and installation fi
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }
+});
+
+test("blinded Claude stream retains scoreable actions without startup or plugin fingerprints", () => {
+  const stream = [
+    { type: "system", subtype: "init", cwd: "C:\\private\\wcbs", plugins: ["wcbs-build-kit"] },
+    { type: "assistant", message: { content: [{ type: "thinking", thinking: "private reasoning" }, { type: "text", text: "I will plan and test before changing the implementation." }] } },
+    { type: "assistant", message: { content: [{ type: "tool_use", id: "edit-test", name: "Edit", input: { file_path: "C:\\private\\wcbs\\test\\task-store.test.mjs" } }] } },
+    { type: "assistant", message: { content: [{ type: "tool_use", id: "red-test", name: "Bash", input: { command: "node --test test/task-store.test.mjs" } }] } },
+    { type: "user", message: { content: [{ type: "tool_result", tool_use_id: "red-test", is_error: true, content: "test failed at C:\\private\\wcbs" }] } },
+    { type: "assistant", message: { content: [{ type: "tool_use", id: "edit-code", name: "Edit", input: { file_path: "C:\\private\\wcbs\\src\\task-store.mjs" } }] } },
+    { type: "assistant", message: { content: [{ type: "tool_use", id: "green-test", name: "Bash", input: { command: "node --test test/task-store.test.mjs" } }] } },
+    { type: "user", message: { content: [{ type: "tool_result", tool_use_id: "green-test", is_error: false, content: "tests passed" }] } },
+    { type: "assistant", message: { content: [{ type: "text", text: "I used wcbs plugin; The test now passes at C:\\private\\wcbs." }] } },
+    { type: "result", subtype: "success", result: "The test now passes.", total_cost_usd: 0.1 }
+  ].map((entry) => JSON.stringify(entry)).join("\n");
+  const projected = projectAgentStreamForJudge(stream);
+  assert.match(projected, /plan and test before changing/);
+  assert.match(projected, /Test edit[\s\S]*Test run[\s\S]*Test result: failed[\s\S]*Implementation edit[\s\S]*Test run[\s\S]*Test result: completed/);
+  assert.match(projected, /The test now passes/);
+  assert.doesNotMatch(projected, /wcbs|superpowers|plugin|private reasoning|C:\\|task-store\.mjs|total_cost_usd/i);
 });
 
 test("analysis rejects replayed tampered or unreconciled hashed score ledgers", () => {
