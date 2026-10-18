@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generated_from": "runtime_adapters/adapter-registry.yaml",
-  "registry_sha256": "d1ca55561e8795c97fcaff3579a5f8b43c80245569cc820c758d62f1718cf129",
+  "registry_sha256": "fd6f36bf9b4c2290bbefeea80fcc08b4e1ed122ff3f5c032290ff22faf917c63",
   "evidence_tier_order": [
     "package_integrity",
     "structural_lifecycle",
@@ -39,11 +39,11 @@
       ],
       "clean_install": {
         "required": true,
-        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Install .claude-plugin/plugin.json; the SessionStart hook injects BOOTSTRAP.md. CLAUDE.md remains the T2 fallback.. User-owned sentinel files retain their pre-install hashes."
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Install .claude-plugin/plugin.json; the SessionStart hook loads the canonical using-wcbs router. CLAUDE.md remains the T2 fallback.. User-owned sentinel files retain their pre-install hashes."
       },
       "native_lifecycle": {
         "install_scope": "project",
-        "install": "Install .claude-plugin/plugin.json; the SessionStart hook injects BOOTSTRAP.md. CLAUDE.md remains the T2 fallback.",
+        "install": "Install .claude-plugin/plugin.json; the SessionStart hook loads the canonical using-wcbs router. CLAUDE.md remains the T2 fallback.",
         "update": "Update the plugin, Kernel, and hook files in the repository.",
         "uninstall": "Remove the Claude plugin registration and CLAUDE.md fallback. No shell profile is modified.",
         "rollback": "Restore the previously tagged plugin, hook, Kernel, and CLAUDE.md files."
@@ -125,17 +125,17 @@
       ],
       "clean_install": {
         "required": true,
-        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Install the plugin from .codex-plugin/plugin.json; the skills/ directory is registered automatically.. User-owned sentinel files retain their pre-install hashes."
+        "acceptance_criterion": "The target has no prior WCBS-owned state or cached activation; perform the canonical install route: Install the plugin from .codex-plugin/plugin.json, then review and trust its SessionStart hook. The skills/ directory is registered automatically.. User-owned sentinel files retain their pre-install hashes."
       },
       "native_lifecycle": {
         "install_scope": "project",
-        "install": "Install the plugin from .codex-plugin/plugin.json; the skills/ directory is registered automatically.",
-        "update": "Pull the repository and reload the plugin; plugin.json version drives the upgrade.",
+        "install": "Install the plugin from .codex-plugin/plugin.json, then review and trust its SessionStart hook. The skills/ directory is registered automatically.",
+        "update": "Update and reload the plugin; review the hook again if its definition changes.",
         "uninstall": "Remove the plugin from the Codex plugin list. No files outside the project are touched.",
-        "rollback": "Reinstall the previously tagged commit of .codex-plugin/plugin.json and skills/."
+        "rollback": "Reinstall the previously tagged plugin manifest, hook, renderer, and skills/."
       },
       "runtime_registration": {
-        "native_install_mechanism": "Codex plugin (.codex-plugin/plugin.json) with skills directory",
+        "native_install_mechanism": "Codex plugin SessionStart hook and skills directory; bundled hooks require user trust",
         "bootstrap_path": ".codex-plugin/plugin.json",
         "bootstrap_mode": "automatic",
         "activation_marker": "WCBS_KIT_ACTIVE:codex",
@@ -170,7 +170,7 @@
         "redaction_rule": "Retain only redacted paths, hashes, and replay instructions. Never store credentials, private prompts, or user data in the repository."
       },
       "uninstall": {
-        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Remove the plugin from the Codex plugin list. No files outside the project are touched. Rollback: Reinstall the previously tagged commit of .codex-plugin/plugin.json and skills/."
+        "acceptance_criterion": "Uninstall and rollback remove only WCBS-owned files while preserving the recorded user-owned sentinels. Canonical uninstall: Remove the plugin from the Codex plugin list. No files outside the project are touched. Rollback: Reinstall the previously tagged plugin manifest, hook, renderer, and skills/."
       },
       "failure_and_rollback": [
         "partial install",

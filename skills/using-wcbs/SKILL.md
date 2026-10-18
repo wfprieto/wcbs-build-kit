@@ -20,8 +20,13 @@ Before a project action, do one of these explicitly:
 1. Load the relevant skill; or
 2. State why no skill applies and use the evidence-first fallback below.
 
+Naming a skill is not loading it. Use the runtime's native skill invocation or
+read the full `SKILL.md` before applying it. A catalog entry, description, or
+planned route is not evidence that the skill was loaded.
+
 User instructions win. Never invent a tool that is absent from the active
-runtime map. If the catalog or map is unreadable, stop with `Blocked`.
+runtime map. If a required skill, catalog, or map is unreadable, stop with
+`Blocked`; do not provide a provisional plan, audit, fix, or release verdict.
 
 ## Process Router
 

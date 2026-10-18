@@ -117,7 +117,7 @@ function packageRoots(adapter) {
   // `codex plugin marketplace add`; keeping it inside the owned bundle makes
   // the documented install path replayable without touching a user's global
   // marketplace directory.
-  if (adapter.runtime_id === "codex") common.push(".agents/plugins/marketplace.json");
+  if (adapter.runtime_id === "codex") common.push(".agents/plugins/marketplace.json", "hooks/codex-hooks.json", "scripts/render-session-bootstrap.mjs");
   if (adapter.runtime_id === "claude") common.push("hooks", "scripts/render-session-bootstrap.mjs");
   return [...common, runtimeArtifact];
 }
@@ -330,8 +330,9 @@ try {
     } else {
       const body = fs.readFileSync(path.resolve(transcript), "utf8");
       const marker = adapter.manifest.activation_marker;
-      if (!body.includes(marker)) throw new Error(`Blocked: transcript does not contain ${marker}.`);
-      emit({ status: "RECORDED_CANDIDATE", evidence: "Likely", target: adapter.runtime_id, marker, message: "Transcript marker was found. Independent replay and evidence review are still required before any Runtime Verified label." }, "RECORDED_CANDIDATE: marker found; independent clean-session replay still required.");
+      const response = body.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
+      if (response.split("\n", 1)[0] !== marker || response.split(marker).length !== 2) throw new Error(`Blocked: first assistant message must begin with exactly one unformatted ${marker} line.`);
+      emit({ status: "RECORDED_CANDIDATE", evidence: "Likely", target: adapter.runtime_id, marker, message: "First assistant message starts with the exact marker. Inspect the raw trace and obtain independent replay before any Runtime Verified label." }, "RECORDED_CANDIDATE: exact first-line marker found; independent clean-session replay still required.");
     }
   } else if (command === "status" && !pluginDirInput) {
     const registry = readRegistry();

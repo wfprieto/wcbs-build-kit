@@ -65,7 +65,13 @@ test("Codex V2 installation includes the self-contained marketplace manifest wit
     assert.equal(install.status, 0, `${install.stdout}${install.stderr}`);
     const marketplace = JSON.parse(fs.readFileSync(path.join(plugin, ".agents", "plugins", "marketplace.json"), "utf8"));
     assert.deepEqual(marketplace.plugins[0].source, { source: "local", path: "./" });
-    assert.equal(fs.existsSync(path.join(plugin, ".codex-plugin", "plugin.json")), true);
+    const manifest = JSON.parse(fs.readFileSync(path.join(plugin, ".codex-plugin", "plugin.json"), "utf8"));
+    assert.equal(manifest.hooks, "./hooks/codex-hooks.json");
+    assert.equal(fs.existsSync(path.join(plugin, "hooks", "codex-hooks.json")), true);
+    assert.equal(fs.existsSync(path.join(plugin, "scripts", "render-session-bootstrap.mjs")), true);
+    const rendered = spawnSync(process.execPath, [path.join(plugin, "scripts", "render-session-bootstrap.mjs"), "--runtime", "codex", "--shape", "codex"], { cwd: plugin, encoding: "utf8" });
+    assert.equal(rendered.status, 0, `${rendered.stdout}${rendered.stderr}`);
+    assert.match(JSON.parse(rendered.stdout).hookSpecificOutput.additionalContext, /WCBS_KIT_ACTIVE:codex/);
     assert.equal(fs.existsSync(path.join(plugin, "package.json")), false, "the native plugin bundle must not ship package-manager scripts whose sources are intentionally excluded");
     assert.deepEqual(userHashes(project), before);
     assert.equal(run(["uninstall", "--plugin-dir", plugin]).status, 0);
@@ -290,4 +296,25 @@ test("activation verification stays blocked until a raw clean-session transcript
   assert.notEqual(result.status, 0);
   assert.match(result.stdout, /Blocked/i);
   assert.doesNotMatch(result.stdout, /Runtime Verified/i);
+});
+
+test("activation verification accepts only an exact first-line assistant marker", () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-v2-activation-"));
+  const transcript = path.join(directory, "first-assistant-message.txt");
+  try {
+    for (const [body, accepted] of [
+      ["WCBS_KIT_ACTIVE:codex\nApplying using-wcbs.\n", true],
+      ["Loaded instructions.\nWCBS_KIT_ACTIVE:codex\n", false],
+      ["`WCBS_KIT_ACTIVE:codex`\n", false],
+      ["WCBS_KIT_ACTIVE:codex\nWCBS_KIT_ACTIVE:codex\n", false],
+      ['{"type":"hook","text":"WCBS_KIT_ACTIVE:codex"}\n', false]
+    ]) {
+      fs.writeFileSync(transcript, body, "utf8");
+      const result = run(["verify-activation", "--target", "codex", "--transcript", transcript, "--json"]);
+      assert.equal(result.status === 0, accepted, `${body}: ${result.stdout}${result.stderr}`);
+      if (accepted) assert.equal(JSON.parse(result.stdout).evidence, "Likely");
+    }
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
 });

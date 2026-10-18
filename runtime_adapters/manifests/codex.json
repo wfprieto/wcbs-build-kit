@@ -3,9 +3,9 @@
   "display_name": "OpenAI Codex",
   "owner": "wfprieto",
   "support_level": "Full",
-  "activation_tier": "T2",
-  "integration_shape": "in_process_plugin",
-  "native_install_mechanism": "Codex plugin (.codex-plugin/plugin.json) with skills directory",
+  "activation_tier": "T1",
+  "integration_shape": "hybrid",
+  "native_install_mechanism": "Codex plugin SessionStart hook and skills directory; bundled hooks require user trust",
   "install_scope": "project",
   "bootstrap_path": ".codex-plugin/plugin.json",
   "bootstrap_mode": "automatic",
@@ -31,10 +31,10 @@
     "windows"
   ],
   "modifies_user_files": false,
-  "install": "Install the plugin from .codex-plugin/plugin.json; the skills/ directory is registered automatically.",
-  "update": "Pull the repository and reload the plugin; plugin.json version drives the upgrade.",
+  "install": "Install the plugin from .codex-plugin/plugin.json, then review and trust its SessionStart hook. The skills/ directory is registered automatically.",
+  "update": "Update and reload the plugin; review the hook again if its definition changes.",
   "uninstall": "Remove the plugin from the Codex plugin list. No files outside the project are touched.",
-  "rollback": "Reinstall the previously tagged commit of .codex-plugin/plugin.json and skills/.",
-  "limitations": "Plugin skill discovery requires the Codex plugin runtime to be enabled for the workspace. The root hook is deliberately disabled for Codex.",
+  "rollback": "Reinstall the previously tagged plugin manifest, hook, renderer, and skills/.",
+  "limitations": "Codex skips bundled hooks until the user reviews and trusts their current definition. Runtime activation remains Not Run until fresh-session proof passes.",
   "deprecation": "Designed adapter; runtime activation evidence is pending."
 }

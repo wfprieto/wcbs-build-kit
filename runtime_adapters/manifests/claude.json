@@ -31,7 +31,7 @@
     "windows"
   ],
   "modifies_user_files": false,
-  "install": "Install .claude-plugin/plugin.json; the SessionStart hook injects BOOTSTRAP.md. CLAUDE.md remains the T2 fallback.",
+  "install": "Install .claude-plugin/plugin.json; the SessionStart hook loads the canonical using-wcbs router. CLAUDE.md remains the T2 fallback.",
   "update": "Update the plugin, Kernel, and hook files in the repository.",
   "uninstall": "Remove the Claude plugin registration and CLAUDE.md fallback. No shell profile is modified.",
   "rollback": "Restore the previously tagged plugin, hook, Kernel, and CLAUDE.md files.",
