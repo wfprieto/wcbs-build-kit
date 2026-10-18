@@ -4,8 +4,10 @@ This directory contains two immutable, evidence-gated behavioral protocols. Neit
 
 | Protocol | Arms | Minimum runs | Current state |
 | --- | --- | ---: | --- |
-| Gate 0C | neutral, WCBS | 160 | Blocked: execution identity and vendor loader are deliberately unrecorded |
-| Superpowers comparison | neutral, WCBS, Superpowers | 240 | Blocked: shared execution identity and both vendor loaders are deliberately unrecorded |
+| Gate 0C | neutral, WCBS | 160 | Configured; strict preflight and measured execution still required |
+| Superpowers comparison | neutral, WCBS, Superpowers | 240 | Configured; strict preflight and measured execution still required |
+
+Both protocols pin Claude Code CLI 2.1.228, `claude-sonnet-5`, the native executable SHA-256, and the same non-interactive launcher. The launcher validates the executable bytes and gives every arm the same model, tools, permission mode, effort, and per-attempt budget. Only the assigned non-neutral arm receives `--plugin-dir`. Its bounded `dontAsk` tool policy avoids a blanket permission bypass; denied commands and budget exhaustion remain failure-as-data, not grounds to change a protocol after measurement starts.
 
 ## Non-paid preflight
 
@@ -33,6 +35,7 @@ Commit updates to the applicable preregistration before the first invocation. Th
 - One shared, vendor-documented agent command template and identical tool/context/budget conditions for every arm.
 - Vendor-documented WCBS and (for Phase 6) Superpowers loader templates. Do not invent a loader from a support claim.
 - A protected credential variable name; credential values stay only in the execution environment.
+- For this configured run, a locally generated Claude Max automation token is passed as `CLAUDE_CODE_OAUTH_TOKEN` from an encrypted store outside the repository. Never paste it into a protocol, evidence artifact, or chat.
 - For Phase 6, a read-only Superpowers checkout that resolves exactly to the preregistered commit and tree.
 - An `evaluation_subject` and `claim_target` with exactly the same immutable commit and tree. The preflight builds fresh Git-derived ZIPs for both identities and requires the canonical actual-ZIP content manifests to match. Dirty, ignored, untracked, mode-drifted, or caller-tree files cannot supply this proof.
 
@@ -67,6 +70,8 @@ npm run eval:create-judge-packets -- --run-id <run-id> --evidence-dir /secure/ex
 Judges receive only `judge-packets/` plus its signed delivery manifest. The delivery projection omits arm names, loader/installation outcomes, command vectors, project-diff shape/counts, raw failure categories, paths, and raw diagnostics. Keep `custody/blind-map.json`, raw workspace evidence, and source/profile evidence unavailable to both judges and the adjudicator. Before delivery publication, the pinned producer signs a domain-separated producer freeze over the once-sealed raw run manifest, every retained raw-artifact hash, packet projection hashes, delivery-manifest hash, blind-map hash, and protocol/schedule identity. The raw run manifest is never rewritten after sealing. Every judge, custody, and adjudication envelope binds that producer-freeze hash; analysis recomputes and verifies it before score parsing. The verifier rejects altered packets, extra files, symlinks, malformed fields, and a recomputed cross-arm blind-map swap before score parsing. This filesystem split is an auditable technical delivery control; it does not prove human independence.
 
 Exactly two ledgers are required: each judge ledger is canonical UTF-8 JSON with recursively sorted keys, one final newline, sorted unique packet scores, a self-hash, and a detached Ed25519 signature made by one of the two distinct public keys pinned in the complete protocol. Before adjudication, the jointly signed custody index binds both ledger hashes, the delivery-manifest hash, and the deterministic blind-map hash. The separately keyed adjudication envelope must cite those two hashes. Judge agreement cannot be overwritten; disagreement requires a non-empty reconciliation reason from a role distinct from both judges. Missing/invalid packet scores and contradictory `success: true` / `safety: false` or `correctness: false` composites are retained as locked zero failures rather than discarded. These technical signatures prove post-signature integrity only; they do not prove a signer’s human identity, independence, or chronology.
+
+For this run, the two separately instructed blinded scorers and the adjudicator are AI reviewers. Label them as AI in every report. Distinct sessions and keys provide technical separation but do not justify a claim of human-independent review.
 
 Analyze the three canonical envelopes with the reasoned adjudication ledger:
 

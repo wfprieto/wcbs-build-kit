@@ -2,6 +2,10 @@
   "schema_version": 1,
   "files": [
     {
+      "path": "scripts/claude-eval-agent.mjs",
+      "sha256": "c7a527ba63adf456bd32a87d1d0bcb5ce57521c8c5317e9fc3766c8fe400b2f0"
+    },
+    {
       "path": "scripts/analyze-behavioral-evaluation.mjs",
       "sha256": "9756de285f49241a65857b7ccc8a516eb6652613c0125ad34cb589aedda4938d"
     },
@@ -19,7 +23,7 @@
     },
     {
       "path": "scripts/lib/evaluation-protocol.mjs",
-      "sha256": "208f1a6bac03dde3d395cb93347cda11d2d67119826f84d16e2787d5c2b3ff1e"
+      "sha256": "f8a4676026601b5cc562e8422380bc8b07c8259da0fae4c2e73b4000d77bbaf2"
     },
     {
       "path": "scripts/lib/hardened-git.mjs",

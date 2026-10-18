@@ -19,35 +19,73 @@
   "repetitions": 10,
   "expected_total_runs": 160,
   "wcbs_candidate": {
-    "commit": "82d9dd61dffb4e26ae1046887b95c43e89c3cbe8",
-    "tree": "a65def1dfe7f474a5993698d48eea0bdea99eadc"
+    "commit": "0205acf8a0936f6bb3e4379ecc8021fed110f6af",
+    "tree": "21199eb45bdb2eb62b6129b6e7347d8e6dd39b3c"
   },
   "evaluation_subject": {
-    "commit": "82d9dd61dffb4e26ae1046887b95c43e89c3cbe8",
-    "tree": "a65def1dfe7f474a5993698d48eea0bdea99eadc"
+    "commit": "0205acf8a0936f6bb3e4379ecc8021fed110f6af",
+    "tree": "21199eb45bdb2eb62b6129b6e7347d8e6dd39b3c"
   },
   "claim_target": {
-    "commit": "82d9dd61dffb4e26ae1046887b95c43e89c3cbe8",
-    "tree": "a65def1dfe7f474a5993698d48eea0bdea99eadc"
+    "commit": "0205acf8a0936f6bb3e4379ecc8021fed110f6af",
+    "tree": "21199eb45bdb2eb62b6129b6e7347d8e6dd39b3c"
+  },
+  "role_keys": {
+    "producer": {
+      "key_id": "wcbs-eval-20261017-producer",
+      "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAiI2zBKqXdSDHijw7m5uI9PmfbO609evcntG8z9Ph04U=\n-----END PUBLIC KEY-----\n",
+      "private_key_env": "WCBS_EVAL_PRODUCER_PRIVATE_KEY"
+    },
+    "judges": [
+      {
+        "key_id": "wcbs-eval-20261017-judge-a",
+        "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAD1TMBGGEHkPYdhCXdm3lw/4xXN2nXg20mNgHFyvzLzg=\n-----END PUBLIC KEY-----\n"
+      },
+      {
+        "key_id": "wcbs-eval-20261017-judge-b",
+        "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAKPzYzT6N4Q3cG5MP9aZbHTzwr7QI0Lk24RuW9hbuGO0=\n-----END PUBLIC KEY-----\n"
+      }
+    ],
+    "adjudicator": {
+      "key_id": "wcbs-eval-20261017-adjudicator",
+      "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzdmKHBUfRLBnnF1+3kUMP8ssxo0Ay5JEkhw5yJwiibo=\n-----END PUBLIC KEY-----\n"
+    }
   },
   "execution_identity": {
     "agent": "Claude Code CLI",
-    "agent_version": null,
-    "model_id": null,
-    "credential_name": "WCBS_EVAL_CREDENTIAL",
-    "agent_command_template": null,
+    "agent_version": "2.1.228",
+    "model_id": "claude-sonnet-5",
+    "credential_name": "CLAUDE_CODE_OAUTH_TOKEN",
+    "launcher_runtime_version": "v26.2.0",
+    "agent_command_template": {
+      "command": "node",
+      "arguments": [
+        "{{harness_root}}/scripts/claude-eval-agent.mjs",
+        "--claude-exe", "C:/Users/wfpri/AppData/Roaming/npm/node_modules/@anthropic-ai/claude-code/bin/claude.exe",
+        "--claude-sha256", "841efce70b048ae03c752f79000cb6be5c2c2c4d0478f3eaaa762494ade9daf5",
+        "--arm", "{{arm}}",
+        "--workspace", "{{workspace}}",
+        "--plugin-dir", "{{plugin_dir}}",
+        "--superpowers-dir", "{{superpowers_dir}}",
+        "--model", "claude-sonnet-5",
+        "--prompt", "{{prompt}}"
+      ]
+    },
     "requirements": [
       "Before the first paid run, commit the exact agent version, full immutable model identifier, credential variable name, and vendor-documented non-interactive command template.",
       "Use exactly the same agent version, model, tool access, context conditions, budget, and one protected per-record runtime profile across all arms.",
       "The WCBS agent command template must carry the same {{plugin_dir}} supplied to the WCBS loader; a loader that cannot affect the agent process is invalid.",
       "Aliases such as sonnet, opus, or latest are forbidden."
     ],
-    "state": "BLOCKED: immutable execution identity and vendor-documented agent command are intentionally not invented by this repository."
+    "state": "Pinned Claude Code CLI 2.1.228, claude-sonnet-5, executable SHA-256, and one arm-aware non-interactive launcher."
   },
   "arm_loader_templates": {
-    "wcbs": null
+    "wcbs": {
+      "command": "C:/Users/wfpri/AppData/Roaming/npm/node_modules/@anthropic-ai/claude-code/bin/claude.exe",
+      "arguments": ["plugin", "validate", "{{plugin_dir}}"]
+    }
   },
-  "loader_state": "BLOCKED: a vendor-documented Claude loader template has not been recorded. WCBS staging uses V2 wcbs.mjs, but no claimed native loader is fabricated.",
+  "loader_state": "Claude plugin validate checks the staged WCBS plugin; the pinned launcher loads it with --plugin-dir only in the WCBS arm.",
   "verification_command_template": null,
   "timeout_ms": 600000,
   "failure_policy": {
@@ -63,7 +101,7 @@
   },
   "evaluator_harness": {
     "path": "evals/evaluator-harness-manifest.json",
-    "sha256": "5e0b1465fcaf313e76d45d6c84812a651a5f85e37c1bd9883796be1cf568ea64"
+    "sha256": "96e1ce17c5291123e8efe65c69be984139d2d958a0abd9d7bd726e8845d77f1a"
   },
   "analysis": {
     "bootstrap_resamples": 10000,

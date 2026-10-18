@@ -35,7 +35,7 @@ import {
 import { runEval } from "../lib/eval-runner.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-const evaluatorHarnessFiles = ["scripts/lib/evaluation-protocol.mjs", "scripts/lib/eval-runner.mjs", "scripts/lib/hardened-git.mjs", "scripts/build-release-artifacts.mjs", "scripts/run-evals.mjs", "scripts/create-blinded-judge-packets.mjs", "scripts/analyze-behavioral-evaluation.mjs"];
+const evaluatorHarnessFiles = ["scripts/claude-eval-agent.mjs", "scripts/lib/evaluation-protocol.mjs", "scripts/lib/eval-runner.mjs", "scripts/lib/hardened-git.mjs", "scripts/build-release-artifacts.mjs", "scripts/run-evals.mjs", "scripts/create-blinded-judge-packets.mjs", "scripts/analyze-behavioral-evaluation.mjs"];
 function testGit(args, cwd = root) {
   const result = runGitCommand(args, { cwd, encoding: "utf8" });
   if (result.error) throw result.error;
@@ -744,6 +744,7 @@ test("one protected per-record runtime profile links every non-neutral loader to
   try {
     const stubs = writeStubCommands(directory);
     const protocol = fixtureProtocol(stubs);
+    protocol.execution_identity.agent_command_template.arguments.push("{{harness_root}}", "{{arm}}");
     const execution = await executeProtocol({
       root: fixtureRoot,
       protocol,
@@ -760,6 +761,8 @@ test("one protected per-record runtime profile links every non-neutral loader to
     assert.equal(loaderReceipt.home, agentReceipt.home);
     assert.equal(loaderReceipt.userprofile, agentReceipt.userprofile);
     assert.equal(agentReceipt.args.includes(loaderReceipt.pluginDir), true);
+    assert.equal(agentReceipt.args.includes(fixtureRoot), true);
+    assert.equal(agentReceipt.args.includes("wcbs"), true);
     const adversarial = fixtureProtocol(stubs);
     adversarial.execution_identity.agent_command_template.arguments = [stubs.agent, "{{workspace}}", "{{prompt}}"];
     const blocked = preflightProtocol({ root: fixtureRoot, protocol: adversarial, strict: true });
