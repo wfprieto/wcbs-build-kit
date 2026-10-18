@@ -947,8 +947,45 @@ const SENSITIVE_JUDGE_VALUE = /(?:wcbs|superpowers|neutral|plugin(?:[_ -]?dir)?|
 
 function redactedJudgeText(value) {
   if (typeof value !== "string") return "";
-  const bounded = value.slice(0, 8_192).replace(SENSITIVE_JUDGE_VALUE, "[REDACTED]");
+  const bounded = value.slice(0, 8_192).replace(new RegExp(SENSITIVE_JUDGE_VALUE.source, "gi"), "[REDACTED]");
   return SENSITIVE_JUDGE_VALUE.test(bounded) ? "[REDACTED]" : bounded;
+}
+
+export function projectAgentStreamForJudge(stdout) {
+  const messages = String(stdout).split(/\r?\n/).filter(Boolean).map((line) => {
+    try { return JSON.parse(line); } catch { return null; }
+  });
+  if (!messages.some((message) => message?.type === "assistant")) return redactedJudgeText(String(stdout));
+
+  const events = [];
+  const testCalls = new Set();
+  for (const message of messages) {
+    const blocks = Array.isArray(message?.message?.content) ? message.message.content : [];
+    if (message?.type === "assistant") {
+      for (const block of blocks) {
+        if (block?.type === "text" && typeof block.text === "string" && block.text.trim()) events.push(`Assistant: ${redactedJudgeText(block.text)}`);
+        if (block?.type !== "tool_use") continue;
+        if (block.name === "Read") events.push("Read");
+        else if (["Edit", "Write"].includes(block.name)) {
+          const target = String(block.input?.file_path ?? "");
+          events.push(/(?:^|[\\/])tests?[\\/]|\.(?:test|spec)\.[cm]?[jt]sx?$/i.test(target) ? "Test edit" : /\.md$/i.test(target) ? "Plan or document edit" : "Implementation edit");
+        } else if (block.name === "Bash") {
+          const command = String(block.input?.command ?? "");
+          if (/\b(?:node(?:\.exe)?\s+--test|npm(?:\.cmd)?\s+(?:run\s+)?test)\b/i.test(command)) {
+            events.push("Test run");
+            if (typeof block.id === "string") testCalls.add(block.id);
+          } else events.push("Shell action");
+        }
+      }
+    } else if (message?.type === "user") {
+      for (const block of blocks) {
+        if (block?.type === "tool_result" && testCalls.has(block.tool_use_id)) events.push(`Test result: ${block.is_error ? "failed" : "completed"}`);
+      }
+    }
+  }
+  const joined = events.join("\n") || "[No scoreable assistant output]";
+  const bounded = joined.length > 8_192 ? `${joined.slice(0, 4_000)}\n[Middle omitted]\n${joined.slice(-4_000)}` : joined;
+  return redactedJudgeText(bounded);
 }
 
 function consumerEvidenceHandle({ evidence, run_directory }) {
@@ -977,7 +1014,7 @@ function projectJudgePacket(record, packet_id, evidenceRun) {
       prompt: redactedJudgeText(record.prompt),
       criteria: Array.isArray(record.criteria) ? record.criteria.map(redactedJudgeText) : []
     },
-    model_output: redactedJudgeText(stdout),
+    model_output: projectAgentStreamForJudge(stdout),
     verification: { outcome: verification }
   };
 }

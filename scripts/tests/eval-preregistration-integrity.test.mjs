@@ -31,6 +31,7 @@ test("both behavioral protocols pin one well-formed Claude executable identity",
     const sha256 = command.arguments[hashIndex + 1];
     assert.match(sha256, /^[a-f0-9]{64}$/, `${relative} has a malformed executable SHA-256`);
     assert.equal(protocol.execution_identity.model_id, "claude-sonnet-5");
+    assert.deepEqual(protocol.verification_command_template, { command: "node", arguments: ["--test", "test/task-store.test.mjs"] });
     return { executable: command.arguments[executableIndex + 1], sha256 };
   });
   assert.deepEqual(identities[0], identities[1]);
