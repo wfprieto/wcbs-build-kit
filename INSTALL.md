@@ -20,7 +20,13 @@ npm.cmd run verify
 
 ## Agent Runtime Setup
 
-## V2 Native Plugin Install (Default)
+The current default is the project-local V1 route below. Resolve the runtime
+and project destination first. V2 is a self-contained plugin bundle, but its
+integrity check does not prove native registration or session activation. Use
+V2 only where the target runtime has a verified registration path; see
+`docs/V2_RUNTIME_EVIDENCE.md`.
+
+## V2 Native Plugin Bundle (Conditional)
 
 Choose the runtime identity and that runtime's dedicated plugin directory. The
 directory is explicit because WCBS will not infer a user project or modify one
@@ -67,11 +73,12 @@ npm run wcbs -- uninstall --plugin-dir <runtime-plugin-directory> --json
 Uninstall refuses modified owned files; it never deletes a plugin directory
 without a valid V2 ownership manifest.
 
-## V1 Project-Local Compatibility Route
+## V1 Project-Local Install (Current Default)
 
-The following project-local commands are retained only for existing V1
-installations and safe migration. They vendor WCBS files into the destination,
-so they are not the default V2 path.
+These commands vendor WCBS files into the resolved project destination.
+Versioned ownership receipts record a hash for each installed file. Update,
+repair, and uninstall refuse to overwrite or remove modified files; legacy
+hashless receipts require a backed-up migration from their original source.
 
 Use the adapter file for your runtime:
 

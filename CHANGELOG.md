@@ -8,9 +8,6 @@
 - Rewrote the execution core around brainstorming, systematic debugging, review request/response, completion verification, plan execution, branch finishing, worktrees, and skill authoring.
 - Added generated specialist catalog coverage, a 42-case blinded behavioral-evaluation preregistration, and explicit runtime-evidence instructions.
 - Kept all support labels below Runtime Verified until real clean-session proof is independently recorded.
-
-## Unreleased - Web Application Security Expansion
-
 - Added the routed `execution-graph` skill for dependency-aware plan execution, requirement traceability, deterministic READY-frontier scheduling, topology validation, and evidence-backed node locking.
 - Added a composite Web Application Security Audit for authentication, sessions, authorization, tenant isolation, input and output security, browser controls, APIs, uploads, object storage, database controls, secrets, logging, business logic, AI and tool routing, supply chain, monitoring, recovery, and release decisions.
 - Added the runtime-loadable `web-application-security` skill.
@@ -19,6 +16,11 @@
 - Connected the audit to cybersecurity routing, audit tier routing, release gates, README, and the active manifest.
 - Added automated tests that fail if the canonical audit, skill, evidence files, routing, release language, or public documentation become disconnected.
 - Prohibited percentage scoring from overriding failed or unknown release-critical security controls.
+- Recorded hashes in V1 install receipts; reject edited, unrecognized, or redirected owned files before update, repair, uninstall, or migration.
+- Preserved staged backups and a recovery record when a destructive rollback is incomplete.
+- Shipped the session bootstrap renderer with hook-enabled adapters and verified installed Claude, Cursor, and Copilot hook output.
+- Aligned release-state validation with governing Gates A-H and kept project-local installation as the current default.
+- Incorporated the reviewed `actions/setup-node` and `actions/upload-artifact` GitHub Actions updates.
 
 ## 1.2.0 - Software-System Hardening
 

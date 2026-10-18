@@ -107,6 +107,7 @@ function relativeFiles(sourceRoots) {
 function packageRoots(adapter) {
   const runtimeArtifact = adapter.packaging?.plugin_path;
   const common = [
+    "BOOTSTRAP.md",
     "00_start_here", "10_governance", "20_skills", "30_agents", "40_knowledge", "50_audits", "60_templates",
     "skills", "runtime_adapters/adapter-registry.yaml", "runtime_adapters/generated",
     `runtime_adapters/manifests/${adapter.runtime_id}.json`, `runtime_adapters/tool_mappings/${adapter.runtime_id}.json`, "LICENSE"
@@ -117,7 +118,7 @@ function packageRoots(adapter) {
   // the documented install path replayable without touching a user's global
   // marketplace directory.
   if (adapter.runtime_id === "codex") common.push(".agents/plugins/marketplace.json");
-  if (adapter.runtime_id === "claude") common.push("hooks");
+  if (adapter.runtime_id === "claude") common.push("hooks", "scripts/render-session-bootstrap.mjs");
   return [...common, runtimeArtifact];
 }
 function readInstallManifest(pluginDir) {
@@ -231,25 +232,46 @@ function uninstall(pluginDir) {
   fs.rmSync(tombstone, { recursive: true, force: true });
   return record;
 }
+function assertUnredirectedProjectPath(projectRoot, relative) {
+  let current = projectRoot;
+  for (const segment of relative.split("/")) {
+    current = path.join(current, segment);
+    let stat;
+    try { stat = fs.lstatSync(current); }
+    catch (error) { if (error.code === "ENOENT") return; throw error; }
+    if (stat.isSymbolicLink()) throw new Error(`Blocked: V1 owned path contains a symbolic link: ${relative}`);
+  }
+}
 function migrate(adapter, pluginDir, project, apply) {
   if (!project) throw new Error("Blocked: --project is required for V1 migration.");
   const legacyProject = path.resolve(project);
   const legacyFile = path.join(legacyProject, ...legacyManifestRel.split("/"));
+  assertUnredirectedProjectPath(legacyProject, legacyManifestRel);
   if (!fs.existsSync(legacyFile)) throw new Error("Blocked: no V1 adapter ownership manifest exists in --project.");
   const legacy = JSON.parse(fs.readFileSync(legacyFile, "utf8"));
-  if (!Array.isArray(legacy.files) || typeof legacy.source_root !== "string" || !legacy.target) throw new Error("Blocked: V1 ownership manifest is incomplete; migration cannot prove ownership.");
+  if (legacy.installed_by !== "wcbs-build-kit" || !Array.isArray(legacy.files) || !legacy.files.length || !legacy.target) throw new Error("Blocked: V1 ownership manifest is incomplete; migration cannot prove ownership.");
   if (legacy.target !== adapter.runtime_id) throw new Error(`Blocked: V1 project target is ${legacy.target}; requested V2 target is ${adapter.runtime_id}.`);
-  const source = path.resolve(legacy.source_root);
-  if (!fs.existsSync(source)) throw new Error("Blocked: V1 source_root is unavailable; migration cannot verify that old owned files are unchanged.");
+  const versioned = legacy.schema_version === 2;
+  if (legacy.schema_version !== undefined && !versioned) throw new Error("Blocked: unsupported V1 ownership manifest version.");
+  if (versioned && (!legacy.file_hashes || typeof legacy.file_hashes !== "object" || Array.isArray(legacy.file_hashes) || Object.keys(legacy.file_hashes).length !== legacy.files.length)) throw new Error("Blocked: V1 file hashes are incomplete.");
+  if (!versioned && typeof legacy.source_root !== "string") throw new Error("Blocked: hashless V1 ownership requires its original source_root.");
+  const source = versioned ? null : path.resolve(legacy.source_root);
+  if (source && !fs.existsSync(source)) throw new Error("Blocked: V1 source_root is unavailable; migration cannot verify that old owned files are unchanged.");
+  const seen = new Set();
   const ownedPaths = legacy.files.map((relative) => {
-    if (typeof relative !== "string" || !relative || path.isAbsolute(relative)) throw new Error("Blocked: V1 ownership manifest contains an invalid path.");
+    if (typeof relative !== "string" || !relative || relative.includes("\\") || path.posix.isAbsolute(relative) || path.win32.isAbsolute(relative) || relative.split("/").some((part) => !part || part === "." || part === "..") || relative === legacyManifestRel) throw new Error("Blocked: V1 ownership manifest contains an invalid path.");
+    const key = process.platform === "win32" ? relative.toLowerCase() : relative;
+    if (seen.has(key)) throw new Error(`Blocked: V1 ownership manifest contains a duplicate path: ${relative}`);
+    seen.add(key);
+    if (versioned && (!Object.hasOwn(legacy.file_hashes, relative) || !/^[a-f0-9]{64}$/.test(legacy.file_hashes[relative]))) throw new Error(`Blocked: V1 owned file has no valid hash: ${relative}`);
     const oldFile = path.resolve(legacyProject, ...relative.split("/"));
-    const sourceFile = path.resolve(source, ...relative.split("/"));
-    if (!oldFile.startsWith(`${legacyProject}${path.sep}`) || !sourceFile.startsWith(`${source}${path.sep}`)) throw new Error(`Blocked: V1 ownership path escapes its root: ${relative}`);
-    return { relative, oldFile, sourceFile };
+    const sourceFile = source ? path.resolve(source, ...relative.split("/")) : null;
+    if (!oldFile.startsWith(`${legacyProject}${path.sep}`) || (sourceFile && !sourceFile.startsWith(`${source}${path.sep}`))) throw new Error(`Blocked: V1 ownership path escapes its root: ${relative}`);
+    assertUnredirectedProjectPath(legacyProject, relative);
+    return { relative, oldFile, sourceFile, expectedHash: versioned ? legacy.file_hashes[relative] : null };
   });
-  const changed = ownedPaths.filter(({ oldFile, sourceFile }) => {
-    return !fs.existsSync(oldFile) || !fs.existsSync(sourceFile) || fs.lstatSync(oldFile).isSymbolicLink() || sha256(oldFile) !== sha256(sourceFile);
+  const changed = ownedPaths.filter(({ oldFile, sourceFile, expectedHash }) => {
+    return !fs.existsSync(oldFile) || fs.lstatSync(oldFile).isSymbolicLink() || !fs.lstatSync(oldFile).isFile() || (sourceFile && !fs.existsSync(sourceFile)) || sha256(oldFile) !== (expectedHash ?? sha256(sourceFile));
   }).map(({ relative }) => relative);
   if (changed.length) throw new Error(`Blocked: V1-owned files changed or are unverifiable; migration will not remove them: ${changed.slice(0, 10).join(", ")}`);
   const plan = { status: apply ? "PASS" : "DRY_RUN", evidence: apply ? "Installed In Isolated Fixture" : "Verified", legacy_target: legacy.target, old_files: legacy.files.length, plugin_dir: pluginDir, project: legacyProject };
@@ -266,6 +288,8 @@ function migrate(adapter, pluginDir, project, apply) {
     }
     let removals = 0;
     for (const entry of [...ownedPaths].sort((left, right) => right.relative.length - left.relative.length)) {
+      assertUnredirectedProjectPath(legacyProject, entry.relative);
+      if (!fs.existsSync(entry.oldFile) || fs.lstatSync(entry.oldFile).isSymbolicLink() || sha256(entry.oldFile) !== (entry.expectedHash ?? sha256(entry.sourceFile))) throw new Error(`Blocked: V1 owned file changed during migration: ${entry.relative}`);
       fs.rmSync(entry.oldFile);
       removals += 1;
       if (Number(process.env.WCBS_TEST_FAIL_MIGRATION_AFTER_REMOVALS ?? 0) === removals) throw new Error("Injected migration removal failure");

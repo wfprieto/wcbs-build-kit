@@ -6,9 +6,9 @@ Use this file for the supported installation and use path. For the first decisio
 
 All current runtime manifests declare `install_scope: project`. Use the
 transactional project-local installer only after the destination is resolved.
-The installer protects unrelated files, records ownership, and refuses unsafe
-uninstall. Native V2 bundles are package-integrity artifacts, not a universal
-runtime-registration route.
+The installer protects unrelated files, records per-file ownership hashes, and
+refuses update or uninstall when owned files have changed. Native V2 bundles
+are package-integrity artifacts, not a universal runtime-registration route.
 
 ```bash
 node scripts/resolve-install-context.mjs --target <runtime> --candidate <path> [--candidate <path> ...]

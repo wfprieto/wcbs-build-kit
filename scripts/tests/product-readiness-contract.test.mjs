@@ -19,13 +19,16 @@ test("installer lists targets and supports JSON dry-run", () => {
   assert.ok(JSON.parse(result.stdout).files.includes("AGENTS.md"));
 });
 
-test("installer verifies and repairs owned files", () => {
+test("installer refuses edited owned files and repairs missing owned files", () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-product-install-"));
   try {
     assert.equal(run("install-adapter.mjs", ["--target", "claude", "--dest", dir, "--install"]).status, 0);
     assert.equal(run("install-adapter.mjs", ["--target", "claude", "--dest", dir, "--verify-owned-files"]).status, 0);
     fs.writeFileSync(path.join(dir, "CLAUDE.md"), "changed\n", "utf8");
     assert.notEqual(run("install-adapter.mjs", ["--target", "claude", "--dest", dir, "--verify-owned-files"]).status, 0);
+    assert.notEqual(run("install-adapter.mjs", ["--target", "claude", "--dest", dir, "--repair"]).status, 0);
+    assert.equal(fs.readFileSync(path.join(dir, "CLAUDE.md"), "utf8"), "changed\n");
+    fs.rmSync(path.join(dir, "CLAUDE.md"));
     assert.equal(run("install-adapter.mjs", ["--target", "claude", "--dest", dir, "--repair"]).status, 0);
     assert.equal(run("install-adapter.mjs", ["--target", "claude", "--dest", dir, "--verify-owned-files"]).status, 0);
   } finally {

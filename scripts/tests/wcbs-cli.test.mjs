@@ -75,6 +75,25 @@ test("Codex V2 installation includes the self-contained marketplace manifest wit
   }
 });
 
+test("Claude V2 bundle executes its installed SessionStart hook rather than a blocked fallback", () => {
+  const project = projectFixture();
+  const plugin = path.join(project, "runtime-plugins", "wcbs-claude");
+  try {
+    const install = run(["install", "--target", "claude", "--plugin-dir", plugin, "--json"]);
+    assert.equal(install.status, 0, `${install.stdout}${install.stderr}`);
+    assert.equal(fs.existsSync(path.join(plugin, "scripts", "render-session-bootstrap.mjs")), true);
+    const command = process.platform === "win32"
+      ? spawnSync("pwsh", ["-NoProfile", "-NonInteractive", "-Command", "cmd.exe /d /s /c \"call .\\hooks\\run-hook.cmd session-start --runtime claude\""], { cwd: plugin, encoding: "utf8" })
+      : spawnSync(path.join(plugin, "hooks", "run-hook"), ["session-start", "--runtime", "claude"], { cwd: plugin, encoding: "utf8" });
+    assert.equal(command.status, 0, `${command.stdout}${command.stderr}`);
+    const payload = JSON.parse(command.stdout);
+    assert.match(payload.hookSpecificOutput.additionalContext, /WCBS_KIT_ACTIVE:claude/);
+    assert.doesNotMatch(payload.hookSpecificOutput.additionalContext, /unable_to_transfer/);
+  } finally {
+    fs.rmSync(project, { recursive: true, force: true });
+  }
+});
+
 test("V2 install blocks an ambiguous target and writes nothing", () => {
   const project = projectFixture();
   const plugin = path.join(project, "runtime-plugins", "wcbs");
@@ -185,6 +204,27 @@ test("V1 migration is dry-run first, preserves user files, and removes only veri
   }
 });
 
+test("V1 migration verifies versioned receipts even when the original source checkout moved", () => {
+  const project = projectFixture();
+  const plugin = path.join(project, "runtime-plugins", "wcbs-codex");
+  try {
+    const legacy = spawnSync(process.execPath, ["scripts/install-adapter.mjs", "--target", "codex", "--dest", project, "--install"], { cwd: root, encoding: "utf8" });
+    assert.equal(legacy.status, 0, `${legacy.stdout}${legacy.stderr}`);
+    const file = path.join(project, ".wcbs", "adapter-install-manifest.json");
+    const receipt = JSON.parse(fs.readFileSync(file, "utf8"));
+    receipt.source_root = path.join(project, "source-that-moved");
+    fs.writeFileSync(file, JSON.stringify(receipt));
+    const dryRun = run(["migrate", "--project", project, "--plugin-dir", plugin, "--dry-run"]);
+    assert.equal(dryRun.status, 0, `${dryRun.stdout}${dryRun.stderr}`);
+    const apply = run(["migrate", "--project", project, "--plugin-dir", plugin, "--apply"]);
+    assert.equal(apply.status, 0, `${apply.stdout}${apply.stderr}`);
+    assert.equal(fs.existsSync(path.join(project, "AGENTS.md")), false);
+    assert.equal(fs.existsSync(path.join(plugin, ".wcbs", "v2-plugin-install-manifest.json")), true);
+  } finally {
+    fs.rmSync(project, { recursive: true, force: true });
+  }
+});
+
 test("V1 migration refuses a changed V1-owned file before it creates a V2 plugin", () => {
   const project = projectFixture();
   const plugin = path.join(project, "runtime-plugins", "wcbs-codex");
@@ -199,6 +239,29 @@ test("V1 migration refuses a changed V1-owned file before it creates a V2 plugin
     assert.equal(fs.existsSync(path.join(project, ".wcbs", "adapter-install-manifest.json")), true);
   } finally {
     fs.rmSync(project, { recursive: true, force: true });
+  }
+});
+
+test("V1 migration refuses an owned directory redirected through a symlink", () => {
+  const project = projectFixture();
+  const outside = fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-v1-migration-outside-"));
+  const plugin = path.join(project, "runtime-plugins", "wcbs-codex");
+  try {
+    const legacy = spawnSync(process.execPath, ["scripts/install-adapter.mjs", "--target", "codex", "--dest", project, "--install"], { cwd: root, encoding: "utf8" });
+    assert.equal(legacy.status, 0, `${legacy.stdout}${legacy.stderr}`);
+    const knowledge = path.join(project, "40_knowledge");
+    const moved = path.join(outside, "40_knowledge");
+    fs.renameSync(knowledge, moved);
+    fs.symlinkSync(moved, knowledge, "dir");
+    const witness = path.join(moved, "SYSTEMATIC_WORKFLOWS.md");
+    const before = hash(witness);
+    const result = run(["migrate", "--project", project, "--plugin-dir", plugin, "--apply"]);
+    assert.notEqual(result.status, 0, `${result.stdout}${result.stderr}`);
+    assert.equal(hash(witness), before);
+    assert.equal(fs.existsSync(plugin), false);
+  } finally {
+    fs.rmSync(project, { recursive: true, force: true });
+    fs.rmSync(outside, { recursive: true, force: true });
   }
 });
 
