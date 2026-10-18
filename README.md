@@ -47,6 +47,8 @@ and independently verified.
 
 **Human reviewing or maintaining this repository:** use `GET_STARTED.md` for the shortest verification and setup path.
 
+The v2.0.0 ZIP and self-hosted Codex/Claude marketplace installs have distinct evidence limits; see `docs/ADOPTION_EVIDENCE.md`. [Share a first-install report](https://github.com/wfprieto/wcbs-build-kit/issues/new?template=first_install_feedback.md) so outside-user experience can be measured rather than inferred.
+
 Every activated agent must then follow the repository-controlled startup sequence:
 
 1. `BOOTSTRAP.md`

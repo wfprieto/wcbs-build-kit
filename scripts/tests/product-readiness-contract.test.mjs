@@ -52,11 +52,31 @@ test("product maturity docs exist", () => {
     "RELEASE_NOTES.md",
     ".github/ISSUE_TEMPLATE/bug_report.md",
     ".github/ISSUE_TEMPLATE/failed_install_report.md",
+    ".github/ISSUE_TEMPLATE/first_install_feedback.md",
     ".github/ISSUE_TEMPLATE/adapter_support_request.md",
     ".github/ISSUE_TEMPLATE/skill_improvement_request.md",
   ]) {
     assert.ok(fs.existsSync(path.join(root, ...rel.split("/"))), rel);
   }
+});
+
+test("public adoption claims keep distribution separate from runtime proof", () => {
+  const pkg = JSON.parse(read("package.json"));
+  const claudeMarketplace = JSON.parse(read(".claude-plugin/marketplace.json"));
+  const feedback = read(".github/ISSUE_TEMPLATE/first_install_feedback.md");
+  assert.equal(pkg.private, true);
+  assert.ok(claudeMarketplace.description?.trim());
+  const getStarted = read("GET_STARTED.md");
+  assert.match(getStarted, /first_install_feedback\.md/);
+  assert.match(getStarted, /codex plugin marketplace add wfprieto\/wcbs-build-kit --ref v2\.0\.0/);
+  assert.match(getStarted, /claude plugin marketplace add wfprieto\/wcbs-build-kit/);
+  assert.match(read("docs/ADOPTION_EVIDENCE.md"), /self-hosted/i);
+  assert.match(read("docs/ADOPTION_EVIDENCE.md"), /independent.*feedback/i);
+  assert.match(read("SUPPORT_MATRIX.md"), /registration.*install.*runtime activation/i);
+  assert.match(read("DISTRIBUTION_POLICY.md"), /package\.json` private/);
+  assert.match(read("DISTRIBUTION_POLICY.md"), /defer npm publication/);
+  assert.match(feedback, /version or commit/i);
+  assert.match(feedback, /redact/i);
 });
 
 test("release workflows expose every forensic product gate", () => {

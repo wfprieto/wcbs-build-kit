@@ -95,6 +95,27 @@ continue under V2 instructions unless the selected runtime has a documented,
 executed native registration step and then passes the clean-session procedure
 in `docs/V2_RUNTIME_EVIDENCE.md`.
 
+## Optional self-hosted GitHub marketplace registration
+
+These commands passed fresh-profile registration and install checks on
+2026-10-18. Codex was tested with CLI `0.163.0-alpha.10.2` at the v2.0.0 tag;
+Claude Code `2.1.228` was tested against the then-current `main` branch.
+
+```bash
+codex plugin marketplace add wfprieto/wcbs-build-kit --ref v2.0.0
+codex plugin add wcbs-build-kit@wcbs-build-kit
+```
+
+```bash
+claude plugin marketplace add wfprieto/wcbs-build-kit
+claude plugin install wcbs-build-kit@wcbs-build-kit
+```
+
+These are user-profile plugin installs, not the project-scoped default. An
+installed or enabled plugin is not clean-session activation proof. Keep the
+project-scoped route as the supported default and use
+`docs/V2_RUNTIME_EVIDENCE.md` before claiming native runtime support.
+
 URL-paste discovery is `REQUESTED`, not `ENFORCED`: this repository can make the correct path obvious after it is opened, but it cannot compel an external model to fetch a URL.
 
 ## Human verification of this kit
@@ -112,6 +133,10 @@ Windows PowerShell fallback:
 npm.cmd run verify
 npm.cmd run check-install
 ```
+
+## First-install feedback
+
+After a real first install, [report the outcome](https://github.com/wfprieto/wcbs-build-kit/issues/new?template=first_install_feedback.md), including success or failure. Redact secrets and private paths. The optional Codex and Claude GitHub marketplace install receipts are in `docs/ADOPTION_EVIDENCE.md`; they do not replace the project-scoped default or prove clean-session activation.
 
 ## Direct paths
 
