@@ -12,6 +12,11 @@ The Super Build Kit is distributed as a repository package first.
 - Keep runtime dependencies at zero unless APIVR records a durable need.
 - Do not publish local scratch folders, generated archives, `.env` files, or secret-bearing material.
 - Keep active instructions separate from provenance.
+- Include the current `LICENSE` and matching `UNLICENSED` metadata in new
+  distribution packages. Do not relabel or republish the MIT-licensed v2.0.0
+  artifact under the new notice; its existing grant remains intact. Before
+  publishing a new all-rights-reserved release, assign it a distinct version
+  and verify that its packaged license and metadata agree.
 - Verify before every release with `npm run verify` and `npm run system-test`.
 
 ## Download Safety

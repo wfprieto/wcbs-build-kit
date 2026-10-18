@@ -4,6 +4,6 @@
   "description": "WCBS Engineering Operating System delivery package.",
   "author": {"name": "Bill Prieto", "email": "wfprieto@gmail.com"},
   "repository": "https://github.com/wfprieto/wcbs-build-kit",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "skills": "./skills/"
 }

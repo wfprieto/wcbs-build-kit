@@ -6,7 +6,9 @@ The current `main` branch and latest tagged release are supported for security r
 
 ## Reporting A Security Issue
 
-Open a private report if GitHub security advisories are enabled, or contact the repository owner through GitHub.
+Use GitHub's private **Report a vulnerability** action on the repository's
+[Security Advisories](https://github.com/wfprieto/wcbs-build-kit/security/advisories)
+page. If that route is unavailable, contact the repository owner privately.
 
 Do not include secrets, live credentials, private customer data, exploit payloads, or third-party target details in public issues.
 

@@ -2,6 +2,10 @@
 
 Use this file for the supported installation and use path. For the first decision among installation, contribution, release, and runtime evaluation, open `WCBS_START.md`.
 
+Before installing the current main revision, read [LICENSE](LICENSE). These
+technical steps do not grant permission; obtain written authorization for
+rights not covered by a valid earlier license or applicable law.
+
 ## Current default: project-scoped installation
 
 All current runtime manifests declare `install_scope: project`. Use the
