@@ -18,8 +18,11 @@ test("Superpowers compatibility governance pins provenance and a decision ledger
   assert.match(compatibility, new RegExp(upstreamCommit));
   assert.match(compatibility, /MIT/i);
   assert.match(compatibility, /adopt, adapt, defer, or reject/i);
+  assert.match(compatibility, /one durable review issue/i);
   assert.match(ledger, /using-wcbs/);
   assert.match(ledger, new RegExp(upstreamCommit));
+  assert.match(ledger, /bb92a77741419a4ab5f06e711a283343f1ada0c3/);
+  assert.match(ledger, /compatibility of the unreviewed delta is `Unknown`/);
 });
 
 test("complete Superpowers integration matrix is pinned, reviewable, and decision-complete", () => {
@@ -42,14 +45,25 @@ test("complete Superpowers integration matrix is pinned, reviewable, and decisio
   ]) assert.match(JSON.stringify(matrix.entries), new RegExp(`skills/${skill.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/SKILL\\.md`));
 });
 
-test("weekly upstream check creates one durable review issue on drift and cannot import changes", () => {
+test("weekly upstream check maintains one durable review issue on drift and cannot import changes", () => {
   const workflow = read(".github/workflows/upstream-superpowers-check.yml");
   assert.match(workflow, /schedule:/);
   assert.match(workflow, /git ls-remote https:\/\/github\.com\/obra\/superpowers\.git HEAD/);
   assert.match(workflow, /actions\/upload-artifact@[0-9a-f]{40}/);
   assert.doesNotMatch(workflow, /git (?:merge|cherry-pick|pull|push|commit)/i);
   assert.match(workflow, /issues:\s*write/);
-  assert.match(workflow, /Superpowers upstream drift/);
+  assert.match(workflow, /concurrency:/);
+  assert.match(workflow, /title="\[WCBS\] Superpowers upstream adoption review"/);
+  assert.doesNotMatch(workflow, /title=.*OBSERVED/);
+  assert.match(workflow, /gh issue list .*--state all/);
+  assert.match(workflow, /if \(\( count > 1 \)\)/);
+  assert.match(workflow, /gh issue reopen/);
+  assert.match(workflow, /superpowers-observed:\$OBSERVED/);
+  assert.match(workflow, /gh issue comment/);
+  assert.ok(workflow.indexOf('if [[ "$previous_body" !=') < workflow.indexOf('gh issue reopen'),
+    "an already-reviewed SHA must not reopen a closed issue on every poll");
+  assert.ok(workflow.indexOf('gh issue comment') < workflow.indexOf('gh issue edit'),
+    "a failed comment must not advance the observed-SHA marker and hide the alert");
   assert.match(workflow, /ADOPTION_LEDGER\.md/);
   assert.match(workflow, new RegExp(upstreamCommit));
 });

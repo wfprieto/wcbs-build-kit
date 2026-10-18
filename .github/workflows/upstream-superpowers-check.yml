@@ -9,6 +9,10 @@ permissions:
   contents: read
   issues: write
 
+concurrency:
+  group: superpowers-upstream-review
+  cancel-in-progress: false
+
 jobs:
   report:
     name: Report pinned-baseline drift
@@ -21,7 +25,7 @@ jobs:
           set -euo pipefail
           pinned="44c9b2d6e889982ac18c27d05a19fefe335194e1"
           observed="$(git ls-remote https://github.com/obra/superpowers.git HEAD | awk '{print $1}')"
-          test -n "$observed"
+          [[ "$observed" =~ ^[0-9a-f]{40}$ ]]
           {
             echo "# Superpowers upstream report"
             echo
@@ -41,7 +45,7 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Create durable review issue for upstream drift
+      - name: Maintain durable upstream review issue
         if: steps.upstream.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -49,10 +53,42 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          title="[WCBS] Superpowers upstream drift: ${OBSERVED}"
-          existing="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "\"$title\" in:title" --json title --jq 'length' 2>/dev/null || true)"
-          if [ "$existing" = "0" ] || [ -z "$existing" ]; then
-            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "Upstream HEAD changed from the pinned WCBS baseline. Before any import, record a decision and compatibility evidence in docs/upstream/ADOPTION_LEDGER.md and docs/upstream/SUPERPOWERS_INTEGRATION_MATRIX.json. This issue is the durable review record; close it only after those records are committed."
+          title="[WCBS] Superpowers upstream adoption review"
+          pinned="44c9b2d6e889982ac18c27d05a19fefe335194e1"
+          matches="$(gh issue list --repo "$GITHUB_REPOSITORY" --state all --limit 1000 --json number,title,body,state | jq -c --arg title "$title" '[.[] | select(.title == $title)]')"
+          count="$(jq 'length' <<< "$matches")"
+          if (( count > 1 )); then
+            echo "Multiple durable Superpowers review issues found; resolve manually." >&2
+            exit 1
+          fi
+
+          body="$(printf '%s\n' \
+            '<!-- wcbs-superpowers-upstream-review -->' \
+            'Superpowers upstream review. This issue is the durable review record.' \
+            '' \
+            "Pinned baseline: $pinned" \
+            "Latest observed HEAD: $OBSERVED" \
+            "<!-- superpowers-observed:$OBSERVED -->" \
+            "Compare: https://github.com/obra/superpowers/compare/$pinned...$OBSERVED" \
+            '' \
+            'Before any import, record an adopt, adapt, defer, or reject decision with evidence in docs/upstream/ADOPTION_LEDGER.md.' \
+            'Update docs/upstream/SUPERPOWERS_INTEGRATION_MATRIX.json only when a reviewed capability decision changes.' \
+            'Polling is not an adoption decision; do not import upstream changes automatically.')"
+
+          if (( count == 0 )); then
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "$body"
+            exit 0
+          fi
+
+          number="$(jq -r '.[0].number' <<< "$matches")"
+          state="$(jq -r '.[0].state' <<< "$matches")"
+          previous_body="$(jq -r '.[0].body' <<< "$matches")"
+          if [[ "$previous_body" != *"<!-- superpowers-observed:$OBSERVED -->"* ]]; then
+            if [ "$state" = "CLOSED" ]; then
+              gh issue reopen "$number" --repo "$GITHUB_REPOSITORY"
+            fi
+            gh issue comment "$number" --repo "$GITHUB_REPOSITORY" --body "Observed Superpowers HEAD $OBSERVED (pinned $pinned). Review the upstream diff and record the disposition and evidence in docs/upstream/ADOPTION_LEDGER.md before any import."
+            gh issue edit "$number" --repo "$GITHUB_REPOSITORY" --body "$body"
           fi
 
       - name: Upload report
