@@ -25,9 +25,11 @@ changes runtime support claims.
 
 The scheduled upstream report records the current remote `HEAD` beside this
 pinned baseline. It never imports, merges, commits, or publishes upstream
-changes. A maintainer must record one decision in `ADOPTION_LEDGER.md` for each
-material candidate: **adopt, adapt, defer, or reject**. Every adopt/adapt
-decision needs an owner, provenance, compatibility test, and evidence result.
+changes. Drift updates one durable review issue rather than creating an issue
+per SHA; an unchanged observed SHA creates no new comment. A maintainer must
+record one decision in `ADOPTION_LEDGER.md` for each material candidate:
+**adopt, adapt, defer, or reject**. Every adopt/adapt decision needs an owner,
+provenance, compatibility test, and evidence result. An alert is not a decision.
 
 ## Compatibility scenarios
 
