@@ -213,7 +213,7 @@ function checkHookTransport() {
   const copilot = json(".github/hooks/wcbs-session-start.json");
   if (!Array.isArray(copilot?.hooks?.sessionStart) || copilot.hooks.sessionStart[0]?.type !== "command" || copilot.hooks.sessionStart[0]?.bash !== "./hooks/run-hook session-start --runtime github-copilot") fail(".github/hooks/wcbs-session-start.json must declare Copilot's POSIX project sessionStart transport.");
   const plugin = json(".claude-plugin/plugin.json");
-  if (plugin?.hooks !== "./hooks/hooks.json" || plugin?.skills !== "./skills/") fail(".claude-plugin/plugin.json component paths must resolve from the plugin root without parent traversal.");
+  if (Object.hasOwn(plugin ?? {}, "hooks") || plugin?.skills !== "./skills/") fail(".claude-plugin/plugin.json must use default hook discovery once and keep skill paths inside the plugin root.");
 }
 function schema(p) { return json(p); }
 function checkAdapters() {
