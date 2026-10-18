@@ -456,6 +456,17 @@ export function validateManifestSelfHash(manifest) {
   return expected;
 }
 
+function validateRunPlan(evidenceRun, manifest) {
+  if (manifest.schema_version !== 2 || !/^[a-f0-9]{64}$/.test(manifest.run_plan_sha256 ?? "")) throw new Error("Blocked: sealed run manifest is missing its pre-run plan binding.");
+  const bytes = readEvidenceFile(evidenceRun, "run-plan.json", "pre-run plan");
+  if (sha256(bytes) !== manifest.run_plan_sha256) throw new Error("Blocked: pre-run plan no longer matches the sealed manifest.");
+  let plan;
+  try { plan = JSON.parse(bytes.toString("utf8")); }
+  catch (error) { throw new Error(`Blocked: pre-run plan is invalid JSON: ${error.message}`); }
+  exactKeys(plan, ["schema_version", "kind", "run_id", "created_utc", "protocol_id", "protocol_sha256", "seed", "schedule"], "Pre-run plan");
+  if (plan.schema_version !== 1 || plan.kind !== "pre-run-plan" || plan.run_id !== manifest.run_id || plan.protocol_id !== manifest.protocol_id || plan.protocol_sha256 !== manifest.protocol_sha256 || plan.seed !== manifest.schedule?.seed || json(plan.schedule) !== json(manifest.schedule) || plan.schedule.schedule_sha256 !== sha256(json(plan.schedule.records))) throw new Error("Blocked: pre-run plan does not match the sealed execution schedule.");
+}
+
 function sanitizeEnvironment(profileDirectory, credential, credentialName) {
   const env = {};
   for (const key of ALLOWED_ENV) if (process.env[key] !== undefined) env[key] = process.env[key];
@@ -841,8 +852,19 @@ export async function executeProtocol({ root, protocol, run_id, run_directory, e
   const evidenceRun = createExternalEvidenceRun(preparedEvidence);
   const runDirectory = evidenceRun.run_identity.realpath;
   const schedule = createRandomSchedule({ protocol: completeProtocol, seed });
-  const manifest = {
+  const runPlan = {
     schema_version: 1,
+    kind: "pre-run-plan",
+    run_id,
+    created_utc: now(),
+    protocol_id: protocol.protocol_id,
+    protocol_sha256: preflight.complete_protocol_sha256,
+    seed,
+    schedule
+  };
+  const runPlanSha256 = hashFile(writeEvidenceJson(evidenceRun, "run-plan.json", runPlan));
+  const manifest = {
+    schema_version: 2,
     run_id,
     created_utc: now(),
     protocol_id: protocol.protocol_id,
@@ -859,6 +881,7 @@ export async function executeProtocol({ root, protocol, run_id, run_directory, e
     evaluator_harness: preflight.evaluator_harness,
     superpowers_source_identity: protocol.superpowers_source_identity ?? null,
     role_keys: preflight.role_keys,
+    run_plan_sha256: runPlanSha256,
     schedule,
     records: []
   };
@@ -1109,6 +1132,7 @@ export function createBlindedJudgePackets({ run_directory, evidence = null, mani
   const sealedManifest = manifest ?? readEvidenceJson(evidenceRun, "run-manifest.json", "run manifest");
   manifest = sealedManifest;
   validateManifestSelfHash(manifest);
+  validateRunPlan(evidenceRun, manifest);
   if (fs.existsSync(path.join(evidenceRun.run_identity.realpath, "judge-packets"))) throw new Error("Blocked: judge delivery already exists and may not be overwritten.");
   const mapping = [];
   const records = new Map((manifest.records ?? []).map((record) => [record.run_id, record]));
@@ -1145,6 +1169,7 @@ export function validateBlindedDelivery({ run_directory, evidence = null, manife
   const evidenceRun = consumerEvidenceHandle({ evidence, run_directory });
   manifest = manifest ?? readEvidenceJson(evidenceRun, "run-manifest.json", "run manifest");
   validateManifestSelfHash(manifest);
+  validateRunPlan(evidenceRun, manifest);
   const schedule = manifest.schedule?.records;
   if (!Array.isArray(schedule) || !schedule.length) throw new Error("Blocked: blinded delivery requires a locked schedule.");
   const expected = schedule.map((row) => ({

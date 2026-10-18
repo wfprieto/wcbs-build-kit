@@ -98,12 +98,34 @@ function makeTemporaryDirectory() {
   return fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-evaluation-protocol-"));
 }
 
+function sealSyntheticRunPlan(directory, manifest) {
+  manifest.schema_version = 2;
+  manifest.run_id = "fixture-synthetic-run";
+  manifest.schedule.seed = "fixture-synthetic-seed";
+  manifest.schedule.schedule_sha256 = sha256(JSON.stringify(manifest.schedule.records));
+  const plan = {
+    schema_version: 1,
+    kind: "pre-run-plan",
+    run_id: manifest.run_id,
+    created_utc: new Date().toISOString(),
+    protocol_id: manifest.protocol_id,
+    protocol_sha256: manifest.protocol_sha256,
+    seed: manifest.schedule.seed,
+    schedule: manifest.schedule
+  };
+  const bytes = `${JSON.stringify(plan, null, 2)}\n`;
+  fs.writeFileSync(path.join(directory, "run-plan.json"), bytes);
+  manifest.run_plan_sha256 = sha256(bytes);
+  manifest.manifest_sha256 = manifestSelfHash(manifest);
+}
+
 function writeStubCommands(directory) {
   const loader = path.join(directory, "loader.mjs");
   const agent = path.join(directory, "agent.mjs");
   const verify = path.join(directory, "verify.mjs");
   const failingAgent = path.join(directory, "failing-agent.mjs");
   const timedAgent = path.join(directory, "timed-agent.mjs");
+  const planAgent = path.join(directory, "plan-agent.mjs");
   fs.writeFileSync(loader, [
     "import fs from 'node:fs';",
     "import path from 'node:path';",
@@ -121,7 +143,17 @@ function writeStubCommands(directory) {
   fs.writeFileSync(verify, "process.stdout.write('verification-passed\\n');\n");
   fs.writeFileSync(failingAgent, "process.stderr.write('synthetic tool failure\\n'); process.exit(7);\n");
   fs.writeFileSync(timedAgent, "setTimeout(() => process.stdout.write('too late\\n'), 10000);\n");
-  return { loader, agent, failingAgent, timedAgent, verify };
+  fs.writeFileSync(planAgent, [
+    "import fs from 'node:fs';",
+    "import path from 'node:path';",
+    "const file = path.resolve(process.cwd(), '..', '..', 'run-plan.json');",
+    "if (!fs.existsSync(file)) process.exit(8);",
+    "const plan = JSON.parse(fs.readFileSync(file, 'utf8'));",
+    "if (plan.seed !== 'fixture-pre-run-seed' || plan.schedule.records.length !== 2) process.exit(9);",
+    "fs.writeFileSync(path.join(process.cwd(), 'plan-observed.txt'), plan.run_id);",
+    "process.stdout.write('pre-run-plan-observed\\n');"
+  ].join("\n"));
+  return { loader, agent, failingAgent, timedAgent, planAgent, verify };
 }
 
 function fixtureProtocol(stubs, arms = ["neutral", "wcbs"], repetitions = 1, superpowersIdentity = null) {
@@ -310,6 +342,42 @@ test("Gate 0C stages the exact pinned Git candidate through V2 wcbs plugin insta
     assert.ok(fs.existsSync(path.join(directory, "run", wcbs.artifacts.workspace_manifest)));
     assert.ok(fs.existsSync(path.join(directory, "run", wcbs.artifacts.workspace_diff)));
     assert.equal(JSON.stringify(result.manifest).includes("synthetic-test-value-not-a-real-credential"), false);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("the seeded schedule is sealed before the first agent invocation and bound to final custody", async () => {
+  const directory = makeTemporaryDirectory();
+  try {
+    const stubs = writeStubCommands(directory);
+    const protocol = fixtureProtocol(stubs);
+    protocol.execution_identity.agent_command_template.arguments[0] = stubs.planAgent;
+    const runDirectory = path.join(directory, "run");
+    const execution = await executeProtocol({
+      root: fixtureRoot,
+      protocol,
+      run_id: "fixture-pre-run-plan",
+      run_directory: runDirectory,
+      seed: "fixture-pre-run-seed",
+      credential: "synthetic-test-value-not-a-real-credential"
+    });
+    assert.equal(execution.status, "PASS");
+    assert.equal(execution.manifest.records.every((record) => record.status === "Complete"), true);
+    const plan = JSON.parse(fs.readFileSync(path.join(runDirectory, "run-plan.json"), "utf8"));
+    assert.equal(plan.run_id, "fixture-pre-run-plan");
+    assert.equal(plan.seed, "fixture-pre-run-seed");
+    assert.deepEqual(plan.schedule, execution.manifest.schedule);
+    assert.equal(execution.manifest.run_plan_sha256, sha256(fs.readFileSync(path.join(runDirectory, "run-plan.json"))));
+    assert.doesNotThrow(() => createBlindedJudgePackets({ run_directory: runDirectory, manifest: execution.manifest }));
+    fs.writeFileSync(path.join(runDirectory, "run-plan.json"), "{}\n");
+    assert.throws(() => validateBlindedDelivery({ run_directory: runDirectory, manifest: execution.manifest }), /pre-run plan/);
+    fs.rmSync(path.join(runDirectory, "run-plan.json"));
+    assert.throws(() => validateBlindedDelivery({ run_directory: runDirectory, manifest: execution.manifest }), /run-plan\.json/);
+    const downgraded = { ...execution.manifest, schema_version: 1 };
+    delete downgraded.run_plan_sha256;
+    downgraded.manifest_sha256 = manifestSelfHash(downgraded);
+    assert.throws(() => validateBlindedDelivery({ run_directory: runDirectory, manifest: downgraded }), /pre-run plan binding/);
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }
@@ -922,7 +990,7 @@ test("three-arm judge packages omit nested structural loader and installation fi
         }
       }]
     };
-    manifest.manifest_sha256 = manifestSelfHash(manifest);
+    sealSyntheticRunPlan(directory, manifest);
     const packets = createBlindedJudgePackets({ run_directory: directory, manifest });
     const delivery = fs.readFileSync(path.join(directory, packets[0].packet_path), "utf8").toLowerCase();
     for (const forbidden of ["wcbs", "plugin-dir", "private", "loader", "installation", "command", "workspace_diff"]) assert.equal(delivery.includes(forbidden), false, `judge delivery leaked ${forbidden}`);
@@ -1167,7 +1235,7 @@ test("judge delivery is value-neutral and signed custody rejects packet or map s
         artifacts: { transcript: "records/fixture/transcript.json", transcript_sha256: sha256(fs.readFileSync(path.join(recordDirectory, "transcript.json"))), workspace_manifest: "records/fixture/workspace-manifest.json", workspace_manifest_sha256: sha256(fs.readFileSync(path.join(recordDirectory, "workspace-manifest.json"))), workspace_diff: "records/fixture/workspace-diff.json", workspace_diff_sha256: sha256(fs.readFileSync(path.join(recordDirectory, "workspace-diff.json"))) }
       }]
     };
-    manifest.manifest_sha256 = manifestSelfHash(manifest);
+    sealSyntheticRunPlan(directory, manifest);
     const packets = createBlindedJudgePackets({ run_directory: directory, manifest });
     const packet = JSON.parse(fs.readFileSync(path.join(directory, packets[0].packet_path), "utf8"));
     assert.deepEqual(Object.keys(packet).sort(), ["case", "model_output", "packet_id", "schema_version", "verification"]);
