@@ -107,6 +107,27 @@ test("installer records immutable per-file hashes and refuses to overwrite or de
   }
 });
 
+test("repair restores only missing owned files without rewriting the receipt or intact files", () => {
+  const dir = tmp();
+  try {
+    assert.equal(run(["--target", "codex", "--dest", dir, "--install"]).code, 0);
+    const manifest = path.join(dir, ".wcbs", "adapter-install-manifest.json");
+    const receiptBefore = fs.readFileSync(manifest, "utf8");
+    const intact = path.join(dir, "GET_STARTED.md");
+    const oldTime = new Date("2001-01-01T00:00:00Z");
+    fs.utimesSync(intact, oldTime, oldTime);
+    const intactMtime = fs.statSync(intact).mtimeMs;
+    fs.rmSync(path.join(dir, "AGENTS.md"));
+    const result = run(["--target", "codex", "--dest", dir, "--repair"]);
+    assert.equal(result.code, 0, result.output);
+    assert.equal(fs.readFileSync(manifest, "utf8"), receiptBefore);
+    assert.equal(fs.statSync(intact).mtimeMs, intactMtime);
+    assert.equal(run(["--target", "codex", "--dest", dir, "--doctor"]).code, 0);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("uninstall rejects a manifest traversal path before touching an outside sentinel", () => {
   const parent = tmp();
   const dir = path.join(parent, "project");

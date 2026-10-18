@@ -233,13 +233,13 @@ function assertOwnedIntegrity(destination, record, allowMissing = false) {
   return { missing, modified };
 }
 
-function buildPlan(destination, update, allowMissing = false) {
+function buildPlan(destination, update) {
   const existing = loadInstallManifest(destination);
   if (update && !existing) throw new Error("Update requires an existing .wcbs/adapter-install-manifest.json. Run --install first.");
   if (!update && existing) throw new Error("Install manifest already exists. Use --update or --uninstall before reinstalling.");
   const files = plannedFiles();
   if (existing) {
-    assertOwnedIntegrity(destination, existing, allowMissing);
+    assertOwnedIntegrity(destination, existing);
     const current = new Set(files);
     const retired = existing.files.filter((rel) => !current.has(rel));
     if (retired.length) throw new Error(`Source file set changed; refusing to orphan previously owned files: ${retired.slice(0, 10).join(", ")}.`);
@@ -271,7 +271,7 @@ function buildPlan(destination, update, allowMissing = false) {
   if (collisions.length) {
     throw new Error(`Preflight collision(s); no files written: ${[...new Set(collisions)].sort().join(", ")}`);
   }
-  return { existing, files, operations, record: installRecord(files), manifestHash: existing ? sha256(finalManifest) : null, allowMissing };
+  return { existing, files, operations, record: installRecord(files), manifestHash: existing ? sha256(finalManifest) : null };
 }
 
 function stagePlan(plan) {
@@ -356,7 +356,7 @@ function rollbackTransaction(destination, journal, originalError, backupDirector
     let recovery;
     try { recovery = writeRecoveryRecord(destination, originalError, [...new Set(residual)], backupDirectory); }
     catch (error) { recovery = `could not be written (${error.message})`; }
-    const action = mode === "--uninstall" ? "uninstall" : "installation";
+    const action = mode === "--uninstall" ? "uninstall" : mode === "--repair" ? "repair" : "installation";
     const failure = new Error(`CRITICAL: ${action} failed and rollback was incomplete. Recovery record: ${recovery}. Preserved backups: ${backupDirectory}`);
     failure.rollbackIncomplete = true;
     throw failure;
@@ -374,7 +374,7 @@ function commitPlan(destination, plan, staged) {
       assertNoSymlinkSegments(destination, operation.destination, operation.rel);
       if (plan.existing?.files.includes(operation.rel)) {
         const state = inspectOwnedFiles(destination, { files: [operation.rel], file_hashes: plan.existing.file_hashes });
-        if (state.modified.length || (!plan.allowMissing && state.missing.length)) throw new Error(`Owned-file integrity changed during update: ${operation.rel}`);
+        if (state.modified.length || state.missing.length) throw new Error(`Owned-file integrity changed during update: ${operation.rel}`);
       } else if (fs.existsSync(operation.destination)) {
         throw new Error(`Unowned file appeared during update: ${operation.rel}`);
       }
@@ -398,8 +398,8 @@ function commitPlan(destination, plan, staged) {
   }
 }
 
-function installOrUpdate(destination, update, allowMissing = false) {
-  const plan = buildPlan(destination, update, allowMissing);
+function installOrUpdate(destination, update) {
+  const plan = buildPlan(destination, update);
   let staged = null;
   let preserveStage = false;
   try {
@@ -479,7 +479,40 @@ function repair(destination) {
   const existing = loadInstallManifest(destination);
   if (!existing) throw new Error("Repair requires an existing install manifest.");
   const { missing } = assertOwnedIntegrity(destination, existing, true);
-  installOrUpdate(destination, true, true);
+  if (!missing.length) {
+    emit({ status: "PASS", target: existing.target, files_repaired: 0 }, `PASS: no owned files need repair for ${existing.target}`);
+    return;
+  }
+  const manifestHash = sha256(manifestPath(destination));
+  const stageRoot = fs.mkdtempSync(path.join(os.tmpdir(), "wcbs-adapter-repair-"));
+  const journal = { files: [], createdDirectories: [] };
+  let preserveStage = false;
+  try {
+    for (const rel of missing) {
+      const source = path.join(root, ...rel.split("/"));
+      if (sha256(source) !== existing.file_hashes[rel]) throw new Error(`Repair source differs from recorded owned file: ${rel}`);
+      const staged = path.join(stageRoot, ...rel.split("/"));
+      fs.mkdirSync(path.dirname(staged), { recursive: true });
+      fs.copyFileSync(source, staged);
+      if (sha256(staged) !== existing.file_hashes[rel]) throw new Error(`Staged repair payload differs from recorded owned file: ${rel}`);
+    }
+    if (sha256(manifestPath(destination)) !== manifestHash) throw new Error("Install manifest changed during repair; refusing writes.");
+    for (const rel of missing) {
+      const file = assertOwnedPath(destination, rel);
+      if (fs.existsSync(file)) throw new Error(`Missing owned file reappeared during repair: ${rel}`);
+      ensureParentDirectories(file, destination, journal);
+      fs.copyFileSync(path.join(stageRoot, ...rel.split("/")), file, fs.constants.COPYFILE_EXCL);
+      journal.files.push({ rel, destination: file, backup: null });
+      if (sha256(file) !== existing.file_hashes[rel]) throw new Error(`Repaired file failed integrity check: ${rel}`);
+    }
+    assertOwnedIntegrity(destination, existing);
+  } catch (error) {
+    try { rollbackTransaction(destination, journal, error, stageRoot); }
+    catch (rollbackError) { preserveStage = rollbackError.rollbackIncomplete === true; throw rollbackError; }
+    throw error;
+  } finally {
+    if (!preserveStage) fs.rmSync(stageRoot, { recursive: true, force: true });
+  }
   emit({ status: "PASS", target: existing.target, files_repaired: missing.length }, `PASS: repaired ${missing.length} missing owned files for ${existing.target}`);
 }
 

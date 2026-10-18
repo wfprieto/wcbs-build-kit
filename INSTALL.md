@@ -79,6 +79,8 @@ These commands vendor WCBS files into the resolved project destination.
 Versioned ownership receipts record a hash for each installed file. Update,
 repair, and uninstall refuse to overwrite or remove modified files; legacy
 hashless receipts require a backed-up migration from their original source.
+Repair restores missing files only when the current source bytes match the
+receipt; it leaves intact files and the receipt unchanged.
 
 Use the adapter file for your runtime:
 
