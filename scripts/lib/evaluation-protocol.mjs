@@ -352,6 +352,8 @@ function templateValues(context) {
     "{{workspace}}": context.workspace,
     "{{plugin_dir}}": context.plugin_dir,
     "{{superpowers_dir}}": context.superpowers_dir ?? "",
+    "{{harness_root}}": context.harness_root ?? "",
+    "{{arm}}": context.arm ?? "",
     "{{prompt}}": context.prompt ?? ""
   };
 }
@@ -870,7 +872,7 @@ export async function executeProtocol({ root, protocol, run_id, run_directory, e
     try {
       staged = stageWorkspace({ root, protocol, record: scheduled, evidenceRun, superpowersSource: superpowers_source, protectedValue: credential });
       const superpowersDir = staged.superpowers ? path.join(runDirectory, staged.superpowers.source) : "";
-      const agent = templateCommand(protocol.execution_identity.agent_command_template, { workspace: staged.workspace, plugin_dir: path.join(staged.workspace, ".wcbs-evaluation", "plugins", scheduled.arm), superpowers_dir: superpowersDir, prompt: testCase.prompt }, "agent command");
+      const agent = templateCommand(protocol.execution_identity.agent_command_template, { workspace: staged.workspace, plugin_dir: path.join(staged.workspace, ".wcbs-evaluation", "plugins", scheduled.arm), superpowers_dir: superpowersDir, harness_root: root, arm: scheduled.arm, prompt: testCase.prompt }, "agent command");
       const transcriptRelative = `${recordRelative}/transcript.json`;
       const transcriptFile = path.join(recordDirectory, "transcript.json");
       const transcript = await runEval({ command: agent.command, args: agent.arguments, cwd: staged.workspace, transcriptPath: transcriptFile, writeTranscript: (content) => writeEvidenceFile(evidenceRun, transcriptRelative, content), credential, credentialName: protocol.execution_identity.credential_name, timeoutMs: protocol.timeout_ms, profileDirectory: staged.profileDirectory });
