@@ -1,6 +1,6 @@
 {
   "name": "wcbs-build-kit",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "LLM-agnostic APIVR and Elite Build Goals operating system for audited software work.",
   "author": {
     "name": "Bill Prieto",

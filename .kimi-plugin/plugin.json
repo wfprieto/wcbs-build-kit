@@ -1,6 +1,6 @@
 {
   "name": "wcbs-build-kit",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "WCBS executable software-development skills with APIVR and evidence gates.",
   "author": {"name": "Bill Prieto", "email": "wfprieto@gmail.com"},
   "homepage": "https://github.com/wfprieto/wcbs-build-kit",

@@ -66,6 +66,7 @@ function makeCleanFixtureSource() {
 
 const fixtureRoot = makeCleanFixtureSource();
 process.once("exit", () => { fs.rmSync(fixtureRoot, { recursive: true, force: true }); });
+const fixtureVersion = JSON.parse(fs.readFileSync(path.join(fixtureRoot, "package.json"), "utf8")).version;
 const fixtureCandidate = {
   commit: testGit(["rev-parse", "HEAD"], fixtureRoot).trim(),
   tree: testGit(["rev-parse", "HEAD^{tree}"], fixtureRoot).trim()
@@ -1179,7 +1180,7 @@ test("evaluation subject claim target and release artifact content manifest must
     const build = spawnSync(process.execPath, [path.join(root, "scripts", "build-release-artifacts.mjs"), "--repository-root", fixtureRoot, "--out", out], { cwd: root, encoding: "utf8" });
     assert.equal(build.status, 0, build.stderr);
     const artifactManifest = path.join(out, "RELEASE_ARTIFACT_MANIFEST.json");
-    const artifact = path.join(out, "super-build-kit-2.0.0.zip");
+    const artifact = path.join(out, `super-build-kit-${fixtureVersion}.zip`);
     const zip = fs.readFileSync(artifact);
     const localNameLength = zip.readUInt16LE(26);
     const localExtraLength = zip.readUInt16LE(28);
@@ -1318,7 +1319,7 @@ test("release ZIP verifier rejects every central local and EOCD inconsistency", 
     const out = path.join(directory, "artifact");
     const build = spawnSync(process.execPath, [path.join(root, "scripts", "build-release-artifacts.mjs"), "--repository-root", fixtureRoot, "--out", out], { cwd: root, encoding: "utf8" });
     assert.equal(build.status, 0, build.stderr);
-    const zipPath = path.join(out, "super-build-kit-2.0.0.zip");
+    const zipPath = path.join(out, `super-build-kit-${fixtureVersion}.zip`);
     const manifestPath = path.join(out, "RELEASE_ARTIFACT_MANIFEST.json");
     const original = fs.readFileSync(zipPath);
     const centralOffset = original.readUInt32LE(original.length - 6);
