@@ -6,6 +6,11 @@ Operating law: **Audit wide. Fix narrow. Prove everything.**
 
 Repository slug: `wcbs-build-kit`. Product/system name: Super Build Kit.
 
+**License:** Current main is [All Rights Reserved](LICENSE). Public access and
+technical installation instructions do not grant reuse rights. Earlier
+MIT-licensed copies, including the tagged v2.0.0 release, retain their
+original terms; request written permission for rights not otherwise granted.
+
 > **AI CODING AGENT GIVEN ONLY THIS REPOSITORY URL**
 >
 > Open `WCBS_START.md` first, then follow its `GET_STARTED.md` route when installation or use is your intent.

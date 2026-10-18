@@ -2,6 +2,14 @@
 
 Super Build Kit contributions must preserve the operating law: **Audit wide. Fix narrow. Prove everything.**
 
+## Rights And Attribution
+
+Submit only material you own or are authorized to contribute. A pull request
+does not transfer copyright or grant permission to distribute a contribution
+under the current [LICENSE](LICENSE). Before incorporating third-party work,
+the maintainer must secure the necessary written rights and preserve required
+third-party notices. Earlier MIT grants remain unaffected.
+
 ## Contribution Standard
 
 1. Read `00_start_here/START_HERE.md`, `00_start_here/SOURCE_OF_TRUTH.md`, `00_start_here/LOAD_ORDER.md`, and `50_audits/AUDIT_TIER_ROUTER.md`.

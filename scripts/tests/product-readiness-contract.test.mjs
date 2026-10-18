@@ -61,6 +61,25 @@ test("product maturity docs exist", () => {
   }
 });
 
+test("current distribution reserves owned rights and preserves earlier grants", () => {
+  const notice = read("LICENSE");
+  assert.match(notice, /ALL RIGHTS RESERVED/);
+  assert.match(notice, /Copyright \(c\) 2026 wfprieto/);
+  assert.match(notice, /Earlier MIT-licensed material/);
+  assert.match(notice, /Third-party material and contributions/);
+  for (const rel of [
+    "package.json",
+    ".claude-plugin/plugin.json",
+    ".codex-plugin/plugin.json",
+    ".kimi-plugin/plugin.json",
+  ]) {
+    assert.equal(JSON.parse(read(rel)).license, "UNLICENSED", rel);
+  }
+  for (const rel of ["README.md", "WCBS_START.md", "GET_STARTED.md"]) {
+    assert.match(read(rel), /LICENSE/, rel);
+  }
+});
+
 test("historical audit routes current release claims through a dated evidence update", () => {
   const historical = read("docs/evidence/FINAL_20_PASS_AUDIT.md");
   const update = read("docs/evidence/V2_0_0_AUDIT_UPDATE.md");

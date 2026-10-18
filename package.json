@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "description": "WCBS Engineering Operating System distribution package with APIVR, Elite Build Goals, deterministic initialization, and evidence-backed verification.",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "doctor": "node scripts/wcbs-doctor.mjs",

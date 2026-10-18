@@ -2,6 +2,10 @@
 
 Use this page to choose the shortest valid route. It is a router, not a new source of truth. Authority remains `00_start_here/SOURCE_OF_TRUTH.md`; risk classification remains `50_audits/AUDIT_TIER_ROUTER.md`.
 
+Read [LICENSE](LICENSE) before using the current main revision. The routes below
+are operational guidance, not a permission grant; earlier MIT grants remain
+unaffected.
+
 **Prove it before you say it.** A described package, a fixture, and a real clean-session runtime result are different evidence tiers.
 
 ## Choose your intent
