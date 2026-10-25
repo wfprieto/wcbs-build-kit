@@ -203,6 +203,47 @@ test("Codex smoke rejects a redirected ownership receipt before parsing outside 
   });
 });
 
+for (const relative of [hookRel, rendererRel]) {
+  test(`Codex doctor and smoke reject deletion of ${relative} with an unchanged receipt and accept restoration`, async () => {
+    await withFixture(({ destination, receiptFile, originalRenderer, sentinel, doctor, smoke, writeRenderer, clearSentinel }) => {
+      writeRenderer(originalRenderer.replace(/^#![^\n]*\n/, ""));
+      const checks = [["doctor", doctor], ["smoke", smoke]];
+      const expectHealthy = () => {
+        for (const [label, check] of checks) {
+          const result = check();
+          assert.equal(result.error, undefined, result.error?.message);
+          assert.equal(result.status, 0, `${label}: ${result.stdout}${result.stderr}`);
+        }
+        assert.equal(fs.readFileSync(sentinel, "utf8"), "installed renderer executed\n");
+      };
+      expectHealthy();
+      clearSentinel();
+      const intact = snapshot(destination);
+      const receipt = fs.readFileSync(receiptFile);
+      const file = path.join(destination, relative);
+      const contents = fs.readFileSync(file);
+      fs.rmSync(file);
+      const incomplete = intact.filter(([entry]) => entry !== relative);
+      assert.deepEqual(snapshot(destination), incomplete, "fixture must delete only the selected dependency");
+      assert.deepEqual(fs.readFileSync(receiptFile), receipt, "fixture must retain the ownership receipt");
+      for (const [label, check] of checks) {
+        const result = check();
+        const output = `${result.stdout}${result.stderr}`;
+        assert.equal(result.error, undefined, result.error?.message);
+        assert.equal(result.status, 1, `${label}: ${output}`);
+        assert.match(output, /missing/i);
+        assert.ok(output.includes(relative), `${label} must identify missing ${relative}: ${output}`);
+        assert.equal(fs.existsSync(sentinel), false, `${label} must reject the package before hook execution`);
+        assert.deepEqual(snapshot(destination), incomplete, `${label} must preserve the incomplete package and receipt`);
+      }
+      fs.writeFileSync(file, contents);
+      assert.deepEqual(snapshot(destination), intact, "restoration must recover the exact installed bytes");
+      expectHealthy();
+      assert.deepEqual(snapshot(destination), intact);
+    });
+  });
+}
+
 test("Codex smoke rejects unsafe or incomplete packages before executing any hook", async (t) => {
   const cases = [
     ["unsealed renderer modification", ({ rendererFile, receiptFile, originalRenderer, writeRenderer }) => {
