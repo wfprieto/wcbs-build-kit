@@ -5,6 +5,7 @@
 - Reserved rights in newly distributed owner material while preserving the MIT grant for prior copies and third-party terms.
 - Updated package and plugin metadata to `UNLICENSED`; retained the historical v2.0.0 release unchanged.
 - Enabled private vulnerability reporting, vulnerability alerts, and Dependabot security updates on GitHub.
+- Fixed the default project-local Codex installer to include its declared SessionStart hook and bootstrap renderer. Existing hashed installations receive both files through `--update`; native runtime activation remains unverified.
 
 ## 2.0.0 - Native Plugin and Executable Skills
 

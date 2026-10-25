@@ -51,6 +51,108 @@ function filesBelow(dir) {
   return files.sort();
 }
 
+const codexHookFiles = ["hooks/codex-hooks.json", "scripts/render-session-bootstrap.mjs"];
+
+function assertInstalledCodexHook(dir) {
+  const plugin = JSON.parse(fs.readFileSync(path.join(dir, ".codex-plugin", "plugin.json"), "utf8"));
+  const hookFile = path.resolve(dir, plugin.hooks);
+  assert.ok(fs.existsSync(hookFile), `Missing declared Codex hook: ${plugin.hooks}`);
+  const hook = JSON.parse(fs.readFileSync(hookFile, "utf8")).hooks.SessionStart[0].hooks[0];
+  const invocation = /^node "\$\{PLUGIN_ROOT\}\/([^"]+)" --runtime (\S+) --shape (\S+)$/.exec(hook.command);
+  assert.ok(invocation, `Unexpected Codex hook command: ${hook.command}`);
+  assert.equal(invocation[2], "codex");
+  assert.equal(invocation[3], "codex");
+  const renderer = path.resolve(dir, invocation[1]);
+  assert.ok(fs.existsSync(renderer), "Missing installed Codex renderer");
+  const receipt = JSON.parse(fs.readFileSync(path.join(dir, ".wcbs", "adapter-install-manifest.json"), "utf8"));
+  for (const rel of [plugin.hooks.replace(/^\.\//, ""), invocation[1]]) {
+    assert.ok(receipt.files.includes(rel), `Codex hook dependency is not owned: ${rel}`);
+    assert.equal(receipt.file_hashes[rel], hash(path.resolve(dir, rel)));
+  }
+  const rendered = spawnSync(process.execPath, [renderer, "--runtime", invocation[2], "--shape", invocation[3]], {
+    cwd: os.tmpdir(), encoding: "utf8"
+  });
+  assert.equal(rendered.status, 0, `${rendered.stdout}${rendered.stderr}`);
+  assert.equal(rendered.stderr, "");
+  const payload = JSON.parse(rendered.stdout);
+  assert.deepEqual(Object.keys(payload), ["hookSpecificOutput"]);
+  assert.equal(payload.hookSpecificOutput.hookEventName, "SessionStart");
+  const context = payload.hookSpecificOutput.additionalContext;
+  assert.equal(context.split("WCBS_KIT_ACTIVE:codex").length - 1, 1);
+  assert.ok(context.includes(path.join(dir, "skills", "using-wcbs", "SKILL.md")));
+  assert.ok(context.includes(path.join(dir, "runtime_adapters", "tool_mappings", "codex.json")));
+}
+
+function retainPreHookCodexReceipt(dir) {
+  const file = path.join(dir, ".wcbs", "adapter-install-manifest.json");
+  const receipt = JSON.parse(fs.readFileSync(file, "utf8"));
+  for (const rel of codexHookFiles) {
+    fs.rmSync(path.resolve(dir, rel), { force: true });
+    receipt.files = receipt.files.filter((owned) => owned !== rel);
+    delete receipt.file_hashes[rel];
+  }
+  fs.writeFileSync(file, `${JSON.stringify(receipt, null, 2)}\n`);
+}
+
+test("default Codex install delivers an owned, runnable SessionStart hook without unrelated hooks", () => {
+  const parent = tmp();
+  const dir = path.join(parent, "project with spaces");
+  const userHook = path.join(dir, "hooks", "hooks.json");
+  try {
+    fs.mkdirSync(path.dirname(userHook), { recursive: true });
+    fs.writeFileSync(userHook, "user hook sentinel\n");
+    const installed = run(["--target", "codex", "--dest", dir, "--install"]);
+    assert.equal(installed.code, 0, installed.output);
+    assertInstalledCodexHook(dir);
+    const removed = run(["--target", "codex", "--dest", dir, "--uninstall"]);
+    assert.equal(removed.code, 0, removed.output);
+    for (const rel of codexHookFiles) assert.equal(exists(dir, rel), false);
+    assert.equal(fs.readFileSync(userHook, "utf8"), "user hook sentinel\n");
+  } finally {
+    fs.rmSync(parent, { recursive: true, force: true });
+  }
+});
+
+test("Codex update adds the hook to a pre-fix hashed receipt and removes it on uninstall", () => {
+  const dir = tmp();
+  try {
+    fs.writeFileSync(path.join(dir, "app.txt"), "user sentinel\n");
+    const installed = run(["--target", "codex", "--dest", dir, "--install"]);
+    assert.equal(installed.code, 0, installed.output);
+    retainPreHookCodexReceipt(dir);
+    const updated = run(["--target", "codex", "--dest", dir, "--update"]);
+    assert.equal(updated.code, 0, updated.output);
+    assertInstalledCodexHook(dir);
+    const removed = run(["--target", "codex", "--dest", dir, "--uninstall"]);
+    assert.equal(removed.code, 0, removed.output);
+    for (const rel of codexHookFiles) assert.equal(exists(dir, rel), false);
+    assert.equal(fs.readFileSync(path.join(dir, "app.txt"), "utf8"), "user sentinel\n");
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("Codex hook upgrade rejects unowned dependency collisions before writing any file", () => {
+  for (const rel of codexHookFiles) {
+    const dir = tmp();
+    try {
+      const installed = run(["--target", "codex", "--dest", dir, "--install"]);
+      assert.equal(installed.code, 0, installed.output);
+      retainPreHookCodexReceipt(dir);
+      const userFile = path.resolve(dir, rel);
+      fs.mkdirSync(path.dirname(userFile), { recursive: true });
+      fs.writeFileSync(userFile, "user dependency sentinel\n");
+      const before = filesBelow(dir).map((file) => [file, hash(path.resolve(dir, file))]);
+      const updated = run(["--target", "codex", "--dest", dir, "--update"]);
+      assert.notEqual(updated.code, 0, updated.output);
+      assert.match(updated.output, /unowned existing file/);
+      assert.deepEqual(filesBelow(dir).map((file) => [file, hash(path.resolve(dir, file))]), before);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  }
+});
+
 test("codex adapter installs, verifies, updates, and uninstalls transactionally", () => {
   const dir = tmp();
   try {
