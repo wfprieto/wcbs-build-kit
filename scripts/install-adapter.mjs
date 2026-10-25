@@ -53,7 +53,7 @@ const commonFiles = [
 ];
 
 const adapters = {
-  "codex": [".codex-plugin/plugin.json", "AGENTS.md"],
+  "codex": [".codex-plugin/plugin.json", "AGENTS.md", "hooks/codex-hooks.json", "scripts/render-session-bootstrap.mjs"],
   "claude": ["CLAUDE.md", ".claude-plugin/plugin.json", "hooks", "scripts/render-session-bootstrap.mjs"],
   "cursor": [".cursor/rules/super-build-kit.mdc", ".cursor/hooks.json", "hooks", "scripts/render-session-bootstrap.mjs"],
   "github-copilot": [".github/copilot-instructions.md", ".github/hooks/wcbs-session-start.json", "hooks", "scripts/render-session-bootstrap.mjs"],
