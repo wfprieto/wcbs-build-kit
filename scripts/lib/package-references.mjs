@@ -2,10 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { validateToolMapping } from "./adapter-contract.mjs";
 
-/** Validate the installed package's declared local references without running hooks. */
+/** Validate local references and resolve supported Codex commands without running hooks. */
 export function validatePackageReferences(packageRoot, target, ownedFiles) {
   const root = path.resolve(packageRoot);
   const owned = new Set(ownedFiles);
+  const codexSessionStart = [];
   const invalid = (label, reason) => { throw new Error(`Invalid package reference ${label}: ${reason}.`); };
 
   function reference(value, label, kind = "file", allowRoot = false) {
@@ -65,6 +66,7 @@ export function validatePackageReferences(packageRoot, target, ownedFiles) {
     if (!match) invalid(label, "unsupported or malformed built-in hook command");
     const dependency = reference(match[1], label);
     if (dependency.relative !== expectedPath) invalid(label, `expected built-in hook target ${expectedPath}`);
+    return dependency.file;
   }
 
   function pluginHooks(value, label = value) {
@@ -75,10 +77,11 @@ export function validatePackageReferences(packageRoot, target, ownedFiles) {
       if (!Array.isArray(group?.hooks) || !group.hooks.length) invalid(value, "malformed SessionStart hooks");
       for (const hook of group.hooks) {
         if (hook?.type !== "command") invalid(value, "unsupported SessionStart hook type");
-        hookCommand(hook.command, `${value}.command`, target === "codex"
+        const rendererPath = hookCommand(hook.command, `${value}.command`, target === "codex"
           ? /^node "\$\{PLUGIN_ROOT\}\/([^"]+)" --runtime codex --shape codex$/
           : /^"\$\{CLAUDE_PLUGIN_ROOT\}\/([^"]+)" session-start --runtime claude$/,
         target === "codex" ? "scripts/render-session-bootstrap.mjs" : "hooks/run-hook.cmd");
+        if (target === "codex") codexSessionStart.push({ rendererPath, args: ["--runtime", "codex", "--shape", "codex"] });
       }
     }
     rendererInputs();
@@ -133,4 +136,5 @@ export function validatePackageReferences(packageRoot, target, ownedFiles) {
       if (source.file !== root) invalid("marketplace.source.path", "bundled local source must resolve to the installed package root");
     }
   }
+  return { codexSessionStart };
 }
