@@ -2,6 +2,19 @@
 
 Use these prompts to verify that a runtime has activated the Super Build Kit.
 
+## Codex Executable Package Smoke Test
+
+Run `node scripts/adapter-smoke-test.mjs --target codex --dest <installed-project>`
+from the kit source. It verifies ownership and local references, resolves the
+installed SessionStart hook, and executes its installed renderer with bounded
+time and output. It checks the JSON payload, exact marker, installed paths,
+and complete canonical `using-wcbs` context.
+
+A pass is **Executable package verification**. **Authenticated Codex
+activation: Not Run** remains the reported state until separate clean-session
+evidence establishes native registration, trusted hook loading, and invocation.
+The smoke test does not update runtime support labels.
+
 ## Marker Test
 
 Run this first. It checks for one observable marker, not complete runtime support.
