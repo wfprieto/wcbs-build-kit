@@ -61,6 +61,9 @@ Every activated agent must then follow the repository-controlled startup sequenc
 3. the Controller-declared load order and runtime adapter
 
 Do not substitute this README for the Kernel or Controller, and do not claim activation until the installed adapter passes its doctor and smoke test.
+Those are package prerequisites, not authenticated activation proof. Use the
+claim boundaries in `runtime_adapters/PORTABILITY_CONTRACT.md` section 6 and
+the clean-session procedure in `docs/V2_RUNTIME_EVIDENCE.md`.
 
 ## Core Operational Skills
 
@@ -155,6 +158,12 @@ npm run release-check
 `package.json` defines the gate's component commands. Follow `RELEASE_PROCESS.md` for candidate evidence, required hosted checks, tagging, and release artifacts.
 
 Individual commands remain available for diagnosis and do not replace the release gate. `npm run check` runs repository checks and the Node and Python suites. `npm run system-test` checks routing fixtures. `npm run check-install` runs strict doctor verification, system tests, isolated V1 install/doctor/ownership/smoke/uninstall checks, and V2 install/doctor/status/uninstall checks with user-file preservation. These package checks do not prove authenticated runtime activation.
+
+For the exact distinction between static checks, fixture conformance,
+executable component tests, authenticated activation, and observed agent
+behavior, use the canonical command map in
+`runtime_adapters/PORTABILITY_CONTRACT.md` section 6. A passing aggregate does
+not promote narrower evidence to a runtime or behavioral-outcome claim.
 
 The npm gate launches Python through `scripts/run-python-tests.mjs`, which selects `python3`, `python`, or `py -3` without invoking a shell, so the same gate can run on Linux, macOS, and Windows when Python 3 is installed.
 

@@ -96,7 +96,41 @@ Designed support and verified support are separate facts:
 - `runtime_adapters/VERIFIED_SUPPORT_LEVELS.md` reports evidence that has actually been run.
 - `runtime_adapters/RUNTIME_PROOF_PACKS.json` is the generated, runtime-specific proof requirement catalog. It defines the five evidence tiers, clean-install checks, evidence manifest, uninstall boundary, and blocked-state handling; it does not itself prove any runtime result.
 
-Do not claim `Runtime Verified` from manifest validity, file presence, dry-run instructions, or structural tests. Runtime verification requires a clean-session runtime test or an explicitly recorded equivalent evidence artifact.
+Do not claim `Runtime Verified` from manifest validity, file presence, dry-run instructions, or structural tests. Follow `docs/V2_RUNTIME_EVIDENCE.md` and the selected runtime proof pack. Any equivalent evidence artifact must retain the same authenticated runtime provenance, acceptance criteria, and independent replay; a fixture or marker alone is not equivalent.
+
+### Verification claim boundaries
+
+This is the canonical command-to-evidence map. The existing support labels,
+APIVR evidence states, and proof-pack stages answer different questions:
+`Verified` describes a named observation; it does not mean `Runtime Verified`.
+The legacy `Behaviorally Verified` label means fixture conformance, not
+observed agent behavior. The map describes what a result can substantiate;
+commands do not update support labels. These are not new support levels.
+
+| Command or retained evidence | Existing support vocabulary | Proof-pack boundary and limit |
+|---|---|---|
+| Written instructions or an unexecuted scenario | Documented | A requirement or route is described; no proof-pack result is established. |
+| `npm run doctor`, `npm run verify` | Structurally Verified | Source contracts, references, and metadata only; these commands do not execute every package check they inspect. |
+| `npm run system-test`, `npm run behavior-test` | Behaviorally Verified (legacy fixture conformance) | File/phrase routing fixtures and JSON fixture validation; no agent follows a workflow during these checks. |
+| `node scripts/adapter-smoke-test.mjs --target codex --dest <project>` | Structurally Verified, with executable component evidence | Validates the installed package and executes its renderer. This supports `package_integrity` and the smoke step of `structural_lifecycle`, not native hook loading. |
+| The same smoke command for other supported targets | Structurally Verified | Validates installed files and scenario text; it does not execute those runtimes or their hooks. |
+| `npm run check-install` | Installed In Isolated Fixture; Structurally Verified | Executes isolated V1/V2 package lifecycles and component assertions. Supports `package_integrity` and the tested parts of `structural_lifecycle`, not native registration. |
+| `npm run test`, `npm run release-check` | The labels earned by their individual checks | Real executable tests prove their asserted component outcomes; static checks and fixtures retain their narrower scope. Aggregation does not establish runtime activation or agent behavior. |
+| `npm run eval` without `--execute` | Preflight only; no behavioral support label earned | Checks preregistration/readiness and reports blockers. No model execution, score, comparison result, or runtime-support advancement occurs. |
+| Recorded native marketplace install | Registration evidence; not Runtime Verified | The `registration` stage requires the exact vendor version and package identity. Historical receipts apply only to their recorded source. |
+| Independently reviewed clean-session record | Runtime Verified only when the required evidence passes | Requires `registration`, `clean_session_activation`, and `clean_session_invocation`, plus the selected pack's package/lifecycle requirements. A first-line marker is only one observation. |
+
+Report each stage against its own acceptance criteria. For example, successful
+owned-file uninstall does not establish the full `structural_lifecycle`
+no-residue criterion when empty directories remain. A command's `Not Run`
+runtime result applies to that invocation; it neither invalidates nor replaces
+a separately retained runtime record.
+
+Observed agent behavior requires a genuine agent trace showing the named
+skill/workflow and its observable result. Native loading, prompted naming of
+startup files, and a candidate marker are distinct evidence. Even a verified
+invocation does not establish better software outcomes, broad reliability, or
+superiority over another framework; those claims require their own results.
 
 ## 7. Tool-Mapping Contract
 

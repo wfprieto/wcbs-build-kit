@@ -1,6 +1,9 @@
 # Verified Runtime Transcripts
 
-Use this file to record clean-session runtime evidence.
+Use this index to record clean-session runtime evidence and clearly scoped
+candidate observations. The command-to-evidence map is owned by
+`runtime_adapters/PORTABILITY_CONTRACT.md` section 6. A record here does not
+automatically advance a runtime support label.
 
 ## Required Transcript Fields
 
@@ -17,7 +20,12 @@ Use this file to record clean-session runtime evidence.
 
 ## Current Status
 
-No live clean-session runtime transcript is recorded yet. Current support claims are behaviorally verified through isolated fixtures unless this file records runtime evidence.
+No live clean-session runtime transcript is retained in this index. Static
+checks, fixtures, and executable package results prove only their named
+boundaries; they are not observed agent behavior. Runtime support remains as
+recorded in `runtime_adapters/VERIFIED_SUPPORT_LEVELS.md` until the independent
+review procedure in `docs/V2_RUNTIME_EVIDENCE.md` passes for an exact runtime
+and package revision. The dated attempts below preserve their original scope.
 
 ## Current v3 Evidence Attempts
 

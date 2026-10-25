@@ -145,5 +145,10 @@ reportErrors();
 console.log(`PASS: ${target} adapter smoke test passed for ${path.resolve(dest)}`);
 if (target === "codex") {
   console.log("Verification: Executable package verification.");
-  console.log("Authenticated Codex activation: Not Run.");
+  console.log("Evidence tier: Structurally Verified (executable component).");
+  console.log("Authenticated Codex activation: Not Run by this command.");
+  console.log("Observed agent behavior: Not Run by this command.");
+} else {
+  console.log("Verification: Structural package and scenario checks (Structurally Verified).");
+  console.log("Runtime activation and observed agent behavior: Not Run by this command.");
 }

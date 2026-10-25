@@ -340,11 +340,11 @@ try {
       const marker = adapter.manifest.activation_marker;
       const response = body.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
       if (response.split("\n", 1)[0] !== marker || response.split(marker).length !== 2) throw new Error(`Blocked: first assistant message must begin with exactly one unformatted ${marker} line.`);
-      emit({ status: "RECORDED_CANDIDATE", evidence: "Likely", target: adapter.runtime_id, marker, message: "First assistant message starts with the exact marker. Inspect the raw trace and obtain independent replay before any Runtime Verified label." }, "RECORDED_CANDIDATE: exact first-line marker found; independent clean-session replay still required.");
+      emit({ status: "RECORDED_CANDIDATE", evidence: "Likely", verification_scope: "marker_candidate", runtime_state: "Not Run", agent_behavior_state: "Not Run", target: adapter.runtime_id, marker, message: "First assistant message starts with the exact marker. This command does not authenticate its origin or observe agent behavior. Inspect the raw trace and obtain independent replay before any Runtime Verified label." }, "RECORDED_CANDIDATE: exact first-line marker found; authenticated activation and agent behavior were not verified by this command. Independent clean-session replay is still required.");
     }
   } else if (command === "status" && !pluginDirInput) {
     const registry = readRegistry();
-    emit({ status: "PASS", evidence: "Verified", adapters: registry.adapters.map((adapter) => ({ runtime_id: adapter.runtime_id, designed: adapter.support.designed, verified: adapter.support.verified, label: adapter.support.label })) }, "PASS: WCBS V2 registry is available. Supply --plugin-dir to inspect an installed plugin.");
+    emit({ status: "PASS", evidence: "Verified", verification_scope: "registry_metadata", adapters: registry.adapters.map((adapter) => ({ runtime_id: adapter.runtime_id, designed: adapter.support.designed, verified: adapter.support.verified, label: adapter.support.label })) }, "PASS: WCBS V2 registry metadata is available; no runtime was tested by this command. Supply --plugin-dir to inspect an installed plugin.");
   } else {
     const pluginDir = assertSafePluginDir(pluginDirInput);
     if (command === "install") {
