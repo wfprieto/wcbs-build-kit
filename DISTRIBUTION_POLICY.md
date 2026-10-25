@@ -17,7 +17,8 @@ The Super Build Kit is distributed as a repository package first.
   artifact under the new notice; its existing grant remains intact. Before
   publishing a new all-rights-reserved release, assign it a distinct version
   and verify that its packaged license and metadata agree.
-- Verify before every release with `npm run verify` and `npm run system-test`.
+- Verify before every release with the authoritative `npm run release-check`
+  command and follow `RELEASE_PROCESS.md` for the complete release workflow.
 
 ## Download Safety
 
