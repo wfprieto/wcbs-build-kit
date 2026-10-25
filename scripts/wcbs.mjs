@@ -13,6 +13,7 @@ import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { validatePackageReferences } from "./lib/package-references.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2);
@@ -123,6 +124,7 @@ function packageRoots(adapter) {
 }
 function readInstallManifest(pluginDir) {
   const file = path.join(pluginDir, ...manifestRel.split("/"));
+  assertNoSymlinkInExistingPath(file);
   if (!fs.existsSync(file)) return null;
   const record = JSON.parse(fs.readFileSync(file, "utf8"));
   if (record.schema_version !== 1 || record.installed_by !== "wcbs-v2-plugin" || !Array.isArray(record.files)) throw new Error("Blocked: plugin ownership manifest is malformed; refusing ownership action.");
@@ -134,6 +136,7 @@ function verifyOwned(pluginDir, record) {
     if (!entry?.path || !/^[a-f0-9]{64}$/i.test(entry.sha256 ?? "")) throw new Error("Blocked: plugin ownership manifest contains an invalid file record.");
     const file = path.resolve(pluginDir, ...entry.path.split("/"));
     if (!(file === pluginDir || file.startsWith(`${pluginDir}${path.sep}`))) throw new Error(`Blocked: plugin ownership path escapes its directory: ${entry.path}`);
+    assertNoSymlinkInExistingPath(file);
     if (!fs.existsSync(file)) missing.push(entry.path);
     else if (fs.lstatSync(file).isSymbolicLink() || !fs.lstatSync(file).isFile() || sha256(file) !== entry.sha256) changed.push(entry.path);
   }
@@ -211,7 +214,7 @@ function install(adapter, pluginDir) {
     fs.rmSync(stage, { recursive: true, force: true });
   }
 }
-function doctor(pluginDir) {
+function inspectOwnedPackage(pluginDir) {
   assertSafePluginDir(pluginDir);
   const record = readInstallManifest(pluginDir);
   if (!record) throw new Error("Blocked: no WCBS V2 ownership manifest exists at --plugin-dir.");
@@ -224,8 +227,13 @@ function doctor(pluginDir) {
   if (!fs.existsSync(generated) || !fs.readFileSync(generated, "utf8").includes("{{activation_marker}}")) throw new Error("Blocked: generated bootstrap template is missing or malformed.");
   return { ...record, marker, integrity };
 }
+function doctor(pluginDir) {
+  const record = inspectOwnedPackage(pluginDir);
+  validatePackageReferences(pluginDir, record.target, record.files.map((entry) => entry.path));
+  return record;
+}
 function uninstall(pluginDir) {
-  const record = doctor(pluginDir);
+  const record = inspectOwnedPackage(pluginDir);
   assertSafePluginDir(pluginDir);
   const tombstone = `${pluginDir}.wcbs-v2-removing-${process.pid}-${Date.now()}`;
   fs.renameSync(pluginDir, tombstone);

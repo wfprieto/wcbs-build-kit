@@ -2,6 +2,7 @@
 
 ## 3.0.0 - Rights Reservation (unreleased)
 
+- Strengthened V1 and V2 installation doctors to validate required package-relative manifest and hook dependencies without executing commands. Invalid references block verification; safe ownership checks still permit removal of hash-valid packages with malformed references.
 - Reserved rights in newly distributed owner material while preserving the MIT grant for prior copies and third-party terms.
 - Updated package and plugin metadata to `UNLICENSED`; retained the historical v2.0.0 release unchanged.
 - Enabled private vulnerability reporting, vulnerability alerts, and Dependabot security updates on GitHub.

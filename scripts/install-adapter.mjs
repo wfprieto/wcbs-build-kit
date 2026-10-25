@@ -6,6 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { validatePackageReferences } from "./lib/package-references.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2);
@@ -456,6 +457,7 @@ function doctor(destination) {
   const existing = loadInstallManifest(destination);
   if (!existing) throw new Error("No install manifest found.");
   assertOwnedIntegrity(destination, existing);
+  validatePackageReferences(destination, existing.target, existing.files);
   const marker = `WCBS_KIT_ACTIVE:${existing.target}`;
   const markerFound = existing.files.some((rel) => {
     const file = path.join(destination, ...rel.split("/"));
