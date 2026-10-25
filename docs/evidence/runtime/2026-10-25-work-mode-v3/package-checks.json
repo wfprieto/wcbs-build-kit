@@ -1,0 +1,546 @@
+{
+  "redaction": [
+    "Synthetic source/fixture/executor paths replaced with declared placeholders.",
+    "Disposable WCBS temporary paths normalized.",
+    "No output truncation. No credentials, private prompts, account identifiers or user data inspected or retained."
+  ],
+  "commands": [
+    {
+      "id": "codex-path-lookup",
+      "timestamp_utc": "2026-10-25T20:53:11.404729+00:00",
+      "completed_utc": "2026-10-25T20:53:11.409306+00:00",
+      "command": [
+        "bash",
+        "-c",
+        "command -v codex"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 1,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_state": "Blocked"
+    },
+    {
+      "id": "codex-version",
+      "timestamp_utc": "2026-10-25T20:53:11.409649+00:00",
+      "completed_utc": "2026-10-25T20:53:11.410188+00:00",
+      "command": [
+        "codex",
+        "--version"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 0,
+      "exit_code": null,
+      "stdout": "",
+      "stderr": "",
+      "execution_error": "FileNotFoundError: [Errno 2] No such file or directory: 'codex'",
+      "stdout_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_state": "Blocked"
+    },
+    {
+      "id": "node-version",
+      "timestamp_utc": "2026-10-25T20:53:11.410262+00:00",
+      "completed_utc": "2026-10-25T20:53:11.414363+00:00",
+      "command": [
+        "<node>",
+        "--version"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "stdout": "v24.22.1\n",
+      "stderr": "",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "249baf635bb43877fcb9422efa1a4904b702d0ddf14d3949b7cd0950d5229c81",
+      "stderr_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "python-version",
+      "timestamp_utc": "2026-10-25T20:53:11.414453+00:00",
+      "completed_utc": "2026-10-25T20:53:11.416331+00:00",
+      "command": [
+        "python3",
+        "--version"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "stdout": "Python 3.12.14\n",
+      "stderr": "",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "4c3569f5da09975434dd9fd9a91fadbc4367a91d8f3c3fab59e9241ab9ee4bd8",
+      "stderr_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "v1-clean-install",
+      "timestamp_utc": "2026-10-25T20:53:11.417498+00:00",
+      "completed_utc": "2026-10-25T20:53:11.579133+00:00",
+      "command": [
+        "<node>",
+        "<kit-source>/scripts/install-adapter.mjs",
+        "--target",
+        "codex",
+        "--dest",
+        "<fixture-root>/ordinary-project",
+        "--install",
+        "--json"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "stdout": "PASS: installed codex adapter into <fixture-root>/ordinary-project\nFiles tracked: 233\n",
+      "stderr": "",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "229d448254d9c42e21700f7b964c5d21e2dd09f5d542916a9dcf7242f1dd15f1",
+      "stderr_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "v1-doctor",
+      "timestamp_utc": "2026-10-25T20:53:11.594435+00:00",
+      "completed_utc": "2026-10-25T20:53:11.692386+00:00",
+      "command": [
+        "<node>",
+        "<kit-source>/scripts/install-adapter.mjs",
+        "--target",
+        "codex",
+        "--dest",
+        "<fixture-root>/ordinary-project",
+        "--doctor",
+        "--json"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "stdout": "PASS: codex adapter install is structurally healthy in <fixture-root>/ordinary-project\nFiles checked: 233\n",
+      "stderr": "",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "b589147c5ae96b137a2126dd5aa42469d80c2f0d1f72f0c98eba3e26972ffb4a",
+      "stderr_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "v1-owned-files",
+      "timestamp_utc": "2026-10-25T20:53:11.692523+00:00",
+      "completed_utc": "2026-10-25T20:53:11.774872+00:00",
+      "command": [
+        "<node>",
+        "<kit-source>/scripts/install-adapter.mjs",
+        "--target",
+        "codex",
+        "--dest",
+        "<fixture-root>/ordinary-project",
+        "--verify-owned-files",
+        "--json"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"target\": \"codex\",\n  \"files_checked\": 233,\n  \"missing\": [],\n  \"changed\": []\n}\n",
+      "stderr": "",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "030fedacd18c53ea5f86a79d1fe2968625b002df63112f06abc60b5d3f4ea79d",
+      "stderr_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "v1-executable-smoke",
+      "timestamp_utc": "2026-10-25T20:53:11.775088+00:00",
+      "completed_utc": "2026-10-25T20:53:11.985392+00:00",
+      "command": [
+        "<node>",
+        "<kit-source>/scripts/adapter-smoke-test.mjs",
+        "--target",
+        "codex",
+        "--dest",
+        "<fixture-root>/ordinary-project"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "stdout": "PASS: codex adapter smoke test passed for <fixture-root>/ordinary-project\nVerification: Executable package verification.\nAuthenticated Codex activation: Not Run.\n",
+      "stderr": "",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "dfbd0cc733e61da424898773ab87a98d9cadf6cba0658e787861e03364b24244",
+      "stderr_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "v1-controlled-uninstall-failure",
+      "timestamp_utc": "2026-10-25T20:53:11.999989+00:00",
+      "completed_utc": "2026-10-25T20:53:12.114529+00:00",
+      "command": [
+        "<node>",
+        "<kit-source>/scripts/install-adapter.mjs",
+        "--target",
+        "codex",
+        "--dest",
+        "<fixture-root>/ordinary-project",
+        "--uninstall",
+        "--json"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {
+        "WCBS_TEST_FAIL_UNINSTALL_AFTER_REMOVALS": "2"
+      },
+      "expected_exit_code": 1,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "FAIL: Injected uninstall removal failure after 2 removal(s)\n",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_before_redaction_sha256": "2802c92185677d0a8227e72a58d70884668578e188f2b3c3b57e04cab1e83088",
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "v1-doctor-after-package-rollback",
+      "timestamp_utc": "2026-10-25T20:53:12.132102+00:00",
+      "completed_utc": "2026-10-25T20:53:12.218420+00:00",
+      "command": [
+        "<node>",
+        "<kit-source>/scripts/install-adapter.mjs",
+        "--target",
+        "codex",
+        "--dest",
+        "<fixture-root>/ordinary-project",
+        "--doctor",
+        "--json"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "stdout": "PASS: codex adapter install is structurally healthy in <fixture-root>/ordinary-project\nFiles checked: 233\n",
+      "stderr": "",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "b589147c5ae96b137a2126dd5aa42469d80c2f0d1f72f0c98eba3e26972ffb4a",
+      "stderr_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "v1-smoke-after-package-rollback",
+      "timestamp_utc": "2026-10-25T20:53:12.218648+00:00",
+      "completed_utc": "2026-10-25T20:53:12.445154+00:00",
+      "command": [
+        "<node>",
+        "<kit-source>/scripts/adapter-smoke-test.mjs",
+        "--target",
+        "codex",
+        "--dest",
+        "<fixture-root>/ordinary-project"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "stdout": "PASS: codex adapter smoke test passed for <fixture-root>/ordinary-project\nVerification: Executable package verification.\nAuthenticated Codex activation: Not Run.\n",
+      "stderr": "",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "dfbd0cc733e61da424898773ab87a98d9cadf6cba0658e787861e03364b24244",
+      "stderr_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "v1-uninstall",
+      "timestamp_utc": "2026-10-25T20:53:12.445287+00:00",
+      "completed_utc": "2026-10-25T20:53:12.586428+00:00",
+      "command": [
+        "<node>",
+        "<kit-source>/scripts/install-adapter.mjs",
+        "--target",
+        "codex",
+        "--dest",
+        "<fixture-root>/ordinary-project",
+        "--uninstall",
+        "--json"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "stdout": "PASS: uninstalled codex adapter from <fixture-root>/ordinary-project\nFiles removed: 233\n",
+      "stderr": "",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "3f8df7bd79324ca2b155e3a31c8a03f466a302678de667088df83dac6df5f546",
+      "stderr_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "v1-controlled-partial-install-failure",
+      "timestamp_utc": "2026-10-25T20:53:12.593974+00:00",
+      "completed_utc": "2026-10-25T20:53:12.707953+00:00",
+      "command": [
+        "<node>",
+        "<kit-source>/scripts/install-adapter.mjs",
+        "--target",
+        "codex",
+        "--dest",
+        "<fixture-root>/partial-install-project",
+        "--install",
+        "--json"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {
+        "WCBS_TEST_FAIL_AFTER_WRITES": "3"
+      },
+      "expected_exit_code": 1,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "FAIL: Injected commit failure after 3 write(s)\n",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_before_redaction_sha256": "057e86e69c82eebbf20cd6ea6a98f8e3f8405d30a34706b61af436611d63968e",
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "native-codex-marketplace-attempt",
+      "timestamp_utc": "2026-10-25T20:53:12.708431+00:00",
+      "completed_utc": "2026-10-25T20:53:12.771004+00:00",
+      "command": [
+        "<node>",
+        "<kit-source>/scripts/check-codex-marketplace.mjs"
+      ],
+      "cwd": "<kit-source>",
+      "environment_overrides": {},
+      "expected_exit_code": 0,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "BLOCKED: Unable to start codex: spawnSync codex ENOENT\n",
+      "execution_error": null,
+      "stdout_before_redaction_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_before_redaction_sha256": "cd397963f6ae5c698ffa4b0e8d58774caf0fe72d9f7e59dd04015cf50de82fc2",
+      "evidence_state": "Blocked"
+    }
+  ],
+  "assertions": [
+    {
+      "id": "codex-binary-override-present",
+      "actual": false,
+      "evidence_state": "Verified"
+    },
+    {
+      "id": "user-files-after-install",
+      "evidence_state": "Verified",
+      "actual": {
+        "README.md": "2bf33bba5a083efb0a5bbff02111dbb1988dbd1b0c9e7eb55743bf351e9c749a",
+        "package.json": "e175bdd9e1a73d2d99bb5a8eb4f148d77c211e265bac5ce9be81c933f72922c8",
+        "src/index.js": "6fab7a71eb31b1690d6aecb5ee0113d7e6a80b76a72efa8269b993c9d08c04e5"
+      },
+      "expected": {
+        "README.md": "2bf33bba5a083efb0a5bbff02111dbb1988dbd1b0c9e7eb55743bf351e9c749a",
+        "package.json": "e175bdd9e1a73d2d99bb5a8eb4f148d77c211e265bac5ce9be81c933f72922c8",
+        "src/index.js": "6fab7a71eb31b1690d6aecb5ee0113d7e6a80b76a72efa8269b993c9d08c04e5"
+      }
+    },
+    {
+      "id": "package-unchanged-after-checks",
+      "evidence_state": "Verified",
+      "entry_count": 324,
+      "actual_snapshot_sha256": "f5f87650526c5944c798c60d95ea2afe5b2038c190b25565373983ca71af8824",
+      "expected_snapshot_sha256": "f5f87650526c5944c798c60d95ea2afe5b2038c190b25565373983ca71af8824"
+    },
+    {
+      "id": "complete-package-restored-after-uninstall-failure",
+      "evidence_state": "Verified",
+      "entry_count": 324,
+      "actual_snapshot_sha256": "f5f87650526c5944c798c60d95ea2afe5b2038c190b25565373983ca71af8824",
+      "expected_snapshot_sha256": "f5f87650526c5944c798c60d95ea2afe5b2038c190b25565373983ca71af8824"
+    },
+    {
+      "id": "original-user-files-restored-after-uninstall",
+      "evidence_state": "Verified",
+      "actual": {
+        "README.md": {
+          "kind": "file",
+          "sha256": "2bf33bba5a083efb0a5bbff02111dbb1988dbd1b0c9e7eb55743bf351e9c749a"
+        },
+        "package.json": {
+          "kind": "file",
+          "sha256": "e175bdd9e1a73d2d99bb5a8eb4f148d77c211e265bac5ce9be81c933f72922c8"
+        },
+        "src/index.js": {
+          "kind": "file",
+          "sha256": "6fab7a71eb31b1690d6aecb5ee0113d7e6a80b76a72efa8269b993c9d08c04e5"
+        }
+      },
+      "expected": {
+        "README.md": {
+          "kind": "file",
+          "sha256": "2bf33bba5a083efb0a5bbff02111dbb1988dbd1b0c9e7eb55743bf351e9c749a"
+        },
+        "package.json": {
+          "kind": "file",
+          "sha256": "e175bdd9e1a73d2d99bb5a8eb4f148d77c211e265bac5ce9be81c933f72922c8"
+        },
+        "src/index.js": {
+          "kind": "file",
+          "sha256": "6fab7a71eb31b1690d6aecb5ee0113d7e6a80b76a72efa8269b993c9d08c04e5"
+        }
+      }
+    },
+    {
+      "id": "uninstall-directory-residue",
+      "evidence_state": "Verified",
+      "actual": [
+        ".codex-plugin",
+        ".wcbs",
+        "00_start_here",
+        "10_governance",
+        "10_governance/source_of_truth",
+        "20_skills",
+        "20_skills/apivr",
+        "20_skills/apivr/references",
+        "30_agents",
+        "40_knowledge",
+        "50_audits",
+        "60_templates",
+        "docs",
+        "docs/evidence",
+        "docs/execution",
+        "docs/specs",
+        "docs/upstream",
+        "hooks",
+        "runtime_adapters",
+        "runtime_adapters/generated",
+        "runtime_adapters/manifests",
+        "runtime_adapters/schemas",
+        "runtime_adapters/tool_mappings",
+        "scripts",
+        "skills",
+        "skills/20-pass-protocol",
+        "skills/20-pass-protocol/agents",
+        "skills/agent-observability-and-run-tracing",
+        "skills/ai-application-security",
+        "skills/anti-ai-writing-quality",
+        "skills/brainstorming",
+        "skills/code-review-and-review-army",
+        "skills/codebase-design-and-deep-modules",
+        "skills/compound-learning-capture",
+        "skills/cybersecurity-risk-routing",
+        "skills/data-output-and-reporting",
+        "skills/deployment-and-hosting-guidance",
+        "skills/devex-and-documentation-review",
+        "skills/diagnosing-bugs-and-feedback-loops",
+        "skills/dispatching-parallel-agents",
+        "skills/domain-modeling-and-shared-language",
+        "skills/engineering-plan-review",
+        "skills/executing-plans",
+        "skills/execution-graph",
+        "skills/external-api-integration",
+        "skills/external-integration-launch-gate",
+        "skills/external-integration-launch-gate/agents",
+        "skills/external-integration-launch-gate/references",
+        "skills/finishing-a-development-branch",
+        "skills/knowledge-refresh-and-drift-control",
+        "skills/long-horizon-agent-runtime",
+        "skills/mcp-tool-governance",
+        "skills/media-and-asset-pipeline",
+        "skills/product-requirements-and-issue-slicing",
+        "skills/product-strategy-office-hours",
+        "skills/project-bootstrap-and-setup",
+        "skills/qa-and-browser-verification",
+        "skills/receiving-code-review",
+        "skills/release-readiness-and-ship-gates",
+        "skills/repeatable-agent-loops",
+        "skills/requesting-code-review",
+        "skills/requirements-grilling-and-alignment",
+        "skills/scheduling-and-automation-routing",
+        "skills/security-incident-response",
+        "skills/simplest-safe-path",
+        "skills/strategist-writing-dna",
+        "skills/subagent-driven-development",
+        "skills/subagent-driven-development/prompts",
+        "skills/subagent-driven-development/schemas",
+        "skills/subagent-driven-development/scripts",
+        "skills/subagent-driven-development/tests",
+        "skills/super-build-kit",
+        "skills/supply-chain-and-build-provenance",
+        "skills/systematic-debugging",
+        "skills/test-driven-development",
+        "skills/test-driven-development/references",
+        "skills/throwaway-prototyping",
+        "skills/ui-ux-design-quality",
+        "skills/using-git-worktrees",
+        "skills/using-wcbs",
+        "skills/verification-before-completion",
+        "skills/web-application-security",
+        "skills/writing-plans",
+        "skills/writing-skills",
+        "tests",
+        "tests/system"
+      ],
+      "limit": "Owned files and receipt removed, but these directory trees remain without WCBS files. No full directory-cleanup claim."
+    },
+    {
+      "id": "all-owned-files-removed",
+      "evidence_state": "Verified",
+      "actual": [],
+      "expected": []
+    },
+    {
+      "id": "receipt-removed",
+      "evidence_state": "Verified",
+      "actual": false,
+      "expected": false
+    },
+    {
+      "id": "original-project-restored-after-partial-install-failure",
+      "evidence_state": "Verified",
+      "actual": {
+        "README.md": {
+          "kind": "file",
+          "sha256": "2bf33bba5a083efb0a5bbff02111dbb1988dbd1b0c9e7eb55743bf351e9c749a"
+        },
+        "package.json": {
+          "kind": "file",
+          "sha256": "e175bdd9e1a73d2d99bb5a8eb4f148d77c211e265bac5ce9be81c933f72922c8"
+        },
+        "src": {
+          "kind": "directory"
+        },
+        "src/index.js": {
+          "kind": "file",
+          "sha256": "6fab7a71eb31b1690d6aecb5ee0113d7e6a80b76a72efa8269b993c9d08c04e5"
+        }
+      },
+      "expected": {
+        "README.md": {
+          "kind": "file",
+          "sha256": "2bf33bba5a083efb0a5bbff02111dbb1988dbd1b0c9e7eb55743bf351e9c749a"
+        },
+        "package.json": {
+          "kind": "file",
+          "sha256": "e175bdd9e1a73d2d99bb5a8eb4f148d77c211e265bac5ce9be81c933f72922c8"
+        },
+        "src": {
+          "kind": "directory"
+        },
+        "src/index.js": {
+          "kind": "file",
+          "sha256": "6fab7a71eb31b1690d6aecb5ee0113d7e6a80b76a72efa8269b993c9d08c04e5"
+        }
+      }
+    },
+    {
+      "id": "outside-sentinel-preserved",
+      "evidence_state": "Verified",
+      "actual": "dc50737536c0788ed6b761466727f871d066c4a87a081172d08292b728c4d8fe",
+      "expected": "dc50737536c0788ed6b761466727f871d066c4a87a081172d08292b728c4d8fe"
+    }
+  ]
+}
