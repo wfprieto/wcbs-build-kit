@@ -12,7 +12,9 @@ const errors = [];
 
 if (!fs.existsSync(dir)) errors.push("Missing tests/behavior directory.");
 else {
-  for (const file of fs.readdirSync(dir).filter((name) => name.endsWith(".json")).sort()) {
+  const files = fs.readdirSync(dir).filter((name) => name.endsWith(".json")).sort();
+  if (!files.length) errors.push("No JSON behavior fixtures found; an empty fixture set does not establish validation coverage.");
+  for (const file of files) {
     const rel = `tests/behavior/${file}`;
     const item = JSON.parse(fs.readFileSync(path.join(dir, file), "utf8"));
     for (const key of required) if (!item[key]) errors.push(`${rel}: missing ${key}`);
@@ -30,3 +32,5 @@ if (errors.length) {
 }
 
 console.log("PASS: behavior fixtures include APIVR tier, skills, evidence state, release gates, verification, and verdict.");
+console.log("Verification: Fixture-data validation (Behaviorally Verified: legacy fixture conformance).");
+console.log("Not performed by this command: agent execution, authenticated activation, or observed agent behavior.");

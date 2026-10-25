@@ -78,4 +78,6 @@ if (errors.length) {
   process.exitCode = 1;
 } else {
   console.log("PASS: startup, planning, forensic security, and critical routing fixtures passed.");
+  console.log("Verification: Static routing-fixture validation (Behaviorally Verified: legacy fixture conformance).");
+  console.log("Not performed by this command: authenticated activation, security assessment, or observed agent behavior.");
 }

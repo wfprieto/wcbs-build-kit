@@ -199,7 +199,20 @@ function renderInstallationMatrix(adapters) {
 }
 
 function renderVerifiedSupport(adapters) {
-  const lines = ["# Verified Runtime Support Levels", "", "<!-- GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml. -->", "", "A designed capability or package test is not runtime proof. This table reports only recorded evidence.", "", "## Evidence Levels", "", "- **Documented** — a route is described, but no structural check has run.", "- **Structurally Verified** — manifests, generated artifacts, and package contracts pass deterministic validation.", "- **Installed In Isolated Fixture** — an installer completed in a throwaway destination with ownership evidence.", "- **Behaviorally Verified** — documented behavior fixtures passed; this is not proof that a runtime injected the instructions.", "- **Runtime Verified** — a clean, authenticated session in the named runtime loaded the package and produced the expected activation evidence.", "", "Do not report a runtime as `Runtime Verified` without the raw clean-session transcript, runtime version, package revision, and independent replay instructions.", "", "| Runtime | Designed support | Verified state | Public label | Evidence |", "|---|---|---|---|---|"];
+  const lines = [
+    "# Verified Runtime Support Levels", "",
+    "<!-- GENERATED FILE - DO NOT EDIT BY HAND. Source of truth: runtime_adapters/adapter-registry.yaml. -->", "",
+    "A designed capability or package test is not runtime proof. This table reports recorded authenticated runtime states; static and package passes do not advance them.", "",
+    "## Evidence Levels", "",
+    "- **Documented** — a route is described, but no structural check has run.",
+    "- **Structurally Verified** — manifests, generated artifacts, and package contracts pass deterministic validation. Executable component checks prove only the component outcomes they assert.",
+    "- **Installed In Isolated Fixture** — an installer completed in a throwaway destination with ownership evidence; this does not establish native runtime registration.",
+    "- **Behaviorally Verified** — legacy fixture-conformance label: documented fixture data or routing contracts passed. No agent behavior was observed by those checks.",
+    "- **Runtime Verified** — the required authenticated clean-session activation and invocation evidence passed for the named runtime version and exact package revision, with independent review under the runtime evidence procedure.", "",
+    "Do not report a runtime as `Runtime Verified` without the raw clean-session transcript, runtime version, package revision, and independent replay instructions.", "",
+    "The canonical command-to-evidence map is in `runtime_adapters/PORTABILITY_CONTRACT.md` section 6. `Verified` evidence states describe named observations; they are not runtime support labels. Observed workflow results require actual agent traces and do not establish general quality or superiority.", "",
+    "| Runtime | Designed support | Authenticated runtime state | Public label | Evidence |", "|---|---|---|---|---|"
+  ];
   for (const adapter of adapters) lines.push(`| \`${adapter.runtime_id}\` (${adapter.manifest.display_name}) | ${adapter.support.designed} | ${adapter.support.verified} | ${adapter.support.label} | ${adapter.support.evidence} |`);
   return newline(lines.join("\n"));
 }

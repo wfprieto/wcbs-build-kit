@@ -109,4 +109,6 @@ for (const adapter of v2Registry.adapters) {
 }
 
 emit("PASS: install check completed.");
+emit("Verification: Executable isolated package lifecycles (Installed In Isolated Fixture).");
+emit("Not performed by this command: native registration, authenticated activation, or observed agent behavior.");
 persistLog();

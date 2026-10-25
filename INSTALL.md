@@ -98,9 +98,11 @@ Use the adapter file for your runtime:
 | Manus | `Manus.md` |
 | Generic LLM agent | `00_start_here/START_HERE.md` |
 
-## Activation Test
+## Prompted Startup Diagnostic
 
-Canonical activation tests live in `runtime_adapters/ACTIVATION_TESTS.md`.
+Diagnostic probes live in `runtime_adapters/ACTIVATION_TESTS.md`. The canonical
+command-to-evidence map is in `runtime_adapters/PORTABILITY_CONTRACT.md`
+section 6; authenticated activation requires `docs/V2_RUNTIME_EVIDENCE.md`.
 
 Ask the agent:
 
@@ -108,7 +110,7 @@ Ask the agent:
 Read the Super Build Kit startup files and report the APIVR tier, applicable skills, evidence requirements, and final stop conditions for a Standard feature plan.
 ```
 
-Activation passes only when the agent names:
+This prompted diagnostic passes only when the agent names:
 
 - `00_start_here/START_HERE.md`;
 - `00_start_here/SOURCE_OF_TRUTH.md`;
@@ -117,6 +119,11 @@ Activation passes only when the agent names:
 - APIVR;
 - Elite Build Goals;
 - evidence states.
+
+Because the prompt explicitly requests WCBS, a pass shows prompted startup
+comprehension only. Naming files is not evidence that they were loaded
+automatically or that the agent followed a workflow. Doctor, smoke, and this
+diagnostic do not establish `Runtime Verified`.
 
 ## Local Health Commands
 

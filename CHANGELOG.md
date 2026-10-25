@@ -2,6 +2,7 @@
 
 ## 3.0.0 - Rights Reservation (unreleased)
 
+- Scoped verification output and active guidance to documentation/contracts, fixture conformance, executable package checks, candidate markers, authenticated activation, and observed agent outcomes. Empty behavior-fixture sets now fail; runtime support states remain unchanged.
 - Added bounded execution and payload verification of the installed Codex SessionStart renderer to the project-local smoke test, with an explicit executable-package evidence label separate from authenticated runtime activation.
 - Strengthened V1 and V2 installation doctors to validate required package-relative manifest and hook dependencies without executing commands. Invalid references block verification; safe ownership checks still permit removal of hash-valid packages with malformed references.
 - Reserved rights in newly distributed owner material while preserving the MIT grant for prior copies and third-party terms.

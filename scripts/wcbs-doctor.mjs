@@ -346,4 +346,8 @@ console.log(`Mode: ${strict ? "verify" : "doctor"}`);
 console.log(`Root: ${root}\n`);
 if (warnings.length) { console.log("Warnings:"); for (const warning of warnings) console.log(`- ${warning}`); console.log(); }
 if (errors.length) { console.log("Failures:"); for (const error of errors) console.log(`- ${error}`); process.exitCode = 1; }
-else console.log("PASS: EOS Kernel, Controller, governance, activation wiring, skills, adapters, artifacts, package gates, and evidence controls passed.");
+else {
+  console.log("PASS: Repository documentation, structure, and contract wiring checks passed.");
+  console.log("Verification: Documentation and structural contracts (Structurally Verified).");
+  console.log("Not performed by this command: release-gate execution, authenticated activation, or observed agent behavior.");
+}
