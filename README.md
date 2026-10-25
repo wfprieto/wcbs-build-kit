@@ -146,16 +146,17 @@ Work is not done until the applicable APIVR phases have run, evidence is recorde
 
 This kit includes a private, zero-dependency `package.json` only for verification commands. It is not an application runtime package and does not add build dependencies.
 
-Run from the kit root:
+Run the authoritative local release gate from the kit root:
 
 ```bash
-npm run check
-npm run verify
-npm run system-test
-npm run check-install
+npm run release-check
 ```
 
-`npm run check` executes the doctor, generated capability-matrix check, version audit, behavior fixtures, complete Node suite, and Python review-package suite. `npm run system-test` checks startup, planning, forensic security, adapter, and software-ready routing fixtures. `npm run check-install` runs the doctor and system tests as an install-readiness gate. The npm gate launches Python through `scripts/run-python-tests.mjs`, which selects `python3`, `python`, or `py -3` without invoking a shell, so the same gate can run on Linux, macOS, and Windows when Python 3 is installed.
+`package.json` defines the gate's component commands. Follow `RELEASE_PROCESS.md` for candidate evidence, required hosted checks, tagging, and release artifacts.
+
+Individual commands remain available for diagnosis and do not replace the release gate. `npm run check` runs repository checks and the Node and Python suites. `npm run system-test` checks routing fixtures. `npm run check-install` runs strict doctor verification, system tests, isolated V1 install/doctor/ownership/smoke/uninstall checks, and V2 install/doctor/status/uninstall checks with user-file preservation. These package checks do not prove authenticated runtime activation.
+
+The npm gate launches Python through `scripts/run-python-tests.mjs`, which selects `python3`, `python`, or `py -3` without invoking a shell, so the same gate can run on Linux, macOS, and Windows when Python 3 is installed.
 
 `npm run verify` runs the doctor in strict mode. Missing document references that are warnings in ordinary doctor mode become failures in strict mode.
 
