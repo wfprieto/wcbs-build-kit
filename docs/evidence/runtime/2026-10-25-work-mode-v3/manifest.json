@@ -1,0 +1,137 @@
+{
+  "run_id": "2026-10-25-work-mode-v3",
+  "timestamp_utc": "2026-10-25T20:53:11.404729+00:00",
+  "completed_utc": "2026-10-25T20:53:12.773428+00:00",
+  "apivr_tier": "Comprehensive",
+  "overall_verdict": "PARTIAL",
+  "authenticated_runtime_evidence_state": "Blocked",
+  "evidence_state": "Blocked",
+  "command": "Exact command arrays, environment overrides and outputs are retained in package-checks.json.",
+  "expected_result": "A versioned runtime, native registration, three fresh authenticated activation/invocation traces, native uninstall and runtime rollback with independent review.",
+  "actual_result": "Isolated V1 executable package checks completed; owned files were removed on uninstall but empty directory trees remained. Native authenticated runtime steps are Blocked.",
+  "runtime_id": "chatgpt-work-mode",
+  "actual_host": "ChatGPT Work Mode (cloud execution)",
+  "runtime_version": null,
+  "runtime_version_state": "Blocked",
+  "runtime_version_reason": "Host build identity not exposed; codex absent from PATH; no CLI binary override present.",
+  "operating_system": {
+    "system": "Linux",
+    "machine": "x86_64",
+    "kernel_release": "6.18.55"
+  },
+  "executor_versions": {
+    "node": "v24.22.1",
+    "python": "Python 3.12.14"
+  },
+  "wcbs_package_identity": {
+    "version": "3.0.0",
+    "commit": "48cdbf25a1756704655d8dc9b80311b525ad56cc",
+    "tree": "97f0b58571d62a6ab2c009b733872813e99266f3",
+    "installation_route": "project-local-v1",
+    "source_file_sha256": {
+      "package.json": "484a8d69e750e7d8150a4578d41b9ac5b6f7033e5a9d06312326542ddf0eecec",
+      ".codex-plugin/plugin.json": "2233d9db816a5aadfb95687715f78e0b3ad9f1d87b989ae061df6e958b855429",
+      "hooks/codex-hooks.json": "1c9dcf3603f67108598de10131bd49e6bf0de0e1dfcb4fb4a708061572c9499c",
+      "scripts/render-session-bootstrap.mjs": "fbfcf2c8e51f00bb2e9eb1cc1036ef3165dabd522952b803e26f7a5fe87de656",
+      "scripts/install-adapter.mjs": "c09d8d473d9c2d0601346e50199c917024bea649ec428bba4c3726bfca8965d8",
+      "scripts/adapter-smoke-test.mjs": "7b1993660750088cac79ea07a43f052af99812e205ca6f3bf4a836de5df51168",
+      "runtime_adapters/RUNTIME_PROOF_PACKS.json": "a4f5c07e720f15d3aa709bf7af79b174d1b8bc40a9ba1bcf01fbfec8f0b863ef"
+    }
+  },
+  "installed_receipt_sha256": "82246e686bf99a7c806b7741caefba832af02a5698a5618a629433bae8913cdc",
+  "owned_file_count": 233,
+  "user_sentinel_sha256": {
+    "README.md": "2bf33bba5a083efb0a5bbff02111dbb1988dbd1b0c9e7eb55743bf351e9c749a",
+    "package.json": "e175bdd9e1a73d2d99bb5a8eb4f148d77c211e265bac5ce9be81c933f72922c8",
+    "src/index.js": "6fab7a71eb31b1690d6aecb5ee0113d7e6a80b76a72efa8269b993c9d08c04e5"
+  },
+  "outside_sentinel_sha256": "dc50737536c0788ed6b761466727f871d066c4a87a081172d08292b728c4d8fe",
+  "source_scope": "Exact current v3 source revision; no historical v2 receipt reused.",
+  "native_registration": {
+    "evidence_state": "Blocked",
+    "reason": "No runnable Codex CLI/native registration interface in this host. V1 package placement does not register a native marketplace plugin."
+  },
+  "clean_session_activation": {
+    "evidence_state": "Blocked",
+    "reason": "No fresh authenticated native session or raw startup trace can be created from this preloaded Work conversation."
+  },
+  "representative_invocation": {
+    "evidence_state": "Blocked",
+    "reason": "No native skill-load trace in a fresh authenticated session; manual file reads and package smoke do not satisfy this criterion."
+  },
+  "native_uninstall": {
+    "evidence_state": "Blocked",
+    "reason": "No native registration was performed; package-only uninstall is recorded separately."
+  },
+  "runtime_rollback": {
+    "evidence_state": "Blocked",
+    "reason": "No authenticated prior runtime baseline or native registration exists; controlled local package rollback is separate."
+  },
+  "package_lifecycle": {
+    "evidence_state": "Verified",
+    "scope": "V1 clean isolated install, doctor, owned-file verification, executable smoke, owned-file uninstall, controlled uninstall rollback and partial-install rollback.",
+    "uninstall_directory_residue_count": 86,
+    "directory_cleanup_state": "Incomplete",
+    "limitations": [
+      "V1 uninstall leaves directory trees containing no WCBS files; see the recorded residue paths.",
+      "Controlled rollback verifies local file restoration, not restoration of an authenticated runtime baseline."
+    ]
+  },
+  "profile_runs": [
+    {
+      "profile": 1,
+      "evidence_state": "Blocked",
+      "transcript": null
+    },
+    {
+      "profile": 2,
+      "evidence_state": "Blocked",
+      "transcript": null
+    },
+    {
+      "profile": 3,
+      "evidence_state": "Blocked",
+      "transcript": null
+    }
+  ],
+  "reviewer": {
+    "agent": "release_safeguards_review",
+    "evidence_review": "Assigned independent reviewer; the change pull request records the review outcome. This field alone is not an approval receipt.",
+    "authenticated_session_replay": "Blocked"
+  },
+  "redactions": [
+    "Synthetic source/fixture/executor paths replaced with declared placeholders.",
+    "Disposable WCBS temporary paths normalized.",
+    "No output truncation. No credentials, private prompts, account identifiers or user data inspected or retained."
+  ],
+  "support_label_changed": false,
+  "evidence_location_or_sha256": {
+    "path": "package-checks.json",
+    "sha256": "6678b9ee3269e4cb4eb217a581ecb3c7068497b2ff05b6c9011e40c5498150bb"
+  },
+  "target_adapter_id": "codex",
+  "proof_pack_runtime_id": "codex",
+  "discovery": {
+    "plugin_search": {
+      "query": "WCBS",
+      "plugins_returned": 0,
+      "result_scope": "Current Plugin Management search; not exhaustive and not proof of universal absence."
+    },
+    "current_session_clean": false,
+    "native_registration_interface_exposed": false,
+    "credentials_inspected": false,
+    "account_or_global_settings_changed": false
+  },
+  "initial_capture": {
+    "evidence_state": "Verified",
+    "result": "First driver stopped on an unmet full-directory-cleanup assumption after successful owned-file uninstall. The final capture retains explicit directory residue and does not claim complete directory cleanup.",
+    "path": "initial-capture-limit.log",
+    "sha256": "430f5f2835493aff9ff3de06c2cd42c9d330acd54e3c6cdeb539faed18eb6776"
+  },
+  "trace": {
+    "controller": "root",
+    "read_only_requirements_audit": "codex_install_verification",
+    "stop_reason": "No versioned native CLI, native registration interface, or fresh authenticated runtime session is available.",
+    "next_action": "Replay the pinned source in three fresh authenticated profiles on a supported native runtime and retain independent review."
+  }
+}
