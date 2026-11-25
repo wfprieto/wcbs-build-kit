@@ -78,12 +78,13 @@ function readCentralDirectory(zipPath) {
 
 function extract(zipPath, destination) {
   const result = isWindows
-    ? spawnSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", "Expand-Archive -LiteralPath $env:WCBS_RELEASE_ZIP -DestinationPath $env:WCBS_RELEASE_DESTINATION -Force"], {
+    ? spawnSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", "$ErrorActionPreference = 'Stop'; Expand-Archive -LiteralPath $env:WCBS_RELEASE_ZIP -DestinationPath $env:WCBS_RELEASE_DESTINATION -Force -ErrorAction Stop"], {
       encoding: "utf8",
       env: { ...process.env, WCBS_RELEASE_ZIP: zipPath, WCBS_RELEASE_DESTINATION: destination }
     })
     : spawnSync("unzip", ["-q", zipPath, "-d", destination], { encoding: "utf8" });
   assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
+  assert.equal(result.stderr, "", "archive extraction must not report errors");
 }
 
 function parseSinglePayload(result) {
@@ -137,6 +138,9 @@ test("release ZIP preserves executable metadata and runs the extracted native tr
 
     extract(zipPath, extraction);
     const packageRoot = path.join(extraction, packageRootName);
+    for (const relative of expectedModes.keys()) {
+      assert.ok(fs.existsSync(path.join(packageRoot, relative)), `extraction must produce ${path.join(packageRoot, relative)}`);
+    }
     if (!isWindows) {
       for (const [relative, expectedMode] of expectedModes) {
         assert.equal(fs.statSync(path.join(packageRoot, relative)).mode & 0o777, expectedMode, `${relative} must retain its mode after extraction`);
