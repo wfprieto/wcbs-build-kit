@@ -1,0 +1,70 @@
+{
+  "wcbs_source_commit": "7115d7a86af6f7e3015ce0011fa56fa0a712130c",
+  "audited_files": [
+    {
+      "file": "scripts/task-brief.mjs",
+      "sha256": "2c74c4958afd3c805c031de38c959117dd7e423c4056012fe814865f72c835d0"
+    },
+    {
+      "file": ".opencode/plugins/wcbs.js",
+      "sha256": "e9c39bf663f06d26c82062946d2137fb2127e5c0f5035fd0dfe1d5925ca1d2b1"
+    },
+    {
+      "file": ".pi/extensions/wcbs.ts",
+      "sha256": "a0ed70c13b06b01ca0b3f374faab9671ce62399ab76b0bceba97265d4b3a081f"
+    }
+  ],
+  "node_version": "v26.2.0",
+  "fixture_assertions": "Passed: observations reproduced; these are gaps, not compatibility passes",
+  "results": [
+    {
+      "id": "task-id-prefix",
+      "scope": "Executed local WCBS CLI fixture; not an upstream or vendor runtime test",
+      "observed": "Task 6 selected Task 6b instead",
+      "command": [
+        "scripts/task-brief.mjs",
+        "--plan",
+        "<fixture>/plan.md",
+        "--task",
+        "6",
+        "--out-dir",
+        "<fixture>/briefs"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "brief": "## Task 6b: Neighbor\nWRONG_TASK\n\n## Brief Contract\n\n- Source plan: <fixture>/plan.md\n- Task id: 6\n- Immutable after dispatch: Yes\n"
+    },
+    {
+      "id": "unclosed-code-fence",
+      "scope": "Executed local WCBS CLI fixture",
+      "observed": "Accepted malformed plan and cut the selected section at a fenced heading",
+      "command": [
+        "scripts/task-brief.mjs",
+        "--plan",
+        "<fixture>/plan.md",
+        "--task",
+        "A1",
+        "--out-dir",
+        "<fixture>/briefs"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "brief": "## Task A1: Intended\n```text\n\n## Brief Contract\n\n- Source plan: <fixture>/plan.md\n- Task id: A1\n- Immutable after dispatch: Yes\n"
+    },
+    {
+      "id": "opencode-marker-mention",
+      "scope": "Local adapter callback stub only; OpenCode runtime Not Run",
+      "observed": "Ordinary prompt receives bootstrap; mentioning the marker suppresses it",
+      "ordinary_part_count": 2,
+      "marker_mention_part_count": 1
+    },
+    {
+      "id": "pi-later-turn",
+      "scope": "Local adapter callback stub only; Pi runtime Not Run",
+      "observed": "Bootstrap context produced before agent_end and omitted afterward on a fresh context input",
+      "first_context_returned": true,
+      "later_context_returned": false,
+      "resources_discover_registered": true
+    }
+  ]
+}
