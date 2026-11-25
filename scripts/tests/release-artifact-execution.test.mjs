@@ -77,8 +77,10 @@ function readCentralDirectory(zipPath) {
 }
 
 function extract(zipPath, destination) {
+  // Match the Windows CI host: Windows PowerShell can inherit a PowerShell 7
+  // archive module whose ExtractToDirectory overload is unavailable on .NET Framework.
   const result = isWindows
-    ? spawnSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", "$ErrorActionPreference = 'Stop'; Expand-Archive -LiteralPath $env:WCBS_RELEASE_ZIP -DestinationPath $env:WCBS_RELEASE_DESTINATION -Force -ErrorAction Stop"], {
+    ? spawnSync("pwsh", ["-NoProfile", "-NonInteractive", "-Command", "$ErrorActionPreference = 'Stop'; Expand-Archive -LiteralPath $env:WCBS_RELEASE_ZIP -DestinationPath $env:WCBS_RELEASE_DESTINATION -Force -ErrorAction Stop"], {
       encoding: "utf8",
       env: { ...process.env, WCBS_RELEASE_ZIP: zipPath, WCBS_RELEASE_DESTINATION: destination }
     })
